@@ -71,23 +71,20 @@ int main(int argc, char **argv) {
 	players.push_back(PlayerConnection(referee.serve()));
     }
 
-    std::string buffer;
     std::string winner;
     bool done = false;
-    while (!done) {
-	for (int i = 0; !done && i < num_players; ++i) {
-	    players[i].sendline("move");
+    for (int i = 0; !done; i = (i+1) % num_players) {
+	players[i].sendline("move");
 
-	    std::cout << "Getting line from " << players[i].get_name() << ": (";
-	    buffer = players[i].getline();
-	    std::cout << buffer << ")" << std::endl;
+	std::cout << "Getting line from " << players[i].get_name() << ": (";
+	std::string buffer = players[i].getline();
+	std::cout << buffer << ")" << std::endl;
 
-	    if (buffer == "w") {
-		winner = players[i].get_name();
-		std::cout << winner << " won!!!" << std::endl;
-		players[i].set_won();
-		done = true;
-	    }
+	if (buffer == "w") {
+	    winner = players[i].get_name();
+	    std::cout << winner << " won!!!" << std::endl;
+	    players[i].set_won();
+	    done = true;
 	}
     }
 
