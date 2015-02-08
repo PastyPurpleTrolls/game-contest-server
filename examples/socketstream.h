@@ -3,6 +3,7 @@
 #define _SOCKETSTREAM_H
 
 // downloaded from http://www.cplusplus.com/forum/general/58677/
+// Updates Copyright (C) 2015 Jonathan Geisler jgeisler@cse.taylor
 
 /*-----------------------------------------------------------------.
 | Copyright (C) 2011 Galik grafterman@googlemail.com               |
