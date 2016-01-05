@@ -107,7 +107,7 @@ class TestReferee
 
   #Sends a notification to our players that the game is over
   def inform_players_of_win(winner_name)
-    puts winner_name + ' wins!'
+    puts "Referee: #{winner_name} wins!"
     @players.each do |player_name,socket|
       socket.puts(winner_name + ' wins!' )
       socket.close
