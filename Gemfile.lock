@@ -180,6 +180,7 @@ GEM
       ffi (>= 0.5.0)
     rdoc (4.2.1)
       json (~> 1.4)
+    redcarpet (3.3.4)
     rspec (3.1.0)
       rspec-core (~> 3.1.0)
       rspec-expectations (~> 3.1.0)
@@ -272,6 +273,7 @@ DEPENDENCIES
   kaminari
   libnotify
   rails (= 4.2.5)
+  redcarpet (~> 3.3, >= 3.3.4)
   rspec-rails (~> 3.1.0)
   sass-rails (~> 4.0.3)
   sdoc

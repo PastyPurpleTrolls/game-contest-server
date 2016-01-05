@@ -26,5 +26,8 @@ module GameContestServer
     # config.i18n.default_locale = :de
 
     config.i18n.enforce_available_locales = false
+
+    config.autoload_paths += %W(#{config.root}/lib)
+
   end
 end
