@@ -34,13 +34,14 @@ Temporary fix: `export DISABLE_SPRING=1`
 Start the daemon (checks for new tournaments and matches)
 
 ```
-$ /usr/local/rvm/gems/ruby-2.2.0/bin/clockworkd stop ./clock.rb --log
+$ /usr/local/rvm/gems/ruby-2.2.0/bin/clockworkd -d . start ./clock.rb --log
 ```
 
 Stop the dameon
 
 ```
-$ /usr/local/rvm/gems/ruby-2.2.0/bin/clockworkd -d . start ./clock.rb --log
+
+$ /usr/local/rvm/gems/ruby-2.2.0/bin/clockworkd stop ./clock.rb --log
 ```
 
 View the logs from the daemon: `tail -f [game_contest_server_root]/tmp/clockworkd.clock.output`
