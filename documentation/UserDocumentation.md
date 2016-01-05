@@ -2,15 +2,6 @@
 
 Interactive, web based manager for automated turn-based game contests.
 
-##Requirements
-
-* Ruby on Rails
-* [RubyGems](https://rubygems.org)
-
-##User Documentation
-
-The user documentation can be found in [documentation](/documentation)
-
 ##Setup
 
 Clone the repo: `git clone https://github.com/PastyPurpleTrolls/test.git`
