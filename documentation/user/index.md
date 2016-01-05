@@ -22,10 +22,10 @@ Every user is capable of uploading Players and challenge other users.
 	* Select a Contest under the list
 	* Select ‘New Player’ link under the Actions section
 	* Fill in all the fields and select ‘Create Player’ Challenge other users
-* Create a Contest
+* Challenge another player
 	* Go to Contests tab
 	* Select a Contest under the list
-	* Select ‘Challenge other players’ link under the Actions section
-	* 
+	* Select ‘Challenge other players’ link under the Actions section 
+	*  
 
 
