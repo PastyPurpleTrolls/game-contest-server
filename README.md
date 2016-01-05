@@ -7,6 +7,10 @@ Interactive, web based manager for automated turn-based game contests.
 * Ruby on Rails
 * [RubyGems](https://rubygems.org)
 
+##User Documentation
+
+The user documentation can be found in [/documentation](/documentation)
+
 ##Setup
 
 Clone the repo: `git clone https://github.com/PastyPurpleTrolls/test.git`
@@ -17,7 +21,7 @@ $ bundle install
 $ rake db:schema:load
 ```
 
-##Running
+##Running (dev)
 
 Start the server
 
@@ -38,10 +42,12 @@ View the logs from the daemon: `tail -f /home/mkammes/gcs/tmp/clockworkd.clock.o
 
 ###Manage Users
 
+Create user in web interface (host:port)
+
 ```
 $ rails c
-> Users.all
-> u = Users.first
+> User.all
+> u = User.first
 > u.contest_creator = true
 > u.admin = true
 > u.save
