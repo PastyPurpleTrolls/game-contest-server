@@ -60,7 +60,6 @@ $ rails c
 
 Run tests: `rspec`
 
-
 ##Development
 
 Frontend user interface files are located in `app/assets`. Views are in `app/views`
@@ -77,3 +76,7 @@ The concept of rounds during a match (repeated games between the same opponents)
 
 Each match is executed by `match_wrapper.rb`. The referee is started and told to listen on a specific port for a set number of players. Then the players are started and told the port where they can find the referee. Referees are in charge of handling communication with the players, but they must check in with `match_wrapper.rb` or the match runner will assume the game has failed and will stop the match. 
 
+##Design
+
+###ERD
+![Image of ERD document](/documentation/GameContestServerERD.png)
