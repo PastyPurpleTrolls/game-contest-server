@@ -40,6 +40,7 @@ class TestPlayer
         blah = response_options.sample
         @ref_socket.puts blah
       elsif input.include?('wins')
+        puts "#{@name}: #{input}"
         @ref_socket.close
         return
       end
