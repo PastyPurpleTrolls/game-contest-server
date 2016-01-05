@@ -114,7 +114,8 @@ tournament = Tournament.create!(
   name: "Round Robin Test Tournament",
   start: Time.now + 10.seconds,
   tournament_type: "round robin",
-  status: "waiting"
+  status: "waiting",
+  rounds_per_match: 1
 )
 player1_tournament = PlayerTournament.create!(player: player1, tournament: tournament)
 player2_tournament = PlayerTournament.create!(player: player2, tournament: tournament)
@@ -125,7 +126,8 @@ tournament2 = Tournament.create!(
   name: "Single Elimination Test Tournament",
   start: Time.now + 10.seconds,
   tournament_type: "single elimination",
-  status: "waiting"
+  status: "waiting",
+  rounds_per_match: 1
 )
 player1_tournament2 = PlayerTournament.create!(player: player1, tournament: tournament2)
 player2_tournament2 = PlayerTournament.create!(player: player2, tournament: tournament2)
