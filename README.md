@@ -16,7 +16,7 @@ The user documentation can be found in [documentation](/documentation)
 Clone the repo: `git clone https://github.com/PastyPurpleTrolls/test.git`
 
 Install prerequisites:
-```
+```bash
 $ bundle install
 $ rake db:schema:load
 ```
@@ -25,19 +25,19 @@ $ rake db:schema:load
 
 Start the server
 
-```
+```bash
 $ rails s -b 0.0.0.0 -p 8000
 ```
 
 Start the daemon (checks for new tournaments and matches)
 
-```
+```bash
 $ /usr/local/rvm/gems/ruby-2.2.0/bin/clockworkd -d . start ./clock.rb --log
 ```
 
 Stop the dameon
 
-```
+```bash
 $ /usr/local/rvm/gems/ruby-2.2.0/bin/clockworkd stop ./clock.rb --log
 ```
 
@@ -47,7 +47,7 @@ View the logs from the daemon: `tail -f [game_contest_server_root]/tmp/clockwork
 
 Create user in web interface (host:port)
 
-```
+```bash
 $ rails c
 > User.all
 > u = User.first
