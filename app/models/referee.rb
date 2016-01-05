@@ -8,7 +8,7 @@ class Referee < ActiveRecord::Base
   validates :user,              presence: true
   validates :match_limit,       presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :name,              presence: true, uniqueness: true
-  validates :rules_url,         format: { with: URI.regexp }
+  validates :rules_url,         format: { with: /\A(http|https):\/\/|[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}(:[0-9]{1,5})?(\/.*)?\z/ }
   validates :players_per_game,  numericality: { only_integer: true, greater_than: 0, less_than: 11 }
   validates :time_per_game,     numericality: { only_integer: true, greater_than: 0, less_than: 16 }
   #  validates :programming_language, presence: true

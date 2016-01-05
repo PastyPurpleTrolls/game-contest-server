@@ -57,11 +57,12 @@ describe Referee do
 
   describe "various url formats" do
     describe "poorly formed urls" do
-      urls = %w[www..dr.google
-        www.dr.google..com
-      ]
+      urls = %w[www.dr.google..com
+        javascript:alert('xss')
+	]
 
-      broken_urls = %w[javascript:alert('xss')
+
+      broken_urls = %w[www..dr.google
         www:google.com
         https://www@.google.com
         https://www.google.com\
@@ -80,7 +81,7 @@ describe Referee do
       end
 
       broken_urls.each do |invalid_url|
-        pending "is invalid" do
+        it "is invalid" do
           referee.rules_url = invalid_url
           expect(referee).not_to be_valid
         end
@@ -107,20 +108,19 @@ describe Referee do
         http://subdomain.web-site.com/cgi-bin/perl.cgi?key1=value1&key2=value2e
         http://www.google.com/?queryparam=123
         http://www.google.com/path?queryparam=123
-      ]
-
-      broken_urls = %w[www.google.com
+        google.com/help.php
+        google.com/help.php?a=5
+        www.m.google.com/help.php?a=5
+        m.google.com/help.php?a=5 www.google.com
         www.google.co.uk
         google.com
         google.co.uk
         google.mu
         mes.intnet.mu
         cse.uom.ac.mu
-        google.com?a=5
-        google.com/help.php
-        google.com/help.php?a=5
-        www.m.google.com/help.php?a=5
-        m.google.com/help.php?a=5
+    ]
+
+      broken_urls = %w[google.com?a=5
       ]
       urls.each do |valid_url|
         it "is valid" do
@@ -130,7 +130,7 @@ describe Referee do
       end
 
       broken_urls.each do |valid_url|
-        pending "is valid" do
+        it "is valid" do
           referee.rules_url = valid_url
           expect(referee).to be_valid
         end
