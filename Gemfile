@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.0'
+gem 'rails', '4.2.5'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
@@ -35,7 +35,8 @@ gem 'spring-commands-rspec'
 
 gem 'bcrypt', '~> 3.1.7'
 gem 'active_link_to'
-gem 'validates_timeliness', github: 'geisler/validates_timeliness', branch: 'support_for_rails4'
+#gem 'validates_timeliness', github: 'geisler/validates_timeliness', branch: 'support_for_rails4'
+gem 'validates_timeliness', '~> 4.0.0'
 gem 'friendly_id', '~> 5.1.0'
 
 # Use SCSS for stylesheets
