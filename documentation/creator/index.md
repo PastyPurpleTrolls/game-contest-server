@@ -1,8 +1,12 @@
-#Game Contest Server
+###Game Contest Server - Contest Creator Documentation
 
-Interactive, web based manager for automated turn-based game contests.
+The Game Contest Website is an interactive, web based manager for automated turn-based game contests.
 
-##Contest Creator
+#Terminology
+
+* See terminology in [User Documentation](/documentation/user/index.md)
+
+#Contest Creator Capabilities
 
 Capable of all User permissions
 Can also create Referees and Tournaments
