@@ -78,12 +78,16 @@ class TournamentRunner
     #Currently only works with 2 player games 
     def round_robin(players)
 	players.each do |p|
-	    players.shuffle!
-	    if @tournament.referee.rounds_capable
-	        create_match(players, @tournament.rounds_per_match)
-	    else
-	        @tournament.rounds_per_match.times do
-		    create_match(players, 1)
+	    players.each do |q|
+		if p != q
+		    match_players = [p, q]
+		    if @tournament.referee.rounds_capable
+			create_match(match_players, @tournament.rounds_per_match)
+		    else
+			@tournament.rounds_per_match.times do
+			    create_match(match_players, 1)
+			end
+		    end
 		end
 	    end
 	end
