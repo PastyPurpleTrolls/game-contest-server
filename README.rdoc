@@ -1,8 +1,0 @@
-== README
-
-
-Welcome to the Game Contest Server! 
-
-The first thing you need to know: everything you should read is in the README folder.  In there we have different documentation on the overall site, testing, features, practices, and future work.  There is also a README.txt file from the previous J-Term 2014 group where they describe the clockwork deamon, program flow, referees, players, and future work.
-
-You got this.  Rock this J-Term.
