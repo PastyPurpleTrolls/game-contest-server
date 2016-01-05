@@ -1,4 +1,4 @@
-This is a document of  notes about things that we need to note for the next group to work on the project.
+T;his is a document of  notes about things that we need to note for the next group to work on the project.
 
 
 --NOTE #1-- regarding the search capability for player's matches.
