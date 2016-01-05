@@ -15,6 +15,8 @@ group :test do
   gem 'simplecov', :require => false
 end
 
+gem 'redcarpet', '~> 3.3', '>= 3.3.4'
+
 group :development, :test do
   gem 'rspec-rails', '~> 3.1.0'
   gem 'guard-rspec', '~> 4.5.0'
