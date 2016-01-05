@@ -1,4 +1,4 @@
-#README
+#Game Contest Server
 
 Interactive, web based manager for automated turn-based game contests.
 
