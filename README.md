@@ -64,6 +64,10 @@ Run tests: `rspec`
 
 Frontend user interface files are located in `app/assets`. Views are in `app/views`
 
+##Design
+
+The Game Contest Server employs two different services: a web server and a background daemon that runs tournaments and matches. The web server allows users to upload players and referees, manage tournaments, and view replays of rounds that have been played on the system. The background daemon continuously checks for new tournaments and matches, runs matches, and adds the results to the database.
+
 ###Executable Environment
 
 User players and referees inherently need to be executed. To faciliate this, several helper files are located in `exec_environment/`.
@@ -75,8 +79,6 @@ When a new tournament is found, the tournament type is used to to generate a bra
 The concept of rounds during a match (repeated games between the same opponents) is handled differently depending upon the type of referee uploaded. Referees that explicitly handle rounds are sent the number of rounds they should run. Some referees might not handle rounds, so the system will create N matches to simulate multiple rounds. 
 
 Each match is executed by `match_wrapper.rb`. The referee is started and told to listen on a specific port for a set number of players. Then the players are started and told the port where they can find the referee. Referees are in charge of handling communication with the players, but they must check in with `match_wrapper.rb` or the match runner will assume the game has failed and will stop the match. 
-
-##Design
 
 ###ERD
 ![Image of ERD document](/documentation/GameContestServerERD.png)
