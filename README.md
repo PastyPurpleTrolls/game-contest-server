@@ -35,9 +35,10 @@ Start the daemon (checks for new tournaments and matches)
 
 ```
 $ /usr/local/rvm/gems/ruby-2.2.0/bin/clockworkd stop ./clock.rb --log
-
+```
 
 Stop the dameon
+
 ```
 $ /usr/local/rvm/gems/ruby-2.2.0/bin/clockworkd -d . start ./clock.rb --log
 ```
