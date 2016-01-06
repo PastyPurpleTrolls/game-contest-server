@@ -4,12 +4,14 @@ The Game Contest Website is an interactive, web based manager for automated turn
 
 ##Terminology
 
-* See terminology in [User Documentation](/documentation/user/index.md)
+* See terminology in [User Documentation](/help/user)
 
 ##Contest Creator Capabilities
 
-Capable of all User permissions
-Can also create Referees and Tournaments
+Contest Creator is capable of 
+
+* all User permissions
+* and creating Referees and Tournaments
 
 ##How To
 
@@ -19,5 +21,5 @@ Can also create Referees and Tournaments
 * Create a Referee
 	* Go to ‘Create a New…’ dropdown and select Referee
 	* Fill in all the fields, except “Upload more files” does not need a specified file. Then select ‘Create Referee’
-
+		* ‘Match limit’ -  A match limit attribute was added to Referees in order for the contest creator to specify a reasonable limit of rounds the users can specify per challenge/tournament matches.
 

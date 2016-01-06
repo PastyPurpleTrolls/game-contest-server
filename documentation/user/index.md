@@ -4,7 +4,7 @@ The Game Contest Website is an interactive, web based manager for automated turn
 
 ##Terminology
 
-* Player- a student’s submitted file to play in a contest.
+* Player- a user’s submitted file to play in a contest.
 * Rounds- one specific instance of a game. For example, a single game of checkers, or a single game of risk. Consists of two or more players.
 * Matches- 1 or more rounds, each round with the same players.
 * Tournaments- a competition between two or more players. The competition consists of a series of matches. For example, a single elimination tournament.
@@ -13,7 +13,10 @@ The Game Contest Website is an interactive, web based manager for automated turn
 
 ##User Capabilities
 
-Every user is capable of uploading Players and challenge other users.
+User is capable of 
+
+* uploading Players 
+* and challenging other users.
 
 ##How To
 
