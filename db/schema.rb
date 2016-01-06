@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150122225259) do
+ActiveRecord::Schema.define(version: 20160106173448) do
 
   create_table "contests", force: :cascade do |t|
     t.integer  "user_id"
@@ -72,7 +72,6 @@ ActiveRecord::Schema.define(version: 20150122225259) do
   create_table "player_matches", force: :cascade do |t|
     t.integer  "player_id"
     t.integer  "match_id"
-    t.float    "score"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "result",     limit: 255
@@ -80,6 +79,18 @@ ActiveRecord::Schema.define(version: 20150122225259) do
 
   add_index "player_matches", ["match_id"], name: "index_player_matches_on_match_id"
   add_index "player_matches", ["player_id"], name: "index_player_matches_on_player_id"
+
+  create_table "player_rounds", force: :cascade do |t|
+    t.integer  "round_id"
+    t.integer  "player_id"
+    t.string   "result"
+    t.float    "score"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "player_rounds", ["player_id"], name: "index_player_rounds_on_player_id"
+  add_index "player_rounds", ["round_id"], name: "index_player_rounds_on_round_id"
 
   create_table "player_tournaments", force: :cascade do |t|
     t.integer  "tournament_id"
@@ -134,6 +145,14 @@ ActiveRecord::Schema.define(version: 20150122225259) do
   add_index "referees", ["programming_language_id"], name: "index_referees_on_programming_language_id"
   add_index "referees", ["slug"], name: "index_referees_on_slug", unique: true
   add_index "referees", ["user_id"], name: "index_referees_on_user_id"
+
+  create_table "rounds", force: :cascade do |t|
+    t.integer  "match_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "rounds", ["match_id"], name: "index_rounds_on_match_id"
 
   create_table "tournaments", force: :cascade do |t|
     t.string   "tournament_type",  limit: 255
