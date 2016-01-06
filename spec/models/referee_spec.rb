@@ -59,18 +59,19 @@ describe Referee do
     describe "poorly formed urls" do
       urls = %w[www.dr.google..com
         javascript:alert('xss')
-	]
-
-
-      broken_urls = %w[www..dr.google
+	www..dr.google
         www:google.com
         https://www@.google.com
         https://www.google.com\
         https://www.google.com'
-        http://www.google.com/path'
-        http://subdomain.web-site.com/cgi-bin/perl.cgi?key1=value1&key2=value2e'
-        http://www.google.com/?queryparam=123'
+	http://www.google.com/?queryparam=123'
         http://www.google.com/path?queryparam=12'3
+	http://www.google.com/path'
+        http://subdomain.web-site.com/cgi-bin/perl.cgi?key1=value1&key2=value2e' 
+      ]
+
+
+      broken_urls = %w[
       ]
 
       urls.each do |invalid_url|
@@ -102,10 +103,6 @@ describe Referee do
         http://google.com/help.php
         http://google.com/help.php?a=5
         http://www.google.com/help.php
-        http://www.google.com?a=5
-        http://www.m.google.com/help.php?a=5
-        http://www.google.com/path
-        http://subdomain.web-site.com/cgi-bin/perl.cgi?key1=value1&key2=value2e
         http://www.google.com/?queryparam=123
         http://www.google.com/path?queryparam=123
         google.com/help.php
@@ -118,9 +115,12 @@ describe Referee do
         google.mu
         mes.intnet.mu
         cse.uom.ac.mu
-    ]
+    	google.com?a=5
+        http://www.google.com?a=5
+      ]
 
-      broken_urls = %w[google.com?a=5
+      broken_urls = %w[
+         http://subdomain.web-site.com/cgi-bin/perl.cgi?key1=value1&key2=value2e
       ]
       urls.each do |valid_url|
         it "is valid" do
