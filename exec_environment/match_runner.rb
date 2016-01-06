@@ -10,7 +10,7 @@ require 'active_record'
 require 'active_support/time'
 require 'sqlite3'
 #This line will need to be changed for every user! 
-require './exec_environment/match_wrapper.rb' #NOTE this is hardcoded to be using the match_wrapper in asjoberg's directory right now
+require './exec_environment/round_wrapper.rb' #NOTE this is hardcoded to be using the match_wrapper in asjoberg's directory right now
 require 'optparse'
 
 #This may be an alternative to running the file using 'rails runner'. These provide access to the rails environment
@@ -40,7 +40,7 @@ class MatchRunner
        if @match.manager_type.to_s == "Contest"
          @referee = @match.manager.referee
        else
-	 @referee = @match.manager.contest.referee
+	    @referee = @match.manager.contest.referee
        end
        @number_of_players = @referee.players_per_game
        @max_match_time = @referee.time_per_game
@@ -55,10 +55,10 @@ class MatchRunner
                  " ("+@match_participants.count().to_s+"/"+@number_of_players.to_s+" in player_matches)"
             return
         end
-        match_wrapper = MatchWrapper.new(@referee,@number_of_players,@max_match_time,@match_participants,@num_rounds)
+        round_wrapper = RoundWrapper.new(@referee,@number_of_players,@max_match_time,@match_participants,@num_rounds)
         puts "   Match runner running match #"+@match_id.to_s
-        match_wrapper.run_match
-        self.send_results_to_db(match_wrapper.results)
+        round_wrapper.run_match
+        self.send_results_to_db(round_wrapper.results)
     end
 
     #Creates PlayerMatch objects for each player using the results dictionary we got back from the MatchWrapper

@@ -1,8 +1,7 @@
 #! /usr/bin/env ruby
 
-#match_wrapper.rb
-#Alex Sjoberg
-#1/09/14
+#round_wrapper.rb
+#Alex Sjoberg, additional work by Bradley Rosenfeld
 
 
 #TODO allow ref to specifiy a unique port for each player
@@ -13,7 +12,7 @@ require 'socket'
 require 'open-uri'
 require 'timeout'
 
-class MatchWrapper
+class RoundWrapper
     
     attr_accessor :results
 
@@ -22,24 +21,33 @@ class MatchWrapper
         #Sets port for referee to talk to wrapper_server  
         @wrapper_server = TCPServer.new(0)
         @players = players
-        @referee = referee.file_location
+        @referee = referee
         @child_list = []
         @number_of_players = number_of_players
         @max_match_time = max_match_time
-        @results = {}
-	@num_rounds = rounds
+        @results = []
+	    @num_rounds = rounds
     end
 
     def run_match
+        if @referee.rounds_capable
+            self.run_round
+        else
+            @num_rounds.times do
+                self.run_round
+            end
+        end
+    end
+
+    def run_round
         #Start referee process, giving it the port to talk to us on
         wrapper_server_port = @wrapper_server.addr[1]
-	if File.exists?("#{File.dirname(@referee)}/Makefile")
-		command="make run port=#{wrapper_server_port} num_players=#{@number_of_players} num_rounds=#{@num_rounds}"
-	else
-		command="#{@referee} -p #{wrapper_server_port} -n  #{@number_of_players} -r #{@num_rounds}"
-	end
-        @child_list.push(Process.spawn("cd #{File.dirname(@referee)}; #{command}"))
-
+	    if File.exists?("#{File.dirname(@referee.file_location)}/Makefile")
+		    command="make run port=#{wrapper_server_port} num_players=#{@number_of_players} num_rounds=#{@num_rounds}"
+	    else
+		    command="#{@referee.file_location} -p #{wrapper_server_port} -n  #{@number_of_players} -r #{@num_rounds}"
+	    end
+        @child_list.push(Process.spawn("cd #{File.dirname(@referee.file_location)}; #{command}"))
 
         #Wait for referee to tell wrapper_server what port to start players on
         begin
@@ -60,13 +68,13 @@ class MatchWrapper
         #Start players
         @players.each do |player|
             #Name must be given before port because it crashes for mysterious ("--name not found") reasons otherwise
-				name = player.name.gsub("'"){'\'"\'"\''}
-				if File.exist?("#{File.dirname(player.file_location)}/Makefile")
-              command="make contest name='#{name}' port=#{@client_port}"
-						else
-							command="#{player.file_location} -n '#{name}' -p #{@client_port}"
-						end
-           @child_list.push(Process.spawn("cd #{File.dirname(player.file_location)}; #{command}"))
+			name = player.name.gsub("'"){'\'"\'"\''}
+			if File.exist?("#{File.dirname(player.file_location)}/Makefile")
+                command="make contest name='#{name}' port=#{@client_port}"
+			else
+			    command="#{player.file_location} -n '#{name}' -p #{@client_port}"
+			end
+            @child_list.push(Process.spawn("cd #{File.dirname(player.file_location)}; #{command}"))
         end
         
         begin
@@ -78,9 +86,15 @@ class MatchWrapper
             reap_children
             return
         end
+
+        reap_children
     end
 
     def wait_for_result
+        while line = @ref_client.gets
+            puts line
+        end
+        return
         @number_of_players.times do |i|
             individual_result = nil
             while individual_result.nil?
