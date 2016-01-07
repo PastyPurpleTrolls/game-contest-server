@@ -133,15 +133,15 @@ class RoundWrapper
         while line = @ref_client.gets
             input = self.parse_command(line)
             case input[:command]
-            when "round"
-                puts "round"
+            when "move"
+            else
+                puts line
             end
         end
     end
     
     def reap_children
         @child_list.each do |pid|
-            puts pid
             Process.kill('SIGKILL', pid)
 	        Process.wait pid
         end
