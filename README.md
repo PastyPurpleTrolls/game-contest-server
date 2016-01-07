@@ -41,7 +41,11 @@ Stop the dameon
 $ /usr/local/rvm/gems/ruby-2.2.0/bin/clockworkd stop ./clock.rb --log
 ```
 
-View the logs from the daemon: `tail -f [game_contest_server_root]/tmp/clockworkd.clock.output`
+View the logs from the daemon (from the root of the game server directory: 
+
+```bash 
+tail -f tmp/clockworkd.clock.output
+```
 
 ###Manage Users
 
