@@ -1,11 +1,6 @@
 #! /usr/bin/env ruby
 
 #round_wrapper.rb
-#Alex Sjoberg, additional work by Bradley Rosenfeld
-
-
-#TODO allow ref to specifiy a unique port for each player
-# NOTE for testing arbitrary players and ref with the matchwrapper without having to worry about tournaments/daemons/etc, see wrapper_test.rb
 
 #Imports
 require 'socket'
@@ -27,11 +22,9 @@ class RoundWrapper
         @number_of_players = number_of_players
         @max_match_time = max_match_time
     
-        @results = {}
+        @status = {}
         @rounds = []
-        @match = {
-            "results": {}
-        }
+        @match = {}
 
 	    @num_rounds = rounds
 
@@ -45,7 +38,7 @@ class RoundWrapper
         else
             @num_rounds.times do |i| 
                 self.run_round
-                if @results[:status] == false
+                if @status[:error] == true
                     return
                 end
             end
@@ -68,7 +61,7 @@ class RoundWrapper
         end
         winner = players.max_by{|k,v| v}
         players.each do |player, wins|
-            @match[:results][player] = {
+            @match[player] = {
                 "result": (player == winner[0]) ? "Win" : "Loss",
                 "score": wins
             }
@@ -125,8 +118,8 @@ class RoundWrapper
                 end
             end
         rescue Timeout::Error
-            @results[:status] = true
-            @results[:message] = "INCONCLUSIVE: Referee failed to provide a port!"  
+            @status[:error] = true
+            @status[:message] = "INCONCLUSIVE: Referee failed to provide a port!"  
             reap_children
             return
         end
@@ -149,8 +142,8 @@ class RoundWrapper
                 self.handle_tcp_input
             end
         rescue Timeout::Error
-            @results[:status] = false
-            @results[:message] = "INCONCLUSIVE: Game exceeded allowed time!"
+            @status[:error] = true
+            @status[:message] = "INCONCLUSIVE: Game exceeded allowed time!"
             reap_children
             return
         end
@@ -190,7 +183,7 @@ class RoundWrapper
                 })
             end
         end
-        @results[:status] = true
+        @status[:error] = false
     end
     
     def reap_children

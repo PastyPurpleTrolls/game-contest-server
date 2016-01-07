@@ -58,11 +58,11 @@ class MatchRunner
         round_wrapper = RoundWrapper.new(@referee,@number_of_players,@max_match_time,@match_participants,@num_rounds)
         puts "   Match runner running match #"+@match_id.to_s
         round_wrapper.run_match
-        self.send_results_to_db(round_wrapper.results)
+        self.send_results_to_db(round_wrapper)
     end
 
     #Creates PlayerMatch objects for each player using the results dictionary we got back from the MatchWrapper
-    def send_results_to_db(results)
+    def send_results_to_db(round_runner)
         if results.include? "INCONCLUSIVE"
             #Error handling, save "inconclusive" as match status
             puts "   "+results
@@ -80,12 +80,12 @@ class MatchRunner
             puts "   Match runner writing results match #"+@match_id.to_s
             results.each do |player_name, player_result|
                 #Print and save
-		if @match.manager_type.to_s == "Tournament"
-			player = Player.where(contest_id: @tournament.contest.id, name: player_name).first
+		        if @match.manager_type.to_s == "Tournament"
+			        player = Player.where(contest_id: @tournament.contest.id, name: player_name).first
                 else
-			player = Player.where(contest_id: @tournament.id, name: player_name).first
-		end
-		player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id).first
+			        player = Player.where(contest_id: @tournament.id, name: player_name).first
+		        end
+		        player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id).first
                 player_match.result = player_result["result"]
                 player_match.score = player_result["score"]
                 player_match.save!        
@@ -99,22 +99,21 @@ class MatchRunner
                 print "\n"
             end
             puts "   Match runner finished match #"+@match_id.to_s
-  	    match = Match.find_by_sql("SELECT * FROM Matches WHERE id = #{@match_id}").first
-	    match.status = "completed"
-	    match.completion = Time.now
-	    match.save!
-	    if match.manager_type.to_s == "Tournament"
-	    	tournament = Tournament.find_by_sql("SELECT * FROM Tournaments WHERE id = #{match.manager_id}").first
-	    	tournament.matches.each do |m|
-		    if m.status == "started"
-			return
-		    end
-		end
-		tournament.status = "completed"
-		tournament.save!
-	    end 
-        end
-	
+  	        match = Match.find_by_sql("SELECT * FROM Matches WHERE id = #{@match_id}").first
+	        match.status = "completed"
+	        match.completion = Time.now
+	        match.save!
+	        if match.manager_type.to_s == "Tournament"
+	    	    tournament = Tournament.find_by_sql("SELECT * FROM Tournaments WHERE id = #{match.manager_id}").first
+	    	    tournament.matches.each do |m|
+		            if m.status == "started"
+			            return
+		            end
+		        end
+		        tournament.status = "completed"
+		        tournament.save!
+	        end 
+        end	
     end
     
     #Prints a name, result, and score

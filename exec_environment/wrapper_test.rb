@@ -29,5 +29,6 @@ round_wrapper = RoundWrapper.new(ref, 2, 5, [p1, p2], 3)
 round_wrapper.run_match
 
 puts(round_wrapper.results)
+puts round_wrapper.rounds
 
 
