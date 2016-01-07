@@ -34,7 +34,9 @@ referee = Referee.create!(
   name: "Guess W!",
   rules_url: "http://www.google.com",
   players_per_game: 2,
-  file_location: Rails.root.join( "examples" , "test_referee.rb").to_s
+  file_location: Rails.root.join( "examples" , "test_referee.rb").to_s,
+  time_per_game: 2,
+  match_limit: 100
 )
 
 contest = Contest.create!(

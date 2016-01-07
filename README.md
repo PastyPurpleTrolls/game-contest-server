@@ -60,6 +60,22 @@ $ rails c
 
 Run tests: `rspec`
 
+
+###Migrations
+
+See the folder db/migrate. If there are new migrations, then perform the following at the command line:
+```bash
+$ rake db:migrate
+$ rake db:migrate RAILS_ENV=test
+```
+
+However, do not perform these command line arguments while the clockwork daemon is running (see the top of the section "Running (dev)"). If you do, this locks the database (because the daemon is not up to date with the database). One way to unlock the database is to perform the following at the command line:
+```bash
+$ rake db:reset
+```
+
+However, make sure that you understand the ramifications of this command line argument- the database's existing data is deleted. See [seeds.rb](/db/seeds/development.rb) for what the default values of the db after the db is reset.
+
 ##Development
 
 Frontend user interface files are located in `app/assets`. Views are in `app/views`
