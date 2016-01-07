@@ -20,6 +20,7 @@
     <%= f.password_field :password_confirmation, class: 'form-control' %>
 </div>
 
+<% if current_user.admin? %>
 <div class='form-group'>
     <%= f.check_box :contest_creator, :checked_value => true, :unchecked_value => false %>
 		<%= f.label :contest_creator, 'Contest Creator' %>
@@ -29,3 +30,4 @@
     <%= f.check_box :admin, :checked_value => true, :unchecked_value => false %>
 		<%= f.label :admin, 'Admin' %>
 </div>
+<% end %>
