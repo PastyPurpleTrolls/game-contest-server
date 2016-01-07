@@ -424,7 +424,7 @@ describe "UsersPages" do
         end
       end
       
-    describe "with forbidden attributes", type: :request do
+    describe "with permission attributes", type: :request do
       describe 'admin' do
         before do
           login admin, avoid_capybara: true
@@ -433,7 +433,7 @@ describe "UsersPages" do
                                          password_confirmation: user.password }
         end
 
-        specify { expect(user.reload).not_to be_admin }
+        specify { expect(user.reload).to be_admin }
       end
       
       describe 'contest_creator' do
@@ -444,7 +444,7 @@ describe "UsersPages" do
                                          password_confirmation: user.password }
         end
 
-        specify { expect(user.reload).not_to be_contest_creator }
+        specify { expect(user.reload).to be_contest_creator }
       end
     end
     
