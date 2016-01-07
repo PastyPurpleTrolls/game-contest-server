@@ -9,8 +9,7 @@
 require 'active_record'
 require 'active_support/time'
 require 'sqlite3'
-#This line will need to be changed for every user! 
-require './exec_environment/round_wrapper.rb' #NOTE this is hardcoded to be using the match_wrapper in asjoberg's directory right now
+require './exec_environment/round_wrapper.rb'
 require 'optparse'
 
 #This may be an alternative to running the file using 'rails runner'. These provide access to the rails environment
@@ -63,11 +62,11 @@ class MatchRunner
 
     #Creates PlayerMatch objects for each player using the results dictionary we got back from the MatchWrapper
     def send_results_to_db(round_runner)
-        if results.include? "INCONCLUSIVE"
+        if round_runner.status[:error]
             #Error handling, save "inconclusive" as match status
             puts "   "+results
             @match_participants.each do |player|
-                player_match = PlayerMatch.find_by_sql("SELECT * FROM Player_Matches WHERE match_id = #{@match_id} AND player_id = #{player.id}").first
+                player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id)
                 player_match.result = "Error"
                 player_match.save!        
                 print_results(player.name,"Error",nil,"\n")                
@@ -75,45 +74,71 @@ class MatchRunner
             puts "   Match runner could not finish match #"+@match_id.to_s
             return
         else
+            self.save_rounds(round_runner.rounds)
             #Print and save results, schedule follow-up matches
-            child_matches = MatchPath.find_by_sql("SELECT result,child_match_id FROM match_paths WHERE match_paths.parent_match_id = #{@match_id}") 
+            child_matches = MatchPath.where(parent_match_id: @match_id)
             puts "   Match runner writing results match #"+@match_id.to_s
-            results.each do |player_name, player_result|
-                #Print and save
-		        if @match.manager_type.to_s == "Tournament"
-			        player = Player.where(contest_id: @tournament.contest.id, name: player_name).first
-                else
-			        player = Player.where(contest_id: @tournament.id, name: player_name).first
-		        end
-		        player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id).first
-                player_match.result = player_result["result"]
-                player_match.score = player_result["score"]
-                player_match.save!        
-                print_results(player.name,player_match.result,player_match.score)
-                #Follow up matches
-                child_matches.each do |data|
-                    if data.result == player_match.result
-                        create_player_match(Match.find(data.child_match_id),player)
-                    end
-                end
-                print "\n"
+            #Loop through participants and find their results
+            @match_participants.each do |player|
+                player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id).first
+                player_match.result = round_runner.match[player.name]
+                player_match.save!
+                print_results(player.name, player_match.result, round_runner.match[player.name].score)
+                self.schedule_matches(player, player_match, child_matches)
             end
             puts "   Match runner finished match #"+@match_id.to_s
-  	        match = Match.find_by_sql("SELECT * FROM Matches WHERE id = #{@match_id}").first
-	        match.status = "completed"
-	        match.completion = Time.now
-	        match.save!
-	        if match.manager_type.to_s == "Tournament"
-	    	    tournament = Tournament.find_by_sql("SELECT * FROM Tournaments WHERE id = #{match.manager_id}").first
-	    	    tournament.matches.each do |m|
-		            if m.status == "started"
-			            return
-		            end
-		        end
-		        tournament.status = "completed"
-		        tournament.save!
-	        end 
+            self.complete_match
+            self.complete_tournament
         end	
+    end
+
+    def save_rounds(rounds)
+        #Loop through all the rounds and create a new record in the DB
+        rounds.each do |round|
+            round_obj = Round.create!(
+                match: Match.find(@match_id)
+            )
+            #Loop through participants and add their results to the DB
+            @match_participants.each do |player|
+                PlayerRound.create!(
+                    round: round_obj,
+                    player: player,
+                    result: round[:results][player.name][:result],
+                    score: round[:results][player.name][:score]
+                )
+            end
+        end
+    end
+
+    def schedule_matches(player, player_match, child_matches)
+        child_matches.each do |match|
+            if match.result == player_match.result
+                create_player_match(Match.find(match.child_match_id), player)
+            end
+        end
+    end
+
+    def complete_match
+        match = Match.find(@match_id).first
+        match.status = "completed"
+        match.completion = Time.now
+        match.save!
+    end
+
+
+    def complete_tournament
+        if match.manager_type.to_s == "Tournament"
+            return false
+        end
+        tournament = Tournament.find(match.manager_id).first
+        tournament.matches.each do |match|
+            if match.status == "started"
+                return false
+            end
+        end
+        tournament.status = "completed"
+        tournament.save!
+        return true
     end
     
     #Prints a name, result, and score
@@ -131,7 +156,6 @@ class MatchRunner
             match: match,
             player: player,
             result: "Pending",
-            score: nil,
         )
         print "=> Match #"+match.id.to_s
         #Change status of match if necessary

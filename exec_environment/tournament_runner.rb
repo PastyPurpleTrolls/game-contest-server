@@ -121,7 +121,7 @@ class TournamentRunner
             status: status,
             earliest_start: Time.now, 
             completion: Date.new,
-	    rounds: num_rounds,
+	        rounds: num_rounds,
         )
         puts " Tournament runner created match #"+match.id.to_s
         return match
@@ -133,7 +133,6 @@ class TournamentRunner
                 match: match,
                 player: player,
                 result: "Pending",
-                score: nil,
             )
             puts "   Added "+player.name
         end
