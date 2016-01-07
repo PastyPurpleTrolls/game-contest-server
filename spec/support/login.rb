@@ -21,11 +21,13 @@ shared_examples "redirects to a login" do |options|
     end
   end
 
-  describe "visit HTTP path", type: :request do
-    before { send(method, http_path) }
+  unless options[:browser_only]
+		describe "visit HTTP path", type: :request do
+ 	  	before { send(method, http_path) }
 
-    it { errors_on_redirect(login_path, :warning) }
-  end
+ 	   	it { errors_on_redirect(login_path, :warning) }
+ 	 	end
+	end
 end
 
 shared_examples "redirects to root" do |options|

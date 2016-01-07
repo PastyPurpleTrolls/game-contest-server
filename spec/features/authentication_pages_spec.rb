@@ -160,6 +160,15 @@ describe "AuthorizationPages" do
         end
       end
     end
+
+		describe "for Matches controller" do
+			describe "index action (with path 'contest_matches')" do
+        it_behaves_like "redirects to a login" , browser_only: true do
+          let (:contest) { FactoryGirl.create(:contest) }
+          let (:path) { contest_matches_path(contest) }
+				end
+			end
+		end
   end
 
   describe "authenticated users" do
