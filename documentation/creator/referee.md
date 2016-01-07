@@ -41,24 +41,24 @@ Commands are sent as key:value pairs. The first `:` in the command is seen as a 
 
 - `port`: (int) TCP port that the players should connect on. This needs to be sent within the first 3 seconds of being started.
 - `match`: Values: `start`, `end`. Tell the manager to expect information about the match.
-- `round`: Values: `start`, `end`. 
+- `round`: Pipe seperated double. `start` or `end`. Round index. 
 - `move`: Send a description of the move as well as any additional information that you want stored in the log file. Seperate with `|`
 - `gamestate`: Implementation dependant value. Sent every 10 moves to represent the current state of the game.
-- `roundresult`: Sent directly after `round:end`. Pipe seperated tuple with player name, result, and score. Score is implementation dependant. Result can only be `win`, `loss`, and `tie`.
-- `finalresult`: Sent directly after `match:end`. Pipe seperated tuple with player name, result, and rounds won. 
+- `roundresult`: Sent directly after `round:end`. Pipe seperated tuple with player name, result, and score. Score is implementation dependant. Result can only be `Win`, `Loss`, and `Tie`.
+- `matchresult`: Sent directly after `match:end`. Pipe seperated tuple with player name, result, and rounds won. 
 
 ####Example communication
 
 ```
 port:2222
 match:start
-round:start
+round:start|1
 move:description|additionalinfo
 gamestate:{}
 round:end
 roundresult:playername|result|score
 roundresult:playername|result|score
 match:end
-finalresult:playername|result|roundswon
-finalresult:playername|result|roundswon
+matchresult:playername|result|roundswon
+matchresult:playername|result|roundswon
 ```

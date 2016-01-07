@@ -1,8 +1,6 @@
 #! /usr/bin/env python3
 
 #ref_helper.py
-#Alex Sjoberg
-#Jan 2014
 
 from optparse import OptionParser
 import socket
@@ -20,6 +18,30 @@ class PlayerConnection():
         self.connection.send(pickle.dumps((CB,player)))
         return pickle.loads(self.connection.recv(4096))
 
+class Manager():
+    #Create connection with manager
+    def __init__(self, hostname, port):
+        self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.connection.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.ip = socket.gethostbyname(hostname)
+        self.connection.connect((self.ip, port))
+
+    #Send command to manager
+    def send(self, command, value):
+        #Convert array to value that server can understand
+        if isinstance(value, list):
+            value = map(str, value)
+            value = "|".join(value)
+        message = command + ":" + str(value) + "\n"
+        try:
+            result = self.connection.send(message.encode())
+        except:
+            result = False
+        return result
+
+    def __del__(self):
+        self.connection.shutdown(socket.SHUT_RDWR)
+        self.connection.close()
 
 #To be run on import
 
@@ -28,18 +50,15 @@ class PlayerConnection():
 parser = OptionParser()
 parser.add_option("-p","--port",action="store",type="int",dest="port")
 parser.add_option("-n","--num",action="store",type="int",dest="num") #number of players, not used with checkers
+parser.add_option("-r", "--rounds", action="store", type="int", dest="rounds") #Number of rounds, not used
 (options, args) = parser.parse_args()
 
-wrapper_port = options.port 
+wrapper_port = options.port
 wrapper_hostname = 'localhost'
 
 
 #connect to match wrapper
-wrapper_socket = socket.socket(socket.AF_INET , socket.SOCK_STREAM)
-wrapper_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-wrapper_ip = socket.gethostbyname(wrapper_hostname)
-wrapper_socket.connect((wrapper_ip , wrapper_port))
-
+manager = Manager(wrapper_hostname, wrapper_port)
 
 #create and bind socket to listen for connecting players
 player_socket  = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -47,12 +66,10 @@ player_socket.bind(('',0))
 player_socket_port = player_socket.getsockname()[1]
 player_socket.listen(10)
 
-#Tell ref what port we want players to connect on
-message = str(player_socket_port) + "\n" #need to add newline for wrapper to receive properly
-wrapper_socket.send(message.encode()) 
+#Tell the manager that the match has started
+manager.send("port", str(player_socket_port))
 
 #Wait for two players to connect and send their names
-#TODO make this a function probably
 
 conn1,addr1 = player_socket.accept()
 P1_name = ""
@@ -67,7 +84,7 @@ while P2_name == "":
 P2 = PlayerConnection(conn2,addr1,P2_name)
 
 
-def report_results(p1wins,p2wins):
+def report_results(resulttype, p1wins,p2wins):
     p1result = "Win"
     p2result = "Loss"
     if p2wins >= p1wins:
@@ -77,8 +94,6 @@ def report_results(p1wins,p2wins):
         else:
             p1result = "Tie"
             p2result = "Tie"
-    result_string = P1_name + "|" + p1result + "|" + str(p1wins)
-    wrapper_socket.send((result_string+"\n").encode())
-    result_string = P2_name + "|" + p2result + "|" + str(p2wins)
-    wrapper_socket.send((result_string+"\n").encode())
+    manager.send(resulttype, [P1_name, p1result, str(p1wins)])
+    manager.send(resulttype, [P2_name, p2result, str(p2wins)])
 

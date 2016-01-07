@@ -110,10 +110,10 @@ def labelBoard(t,size):
         t.write("ROW " + chr(65+i),font=("Arial",12,"bold"))
         t.up()
         t.goto(-(5.2*size),((4*size)+(i*-size)-(1.7*size)))
-        t.down()   
+        t.down()
 
 def fillCheckerBoard(t,size,CB):
-    t.tracer(False)  
+    t.tracer(False)
     drawCheckerBoard(t,-240,240,size)
     labelBoard(t,size)
     for row in range(8):
@@ -135,15 +135,15 @@ def validMove(CB,move,player):
     possibles=getPossibles(CB,player)
     if len(possibles["jumps"])>0:
         if move not in possibles["jumps"]:
-            print("A jump must be taken!!!")
+            #print("A jump must be taken!!!")
             return False
         else:
             return True
     if move not in possibles["moves"]: #includes crowning and blocking moves
-        print ("Invalid move!!!!")
+        #print ("Invalid move!!!!")
         return False
     else:
-        return True 
+        return True
 
 def getPossibles(CB,player):
     possibles={}
@@ -155,7 +155,7 @@ def getPossibles(CB,player):
         playerTokens=[1,2]
         opponentTokens=[3,4]
         rowInc=1
-    possibles["moves"]=findMoves(CB,player,playerTokens,opponentTokens,rowInc)  #puts moves right into possibles D      
+    possibles["moves"]=findMoves(CB,player,playerTokens,opponentTokens,rowInc)  #puts moves right into possibles D
     oldJumps=findJumps(CB,player,playerTokens,opponentTokens,rowInc)
     newJumps=expandJumps(CB,player,oldJumps,playerTokens,opponentTokens,rowInc)
     while newJumps != oldJumps:
@@ -176,7 +176,7 @@ def findCrownings(CB,player,possibles):
         for row in range(8):
             for col in range(8):
                 if CB[row][col]==3:
-                    singleCheckerPositions.append(chr(row+65)+str(col))                
+                    singleCheckerPositions.append(chr(row+65)+str(col))
     else:
         for col in range(0,8,2):
             if CB[7][col]==EMPTY:
@@ -196,7 +196,7 @@ def findCrownings(CB,player,possibles):
 
 def findMoves(CB,player,playerTokens,opponentTokens,rowInc):
     moves=[]
-    #process all board positions    
+    #process all board positions
     for row in range(8):
         for col in range(8):
             if CB[row][col] in playerTokens:
@@ -213,7 +213,7 @@ def findMoves(CB,player,playerTokens,opponentTokens,rowInc):
                             toCol=col+colInc
                             if toRow in VALID_RANGE and toCol in VALID_RANGE and CB[toRow][toCol]==EMPTY:
                                     moves.append(chr(row+65)+str(col)+":"+chr(toRow+65)+str(toCol))
-                       
+
     return moves
 
 def findJumps(CB,player,playerTokens,opponentTokens,rowInc):
@@ -276,11 +276,11 @@ def expandJumps(CB,player,oldJumps,playerTokens,opponentTokens,rowInc):
                         newJumps.append(oldJump+":"+chr(torow+65)+str(tocol))
                         if oldJump in newJumps:
                             newJumps.remove(oldJump)
-    return newJumps          
-            
+    return newJumps
+
 def makeMove(t,CB,move,player,size,possibles):
     if VISIBLE:
-        t.tracer(False)  
+        t.tracer(False)
     if move in possibles["crownings"]:
         row=ord(move[0])-65
         col=int(move[1])
@@ -299,7 +299,7 @@ def makeMove(t,CB,move,player,size,possibles):
             drawSquare(t,x,y,size,"black")
         #change the logical board
         temp=CB[fromRow][fromCol]
-        CB[fromRow][fromCol]=0                         
+        CB[fromRow][fromCol]=0
         CB[toRow][toCol]=temp
         #is this a king?
         king=False
@@ -352,7 +352,7 @@ def readCheckerFile(CB):
             return "black"
         else:
             return "red"
-    
+
 def writeGameState(CB,player):
     fileName=input("Enter a file name to save the game (prefix and .txt) => ")
     if fileName!="":
@@ -364,15 +364,16 @@ def writeGameState(CB,player):
             outFile.write("\n")
         outFile.close()
     else:
-        print("Game not saved")
+        pass
+        #print("Game not saved")
 
 def showBoard(CB):
-    print("  0 1 2 3 4 5 6 7 ")
+    #print("  0 1 2 3 4 5 6 7 ")
     for row in range(8):
         line=chr(row+65)+" "
         for col in range(8):
             line+=str(CB[row][col])+" "
-        print(line)
+        #print(line)
 
 def win(CB):
     for i in range(2):
@@ -421,12 +422,12 @@ def labelGameStats(t,size,PlayerB,PlayerR,Bwin,Rwin,total):
     t.down()
     t.write(str(Bwin) + "/" + str(total),font=("Arial",12,"bold"))
     t.tracer(True)
-    
 
-            
+
+
 def checkers(CB,bob,PlayerB,PlayerR,Bwin,Rwin,totalPlayed):
     player=readCheckerFile(CB)
-    print(player, "goes first")
+    #print(player, "goes first")
     SIZE=60
     if VISIBLE:
         fillCheckerBoard(bob,SIZE,CB)
@@ -435,8 +436,10 @@ def checkers(CB,bob,PlayerB,PlayerR,Bwin,Rwin,totalPlayed):
     while move != 'exit' and not win(CB)[0]:
         possibles=getPossibles(CB,player)
         if player=="red":
+            pname = P1_name
             move=P2.automatedMove(CB,player)
         else:
+            pname = P2_name
             move=P1.automatedMove(CB,player)
         countBadMoves=1
         #Until a valid move or exceeds allowed number of bad move trys
@@ -449,12 +452,14 @@ def checkers(CB,bob,PlayerB,PlayerR,Bwin,Rwin,totalPlayed):
         #terminate due to bad moves or exit entered (and save state)
         if countBadMoves==3 or move=="exit":
             if countBadMoves==3:
-                print("Game terminated because player ", player, " refused to make a valid move!")
+                pass
+                #print("Game terminated because player ", player, " refused to make a valid move!")
             else:
                 writeGameState(CB,player)
-            return       
+            return
         #All good - make move!
         makeMove(bob,CB,move,player,SIZE,possibles)
+        manager.send("move", [move, pname])
         #showBoard(CB)
         player=switchPlayers(player)
     return win(CB)[1]
@@ -473,12 +478,15 @@ def tourney(PlayerB,PlayerR):
     bob=cTurtle.Turtle()
     Rwin=0
     Bwin=0
-    iters=1
+    iters=2
     score=0
+    manager.send("match", "start")
     for i in range(1,iters+1):
         CB=[]
-        print("Game:",i)
+        #print("Game:",i)
+        manager.send("round", ["start", i])
         result=checkers(CB,bob,PlayerB,PlayerR,Bwin,Rwin,i-1)
+        manager.send("round", "end")
         bob.clear()
         if result=="black":
             Bwin+=1
@@ -486,13 +494,15 @@ def tourney(PlayerB,PlayerR):
             Rwin+=1
         #sys.stdout.write(".")
         score+=rateBoard(CB)
-        print()
-        print("Black wins = ",Bwin)
-        print("Red wins = ",Rwin)
-        print("Black average score = ",score/i)
-    report_results(Bwin,Rwin) #On the assumption p1 is always black, and p2 red
+        #print()
+        #print("Black wins = ",Bwin)
+        #print("Red wins = ",Rwin)
+        #print("Black average score = ",score/i)
+        report_results("roundresult", Bwin,Rwin)
+    manager.send("match", "end")
+    report_results("matchresult", Bwin, Rwin)
     return
-    
+
 #run the game!!!!
 tourney("black","red")
-print("Tourney Over")
+#print("Tourney Over")

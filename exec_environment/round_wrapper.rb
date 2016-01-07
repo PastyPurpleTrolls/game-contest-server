@@ -49,17 +49,28 @@ class RoundWrapper
     # Parse commands from the referee client
     # command (str), name of command that I'm looking for
     # str (str), string from client that looks like command:value
-    def parse_command(command, str)
+    def find_command(command, str)
         #split on first instance of command char
         parsed = str.split(@command_char, 2)
         if parsed.first == command
-            # Strip new line characters and split value if necessary
-            value = parsed.last.gsub("\n", "")
-            values = value.split(@value_char)
-            return (values.length > 1) ? values : values.first
+            return self.parse_value(parsed.last)
         else
             return nil
         end
+    end
+
+    def parse_value(value)
+        value = value.gsub("\n", "")
+        values = value.split(@value_char)
+        return (values.length > 1) ? values : value
+    end
+
+    def parse_command(str)
+        cmd = {}
+        parsed = str.split(@command_char, 2)
+        cmd[:command] = parsed.first
+        cmd[:value] = self.parse_value(parsed.last) 
+        return cmd
     end
 
     def run_round(round = -1)
@@ -70,7 +81,9 @@ class RoundWrapper
 	    else
 		    command="#{@referee.file_location} -p #{wrapper_server_port} -n  #{@number_of_players} -r #{@num_rounds}"
 	    end
-        @child_list.push(Process.spawn("cd #{File.dirname(@referee.file_location)}; #{command}"))
+        #Change directories
+        Process.spawn("cd #{File.dirname(@referee.file_location)};")
+        @child_list.push(Process.spawn("#{command}"))
 
         #Wait for referee to tell wrapper_server what port to start players on
         begin
@@ -79,7 +92,7 @@ class RoundWrapper
                 @ref_client = @wrapper_server.accept
                 @client_port = nil
                 while @client_port.nil?
-                    @client_port = parse_command("port", @ref_client.gets)
+                    @client_port = self.find_command("port", @ref_client.gets)
                 end
                 puts @client_port
             end
@@ -98,7 +111,8 @@ class RoundWrapper
 			else
 			    command="#{player.file_location} -n '#{name}' -p #{@client_port}"
 			end
-            @child_list.push(Process.spawn("cd #{File.dirname(player.file_location)}; #{command}"))
+            Process.spawn("cd #{File.dirname(player.file_location)};")
+            @child_list.push(Process.spawn("#{command}"))
         end
         
         begin
@@ -117,12 +131,17 @@ class RoundWrapper
     def wait_for_result(round)
         puts "Waiting for results"
         while line = @ref_client.gets
-            puts line
+            input = self.parse_command(line)
+            case input[:command]
+            when "round"
+                puts "round"
+            end
         end
     end
     
     def reap_children
         @child_list.each do |pid|
+            puts pid
             Process.kill('SIGKILL', pid)
 	        Process.wait pid
         end
