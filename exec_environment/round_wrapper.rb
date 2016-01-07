@@ -33,8 +33,6 @@ class RoundWrapper
     end
 
     def run_match
-        puts "Rounds"
-        puts @num_rounds
         if @referee.rounds_capable
             self.run_round
         else
