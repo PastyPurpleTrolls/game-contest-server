@@ -339,19 +339,28 @@ describe "MatchesPages" do
 # SHOW ALL TOURNAMENT MATCHES
   describe "show all tournament matches" do
     let (:tournament) { FactoryGirl.create(:tournament) }
+		let! (:t2) { FactoryGirl.create(:tournament) } 
 
     before do
       5.times { FactoryGirl.create(:tournament_match, manager: tournament) }
+      5.times { FactoryGirl.create(:tournament_match, manager: t2) }
 
       visit tournament_matches_path(tournament)
     end
     
-    it "lists all the tournament matches for a contest in the system" do
+    it "lists all the tournament matches for a single tournament in the system" do
       Match.where(manager: tournament).each do |m|
         should have_selector('li', text: m.id)
         should have_link(m.id, match_path(m))
       end
     end
+
+		it "should not list matches of other tournaments" do 
+      Match.where(manager: t2).each do |m|
+        should_not have_selector('li', text: m.id)
+        should_not have_link(m.id, match_path(m))
+      end
+		end
   end
 
 # SHOW ALL CONTEST MATCHES
