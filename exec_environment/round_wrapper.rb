@@ -103,7 +103,7 @@ class RoundWrapper
         
         begin
             Timeout::timeout(@max_match_time) do
-                self.wait_for_result
+                self.wait_for_result(round)
             end
         rescue Timeout::Error
             @results = "INCONCLUSIVE: Game exceeded allowed time!"
@@ -114,30 +114,17 @@ class RoundWrapper
         reap_children
     end
 
-    def wait_for_result
+    def wait_for_result(round)
+        puts "Waiting for results"
         while line = @ref_client.gets
             puts line
         end
-        return
-        @number_of_players.times do |i|
-            individual_result = nil
-            while individual_result.nil?
-                individual_result = @ref_client.gets
-            end
-            individual_result = individual_result.split("|")
-            player_name = individual_result[0]
-            match_result = individual_result[1]
-            player_score = individual_result[2].to_i
-            @results[player_name] = {'result' => match_result , 'score' => player_score}
-        end
     end
     
-    #Reaping Children!!!!!
-    ## TODO make sure children are always being reaped no matter what errors occur anywhere in the program. Currently this doesn't seem to be the case
     def reap_children
         @child_list.each do |pid|
             Process.kill('SIGKILL', pid)
-	    Process.wait pid
+	        Process.wait pid
         end
     end 
 end

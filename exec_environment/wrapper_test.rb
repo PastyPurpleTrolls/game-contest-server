@@ -25,7 +25,7 @@ ref = MockPlayer.new("../examples/checkers_ref.py", "ref")
 #p2 = MockPlayer.new("../spec/exec_environment/test_player.rb", "second")
 #ref = MockPlayer.new("../spec/exec_environment/test_referee.rb", "ref")
 
-round_wrapper = RoundWrapper.new(ref, 2, 60, [p1, p2], 30)
+round_wrapper = RoundWrapper.new(ref, 2, 5, [p1, p2], 30)
 round_wrapper.run_match
 
 puts(round_wrapper.results)
