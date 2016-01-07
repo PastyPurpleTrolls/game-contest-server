@@ -19,3 +19,13 @@
     <%= f.label :password_confirmation, 'Confirmation', class: 'control-label' %>
     <%= f.password_field :password_confirmation, class: 'form-control' %>
 </div>
+
+<div class='form-group'>
+    <%= f.check_box :contest_creator, :checked_value => true, :unchecked_value => false %>
+		<%= f.label :contest_creator, 'Contest Creator' %>
+</div>
+
+<div class='form-group'>
+    <%= f.check_box :admin, :checked_value => true, :unchecked_value => false %>
+		<%= f.label :admin, 'Admin' %>
+</div>
