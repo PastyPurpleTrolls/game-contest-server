@@ -9,7 +9,7 @@ require 'timeout'
 
 class RoundWrapper
     
-    attr_accessor :results, :rounds, :match
+    attr_accessor :status, :rounds, :match
 
     #Constructor, sets socket for communication to referee and starts referee and players
     def initialize(referee,number_of_players,max_match_time,players,rounds)  
@@ -33,6 +33,8 @@ class RoundWrapper
     end
 
     def run_match
+        puts "Rounds"
+        puts @num_rounds
         if @referee.rounds_capable
             self.run_round
         else
@@ -171,7 +173,7 @@ class RoundWrapper
                     "score": input[:value][2]
                 }
             when "matchresult"
-                @match[:results][input[:value][0]] = {
+                @match[input[:value][0]] = {
                     "result": input[:value][1],
                     "score": input[:value][2]
                 }

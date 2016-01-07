@@ -62,11 +62,11 @@ class MatchRunner
 
     #Creates PlayerMatch objects for each player using the results dictionary we got back from the MatchWrapper
     def send_results_to_db(round_runner)
+        puts round_runner.status
         if round_runner.status[:error]
             #Error handling, save "inconclusive" as match status
-            puts "   "+results
             @match_participants.each do |player|
-                player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id)
+                player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id).first
                 player_match.result = "Error"
                 player_match.save!        
                 print_results(player.name,"Error",nil,"\n")                
@@ -74,6 +74,7 @@ class MatchRunner
             puts "   Match runner could not finish match #"+@match_id.to_s
             return
         else
+            puts "Saving rounds:"
             self.save_rounds(round_runner.rounds)
             #Print and save results, schedule follow-up matches
             child_matches = MatchPath.where(parent_match_id: @match_id)
@@ -81,9 +82,9 @@ class MatchRunner
             #Loop through participants and find their results
             @match_participants.each do |player|
                 player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id).first
-                player_match.result = round_runner.match[player.name]
+                player_match.result = round_runner.match[player.name][:result]
                 player_match.save!
-                print_results(player.name, player_match.result, round_runner.match[player.name].score)
+                print_results(player.name, player_match.result, round_runner.match[player.name][:score])
                 self.schedule_matches(player, player_match, child_matches)
             end
             puts "   Match runner finished match #"+@match_id.to_s
@@ -119,20 +120,19 @@ class MatchRunner
     end
 
     def complete_match
-        match = Match.find(@match_id).first
-        match.status = "completed"
-        match.completion = Time.now
-        match.save!
+        @match.status = "completed"
+        @match.completion = Time.now
+        @match.save!
     end
 
 
     def complete_tournament
-        if match.manager_type.to_s == "Tournament"
+        if @match.manager_type.to_s == "Tournament"
             return false
         end
-        tournament = Tournament.find(match.manager_id).first
-        tournament.matches.each do |match|
-            if match.status == "started"
+        tournament = Tournament.find(@match.manager_id).first
+        tournament.matches.each do |childmatch|
+            if childmatch.status == "started"
                 return false
             end
         end
