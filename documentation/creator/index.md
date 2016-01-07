@@ -1,6 +1,6 @@
-#Game Contest Server
+#Help
 
-Interactive, web based manager for automated turn-based game contests.
+[View referee documentation](creator/referee)
 
 ##Contest Creator
 
