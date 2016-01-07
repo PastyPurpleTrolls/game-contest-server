@@ -127,7 +127,7 @@ class MatchRunner
 
 
     def complete_tournament
-        if @match.manager_type.to_s == "Tournament"
+        if @match.manager_type.to_s != "Tournament"
             return false
         end
         tournament = Tournament.find(@match.manager_id).first
