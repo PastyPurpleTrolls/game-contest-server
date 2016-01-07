@@ -14,7 +14,7 @@ require 'timeout'
 
 class RoundWrapper
     
-    attr_accessor :results
+    attr_accessor :results, :rounds, :match
 
     #Constructor, sets socket for communication to referee and starts referee and players
     def initialize(referee,number_of_players,max_match_time,players,rounds)  
@@ -26,8 +26,13 @@ class RoundWrapper
         @child_list = []
         @number_of_players = number_of_players
         @max_match_time = max_match_time
-        
-        @results = []
+    
+        @results = {}
+        @rounds = []
+        @match = {
+            "results": {}
+        }
+
 	    @num_rounds = rounds
 
         @command_char = ":"
@@ -35,14 +40,38 @@ class RoundWrapper
     end
 
     def run_match
-        puts "Starting match"
         if @referee.rounds_capable
-            puts "Rounds capable"
             self.run_round
         else
             @num_rounds.times do |i| 
-                self.run_round(i)
+                self.run_round
+                if @results[:status] == false
+                    return
+                end
             end
+            calculate_results
+        end
+    end
+    
+    #Used if referee is not rounds capable and can't calculate it's own match results
+    def calculate_results
+        players = {}
+        @rounds.each do |round|
+            round[:results].each do |player,result|
+                if not players.has_key?(player)
+                    players[player] = 0
+                end
+                if result[:result] == "Win"
+                    players[player] += 1
+                end
+            end
+        end
+        winner = players.max_by{|k,v| v}
+        players.each do |player, wins|
+            @match[:results][player] = {
+                "result": (player == winner[0]) ? "Win" : "Loss",
+                "score": wins
+            }
         end
     end
 
@@ -73,7 +102,7 @@ class RoundWrapper
         return cmd
     end
 
-    def run_round(round = -1)
+    def run_round
         #Start referee process, giving it the port to talk to us on
         wrapper_server_port = @wrapper_server.addr[1]
 	    if File.exists?("#{File.dirname(@referee.file_location)}/Makefile")
@@ -94,10 +123,10 @@ class RoundWrapper
                 while @client_port.nil?
                     @client_port = self.find_command("port", @ref_client.gets)
                 end
-                puts @client_port
             end
         rescue Timeout::Error
-            @results = "INCONCLUSIVE: Referee failed to provide a port!"  
+            @results[:status] = true
+            @results[:message] = "INCONCLUSIVE: Referee failed to provide a port!"  
             reap_children
             return
         end
@@ -117,10 +146,11 @@ class RoundWrapper
         
         begin
             Timeout::timeout(@max_match_time) do
-                self.wait_for_result(round)
+                self.handle_tcp_input
             end
         rescue Timeout::Error
-            @results = "INCONCLUSIVE: Game exceeded allowed time!"
+            @results[:status] = false
+            @results[:message] = "INCONCLUSIVE: Game exceeded allowed time!"
             reap_children
             return
         end
@@ -128,16 +158,39 @@ class RoundWrapper
         reap_children
     end
 
-    def wait_for_result(round)
-        puts "Waiting for results"
+    #Receive input from referee and perform actions
+    def handle_tcp_input
         while line = @ref_client.gets
             input = self.parse_command(line)
+            #Match on command and perform actions
             case input[:command]
+            when "round"
+                #Add a new round to the rounds array when a round starts
+                if input[:value][0] == "start"
+                    @rounds.push({
+                        "results": {},
+                        "moves": []
+                    })
+                end
+            when "roundresult"
+                @rounds.last[:results][input[:value][0]] = {
+                    "result": input[:value][1],
+                    "score": input[:value][2]
+                }
+            when "matchresult"
+                @match[:results][input[:value][0]] = {
+                    "result": input[:value][1],
+                    "score": input[:value][2]
+                }
             when "move"
-            else
-                puts line
+                # Add move to current round
+                @rounds.last[:moves].push({
+                    "description": input[:value][0],
+                    "info": input[:value][1]
+                })
             end
         end
+        @results[:status] = true
     end
     
     def reap_children
@@ -145,6 +198,7 @@ class RoundWrapper
             Process.kill('SIGKILL', pid)
 	        Process.wait pid
         end
+        @child_list = []
     end 
 end
 
