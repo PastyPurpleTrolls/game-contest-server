@@ -20,26 +20,49 @@ class RoundWrapper
     def initialize(referee,number_of_players,max_match_time,players,rounds)  
         #Sets port for referee to talk to wrapper_server  
         @wrapper_server = TCPServer.new(0)
+        
         @players = players
         @referee = referee
         @child_list = []
         @number_of_players = number_of_players
         @max_match_time = max_match_time
+        
         @results = []
 	    @num_rounds = rounds
+
+        @command_char = ":"
+        @value_char = "|"
     end
 
     def run_match
+        puts "Starting match"
         if @referee.rounds_capable
+            puts "Rounds capable"
             self.run_round
         else
-            @num_rounds.times do
-                self.run_round
+            @num_rounds.times do |i| 
+                self.run_round(i)
             end
         end
     end
 
-    def run_round
+    # Parse commands from the referee client
+    # command (str), name of command that I'm looking for
+    # str (str), string from client that looks like command:value
+    def parse_command(command, str)
+        #split on first instance of command char
+        parsed = str.split(@command_char, 2)
+        if parsed.first == command
+            # Strip new line characters and split value if necessary
+            value = parsed.last.gsub("\n", "")
+            values = value.split(@value_char)
+            return (values.length > 1) ? values : values.first
+        else
+            return nil
+        end
+    end
+
+    def run_round(round = -1)
         #Start referee process, giving it the port to talk to us on
         wrapper_server_port = @wrapper_server.addr[1]
 	    if File.exists?("#{File.dirname(@referee.file_location)}/Makefile")
@@ -54,10 +77,11 @@ class RoundWrapper
             Timeout::timeout(3) do
                 #Wait for referee to connect
                 @ref_client = @wrapper_server.accept
-                @client_port = nil #TODO is there a better way to wait for this?
-                while @client_port.nil? #TODO error checking on returned port
-                    @client_port = @ref_client.gets
+                @client_port = nil
+                while @client_port.nil?
+                    @client_port = parse_command("port", @ref_client.gets)
                 end
+                puts @client_port
             end
         rescue Timeout::Error
             @results = "INCONCLUSIVE: Referee failed to provide a port!"  
