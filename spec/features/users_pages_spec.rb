@@ -433,5 +433,32 @@ describe "UsersPages" do
         expect { click_link('delete', match: :first) }.to change(User, :count).by(-1)
       end
     end
+
+    describe "as another admin" do 
+      let! (:admin1) { FactoryGirl.create(:admin) }
+      let! (:admin2) { FactoryGirl.create(:admin) }
+      
+      before do 
+	login admin2
+	visit users_path
+      end
+    it { should have_link('delete', href: user_path(admin1)) }
+    it { should_not have_link('delete', href: user_path(admin2)) }
+    
+    describe "redirects properly", type: :request do
+      before do 
+        login admin2, avoid_capybara: true
+        delete user_path(admin1) 
+      end
+
+    specify { expect(response).to redirect_to(users_path) }
+    end
+    
+    # Currently this test is useless because it just sees that any delete was clicked and not the correct admin....
+    it "removes an admin from the system" do 
+      #expect { click_link('delete', match: :first) }.to change(User, :count).by(-1)
+      expect { find("a[href='#{ user_path(admin1) }']" , text: 'delete').click }.to change(User, :count).by(-1)
+    end
   end
+end
 end
