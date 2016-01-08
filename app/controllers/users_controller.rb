@@ -60,7 +60,7 @@ class UsersController < ApplicationController
   end
 
   def admin_acceptable_params
-    acceptable_params.permit(:admin, :contest_creator)
+    params.require(:user).permit(:username, :password, :password_confirmation, :email, :admin, :contest_creator)
   end
 
   def ensure_admin

@@ -397,7 +397,7 @@ describe "UsersPages" do
       
       it { should have_field('Username', with: user.username) }
       it { should have_field('Email', with: user.email) }
-      it { should have_field('Password', with: user.password) }
+      it { should_not have_field('Password', with: user.password) }
       
       describe "with invalid information" do
         before do
@@ -427,7 +427,7 @@ describe "UsersPages" do
     describe "with permission attributes", type: :request do
       describe 'admin' do
         before do
-          login user, avoid_capybara: true
+          login admin, avoid_capybara: true
           patch user_path(user), user: { admin: true }
         end
 
@@ -436,7 +436,7 @@ describe "UsersPages" do
       
       describe 'contest_creator' do
         before do
-          login user, avoid_capybara: true
+          login admin, avoid_capybara: true
           patch user_path(user), user: { contest_creator: true }
         end
 
