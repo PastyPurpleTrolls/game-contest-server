@@ -1,0 +1,2 @@
+class PlayerRoundController < ApplicationController
+end

@@ -17,7 +17,7 @@ I. Daemon
     We are using the clockwork ruby gem, which essentially creates cron jobs to run our scripts
 at a given interval. We have a script in etc/initd called game_contest_server.sh which starts clockwork
 daemon upon server start. Currently it runs the process from Alex Sjoberg's user directory (/home/asjoberg). The clock.rb file in the top level directory of the project contains the jobs and intervals to be run
-by clcokwork.
+by clockwork.
 
     To start clockwork daemon manually you can use the following...
         - Background

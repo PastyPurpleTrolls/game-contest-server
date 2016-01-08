@@ -283,64 +283,176 @@ describe "UsersPages" do
 
 
   describe "Edit users" do
-    let (:user) { FactoryGirl.create(:user) }
-    let!(:orig_username) { user.username }
-    let (:submit) { 'Update Account' }
+    describe "as User" do
+      let (:user) { FactoryGirl.create(:user) }
+      let!(:orig_username) { user.username }
+      let (:submit) { 'Update Account' }
 
-    before do
-      login user
-      visit edit_user_path(user)
-    end
-
-    it { should have_field('Username', with: user.username) }
-    it { should have_field('Email', with: user.email) }
-    it { should_not have_field('Password', with: user.password) }
-
-    describe "with invalid information" do
       before do
-        fill_in 'Username', with: ''
-        fill_in 'Email', with: user.email
-        fill_in 'Password', with: user.password
-        fill_in 'Confirmation', with: user.password
+        login user
+        visit edit_user_path(user)
       end
 
-      describe "does not change data" do
-        before { click_button submit }
+      it { should have_field('Username', with: user.username) }
+      it { should have_field('Email', with: user.email) }
+      it { should_not have_field('Password', with: user.password) }
 
-        specify { expect(user.reload.username).not_to eq('') }
-        specify { expect(user.reload.username).to eq(orig_username) }
+      describe "with invalid information" do
+        before do
+          fill_in 'Username', with: ''
+          fill_in 'Email', with: user.email
+          fill_in 'Password', with: user.password
+          fill_in 'Confirmation', with: user.password
+        end
+
+        describe "does not change data" do
+          before { click_button submit }
+
+          specify { expect(user.reload.username).not_to eq('') }
+          specify { expect(user.reload.username).to eq(orig_username) }
+        end
+
+        it "does not add a new user to the system" do
+          expect { click_button submit }.not_to change(User, :count)
+        end
+
+        it "produces an error message" do
+          click_button submit
+          should have_alert(:danger)
+        end
       end
 
-      it "does not add a new user to the system" do
-        expect { click_button submit }.not_to change(User, :count)
+      describe "with forbidden attributes", type: :request do
+        describe 'admin' do
+          before do
+            login user, avoid_capybara: true
+            patch user_path(user), user: { admin: true,
+                                           password: user.password,
+                                           password_confirmation: user.password }
+          end
+
+          specify { expect(user.reload).not_to be_admin }
+        end
+
+        describe 'contest_creator' do
+          before do
+            login user, avoid_capybara: true
+            patch user_path(user), user: { contest_creator: true,
+                                           password: user.password,
+                                           password_confirmation: user.password }
+          end
+
+          specify { expect(user.reload).not_to be_contest_creator }
+        end
       end
 
-      it "produces an error message" do
-        click_button submit
-        should have_alert(:danger)
+      describe "with valid information" do
+        before do
+          fill_in 'Username', with: 'Changed name'
+          fill_in 'Email', with: 'new@example.com'
+          fill_in 'Password', with: user.password
+          fill_in 'Confirmation', with: user.password
+        end
+
+        describe "changes the data" do
+          before { click_button submit }
+
+          specify { expect(user.reload.username).to eq('Changed name') }
+          specify { expect(user.reload.email).to eq('new@example.com') }
+        end
+
+        describe "redirects properly", type: :request do
+          before do
+            login user, avoid_capybara: true
+            patch user_path(user), user: { username: 'Changed name',
+                                           email: user.email,
+                                           password: user.password,
+                                           password_confirmation: user.password }
+        end
+
+          specify { expect(response).to redirect_to(user_path(user)) }
+        end
+
+        it "produces an update message" do
+          click_button submit
+          should have_alert(:success)
+        end
+
+        it "does not add a new user to the system" do
+          expect { click_button submit }.not_to change(User, :count)
+        end
       end
     end
+    
+    describe "as admin" do     
+      let (:admin) { FactoryGirl.create(:admin) }
+      let (:user) { FactoryGirl.create(:user) }
+      let!(:orig_username) { user.username }
+      let (:submit) { 'Update Account' }   
 
-    describe "with forbidden attributes", type: :request do
+      before do
+        login admin
+        visit edit_user_path(user)
+      end
+      
+      it { should have_field('Username', with: user.username) }
+      it { should have_field('Email', with: user.email) }
+      it { should_not have_field('Password', with: user.password) }
+      
+      describe "with invalid information" do
+        before do
+<<<<<<< HEAD
+          login user, avoid_capybara: true
+          patch user_path(user), user: { admin: true }
+=======
+          fill_in 'Username', with: ''
+          fill_in 'Email', with: user.email
+          fill_in 'Password', with: user.password
+          fill_in 'Confirmation', with: user.password
+        end
+
+        describe "does not change data" do
+          before { click_button submit }
+
+          specify { expect(user.reload.username).not_to eq('') }
+          specify { expect(user.reload.username).to eq(orig_username) }
+>>>>>>> 0ad98e5d17555e8139b130c44e6bee6965a81d09
+        end
+
+        it "does not add a new user to the system" do 
+          expect { click_button submit }.not_to change(User, :count) 
+        end
+
+        it "produces an error message" do
+          click_button submit
+          should have_alert(:danger)
+        end
+      end
+      
+    describe "with permission attributes", type: :request do
       describe 'admin' do
         before do
-          login user, avoid_capybara: true
+          login admin, avoid_capybara: true
           patch user_path(user), user: { admin: true }
         end
 
-        specify { expect(user.reload).not_to be_admin }
+        specify { expect(user.reload).to be_admin }
       end
-
+      
       describe 'contest_creator' do
         before do
+<<<<<<< HEAD
           login user, avoid_capybara: true
+=======
+          login admin, avoid_capybara: true
+>>>>>>> 0ad98e5d17555e8139b130c44e6bee6965a81d09
           patch user_path(user), user: { contest_creator: true }
         end
 
-        specify { expect(user.reload).not_to be_contest_creator }
+        specify { expect(user.reload).to be_contest_creator }
       end
     end
-
+    
     describe "with valid information" do
       before do
         fill_in 'Username', with: 'Changed name'
@@ -349,16 +461,9 @@ describe "UsersPages" do
         fill_in 'Confirmation', with: user.password
       end
 
-      describe "changes the data" do
-        before { click_button submit }
-
-        specify { expect(user.reload.username).to eq('Changed name') }
-        specify { expect(user.reload.email).to eq('new@example.com') }
-      end
-
       describe "redirects properly", type: :request do
         before do
-          login user, avoid_capybara: true
+          login admin, avoid_capybara: true
           patch user_path(user), user: { username: 'Changed name',
                                          email: user.email,
                                          password: user.password,
@@ -429,5 +534,33 @@ describe "UsersPages" do
         expect { click_link('delete', match: :first) }.to change(User, :count).by(-1)
       end
     end
+
+    describe "as another admin" do 
+      let! (:admin1) { FactoryGirl.create(:admin) }
+      let! (:admin2) { FactoryGirl.create(:admin) }
+      
+      before do 
+	login admin2
+	visit users_path
+      end
+    it { should have_link('delete', href: user_path(admin1)) }
+    it { should_not have_link('delete', href: user_path(admin2)) }
+    
+    describe "redirects properly", type: :request do
+      before do 
+        login admin2, avoid_capybara: true
+        delete user_path(admin1) 
+      end
+
+    specify { expect(response).to redirect_to(users_path) }
+    end
+    
+    # Currently this test is useless because it just sees that any delete was clicked and not the correct admin....
+    it "removes an admin from the system" do 
+      #expect { click_link('delete', match: :first) }.to change(User, :count).by(-1)
+      expect { find("a[href='#{ user_path(admin1) }']" , text: 'delete').click }.to change(User, :count).by(-1)
+    end
   end
+end
+end
 end

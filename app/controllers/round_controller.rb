@@ -1,0 +1,2 @@
+class RoundController < ApplicationController
+end
