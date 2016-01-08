@@ -28,7 +28,6 @@ ref = MockPlayer.new("../examples/checkers_ref.py", "ref")
 round_wrapper = RoundWrapper.new(ref, 2, 5, [p1, p2], 3)
 round_wrapper.run_match
 
-puts(round_wrapper.status)
-puts round_wrapper.rounds
+#puts(round_wrapper.status)
 
 

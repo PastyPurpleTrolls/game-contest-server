@@ -16,8 +16,8 @@
 /code/environments/production/*
 
 
-#Ignore game logs
-/public/game-logs
+#Ignore match logs
+/public/match-logs
 
 # Ignore bundler config.
 /.bundle

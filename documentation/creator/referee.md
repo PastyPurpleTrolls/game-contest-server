@@ -39,11 +39,13 @@ Every 10 moves, the referee should send the game state to the manager.
 
 Commands are sent as key:value pairs. The first `:` in the command is seen as a special character and represents the end of a command name. Everything that follows is interpreted as the value. Pipes `|` represent separation between values that should be parsed.
 
+Do **not** use `|` for any purpose except as a delimiter to represent lists in the protocol. It should not be used in game state representations.
+
 - `port`: (int) TCP port that the players should connect on. This needs to be sent within the first 3 seconds of being started.
 - `match`: Values: `start`, `end`. Tell the manager to expect information about the match.
 - `round`: Pipe separated double. `start` or `end`. Round index. 
-- `move`: Send a description of the move as well as any additional information that you want stored in the log file. Separate with `|`
-- `gamestate`: Implementation dependant value. Sent every 10 moves to represent the current state of the game.
+- `move`: Human readable description of the move as well as any round data needed by the visualizer. Data should be formatted in JSON to make parsing easier. 
+- `gamestate`: Implementation dependant value. Sent every 10 moves to represent the current state of the game. To ease parsing in the browser, please use JSON.
 - `roundresult`: Sent directly after `round:end`. Pipe separated tuple with player name, result, and score. Score is implementation dependant. Result can only be `Win`, `Loss`, and `Tie`.
 - `matchresult`: Sent directly after `match:end`. Pipe separated tuple with player name, result, and rounds won. 
 
@@ -53,7 +55,7 @@ Commands are sent as key:value pairs. The first `:` in the command is seen as a 
 port:2222
 match:start
 round:start|1
-move:description|additionalinfo
+move:description|movedata
 gamestate:{}
 round:end
 roundresult:playername|result|score

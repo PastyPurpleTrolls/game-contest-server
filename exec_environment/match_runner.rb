@@ -44,9 +44,9 @@ class MatchRunner
        @number_of_players = @referee.players_per_game
        @max_match_time = @referee.time_per_game
        @tournament = @match.manager
-       @num_rounds = @match.rounds
+       @num_rounds = @match.num_rounds
 
-       @logs_directory = Rails.root.join("public", "game-logs")
+       @logs_directory = Rails.root.join("public", "match-logs")
     end 
     
     #Uses a MatchWrapper to run a match between the given players and send the results to the database
@@ -116,12 +116,15 @@ class MatchRunner
         end
     end
 
+    #Generate log files for playing back rounds
     def save_round_json(slug, round)
+        #Check if the match directory exists already
         match_directory = File.join(@logs_directory, @match.slug)
         unless File.directory?(match_directory)
             FileUtils.mkdir_p(match_directory)
         end
         filename = File.join(match_directory, slug + ".json")
+        #Write round hash to json file
         File.open(filename, "w") do |file|
             file.write(round.to_json)
         end

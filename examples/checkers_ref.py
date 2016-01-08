@@ -4,6 +4,7 @@ import cTurtle
 import math
 import random
 import pickle
+import json
 from ref_helper import *
 
 EMPTY=0
@@ -463,7 +464,9 @@ def checkers(CB,bob,PlayerB,PlayerR,Bwin,Rwin,totalPlayed):
         fillCheckerBoard(bob,SIZE,CB)
         labelGameStats(bob,SIZE,PlayerB,PlayerR,Bwin,Rwin,totalPlayed)
     move=''
+    moveCount = 0
     while move != 'exit' and not win(CB)[0]:
+        moveCount += 1
         possibles=getPossibles(CB,player)
         if player=="red":
             pname = P1.name
@@ -489,7 +492,15 @@ def checkers(CB,bob,PlayerB,PlayerR,Bwin,Rwin,totalPlayed):
             return
         #All good - make move!
         makeMove(bob,CB,move,player,SIZE,possibles)
-        manager.send("move", [move, pname])
+
+        #Send move to manager
+        description = pname + " moves " + move
+        manager.send("move", [description, [pname, move]])
+
+        #Send game state in intervals of 10 moves
+        if moveCount % 10 == 0:
+            manager.send("gamestate", json.dumps(CB))
+
         #showBoard(CB)
         player=switchPlayers(player)
     return win(CB)[1]

@@ -6,6 +6,7 @@
 require 'socket'
 require 'open-uri'
 require 'timeout'
+require 'json' 
 
 class RoundWrapper
     
@@ -179,8 +180,16 @@ class RoundWrapper
                 # Add move to current round
                 @rounds.last[:moves].push({
                     "description": input[:value][0],
-                    "info": input[:value][1]
+                    "data": input[:value][1]
                 })
+            when "gamestate"
+                #Ignore game state 
+                lastmove = @rounds.last[:moves].last
+                #Ignore game state if there aren't any moves
+                if lastmove.nil?
+                    break
+                end
+                lastmove[:gamestate] = input[:value]
             end
         end
         @status[:error] = false
