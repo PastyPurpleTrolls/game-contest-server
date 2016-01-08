@@ -177,7 +177,12 @@ FactoryGirl.define do
 
   factory :player_match do
     player
+<<<<<<< HEAD
     association :match, factory: :tournament_match
+=======
+    association :match, factory: :tournament_match, existing_players: 1
+    #score 1.0
+>>>>>>> 1f53dce29caa56be05c103792a8f0293d0240656
     result "Unknown Result"
   end
   

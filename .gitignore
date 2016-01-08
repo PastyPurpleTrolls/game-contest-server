@@ -15,6 +15,10 @@
 /code/environments/test/*
 /code/environments/production/*
 
+
+#Ignore match logs
+/public/match-logs
+
 # Ignore bundler config.
 /.bundle
 

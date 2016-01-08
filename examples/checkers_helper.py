@@ -34,14 +34,13 @@ def init(playerFunction):
             CB,player = pickle.loads(ref_socket.recv(4096))
             ref_socket.send(pickle.dumps(automatedMove(CB,player)))
         except EOFError:
-            break        
+            break
 
 #Parsing command line arguments
 #Usage: client.py --name [name] -p [port]"
 parser = OptionParser()
 parser.add_option("-p","--port",action="store",type="int",dest="port")
 parser.add_option("-n","--name" ,action="store",type="string",dest="name")
-
 (options, args) = parser.parse_args()
 
 #To be run on import

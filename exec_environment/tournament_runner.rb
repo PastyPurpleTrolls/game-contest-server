@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
-# Alex Sjoberg
+# Alex Sjoberg, additional work by Bradley Rosenfeld
 # tournament_runner.rb
-# Jan 2014
 #
 # Takes a tournament from the db and creates the necessary matches for it
 
@@ -79,16 +78,10 @@ class TournamentRunner
     def round_robin(players)
 	players.each do |p|
 	    players.each do |q|
-		if p != q
-		    match_players = [p, q]
-		    if @tournament.referee.rounds_capable
-			create_match(match_players, @tournament.rounds_per_match)
-		    else
-			@tournament.rounds_per_match.times do
-			    create_match(match_players, 1)
-			end
+		    if p != q
+		        match_players = [p, q]
+			    create_match(match_players, @tournament.rounds_per_match)
 		    end
-		end
 	    end
 	end
     end
@@ -98,10 +91,8 @@ class TournamentRunner
         count = players.count
         #puts " This many players: "+count.to_s
         if count == 2
-	   @tournament.rounds_per_match.times do
-              create_match([players[0],players[1]], 1)
-	   end
-	   return
+            create_match([players[0],players[1]], @tournament.rounds_per_match)
+	        return
         elsif count == 3
             child = create_raw_match(1, "unassigned")
             create_player_matches(child,[players[0]])
@@ -119,8 +110,8 @@ class TournamentRunner
     def create_match(match_participants, num_rounds)
         match = create_raw_match(num_rounds, "unassigned")
         create_player_matches(match,match_participants)
-	match.status = "waiting"
-	match.save!
+	    match.status = "waiting"
+	    match.save!
         return match
     end 
     #Creates a match
@@ -130,7 +121,7 @@ class TournamentRunner
             status: status,
             earliest_start: Time.now, 
             completion: Date.new,
-	    rounds: num_rounds,
+	        rounds: num_rounds,
         )
         puts " Tournament runner created match #"+match.id.to_s
         return match
@@ -142,7 +133,6 @@ class TournamentRunner
                 match: match,
                 player: player,
                 result: "Pending",
-                score: nil,
             )
             puts "   Added "+player.name
         end

@@ -1,17 +1,13 @@
 #!/usr/bin/env ruby
-#
-#Alex Sjoberg
-#match_runner.rb
-#Jan 2014
-#
-#Takes a match_id and 
+
 
 require 'active_record'
 require 'active_support/time'
 require 'sqlite3'
-#This line will need to be changed for every user! 
-require './exec_environment/match_wrapper.rb' #NOTE this is hardcoded to be using the match_wrapper in asjoberg's directory right now
+require './exec_environment/round_wrapper.rb'
 require 'optparse'
+require 'json'
+require 'fileutils'
 
 #This may be an alternative to running the file using 'rails runner'. These provide access to the rails environment
 #require './config/boot'
@@ -37,15 +33,20 @@ class MatchRunner
        @match_id = match_id 
        @match = Match.find(match_id)
        @match_participants = @match.players
+
+       #Grab referee based upon polymorphic association
        if @match.manager_type.to_s == "Contest"
          @referee = @match.manager.referee
        else
-	 @referee = @match.manager.contest.referee
+	    @referee = @match.manager.contest.referee
        end
+
        @number_of_players = @referee.players_per_game
        @max_match_time = @referee.time_per_game
        @tournament = @match.manager
-       @num_rounds = @match.rounds
+       @num_rounds = @match.num_rounds
+
+       @logs_directory = Rails.root.join("public", "match-logs")
     end 
     
     #Uses a MatchWrapper to run a match between the given players and send the results to the database
@@ -55,19 +56,20 @@ class MatchRunner
                  " ("+@match_participants.count().to_s+"/"+@number_of_players.to_s+" in player_matches)"
             return
         end
-        match_wrapper = MatchWrapper.new(@referee,@number_of_players,@max_match_time,@match_participants,@num_rounds)
+        #Call round wrapper which runs the executables and generates game hashes
+        round_wrapper = RoundWrapper.new(@referee,@number_of_players,@max_match_time,@match_participants,@num_rounds)
         puts "   Match runner running match #"+@match_id.to_s
-        match_wrapper.run_match
-        self.send_results_to_db(match_wrapper.results)
+        round_wrapper.run_match
+        self.send_results_to_db(round_wrapper)
     end
 
     #Creates PlayerMatch objects for each player using the results dictionary we got back from the MatchWrapper
-    def send_results_to_db(results)
-        if results.include? "INCONCLUSIVE"
+    def send_results_to_db(round_runner)
+        puts round_runner.status
+        if round_runner.status[:error]
             #Error handling, save "inconclusive" as match status
-            puts "   "+results
             @match_participants.each do |player|
-                player_match = PlayerMatch.find_by_sql("SELECT * FROM Player_Matches WHERE match_id = #{@match_id} AND player_id = #{player.id}").first
+                player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id).first
                 player_match.result = "Error"
                 player_match.save!        
                 print_results(player.name,"Error",nil,"\n")                
@@ -75,46 +77,87 @@ class MatchRunner
             puts "   Match runner could not finish match #"+@match_id.to_s
             return
         else
+            self.save_rounds(round_runner.rounds)
             #Print and save results, schedule follow-up matches
-            child_matches = MatchPath.find_by_sql("SELECT result,child_match_id FROM match_paths WHERE match_paths.parent_match_id = #{@match_id}") 
+            child_matches = MatchPath.where(parent_match_id: @match_id)
             puts "   Match runner writing results match #"+@match_id.to_s
-            results.each do |player_name, player_result|
-                #Print and save
-		if @match.manager_type.to_s == "Tournament"
-			player = Player.where(contest_id: @tournament.contest.id, name: player_name).first
-                else
-			player = Player.where(contest_id: @tournament.id, name: player_name).first
-		end
-		player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id).first
-                player_match.result = player_result["result"]
-                player_match.score = player_result["score"]
-                player_match.save!        
-                print_results(player.name,player_match.result,player_match.score)
-                #Follow up matches
-                child_matches.each do |data|
-                    if data.result == player_match.result
-                        create_player_match(Match.find(data.child_match_id),player)
-                    end
-                end
-                print "\n"
+            #Loop through participants and find their results
+            @match_participants.each do |player|
+                player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id).first
+                player_match.result = round_runner.match[player.name][:result]
+                player_match.save!
+                print_results(player.name, player_match.result, round_runner.match[player.name][:score])
+                self.schedule_matches(player, player_match, child_matches)
             end
             puts "   Match runner finished match #"+@match_id.to_s
-  	    match = Match.find_by_sql("SELECT * FROM Matches WHERE id = #{@match_id}").first
-	    match.status = "completed"
-	    match.completion = Time.now
-	    match.save!
-	    if match.manager_type.to_s == "Tournament"
-	    	tournament = Tournament.find_by_sql("SELECT * FROM Tournaments WHERE id = #{match.manager_id}").first
-	    	tournament.matches.each do |m|
-		    if m.status == "started"
-			return
-		    end
-		end
-		tournament.status = "completed"
-		tournament.save!
-	    end 
+            self.complete_match
         end
-	
+        #Check to see if the tournament can be completed
+        self.complete_tournament
+    end
+
+    def save_rounds(rounds)
+        #Loop through all the rounds and create a new record in the DB
+        rounds.each do |round|
+            round_obj = Round.create!(
+                match: Match.find(@match_id)
+            )
+            #Loop through participants and add their results to the DB
+            @match_participants.each do |player|
+                PlayerRound.create!(
+                    round: round_obj,
+                    player: player,
+                    result: round[:results][player.name][:result],
+                    score: round[:results][player.name][:score]
+                )
+            end
+            #Save round data to json file
+            self.save_round_json(round_obj.slug, round)
+        end
+    end
+
+    #Generate log files for playing back rounds
+    def save_round_json(slug, round)
+        #Check if the match directory exists already
+        match_directory = File.join(@logs_directory, @match.slug)
+        unless File.directory?(match_directory)
+            FileUtils.mkdir_p(match_directory)
+        end
+        filename = File.join(match_directory, slug + ".json")
+        #Write round hash to json file
+        File.open(filename, "w") do |file|
+            file.write(round.to_json)
+        end
+    end
+
+    def schedule_matches(player, player_match, child_matches)
+        child_matches.each do |match|
+            if match.result == player_match.result
+                create_player_match(Match.find(match.child_match_id), player)
+            end
+        end
+    end
+
+    def complete_match
+        @match.status = "completed"
+        @match.completion = Time.now
+        @match.save!
+    end
+
+
+    def complete_tournament
+        if @match.manager_type.to_s != "Tournament"
+            return false
+        end
+        tournament = Tournament.find(@match.manager_id)
+        tournament.matches.each do |childmatch|
+            if childmatch.status == "started"
+                return false
+            end
+        end
+        tournament.status = "completed"
+        tournament.save!
+        return true
     end
     
     #Prints a name, result, and score
@@ -132,7 +175,6 @@ class MatchRunner
             match: match,
             player: player,
             result: "Pending",
-            score: nil,
         )
         print "=> Match #"+match.id.to_s
         #Change status of match if necessary
