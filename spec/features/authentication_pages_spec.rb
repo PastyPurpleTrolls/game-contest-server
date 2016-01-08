@@ -283,6 +283,44 @@ describe "AuthorizationPages" do
         let (:http_path) { player_path(player) }
       end
     end
+
+		describe "for Matches controller" do
+			describe "index action (with path 'contest_matches')" do
+        it_behaves_like "redirects to root" , browser_only: true do
+					let! (:challenge_match) { FactoryGirl.create(:challenge_match) }
+					it { puts challenge_match.manager.name } 
+
+					# user 'user', with player 'p1', is a player in challenge_match
+					let (:p1) { FactoryGirl.create(:player, user: user, contest_id: challenge_match.manager_id) }
+					it { puts p1.contest.name } 
+					let (:pm1) { FactoryGirl.create(:player_match, player: p1, match: challenge_match) }
+
+					# user 'u2', with player 'p2', is a player in challenge_match
+        	let (:u2) { FactoryGirl.create(:user) }
+					let (:p2) { FactoryGirl.create(:player, user: u2, contest: challenge_match.manager) }
+					let (:pm2) { FactoryGirl.create(:player_match, player: p2, match: challenge_match) }
+
+					# user 'u3' is not allowed to view any challenge_match that it is not apart of
+        	let (:u3) { FactoryGirl.create(:user) }
+        	let (:login_user) { u3 }
+        	let (:signature) { 'Matches for' }
+        	let (:error_type) { :danger }
+          let (:path) { contest_matches_path(challenge_match.manager) }
+					# test not finished, will ask Geisler about it			
+				end
+			end
+
+			describe "show action (with a challenge match)" do
+        it_behaves_like "redirects to root" , browser_only: true do
+          let (:challenge_match) { FactoryGirl.create(:challenge_match) }
+        	let (:signature) { 'Match Information' }
+        	let (:error_type) { :danger }
+          let (:path) { match_path(challenge_match) }
+					# test not finished, will ask Geisler about it			
+				end
+			end
+		end
+		
   end
 
   describe "authenticated, but non-admin user" do
