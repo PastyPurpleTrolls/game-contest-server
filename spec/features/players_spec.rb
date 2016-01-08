@@ -222,7 +222,10 @@ describe "PlayersPages" do
                                href: new_contest_player_path(contest)) }
 
     describe "show match" do
-      let!(:player_match) { FactoryGirl.create(:player_match, player: player) }
+      let!(:player_match) do
+	match = FactoryGirl.create(:tournament_match, player: player)
+	PlayerMatch.where(match: match, player: player).first
+      end
 
       before { visit player_path(player) }
 

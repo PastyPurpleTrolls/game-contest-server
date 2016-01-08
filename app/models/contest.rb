@@ -13,6 +13,9 @@ class Contest < ActiveRecord::Base
   validates :description,   presence: true
   validates :name,          presence: true, uniqueness: true
 
+  def contest
+      self
+  end
 
   def self.search(search)
     if search
