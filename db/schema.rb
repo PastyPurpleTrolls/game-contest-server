@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160106173448) do
+ActiveRecord::Schema.define(version: 20160108185610) do
 
   create_table "contests", force: :cascade do |t|
     t.integer  "user_id"
@@ -62,7 +62,7 @@ ActiveRecord::Schema.define(version: 20160106173448) do
     t.datetime "earliest_start"
     t.string   "manager_type",   limit: 255
     t.string   "slug"
-    t.integer  "rounds"
+    t.integer  "num_rounds"
   end
 
   add_index "matches", ["manager_id", "manager_type"], name: "index_matches_on_manager_id_and_manager_type"
