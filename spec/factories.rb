@@ -68,11 +68,18 @@ FactoryGirl.define do
     tournament
   end
 
-  dummy_player = 0
-
   factory :match do
+    #
+    # we cannot validate the match on save because we haven't created
+    # all the proper associations for the match until after the save
+    # is completed (e.g., players, player_matches, and possibly
+    # player_tournaments).  We make sure to call match.save! after
+    # they've all be created properly to ensure that the validations
+    # are passed before the factory returns.
+    #
     to_create {|instance| instance.save(validate: false) }
-    ignore { existing_players 0 }
+
+    ignore { player nil }
 
     status "waiting"
     completion Time.current
@@ -81,22 +88,58 @@ FactoryGirl.define do
     factory :tournament_match do
       association :manager, factory: :tournament
 
-      before(:create) do |match, evaluator|
-        dummy_player = create(:player, contest: match.manager.contest)
-	dummy_player.tournaments << match.manager
+      factory :winning_match do
+	after(:create) do |match, evaluator|
+	  pm = PlayerMatch.where(match: match,
+				 player: evaluator.player).first
+	  pm.result = "Win"
+	  pm.save!
+	  match.reload
+	end
+      end
+
+      factory :losing_match do
+	after(:create) do |match, evaluator|
+	  pm = PlayerMatch.where(match: match,
+				 player: evaluator.player).first
+	  pm.result = "Loss"
+	  pm.save!
+	  match.reload
+	end
+      end
+
+      after(:create) do |match, evaluator|
+	num_players = match.manager.referee.players_per_game
+
+	if evaluator.player
+	  num_players -= 1
+	  create(:player_match, player: evaluator.player, match: match)
+	  create(:player_tournament, player: evaluator.player, tournament: match.manager)
+	end
+
+	num_players.times do
+	  player = create(:player, contest: match.manager.contest)
+	  create(:player_match, player: player, match: match)
+	  create(:player_tournament, player: player, tournament: match.manager)
+	end
+
+	match.save!
       end
     end
 
     factory :challenge_match do
       association :manager, factory: :contest
 
-      before(:create) { |match| dummy_player = create(:player) }
-    end
+      after(:create) do |match, evaluator|
+        num_players = match.manager.referee.players_per_game
 
-    after(:create) do |match, evaluator|
-      num_players = match.manager.referee.players_per_game
-      num_players -= evaluator.existing_players
-      create_list(:player_match, num_players, player: dummy_player, match: match)
+        num_players.times do
+	  player = create(:player, contest: match.manager.contest)
+	  create(:player_match, player: player, match: match)
+        end
+
+        match.save!
+      end
     end
   end
 
@@ -117,17 +160,9 @@ FactoryGirl.define do
 
   factory :player_match do
     player
-    association :match, factory: :tournament_match, existing_players: 1
+    association :match, factory: :tournament_match
     score 1.0
     result "Unknown Result"
-
-    factory :winning_match do
-      result "Win"
-    end
-
-    factory :losing_match do
-      result "Loss"
-    end
   end
 
 end
