@@ -1,16 +1,46 @@
 #! /usr/bin/env python3
 
-
 import cTurtle
 import math
 import random
-from checkers_ref_helper import *
+import pickle
+from ref_helper import *
 
 EMPTY=0
 INCs=[-1,1]
 VALID_RANGE=range(8)
 DEBUG=False
 VISIBLE=True
+
+
+#Send results to manager
+def report_results(resulttype, p1wins,p2wins):
+    p1result = "Win"
+    p2result = "Loss"
+    if p2wins >= p1wins:
+        if p2wins != p1wins:
+            p1result = "Loss"
+            p2result = "Win"
+        else:
+            p1result = "Tie"
+            p2result = "Tie"
+    manager.send(resulttype, [P1.name, p1result, str(p1wins)])
+    manager.send(resulttype, [P2.name, p2result, str(p2wins)])
+
+#Fake player using socket connection instead
+class Player():
+    def __init__(self, server):
+        self.connection = Connection(server)
+        self.name = self.connection.listen(1024).decode()
+
+    def automatedMove(self, CB,player):
+        self.connection.send(pickle.dumps((CB,player)))
+        return pickle.loads(self.connection.listen(4096))
+
+#Create players
+P1 = Player(playerServer)
+P2 = Player(playerServer)
+
 
 def drawCircleCentered(t,radius):
     pos=t.position()
@@ -436,10 +466,10 @@ def checkers(CB,bob,PlayerB,PlayerR,Bwin,Rwin,totalPlayed):
     while move != 'exit' and not win(CB)[0]:
         possibles=getPossibles(CB,player)
         if player=="red":
-            pname = P1_name
+            pname = P1.name
             move=P2.automatedMove(CB,player)
         else:
-            pname = P2_name
+            pname = P2.name
             move=P1.automatedMove(CB,player)
         countBadMoves=1
         #Until a valid move or exceeds allowed number of bad move trys
