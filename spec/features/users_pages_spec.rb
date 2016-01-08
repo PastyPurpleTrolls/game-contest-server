@@ -401,10 +401,6 @@ describe "UsersPages" do
       
       describe "with invalid information" do
         before do
-<<<<<<< HEAD
-          login user, avoid_capybara: true
-          patch user_path(user), user: { admin: true }
-=======
           fill_in 'Username', with: ''
           fill_in 'Email', with: user.email
           fill_in 'Password', with: user.password
@@ -416,7 +412,6 @@ describe "UsersPages" do
 
           specify { expect(user.reload.username).not_to eq('') }
           specify { expect(user.reload.username).to eq(orig_username) }
->>>>>>> 0ad98e5d17555e8139b130c44e6bee6965a81d09
         end
 
         it "does not add a new user to the system" do 
@@ -441,11 +436,7 @@ describe "UsersPages" do
       
       describe 'contest_creator' do
         before do
-<<<<<<< HEAD
-          login user, avoid_capybara: true
-=======
           login admin, avoid_capybara: true
->>>>>>> 0ad98e5d17555e8139b130c44e6bee6965a81d09
           patch user_path(user), user: { contest_creator: true }
         end
 
