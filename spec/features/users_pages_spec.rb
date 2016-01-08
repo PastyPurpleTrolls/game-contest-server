@@ -325,9 +325,7 @@ describe "UsersPages" do
       describe 'admin' do
         before do
           login user, avoid_capybara: true
-          patch user_path(user), user: { admin: true,
-                                         password: user.password,
-                                         password_confirmation: user.password }
+          patch user_path(user), user: { admin: true }
         end
 
         specify { expect(user.reload).not_to be_admin }
@@ -336,9 +334,7 @@ describe "UsersPages" do
       describe 'contest_creator' do
         before do
           login user, avoid_capybara: true
-          patch user_path(user), user: { contest_creator: true,
-                                         password: user.password,
-                                         password_confirmation: user.password }
+          patch user_path(user), user: { contest_creator: true }
         end
 
         specify { expect(user.reload).not_to be_contest_creator }
