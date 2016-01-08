@@ -1,16 +1,13 @@
 #!/usr/bin/env ruby
-#
-#Alex Sjoberg
-#match_runner.rb
-#Jan 2014
-#
-#Takes a match_id and 
+
 
 require 'active_record'
 require 'active_support/time'
 require 'sqlite3'
 require './exec_environment/round_wrapper.rb'
 require 'optparse'
+require 'json'
+require 'fileutils'
 
 #This may be an alternative to running the file using 'rails runner'. These provide access to the rails environment
 #require './config/boot'
@@ -36,15 +33,20 @@ class MatchRunner
        @match_id = match_id 
        @match = Match.find(match_id)
        @match_participants = @match.players
+
+       #Grab referee based upon polymorphic association
        if @match.manager_type.to_s == "Contest"
          @referee = @match.manager.referee
        else
 	    @referee = @match.manager.contest.referee
        end
+
        @number_of_players = @referee.players_per_game
        @max_match_time = @referee.time_per_game
        @tournament = @match.manager
        @num_rounds = @match.rounds
+
+       @logs_directory = Rails.root.join("public", "game-logs")
     end 
     
     #Uses a MatchWrapper to run a match between the given players and send the results to the database
@@ -54,6 +56,7 @@ class MatchRunner
                  " ("+@match_participants.count().to_s+"/"+@number_of_players.to_s+" in player_matches)"
             return
         end
+        #Call round wrapper which runs the executables and generates game hashes
         round_wrapper = RoundWrapper.new(@referee,@number_of_players,@max_match_time,@match_participants,@num_rounds)
         puts "   Match runner running match #"+@match_id.to_s
         round_wrapper.run_match
@@ -74,7 +77,6 @@ class MatchRunner
             puts "   Match runner could not finish match #"+@match_id.to_s
             return
         else
-            puts "Saving rounds:"
             self.save_rounds(round_runner.rounds)
             #Print and save results, schedule follow-up matches
             child_matches = MatchPath.where(parent_match_id: @match_id)
@@ -89,8 +91,9 @@ class MatchRunner
             end
             puts "   Match runner finished match #"+@match_id.to_s
             self.complete_match
-            self.complete_tournament
-        end	
+        end
+        #Check to see if the tournament can be completed
+        self.complete_tournament
     end
 
     def save_rounds(rounds)
@@ -108,6 +111,19 @@ class MatchRunner
                     score: round[:results][player.name][:score]
                 )
             end
+            #Save round data to json file
+            self.save_round_json(round_obj.slug, round)
+        end
+    end
+
+    def save_round_json(slug, round)
+        match_directory = File.join(@logs_directory, @match.slug)
+        unless File.directory?(match_directory)
+            FileUtils.mkdir_p(match_directory)
+        end
+        filename = File.join(match_directory, slug + ".json")
+        File.open(filename, "w") do |file|
+            file.write(round.to_json)
         end
     end
 
@@ -130,7 +146,7 @@ class MatchRunner
         if @match.manager_type.to_s != "Tournament"
             return false
         end
-        tournament = Tournament.find(@match.manager_id).first
+        tournament = Tournament.find(@match.manager_id)
         tournament.matches.each do |childmatch|
             if childmatch.status == "started"
                 return false

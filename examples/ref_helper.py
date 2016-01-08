@@ -12,7 +12,6 @@ class SocketServer():
         self.socket.listen(10)
 
     def __del__(self):
-        self.socket.shutdown(socket.SHUT_RDWR)
         self.socket.close()
 
 #Handle individual connections to the socket server
@@ -55,7 +54,6 @@ class Manager():
         return result
 
     def __del__(self):
-        self.connection.shutdown(socket.SHUT_RDWR)
         self.connection.close()
 
 #Parse options from manager
