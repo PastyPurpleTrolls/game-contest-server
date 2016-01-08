@@ -5,6 +5,7 @@ class Match < ActiveRecord::Base
   belongs_to :manager, polymorphic: true
   has_many :player_matches , inverse_of: :match , dependent: :destroy
   has_many :players, through: :player_matches
+  has_many :rounds, dependent: :destroy
 
   accepts_nested_attributes_for :player_matches
   has_many :parent_matches, class_name: 'MatchPath', foreign_key: 'child_match_id', dependent: :destroy

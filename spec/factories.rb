@@ -143,15 +143,21 @@ FactoryGirl.define do
     end
   end
 
-	factory :round do
-		factory :challenge_round do
-			association :match, factory: :challenge_match
-		end
+  factory :round do
+    factory :challenge_round do
+      association :match, factory: :challenge_match
+=begin 
+            create player rounds here 
+=end
+    end
 
-		factory :tournament_round do
-			association :match, factory: :tournament_match
-		end
-	end
+    factory :tournament_round do
+      association :match, factory: :tournament_match
+=begin 
+            create player rounds here 
+=end   
+    end
+  end
 
 
   factory :player do
@@ -173,6 +179,13 @@ FactoryGirl.define do
     player
     association :match, factory: :tournament_match
     result "Unknown Result"
+  end
+  
+  factory :player_round do 
+    player
+    round 
+    result "Uknown Round Result" 
+    score 1.0
   end
 
 end
