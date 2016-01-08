@@ -38,6 +38,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    angularjs-rails (1.4.8)
     arel (6.0.3)
     autoprefixer-rails (6.2.3)
       execjs
@@ -53,7 +54,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    childprocess (0.5.8)
+    childprocess (0.5.9)
       ffi (~> 1.0, >= 1.0.11)
     clockwork (1.2.0)
       activesupport
@@ -180,6 +181,7 @@ GEM
       ffi (>= 0.5.0)
     rdoc (4.2.1)
       json (~> 1.4)
+    redcarpet (3.3.4)
     rspec (3.1.0)
       rspec-core (~> 3.1.0)
       rspec-expectations (~> 3.1.0)
@@ -235,7 +237,7 @@ GEM
     thread_safe (0.3.5)
     tilt (1.4.1)
     timecop (0.8.0)
-    timeliness (0.3.7)
+    timeliness (0.3.8)
     turbolinks (2.5.3)
       coffee-rails
     tzinfo (1.2.2)
@@ -243,7 +245,7 @@ GEM
     uglifier (2.7.2)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
-    validates_timeliness (4.0.0)
+    validates_timeliness (4.0.1)
       timeliness (~> 0.3.7)
     will_paginate (3.0.4)
     xpath (2.0.0)
@@ -254,6 +256,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_link_to
+  angularjs-rails
   bcrypt (~> 3.1.7)
   bootstrap-sass (~> 3.3.1)
   capybara (~> 2.4.4)
@@ -272,6 +275,7 @@ DEPENDENCIES
   kaminari
   libnotify
   rails (= 4.2.5)
+  redcarpet (~> 3.3, >= 3.3.4)
   rspec-rails (~> 3.1.0)
   sass-rails (~> 4.0.3)
   sdoc

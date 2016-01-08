@@ -12,7 +12,7 @@ def upload=(uploaded_io)
       self.file_location = '' if self.file_location.nil?
       delete_code(self.file_location)
       self.file_location = store_file(uploaded_io, self.class.to_s.downcase.pluralize, random_hex)
-      uncompress(self.contest.referee.compressed_file_location, File.dirname(self.file_location)) if self.class == Player
+      uncompress(self.contest.referee.compressed_file_location, File.dirname(self.file_location)) if self.class == Player 
     end
 end
 
