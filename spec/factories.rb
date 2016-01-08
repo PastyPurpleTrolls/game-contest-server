@@ -144,19 +144,19 @@ FactoryGirl.define do
   end
 
   factory :round do
+    to_create {|instance| instance.save(validate: false) }
     factory :challenge_round do
       association :match, factory: :challenge_match
-=begin 
-            create player rounds here 
-=end
     end
 
     factory :tournament_round do
       association :match, factory: :tournament_match
-=begin 
-            create player rounds here 
-=end   
     end
+    after(:create) do |round, evaluator|
+      round.match.players.each do |player|
+        create(:player_round, round: round, player: player)
+      end
+    end 
   end
 
 
@@ -184,7 +184,7 @@ FactoryGirl.define do
   factory :player_round do 
     player
     round 
-    result "Uknown Round Result" 
+    result "Unknown Round Result" 
     score 1.0
   end
 
