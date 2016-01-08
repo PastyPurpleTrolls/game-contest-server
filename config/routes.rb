@@ -16,7 +16,9 @@ GameContestServer::Application.routes.draw do
       resources :players
       resources :tournaments do
         resources :players
-	resources :matches, only: [:show, :index]
+				resources :matches, only: [:show, :index] do
+					resources :rounds, only: [:show]
+				end
       end
     end
   end

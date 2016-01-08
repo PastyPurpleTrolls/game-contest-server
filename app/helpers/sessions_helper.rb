@@ -42,6 +42,14 @@ module SessionsHelper
     end
   end
 
+	def ensure_correct_user_from_list(user_id = params[:id], list_of_users)
+    @user = User.friendly.find(user_id)
+		unless((!@user.logged_in?) && (list_of_users.include?(@user)) )
+      flash[:danger] = 'You do not have a player in this challenge match.'
+      redirect_to login_path
+		end
+	end
+
   def ensure_correct_user(user_id = params[:id])
     @user = User.friendly.find(user_id)
     unless current_user?(@user)

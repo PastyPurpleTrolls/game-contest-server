@@ -74,7 +74,7 @@ However, do not perform these command line arguments while the clockwork daemon 
 $ rake db:reset
 ```
 
-However, make sure that you understand the ramifications of this command line argument- the database's existing data is deleted. See [seeds.rb](/db/seeds/development.rb) for what the default values of the db after the db is reset.
+However, make sure that you understand the ramifications of this command- the database's existing data is deleted. See [seeds.rb](/db/seeds/development.rb) for what the default values of the db after the db is reset.
 
 ##Development
 

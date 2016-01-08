@@ -46,6 +46,7 @@ class MatchesController < ApplicationController
     if params[:tournament_id]
       @manager = Tournament.friendly.find(params[:tournament_id])
     elsif params[:contest_id]
+			ensure_correct_user_from_list()
       @manager = Contest.friendly.find(params[:contest_id])
     else
       flash[:danger] = "Unable to find matches"
