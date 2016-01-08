@@ -143,6 +143,17 @@ FactoryGirl.define do
     end
   end
 
+	factory :round do
+		factory :challenge_round do
+			association :match, factory: :challenge_match
+		end
+
+		factory :tournament_round do
+			association :match, factory: :tournament_match
+		end
+	end
+
+
   factory :player do
     user
     contest

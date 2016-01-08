@@ -169,6 +169,22 @@ describe "AuthorizationPages" do
 				end
 			end
 		end
+
+		describe "for Rounds controller show action" do # written with an educated guess of what the path will be for rounds (but that route has not been generated yet)
+			describe "(Rounds are of a challange match)" do 
+        it_behaves_like "redirects to a login" , browser_only: true do
+					let (:challenge_round) { FactoryGirl.create(:challenge_round) }
+          let (:path) { round_path(challenge_round) } 
+				end
+			end
+
+			describe "(Rounds are of a tournament match)" do 
+        it_behaves_like "redirects to a login" , browser_only: true do
+					let (:tournament_round) { FactoryGirl.create(:tournament_round) }
+          let (:path) { round_path(tournament_round) }
+				end
+			end
+		end
   end
 
   describe "authenticated users" do
@@ -285,38 +301,43 @@ describe "AuthorizationPages" do
     end
 
 		describe "for Matches controller" do
-			describe "index action (with path 'contest_matches')" do
+			let (:challenge_match) { FactoryGirl.create(:challenge_match) }
+      let (:other_user) { FactoryGirl.create(:user) }
+			describe "index action (with a challenge match)" do
         it_behaves_like "redirects to root" , browser_only: true do
-					let! (:challenge_match) { FactoryGirl.create(:challenge_match) }
-					it { puts challenge_match.manager.name } 
-
-					# user 'user', with player 'p1', is a player in challenge_match
-					let (:p1) { FactoryGirl.create(:player, user: user, contest_id: challenge_match.manager_id) }
-					it { puts p1.contest.name } 
-					let (:pm1) { FactoryGirl.create(:player_match, player: p1, match: challenge_match) }
-
-					# user 'u2', with player 'p2', is a player in challenge_match
-        	let (:u2) { FactoryGirl.create(:user) }
-					let (:p2) { FactoryGirl.create(:player, user: u2, contest: challenge_match.manager) }
-					let (:pm2) { FactoryGirl.create(:player_match, player: p2, match: challenge_match) }
-
-					# user 'u3' is not allowed to view any challenge_match that it is not apart of
-        	let (:u3) { FactoryGirl.create(:user) }
-        	let (:login_user) { u3 }
+        	let (:login_user) { other_user }
         	let (:signature) { 'Matches for' }
         	let (:error_type) { :danger }
           let (:path) { contest_matches_path(challenge_match.manager) }
-					# test not finished, will ask Geisler about it			
 				end
 			end
 
 			describe "show action (with a challenge match)" do
         it_behaves_like "redirects to root" , browser_only: true do
-          let (:challenge_match) { FactoryGirl.create(:challenge_match) }
         	let (:signature) { 'Match Information' }
         	let (:error_type) { :danger }
           let (:path) { match_path(challenge_match) }
-					# test not finished, will ask Geisler about it			
+				end
+			end
+		end
+
+		describe "for Rounds controller show action" do # written with an educated guess of what the path will be for rounds (but that route has not been generated yet)
+      let (:other_user) { FactoryGirl.create(:user) }
+      let (:login_user) { other_user }
+      let (:signature) { 'Round Information' }
+      let (:error_type) { :danger }
+
+			describe "(Rounds are of a challange match)" do 
+        it_behaves_like "redirects to root" , browser_only: true do
+					let (:challenge_round) { FactoryGirl.create(:challenge_round) }
+          let (:path) { round_path(challenge_round) }
+				end
+			end
+
+			describe "(Rounds are of a tournament match)" do 
+        it_behaves_like "redirects to root" , browser_only: true do
+					let (:tournament_round) { FactoryGirl.create(:tournament_round) }
+          let (:path) { round_path(tournament_round) }
 				end
 			end
 		end
