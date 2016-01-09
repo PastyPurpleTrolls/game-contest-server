@@ -168,6 +168,13 @@ describe "AuthorizationPages" do
           let (:path) { contest_matches_path(contest) }
 				end
 			end
+
+			describe "show action (with a challenge match)" do
+        it_behaves_like "redirects to a login" , browser_only: true do
+          let (:challenge_match) { FactoryGirl.create(:challenge_match) }
+          let (:path) { match_path(challenge_match) }
+				end
+			end
 		end
 
 		describe "for Rounds controller show action" do # written with an educated guess of what the path will be for rounds (but that route has not been generated yet)
@@ -303,9 +310,9 @@ describe "AuthorizationPages" do
 		describe "for Matches controller" do
 			let (:challenge_match) { FactoryGirl.create(:challenge_match) }
       let (:other_user) { FactoryGirl.create(:user) }
+      let (:login_user) { other_user }
 			describe "index action (with a challenge match)" do
         it_behaves_like "redirects to root" , browser_only: true do
-        	let (:login_user) { other_user }
         	let (:signature) { 'Matches for' }
         	let (:error_type) { :danger }
           let (:path) { contest_matches_path(challenge_match.manager) }

@@ -40,14 +40,54 @@ class MatchesController < ApplicationController
 
   def show
     @match = Match.friendly.find(params[:id])
+		unless @match.tournament_match?
+			# ensure that user is logged in, and that the user has a player in the challenge match
+			@list_of_users_in_match = list_of_users_in_match(@match)
+			ensure_correct_user_from_list(@list_of_users_in_match, 'You do not have a player in this challenge match')
+		end
   end
 
   def index
     if params[:tournament_id]
+			@is_challenge_matches = false
       @manager = Tournament.friendly.find(params[:tournament_id])
     elsif params[:contest_id]
-			ensure_correct_user_from_list()
+			@is_challenge_matches = true
       @manager = Contest.friendly.find(params[:contest_id])
+			
+			@users_in_challenge_matches_of_contest = []
+			@manager.matches.each do |match|
+				@users_in_challenge_matches_of_contest.concat(list_of_users_in_match(match))
+=begin
+				match.players.each do |player|
+					@users_in_challenge_matches_of_contest << player.user
+				end
+=end
+			end
+		
+			# ensure that user is logged in, and that the user has a player in contest's challenge matches
+			ensure_correct_user_from_list(@users_in_challenge_matches_of_contest, 'Unable to find matches')
+
+			# the following code is relevant if ensure_correct_user_from_list does not redirect to root or a login
+			# find all the contest's challenge matches in which the user has a player participating in
+
+			# store in an array all the user's players in the contest 
+			@players_of_user_in_contest = Player.where(user: current_user, contest: @manager).to_a
+
+			# store in an array all the contest's challenge matches
+			@matches = @manager.matches.to_a #Match.where(manager: @manager)#, players: @users_players_in_contest)
+
+			# loop for removing the contest's challenge matches that the user is not involved in 
+			@matches.keep_if do |match| 
+				@keep = false # boolean for determining if the match is to be kept in the array
+				match.players.each do |player| 
+					# if user has 1 or more players in the challenge match, keep the challenge match
+					@keep = @players_of_user_in_contest.include?(player)
+					break if @keep # break for sake of efficiency 
+				end
+				@keep
+			end
+
     else
       flash[:danger] = "Unable to find matches"
       redirect_to root_path
@@ -88,5 +128,12 @@ class MatchesController < ApplicationController
     params.require(:match).permit(:earliest_start, player_ids: @contest.players.try(:ids).map(&:to_s))
   end
 
+	def list_of_users_in_match(match) # given a match, it returns a list of users participating in the match. It is possible that duplicates of users are included in the list.
+		@list = []
+		match.players.each do |player|
+			@list << player.user
+		end
+		@list
+	end
 
 end
