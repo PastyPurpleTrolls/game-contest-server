@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Round do
-  let (:round) { FactoryGirl.create(:round) }
+  let (:round) { FactoryGirl.create(:challenge_round) }
   subject { round }
 
   # Tables

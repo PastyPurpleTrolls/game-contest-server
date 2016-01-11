@@ -183,7 +183,7 @@ FactoryGirl.define do
   
   factory :player_round do 
     player
-    round 
+    association :round, factory: :challenge_round 
     result "Unknown Round Result" 
     score 1.0
   end
