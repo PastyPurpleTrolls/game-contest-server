@@ -519,7 +519,7 @@ def tourney(PlayerB,PlayerR):
     bob=cTurtle.Turtle()
     Rwin=0
     Bwin=0
-    iters=2
+    iters=1
     score=0
     manager.send("match", "start")
     for i in range(1,iters+1):
