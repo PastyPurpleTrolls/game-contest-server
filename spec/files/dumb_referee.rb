@@ -1,15 +1,66 @@
-#! /usr/bin/env ruby
+#! /usr/bin/env python3
 
-require 'optparse'
+#This referee will never return a port to the game manger
 
-#For testing a broken ref that never responds
+import json
+#from ref_helper import *
 
-#This section contains the code to allow for command line arguements
-$options = {}
-OptionParser.new do |opts|
-    opts.banner = "Usage: client.rb -p [port] --num [num]"
+class Player():
+    def __init__(self, server):
+        self.wins = 0
 
-    opts.on('-p' , '--port [PORT]' , 'Port for client to connect to') { |v| $options[:port] = v}
-    opts.on('-n' , '--num [NUM]' , 'Number of players we will pass the referee') { |v| $options[:num] = v.to_i}
-    opts.on('-r' , '--rounds [ROUNDS]' , 'Number of rounds we will pass the referee') { |v| $options[:rounds] = v.to_i}
-end.parse!
+        self.connection = Connection(server)
+        self.name = self.connection.listen(1024)
+
+    def addWin(self):
+        self.wins += 1
+        return self.wins
+
+    def move(self):
+        self.connection.send('move')
+        move = self.connection.listen(1024)
+        return move
+
+class Game():
+
+    def __init__(self, numPlayers):
+        self.players = []
+
+        #Create players
+        for i in range(numPlayers):
+            self.players.append(Player(playerServer))
+
+        manager.send("match", "start")
+
+        winner = self.runGame()
+        manager.send("round", "end")
+        self.reportResults("roundresult", winner)
+
+        manager.send("match", "end")
+        self.reportResults("matchresult", winner)
+
+    def reportResults(self, resulttype, winner):
+        for player in self.players:
+            #Tell the player who won
+            player.connection.send(winner.name + " wins\n")
+            #Get the result for who won
+            result = "Win" if (player.name == winner.name) else "Loss"
+            manager.send(resulttype, [player.name, result, str(player.wins)])
+
+    def runGame(self):
+        #Loop until someone wins
+        manager.send("round", ["start", 0])
+        while True:
+            for player in self.players:
+                move = player.move()
+                #Report move to manager
+                manager.send("move", [player.name + " plays " + move, json.dumps([player.name, move])])
+                #Check if it's a winning move
+                if self.checkWin(move):
+                    player.addWin()
+                    return player
+
+    def checkWin(self, move):
+        return move == 'w'
+
+#game = Game(options.num)

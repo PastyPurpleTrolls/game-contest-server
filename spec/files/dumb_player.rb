@@ -1,11 +1,10 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
-#test_player.py
-#Douglas Brown
-#1/15/2014
-#
-#Player that never wins for testing
+#This player will never guess the correct letter
 
+# 1/15/2014
+
+# Guess W! player written in python. Can interact properly with test_referee.rb
 
 #imports
 from optparse import OptionParser
@@ -15,13 +14,9 @@ from random import choice
 #Parsing command line arguments
 #Usage: client.py --name [name] -p [port]"
 parser = OptionParser()
-parser.add_option("-p","--port",action="store",type="int",dest="port")
-parser.add_option("-n","--name" ,action="store",type="string",dest="name")
+parser.add_option("-p", "--port", action="store", type="int", dest="port")
+parser.add_option("-n", "--name", action="store", type="string", dest="name")
 (options, args) = parser.parse_args()
-#print "port"
-#print options.port
-#print "name"
-#print options.name
 
 HOST = 'localhost'
 PORT = options.port
@@ -31,26 +26,20 @@ NAME = options.name
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ip = socket.gethostbyname(HOST)
-#print 'Ip address of ' + HOST + ' is ' + ip
 s.connect((ip,PORT)) #Connect to server
-#print 'Socket Connected to ' + HOST + ' on ip ' + ip
 
-message = str(NAME)+"\n"
-s.send(message)   
+message = str(NAME)
+s.send(message.encode())
 
 #Now receive data
 while True:
-    reply = s.recv(4096)
-    #print "Got input: "+reply.strip()
+    reply = s.recv(4096).decode()
     if "move" in reply:
         guesses = ['a','b','c']
-        blah = choice(guesses)+"\n"
-        s.send(blah)
-        #print "Sent "+blah
+        blah = choice(guesses)
+        s.send(blah.encode())
     elif "wins" in reply:
+        #print(NAME + ': ' + reply.strip())
         break
 
-
-
-
-
+s.close()
