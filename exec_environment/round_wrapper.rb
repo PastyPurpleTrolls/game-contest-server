@@ -163,7 +163,8 @@ class RoundWrapper
                 if input[:value][0] == "start"
                     @rounds.push({
                         "results": {},
-                        "moves": []
+                        "moves": [],
+                        "info": input[:value][1]
                     })
                 end
             when "roundresult"
