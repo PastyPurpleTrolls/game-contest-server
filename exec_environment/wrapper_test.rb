@@ -12,7 +12,7 @@ class MockPlayer
     def initialize(file_location,name)
         self.file_location = file_location
         self.name = name
-        @rounds_capable = true
+        @rounds_capable = false
     end
 end
 
@@ -25,7 +25,7 @@ ref = MockPlayer.new("../examples/checkers_ref.py", "ref")
 #p2 = MockPlayer.new("../spec/exec_environment/test_player.rb", "second")
 #ref = MockPlayer.new("../spec/exec_environment/test_referee.rb", "ref")
 
-round_wrapper = RoundWrapper.new(ref, 2, 5, [p1, p2], 3)
+round_wrapper = RoundWrapper.new(ref, 2, 20, [p1, p2], 3)
 round_wrapper.run_match
 
 #puts(round_wrapper.status)
