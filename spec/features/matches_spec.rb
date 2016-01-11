@@ -379,6 +379,21 @@ describe "MatchesPages" do
         should have_link(m.id, match_path(m))
       end
     end
+=begin
+    let (:contest) { FactoryGirl.create(:contest) }
+		let (:challenge_match) { FactoryGirl.create(:challenge_match, manager: contest) }
+		let (:logged_in_user) do
+			@player = challenge_match.players.first
+		end
+    before do
+      5.times { FactoryGirl.create(:challenge_match, manager: contest) }
+      login user
+      visit contest_matches_path(contest)
+    end
+
+		it "lists all challenge matches for a contest, in which the user has a player participating" do
+		end
+=end
   end
 
 end
