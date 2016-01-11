@@ -40,11 +40,11 @@ class MatchesController < ApplicationController
 
   def show
     @match = Match.friendly.find(params[:id])
-		unless @match.tournament_match?
-			# ensure that user is logged in, and that the user has a player in the challenge match
-			@list_of_users_in_match = list_of_users_in_match(@match)
-			ensure_correct_user_from_list(@list_of_users_in_match, 'You do not have a player in this challenge match')
-		end
+#		unless @match.tournament_match?
+#			ensure that user is logged in, and that the user has a player in the challenge match
+#			@list_of_users_in_match = list_of_users_in_match(@match)
+#			ensure_correct_user_from_list(@list_of_users_in_match, 'You do not have a player in this challenge match')
+#		end
   end
 
   def index
