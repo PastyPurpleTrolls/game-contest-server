@@ -469,10 +469,10 @@ def checkers(CB,bob,PlayerB,PlayerR,Bwin,Rwin,totalPlayed):
         moveCount += 1
         possibles=getPossibles(CB,player)
         if player=="red":
-            pname = P1.name
+            pname = P2.name
             move=P2.automatedMove(CB,player)
         else:
-            pname = P2.name
+            pname = P1.name
             move=P1.automatedMove(CB,player)
         countBadMoves=1
         #Until a valid move or exceeds allowed number of bad move trys
