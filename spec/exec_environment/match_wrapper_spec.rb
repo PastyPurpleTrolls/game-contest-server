@@ -45,8 +45,8 @@ describe "MatchWrapper" do
   before :each do
     @user = FactoryGirl.create(:user)
     @contest = FactoryGirl.create(:contest)
-    @player1 = FactoryGirl.create(:player, user: @user, contest: @contest, name: 'dumb_player', file_location: Rails.root.join('spec', 'exec_environment', '../files/dumb_player.rb').to_s )
-    @player2 = FactoryGirl.create(:player, user: @user, contest: @contest, name: 'stupid_player', file_location: Rails.root.join('spec', 'exec_environment', '../files/dumb_player.rb').to_s )
+    @player1 = FactoryGirl.create(:player, user: @user, contest: @contest, name: 'dumb_player', file_location: Rails.root.join('spec', 'exec_environment', '../files/dumb_player.py').to_s )
+    @player2 = FactoryGirl.create(:player, user: @user, contest: @contest, name: 'stupid_player', file_location: Rails.root.join('spec', 'exec_environment', '../files/dumb_player.py').to_s )
     @referee = FactoryGirl.create(:player, name: "referee", file_location: Rails.root.join('spec', 'exec_environment', '../../examples/test_referee.rb').to_s )
     @match_wrapper = MatchWrapper.new(@referee , 2, 5, [@player1, @player2], 1)
   end
