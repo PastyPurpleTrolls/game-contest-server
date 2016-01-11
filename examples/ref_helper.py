@@ -12,7 +12,10 @@ class SocketServer():
         self.socket.listen(10)
 
     def __del__(self):
-        self.socket.close()
+        try:
+            self.socket.close()
+        except:
+            return
 
 #Handle individual connections to the socket server
 class Connection():
@@ -23,14 +26,17 @@ class Connection():
         var = ""
         while var == "":
             var = self.connection.recv(buffersize)
-        return var
+        return var.decode()
 
     def send(self, data):
-        self.connection.send(data)
+        self.connection.send(data.encode())
 
     def __del__(self):
-        self.connection.shutdown(socket.SHUT_RDWR)
-        self.connection.close()
+        try:
+            self.connection.shutdown(socket.SHUT_RDWR)
+            self.connection.close()
+        except:
+            return
 
 class Manager():
     #Create connection with manager
@@ -54,7 +60,10 @@ class Manager():
         return result
 
     def __del__(self):
-        self.connection.close()
+        try:
+            self.connection.close()
+        except:
+            return
 
 #Parse options from manager
 parser = OptionParser()
