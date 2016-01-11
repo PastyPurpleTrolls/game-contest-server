@@ -123,6 +123,7 @@ class MatchRunner
             #Save round data to json file
             self.save_round_json(round_obj.slug, round)
         end
+        return true
     end
 
     #Generate log files for playing back rounds
