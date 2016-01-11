@@ -45,10 +45,12 @@ shared_examples "redirects to root" do |options|
       end
     end
 
-    describe "visit HTTP path" do
-      before { send(method, http_path) }
+  	unless options[:browser_only]
+    	describe "visit HTTP path" do
+      	before { send(method, http_path) }
 
-      it { errors_on_redirect(root_path, error_type) }
-    end
+      	it { errors_on_redirect(root_path, error_type) }
+    	end
+		end
   end
 end

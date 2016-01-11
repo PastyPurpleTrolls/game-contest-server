@@ -41,13 +41,17 @@ module SessionsHelper
       redirect_to root_path
     end
   end
-
-	def ensure_correct_user_from_list(user_id = params[:id], list_of_users)
-    @user = User.friendly.find(user_id)
-		unless((!@user.logged_in?) && (list_of_users.include?(@user)) )
-      flash[:danger] = 'You do not have a player in this challenge match.'
+	
+	def ensure_correct_user_from_list(list_of_users, message)
+    if !logged_in?
+      flash[:warning] = 'Not logged in.'
       redirect_to login_path
-		end
+    else
+			unless list_of_users.include?(current_user)
+      	flash[:danger] = message
+      	redirect_to root_path
+			end
+    end
 	end
 
   def ensure_correct_user(user_id = params[:id])

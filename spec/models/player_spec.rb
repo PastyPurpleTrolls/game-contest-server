@@ -11,6 +11,8 @@ describe Player do
   it { should respond_to(:tournaments) }
   it { should respond_to(:player_matches) }
   it { should respond_to(:matches) }
+  it { should respond_to(:player_rounds) }
+  it { should respond_to(:rounds) }
   # Attributes
   it { should respond_to(:file_location) }
   it { should respond_to(:description) }
