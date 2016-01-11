@@ -1,9 +1,7 @@
 #! /usr/bin/env python3
 
-#This referee will never return a port to the game manger
-
 import json
-#from ref_helper import *
+from ref_helper import *
 
 class Player():
     def __init__(self, server):
@@ -63,4 +61,4 @@ class Game():
     def checkWin(self, move):
         return move == 'w'
 
-#game = Game(options.num)
+game = Game(options.num)

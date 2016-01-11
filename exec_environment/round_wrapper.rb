@@ -13,7 +13,7 @@ class RoundWrapper
     attr_accessor :status, :rounds, :match
 
     #Constructor, sets socket for communication to referee and starts referee and players
-    def initialize(referee,number_of_players,max_match_time,players,rounds)  
+    def initialize(referee, number_of_players, max_match_time, players, rounds)  
         #Sets port for referee to talk to wrapper_server  
         @wrapper_server = TCPServer.new(0)
         
@@ -22,12 +22,11 @@ class RoundWrapper
         @child_list = []
         @number_of_players = number_of_players
         @max_match_time = max_match_time
+        @num_rounds = rounds
     
         @status = {}
         @rounds = []
         @match = {}
-
-	    @num_rounds = rounds
 
         @command_char = ":"
         @value_char = "|"
@@ -163,7 +162,8 @@ class RoundWrapper
                 if input[:value][0] == "start"
                     @rounds.push({
                         "results": {},
-                        "moves": []
+                        "moves": [],
+                        "info": input[:value][1]
                     })
                 end
             when "roundresult"
