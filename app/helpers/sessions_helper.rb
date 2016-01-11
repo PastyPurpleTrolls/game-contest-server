@@ -56,7 +56,7 @@ module SessionsHelper
 
   def ensure_correct_user(user_id = params[:id])
     @user = User.friendly.find(user_id)
-    unless current_user?(@user)
+    unless current_user?(@user) || current_user.admin?
       flash[:danger] = 'Unable to edit another user\'s stuff.'
       redirect_to root_path
     end

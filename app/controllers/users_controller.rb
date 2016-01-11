@@ -36,7 +36,10 @@ class UsersController < ApplicationController
   end
 
   def update
-    if @user.update(acceptable_params)
+		if current_user.admin? && @user.update(admin_acceptable_params)
+      flash[:success] = @user.username + "'s profile has been modified"
+      redirect_to @user
+    elsif @user.update(acceptable_params)
       flash[:success] = "Your profile has been modified"
       redirect_to @user
     else
@@ -54,6 +57,10 @@ class UsersController < ApplicationController
 
   def acceptable_params
     params.require(:user).permit(:username, :password, :password_confirmation, :email)
+  end
+
+  def admin_acceptable_params
+    params.require(:user).permit(:username, :password, :password_confirmation, :email, :admin, :contest_creator)
   end
 
   def ensure_admin

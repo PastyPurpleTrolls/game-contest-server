@@ -1,6 +1,16 @@
 class RoundsController < ApplicationController
   before_action :ensure_user_logged_in, only: [:show]
+
+	def new
+		@round = Round.new
+		
+	end
+
+	def create
+		@round = Round.create		
+	end	
+
 	def show
-		@show = Round.find(params[:id])
+		@round = Round.friendly.find(params[:id])
 	end
 end

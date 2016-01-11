@@ -150,6 +150,7 @@ ActiveRecord::Schema.define(version: 20160108185610) do
     t.integer  "match_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "slug"
   end
 
   add_index "rounds", ["match_id"], name: "index_rounds_on_match_id"
