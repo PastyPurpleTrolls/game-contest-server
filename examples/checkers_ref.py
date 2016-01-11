@@ -525,7 +525,7 @@ def tourney(PlayerB,PlayerR):
     for i in range(1,iters+1):
         CB=[]
         #print("Game:",i)
-        manager.send("round", ["start", json.dumps({P1.name: PlayerB, P2.name: PlayerR}))
+        manager.send("round", ["start", json.dumps({P1.name: PlayerB, P2.name: PlayerR}]))
         result=checkers(CB,bob,PlayerB,PlayerR,Bwin,Rwin,i-1)
         manager.send("round", "end")
         bob.clear()
