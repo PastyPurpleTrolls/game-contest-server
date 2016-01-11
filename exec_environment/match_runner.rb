@@ -67,17 +67,13 @@ class MatchRunner
     def send_results_to_db(round_runner)
         puts round_runner.status
         if round_runner.status[:error]
-            #Error handling, save "inconclusive" as match status
-            @match_participants.each do |player|
-                player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id).first
-                player_match.result = "Error"
-                player_match.save!        
-                print_results(player.name,"Error",nil,"\n")                
-            end
-            puts "   Match runner could not finish match #"+@match_id.to_s
+            report_error
             return
         else
-            self.save_rounds(round_runner.rounds)
+            if not self.save_rounds(round_runner.rounds)
+                report_error
+                return false
+            end
             #Print and save results, schedule follow-up matches
             child_matches = MatchPath.where(parent_match_id: @match_id)
             puts "   Match runner writing results match #"+@match_id.to_s
@@ -96,7 +92,20 @@ class MatchRunner
         self.complete_tournament
     end
 
+    def report_error
+        @match_participants.each do |player|
+            player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id).first
+            player_match.result = "Error"
+            player_match.save!
+            print_results(player.name, "Error", nil, "\n")
+        end
+        puts "    Match runner could not finish match #" + @match.id.to_s
+    end
+
     def save_rounds(rounds)
+        if rounds.length != @num_rounds
+            return false
+        end
         #Loop through all the rounds and create a new record in the DB
         rounds.each do |round|
             round_obj = Round.create!(
@@ -114,6 +123,7 @@ class MatchRunner
             #Save round data to json file
             self.save_round_json(round_obj.slug, round)
         end
+        return true
     end
 
     #Generate log files for playing back rounds

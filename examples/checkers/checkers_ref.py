@@ -469,10 +469,10 @@ def checkers(CB,bob,PlayerB,PlayerR,Bwin,Rwin,totalPlayed):
         moveCount += 1
         possibles=getPossibles(CB,player)
         if player=="red":
-            pname = P1.name
+            pname = P2.name
             move=P2.automatedMove(CB,player)
         else:
-            pname = P2.name
+            pname = P1.name
             move=P1.automatedMove(CB,player)
         countBadMoves=1
         #Until a valid move or exceeds allowed number of bad move trys
@@ -519,13 +519,13 @@ def tourney(PlayerB,PlayerR):
     bob=cTurtle.Turtle()
     Rwin=0
     Bwin=0
-    iters=2
+    iters=1
     score=0
     manager.send("match", "start")
     for i in range(1,iters+1):
         CB=[]
         #print("Game:",i)
-        manager.send("round", ["start", i])
+        manager.send("round", ["start", json.dumps({P1.name: PlayerB, P2.name: PlayerR})])
         result=checkers(CB,bob,PlayerB,PlayerR,Bwin,Rwin,i-1)
         manager.send("round", "end")
         bob.clear()

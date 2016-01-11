@@ -43,7 +43,7 @@ Do **not** use `|` for any purpose except as a delimiter to represent lists in t
 
 - `port`: (int) TCP port that the players should connect on. This needs to be sent within the first 3 seconds of being started.
 - `match`: Values: `start`, `end`. Tell the manager to expect information about the match.
-- `round`: Pipe separated double. `start` or `end`. Round index. 
+- `round`: Pipe separated double. `start` or `end`. Round start can also contain any data about the round. 
 - `move`: Human readable description of the move as well as any round data needed by the visualizer. Data should be formatted in JSON to make parsing easier. 
 - `gamestate`: Implementation dependant value. Sent every 10 moves to represent the current state of the game. To ease parsing in the browser, please use JSON.
 - `roundresult`: Sent directly after `round:end`. Pipe separated tuple with player name, result, and score. Score is implementation dependant. Result can only be `Win`, `Loss`, and `Tie`.
@@ -54,7 +54,7 @@ Do **not** use `|` for any purpose except as a delimiter to represent lists in t
 ```
 port:2222
 match:start
-round:start|1
+round:start|{}
 move:description|movedata
 gamestate:{}
 round:end
