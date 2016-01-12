@@ -33,7 +33,7 @@
 </div>
 
 <div class="form-gorup">
-    <p><strong>Number of Matches</strong></p>
-    <%= f.select :match_limit, 1..@contest.referee.match_limit.to_i, {},  class: 'form-control' %>
+    <p><strong>Number of Rounds</strong></p>
+    <%= f.select :num_rounds, 1..@contest.referee.match_limit.to_i, {},  class: 'form-control' %>
     <br/>
 </div>
