@@ -281,7 +281,7 @@ describe Match do
     it { should_not be_valid }
   end
 
-=begin
+
 	describe "has 0 rounds" do
 		before do
 			match.num_rounds = 0
@@ -296,7 +296,7 @@ describe Match do
 
 		it { should be_valid }	
 	end
-=end
+
 
   describe "validations" do
     it { should be_valid }
