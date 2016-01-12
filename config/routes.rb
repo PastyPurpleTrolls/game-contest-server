@@ -9,7 +9,14 @@ GameContestServer::Application.routes.draw do
   get '/help/:category/(:page)', to: 'help#show'
 
   resources :users
-  resources :referees
+
+  resources :referees do
+    member do
+        get 'assets/:asset', to: 'referees#show', :constraints  => { :asset => /[0-z\.]+/ }
+    end
+  end
+
+
   shallow do
     resources :contests do
       resources :matches, except: [:edit, :update]
