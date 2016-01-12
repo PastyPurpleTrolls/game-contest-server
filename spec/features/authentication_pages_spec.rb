@@ -329,7 +329,7 @@ describe "AuthorizationPages" do
 		end
 
 		describe "for Rounds controller show action" do # written with an educated guess of what the path will be for rounds (but that route has not been generated yet)
-      let (:other_user) { FactoryGirl.create(:user) }
+      let! (:other_user) { FactoryGirl.create(:user) }
       let (:login_user) { other_user }
       let (:signature) { 'Round Information' }
       let (:error_type) { :danger }
@@ -374,20 +374,5 @@ describe "AuthorizationPages" do
         let (:http_path) { user_path(admin) }
       end
     end
-
-  describe "authenticated, but both users are admins" do
-    describe "for Users controller" do 
-      it_behaves_like "redirects to root" do
-        let (:other_admin) { FactoryGirl.create(:admin) }
-	let (:login_user) { FactoryGirl.create(:admin) }
-	let (:path) { edit_user_path(other_admin) }
-	let (:signature) { 'Edit user' }
-	let (:error_type) { :danger }
-	let (:method) { :patch }
-	let (:http_path) { user_path(other_admin) }
-
-        end
-      end
-    end 
   end
 end

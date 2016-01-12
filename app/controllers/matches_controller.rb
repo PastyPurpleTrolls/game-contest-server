@@ -40,11 +40,11 @@ class MatchesController < ApplicationController
 
   def show
     @match = Match.friendly.find(params[:id])
-		unless @match.tournament_match?
-			# ensure that user is logged in, and that the user has a player in the challenge match
-			@list_of_users_in_match = list_of_users_in_match(@match)
-			ensure_correct_user_from_list(@list_of_users_in_match, 'You do not have a player in this challenge match')
-		end
+#		unless @match.tournament_match?
+#			ensure that user is logged in, and that the user has a player in the challenge match
+#			@list_of_users_in_match = list_of_users_in_match(@match)
+#			ensure_correct_user_from_list(@list_of_users_in_match, 'You do not have a player in this challenge match')
+#		end
   end
 
   def index
@@ -129,13 +129,5 @@ class MatchesController < ApplicationController
   def acceptable_params
     params.require(:match).permit(:earliest_start, :num_rounds, player_ids: @contest.players.try(:ids).map(&:to_s))
   end
-
-	def list_of_users_in_match(match) # given a match, it returns a list of users participating in the match. It is possible that duplicates of users are included in the list.
-		@list = []
-		match.players.each do |player|
-			@list << player.user
-		end
-		@list
-	end
 
 end

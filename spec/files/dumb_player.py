@@ -1,9 +1,6 @@
 #! /usr/bin/env python3
 
-# test_player.py
-# Douglas Brown
-# 1/15/2014
-#
+# Dumb player, will never guess the right letter
 
 # Guess W! player written in python. Can interact properly with test_referee.rb
 
@@ -36,7 +33,7 @@ s.send(message.encode())
 while True:
     reply = s.recv(4096).decode()
     if "move" in reply:
-        guesses = ['a','b','c','w']
+        guesses = ['a','b','c']
         blah = choice(guesses)
         s.send(blah.encode())
     elif "wins" in reply:
