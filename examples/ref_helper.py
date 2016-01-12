@@ -26,10 +26,12 @@ class Connection():
         var = ""
         while var == "":
             var = self.connection.recv(buffersize)
-        return var.decode()
+        return var
 
     def send(self, data):
-        self.connection.send(data.encode())
+        if type(data) is str:
+            data = data.encode()
+        self.connection.send(data)
 
     def __del__(self):
         try:
