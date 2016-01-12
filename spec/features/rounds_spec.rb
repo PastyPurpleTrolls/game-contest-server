@@ -11,26 +11,26 @@ describe "RoundsPages" do
 		let (:user) { FactoryGirl.create(:user) }
 		let (:login_user) { user }
 
-    before do  
-      5.times { FactoryGirl.create(:round, match: tournament_match) }
-      5.times { FactoryGirl.create(:round, match: tournament_match_2) }
-      5.times { FactoryGirl.create(:round, match: challenge_match) }
-			visit match_path(:tournament_match)
+    before do
+			FactoryGirl.create_list(:round, 5, match: tournament_match)
+			FactoryGirl.create_list(:round, 5, match: tournament_match_2)
+			FactoryGirl.create_list(:round, 5, match: contest_match)
+			visit match_rounds_path(tournament_match)
 		end
 
 		it "lists all the rounds for the match" do
-			Match.where(match: tournament_match).each do |r|
+			Round.where(match: tournament_match).each do |r|
 				should have_selector('li', text: r.id)	
         should have_link(r.id, round_path(r))
 			end
 		end
 
 		it "should not list rounds of a different match" do
-			Match.where(match: tournament_match_2).each do |r|
+			Round.where(match: tournament_match_2).each do |r|
 				should_not have_selector('li', text: r.id)	
         should_not have_link(r.id, round_path(r))
 			end
-			Match.where(match: challenge_match).each do |r|
+			Round.where(match: contest_match).each do |r|
 				should_not have_selector('li', text: r.id)	
         should_not have_link(r.id, round_path(r))
 			end
@@ -45,21 +45,21 @@ describe "RoundsPages" do
 		let (:challenge_match_2) { FactoryGirl.create(:challenge_match, manager: contest) }
 
     before do
-      5.times { FactoryGirl.create(:round, match: tournament_match) }
-      5.times { FactoryGirl.create(:round, match: challenge_match) }
-      5.times { FactoryGirl.create(:round, match: challenge_match_2) }
-			visit match_path(:challenge_match)
+			FactoryGirl.create_list(:round, 5, match: tournament_match)
+			FactoryGirl.create_list(:round, 5, match: tournament_match_2)
+			FactoryGirl.create_list(:round, 5, match: contest_match_2)
+			visit match_rounds_path(contest_match)
 		end
 
 		it "lists all the rounds for the match" do
-			Round.where(match: challenge_match).each do |r|
+				Round.where(match: contest_match).each do |r|
 				should have_selector('li', text: r.id)	
         should have_link(r.id, round_path(r))
 			end
 		end
 
 		it "should not list rounds of a different match" do
-			Round.where(match: challenge_match_2).each do |r|
+			Round.where(match: contest_match_2).each do |r|
 				should_not have_selector('li', text: r.id)	
         should_not have_link(r.id, round_path(r))
 			end
