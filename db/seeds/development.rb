@@ -34,7 +34,7 @@ referee = Referee.create!(
   name: "Guess W!",
   rules_url: "http://www.google.com",
   players_per_game: 2,
-  file_location: Rails.root.join( "examples" , "test_referee.rb").to_s,
+  file_location: Rails.root.join( "examples" , "test_ref.py").to_s,
   time_per_game: 2,
   match_limit: 100
 )
@@ -54,7 +54,7 @@ player1 = Player.create!(
   name: "Phil",
   downloadable: false,
   playable: false,
-  file_location: Rails.root.join( "examples" , "test_player.rb").to_s
+  file_location: Rails.root.join( "examples" , "test_player.py").to_s
 )
 player2 = Player.create!(
   user: student,
@@ -72,7 +72,7 @@ player3 = Player.create!(
   name: "Alex",
   downloadable: false,
   playable: false,
-  file_location: Rails.root.join("examples" , "test_player.rb").to_s
+  file_location: Rails.root.join("examples" , "test_player.py").to_s
 )
 player4 = Player.create!(
   user: student,
@@ -81,7 +81,7 @@ player4 = Player.create!(
   name: "Doug",
   downloadable: false,
   playable: false,
-  file_location: Rails.root.join("examples" , "test_player.rb").to_s
+  file_location: Rails.root.join("examples" , "test_player.py").to_s
 )
 player5 = Player.create!(
   user: student,
@@ -108,7 +108,7 @@ player7 = Player.create!(
   name: "Juan",
   downloadable: false,
   playable: false,
-  file_location: Rails.root.join( "examples" , "test_player.rb").to_s
+  file_location: Rails.root.join( "examples" , "test_player.py").to_s
 )
 
 tournament = Tournament.create!(
