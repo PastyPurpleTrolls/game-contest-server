@@ -7,6 +7,7 @@
 
 * See terminology in [User Documentation](/help/user)
 
+
 ##Contest Creator Capabilities
 
 Contest Creator is capable of 
