@@ -13,6 +13,7 @@ describe Match do
   it { should respond_to(:status) }
   it { should respond_to(:earliest_start) }
   it { should respond_to(:completion) }
+	it { should respond_to(:num_rounds) }
 
   # Do not do manager_type tests as it is set by rails
 

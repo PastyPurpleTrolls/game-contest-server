@@ -46,4 +46,15 @@ describe Round do
 		it { should_not be_valid }
 	end
 	
+	describe "is created if there are already num_round rounds for that match" do
+		let (:match) { FactoryGirl.create(:tournament_match, num_rounds: 5) }	
+		
+		before do
+			FactoryGirl.create_list(:round, 6, match: match)
+#			puts Round.last.id.to_s	
+		end
+
+		it { should_not be_valid }
+	end
+		
 end
