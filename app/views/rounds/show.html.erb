@@ -11,9 +11,10 @@
         as: 'player_round' %> 
 </ol>
 
+<div class="replay-viewer"></div>
 <script>
     (function() {
-        new Replay("<%= @match.slug %>", "<%= @round.slug %>"); 
+        new Replay(document.querySelector(".replay-viewer"), "<%= @match.slug %>", "<%= @round.slug %>"); 
     }).call(this);
 </script>
 

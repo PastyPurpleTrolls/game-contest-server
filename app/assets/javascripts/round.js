@@ -76,17 +76,87 @@
         };
     };
 
-    var Replay = function(MatchID, RoundID) {
+    /*
+     * Replay
+     * Displays a Replay of a given round
+     * element (HTMLDomElement) Element to render to
+     * MatchID (string)
+     * RoundID (string)
+     */
+    var Replay = function(element, MatchID, RoundID) {
         var self = this;
 
         self.MatchID = MatchID;
         self.RoundID = RoundID;
 
+        self.element = element;
+
+        self.round = {};
         self.status = true;
 
+        self.init();
+    }
+
+    /*
+     * init()
+     * Start the replay object, generate the layout elements, and load the round file
+     */
+    Replay.prototype.init = function() {
+        var self = this;
+
+        self.generateLayout();
         self.loadRound();
     }
 
+    /*
+     * roundLoaded()
+     * Run after the round has been loaded
+     */
+    Replay.prototype.roundLoaded = function() {
+        var self = this;
+        self.displayMoves();
+    }
+
+    /*
+     * generateLayout()
+     * Creates HTML elements for the viewer
+     */
+    Replay.prototype.generateLayout = function() {
+        var self = this;
+
+        self.elements = {};
+
+        self.elements["moves-viewer"] = document.createElement("ol");
+        self.elements["controls"] = document.createElement("div");
+
+        for (var key in self.elements) {
+            self.elements[key].classList.add(key);
+            self.element.appendChild(self.elements[key]);
+        }
+    }
+
+    /*
+     * displayMoves()
+     * Generates HTML for displaying moves navigation to the user
+     */
+    Replay.prototype.displayMoves = function() {
+        var self = this;
+
+        var movesViewer = self.elements["moves-viewer"];
+
+        var move, view;
+        for (var i = 0; i < self.round.moves.length; i++) {
+            move = self.round.moves[i];
+            view = document.createElement("li");
+            view.textContent = move["description"];
+            movesViewer.appendChild(view);
+        }        
+    }
+
+    /*
+     * loadRound()
+     * Load the round JSON file given the matchID and the roundID
+     */
     Replay.prototype.loadRound = function() {
         var self = this;
 
@@ -96,7 +166,7 @@
         var callback = {
             success: function(data) {
                 self.round = JSON.parse(data);
-                console.log(self.round);
+                self.roundLoaded();
             },
             error: function(data) {
                 throw new Exception("Can't load round file");
