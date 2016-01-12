@@ -1,6 +1,6 @@
 GameContestServer::Application.routes.draw do
-  get "matches/show"
-  get "matches/index"
+#  get "matches/show"
+#  get "matches/index"
   get "visual_tests/colorscheme", as: :colorscheme
   root 'users#welcome'
 
@@ -10,15 +10,14 @@ GameContestServer::Application.routes.draw do
 
   resources :users
   resources :referees
-  shallow do
-    resources :contests do
-      resources :matches, except: [:edit, :update]
+
+  resources :contests, shallow: true do
+    resources :matches, except: [:edit, :update]
+    resources :players
+    resources :tournaments, shallow: true do
       resources :players
-      resources :tournaments do
-        resources :players
-				resources :matches, only: [:show, :index] do
-					resources :rounds, only: [:show]
-				end
+      resources :matches, only: [:index] do
+	resources :rounds, only: [:show]
       end
     end
   end
