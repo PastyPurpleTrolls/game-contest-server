@@ -19,7 +19,7 @@ class Match < ActiveRecord::Base
     if: :completed?
 	validates :num_rounds,				presence: true
 
-	validate :correct_number_of_rounds
+#	validate :correct_number_of_rounds
   validate :correct_number_of_players, unless: :unassigned?
   validate :players_allowed_to_play, if: :tournament_match?
 
@@ -58,10 +58,11 @@ class Match < ActiveRecord::Base
                                     self.manager.referee.players_per_game
   end
 
-	def correct_number_of_rounds
-#		puts Round.where(match_id: self.id).count
-		return if (self.num_rounds == Round.where(match_id: self.id).count)
-	end
+#	def correct_number_of_rounds
+#		puts self.num_rounds
+#		puts Round.all.count
+#		return if (self.num_rounds >= Round.where(match_id: self.id).count)
+#	end
 
   def tournament_match?
     return if self.manager.nil?
