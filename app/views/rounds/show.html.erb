@@ -1,5 +1,8 @@
-<h1>Round Information</h1>
+<% content_for :javascript_includes do %>
+    <%= javascript_include_tag Rails.root.join(url_for(@referee), "assets", "script.js") %>
+<% end %>
 
+<h1>Round Information</h1>
 <p>Round <%= @round.id %> for <%= link_to "Match " + @round.match_id.to_s, @round.match %></p>
 <h2>Results</h2>
 	<ol>

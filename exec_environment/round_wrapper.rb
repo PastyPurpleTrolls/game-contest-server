@@ -198,7 +198,7 @@ class RoundWrapper
     def reap_children
         @child_list.each do |pid|
             Process.kill('SIGKILL', pid)
-	        Process.wait pid
+	        Process.waitpid(pid)
         end
         @child_list = []
     end 
