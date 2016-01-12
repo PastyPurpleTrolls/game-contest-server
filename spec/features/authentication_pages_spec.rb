@@ -329,7 +329,7 @@ describe "AuthorizationPages" do
 		end
 
 		describe "for Rounds controller show action" do # written with an educated guess of what the path will be for rounds (but that route has not been generated yet)
-      let (:other_user) { FactoryGirl.create(:user) }
+      let! (:other_user) { FactoryGirl.create(:user) }
       let (:login_user) { other_user }
       let (:signature) { 'Round Information' }
       let (:error_type) { :danger }
