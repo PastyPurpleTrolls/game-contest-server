@@ -117,8 +117,25 @@
     Replay.prototype.roundLoaded = function() {
         var self = this;
         self.displayMoves();
+        self.loadMove(2);
+    }
 
-        self.loadMove(0);
+    /*
+     * parseJSON()
+     * Helper function, replaces all single quotes with double quotes and parses the string as JSON
+     * string {string} String to parse
+     */
+    Replay.prototype.parseJSON = function(string) {
+        var self = this;
+        
+        try {
+            string = string.replace(/'/gi, '"');
+            var obj = JSON.parse(string);
+        } catch(e) {
+            var obj = {};
+        }
+
+        return obj;
     }
 
     /*
@@ -167,12 +184,19 @@
     Replay.prototype.loadMove = function(move) {
         var self = this;
 
-        self.currentMoveIndex = move;
+        self.currentMoveIndex = (move > self.round.moves.length || move < 0) ? 0 : move;
         self.currentMove = self.round.moves[self.currentMoveIndex];
 
         self.generateGameState();
-        self.renderGame();
+        //self.renderGame();
     }
+
+    /*
+     * generateGameState()
+     * Generate the current gamestate based upon the current move
+     * Stub function, define in plugin
+     */
+    Replay.prototype.generateGameState = function() {}
 
     /*
      * loadRound()
@@ -187,7 +211,7 @@
         var callback = {
             success: function(data) {
                 self.round = JSON.parse(data);
-                console.log(self.round);
+                console.log("round", self.round);
                 self.roundLoaded();
             },
             error: function(data) {
