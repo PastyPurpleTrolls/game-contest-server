@@ -52,8 +52,8 @@ module Uploadable
 
     def delete_code_locations
         delete_code(self.file_location)
-        delete_code(self.compressed_file_location) if self.compressed_file_location?
-        delete_code(self.replay_assets_location) if self.replay_assets_location?
+        delete_code(self.compressed_file_location) if self.compressed_file_location
+        delete_code(self.replay_assets_location) if self.replay_assets_location
     end
 
     #Delete directory where file is located
@@ -63,6 +63,9 @@ module Uploadable
             location = pathname.dirname
         end
         FileUtils.rm_rf(location) if pathname.exist?
+        if pathname.exist? 
+            raise "Deleting stuff it shouldnt"
+        end
     end
 
     def store_file(uploaded_io, dir, random_hex)
