@@ -4,6 +4,7 @@ class PlayerMatch < ActiveRecord::Base
 
   validates :player,    presence: true
   validates :match,     presence: true
+  validates :result,  	inclusion: [nil, 'Win', 'Loss', 'Tie', 'Unknown Result']
 
   default_scope -> { order("player_matches.result DESC") }
   scope :wins, -> { where(result: 'Win') }
