@@ -42,7 +42,6 @@ describe Round do
 			round.players.clear
 			round.players << p1 << p3
 		end
-
 		it { should_not be_valid }
 	end
 	
