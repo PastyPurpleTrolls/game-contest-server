@@ -14,5 +14,7 @@ class RoundsController < ApplicationController
         else
             @referee = @match.manager.contest.referee
         end
+
+        @assets_url = URI.join(root_url, url_for(@referee) + "/",  "assets/") 
 	end
 end

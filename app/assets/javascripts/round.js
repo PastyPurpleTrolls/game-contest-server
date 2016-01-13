@@ -83,11 +83,12 @@
      * MatchID (string)
      * RoundID (string)
      */
-    var Replay = function(element, MatchID, RoundID) {
+    var Replay = function(element, assetsUrl, MatchID, RoundID) {
         var self = this;
 
         self.MatchID = MatchID;
         self.RoundID = RoundID;
+        self.assetsUrl = assetsUrl;
 
         self.element = element;
 
@@ -105,6 +106,7 @@
         var self = this;
 
         self.generateLayout();
+        self.initRenderer();
         self.loadRound();
     }
 
@@ -115,6 +117,8 @@
     Replay.prototype.roundLoaded = function() {
         var self = this;
         self.displayMoves();
+
+        self.loadMove(0);
     }
 
     /*
@@ -126,6 +130,7 @@
 
         self.elements = {};
 
+        self.elements["renderer"] = document.createElement("div");
         self.elements["moves-viewer"] = document.createElement("ol");
         self.elements["controls"] = document.createElement("div");
 
@@ -155,6 +160,21 @@
     }
 
     /*
+     * loadMove()
+     * Display a move in the renderer
+     * move {int} Index of move in moves object
+     */
+    Replay.prototype.loadMove = function(move) {
+        var self = this;
+
+        self.currentMoveIndex = move;
+        self.currentMove = self.round.moves[self.currentMoveIndex];
+
+        self.generateGameState();
+        self.renderGame();
+    }
+
+    /*
      * loadRound()
      * Load the round JSON file given the matchID and the roundID
      */
@@ -167,6 +187,7 @@
         var callback = {
             success: function(data) {
                 self.round = JSON.parse(data);
+                console.log(self.round);
                 self.roundLoaded();
             },
             error: function(data) {
@@ -176,6 +197,105 @@
 
         $http(self.roundJsonUrl).get().then(callback.success).catch(callback.error);
     }
+
+    Replay.prototype.render = function(gamedata) {}
+
+
+    /*
+     * initRenderer()
+     * Generates PIXI canvas element
+     */
+    Replay.prototype.initRenderer = function() {
+        var self = this;
+    
+        self.stage = new PIXI.Stage(0x66FF99);
+        console.log(self);
+        self.renderer = PIXI.autoDetectRenderer(self.rendererWidth, self.rendererHeight);
+        
+        self.elements["renderer"].appendChild(self.renderer.view);
+        
+        self.loadTextures();
+
+        self.sprites = {};
+        self.loadSprites();
+
+        self.spawnSprites();
+
+        requestAnimationFrame(self.animate.bind(self));
+    }
+
+
+    /*
+     * animate()
+     * Update renderer state on every animation frame
+     */
+    Replay.prototype.animate = function() {
+        var self = this;
+
+        self.renderer.render(self.stage);
+
+        requestAnimationFrame(self.animate.bind(self));
+    }
+
+    /*
+     * loadTextures()
+     * Stub function, defined in plugin
+     * Loads all the textures
+     */
+    Replay.prototype.loadTextures = function() {}
+
+    /* 
+     * loadSprites()
+     * Assign textures to sprites and load them in the view
+     * Stub function, defined in plugin
+     */
+    Replay.prototype.loadSprites = function() {}
+
+
+    /*
+     * spawnSprites()
+     * Add sprites to stage
+     */
+    Replay.prototype.spawnSprites = function() {
+        var self = this;
+        for (var key in self.sprites) {
+            self.spritesHelper(self.sprites[key]);
+        }
+    }
+
+    /*
+     * spritesHelper()
+     * Recursively loop through sprites object and add new sprites to stage
+     * obj {object} List of sprites or sprite
+     */
+    Replay.prototype.spritesHelper = function(obj) {
+        var self = this;
+        if ("_texture" in obj) {
+            self.stage.addChild(obj);            
+        } else {
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    self.spritesHelper(obj[key]);
+                }
+            }
+        }         
+    }
+
+    /*
+     * addTexture()
+     * Add a texture to the textures object
+     * name {string} name of the texture
+     * url {string} Relative URL of the texture
+     */
+    Replay.prototype.addTexture = function(name, url) {
+        var self = this;
+
+        if (!self.textures) self.textures = {};
+        if (name in self.textures) return;
+
+        self.textures[name] = PIXI.Texture.fromImage(self.assetsUrl + url);
+    }
+
 
     //Export class
     window.Replay = Replay

@@ -1,5 +1,5 @@
 <% content_for :javascript_includes do %>
-    <%= javascript_include_tag Rails.root.join(url_for(@referee), "assets", "script.js") %>
+    <%= javascript_include_tag URI.join(@assets_url,"script.js") %>
 <% end %>
 
 <h1>Round Information</h1>
@@ -15,7 +15,7 @@
 <div class="replay-viewer"></div>
 <script>
     (function() {
-        new Replay(document.querySelector(".replay-viewer"), "<%= @match.slug %>", "<%= @round.slug %>"); 
+        new Replay(document.querySelector(".replay-viewer"), "<%= @assets_url %>", "<%= @match.slug %>", "<%= @round.slug %>"); 
     }).call(this);
 </script>
 
