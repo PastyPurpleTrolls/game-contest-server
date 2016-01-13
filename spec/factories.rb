@@ -134,6 +134,11 @@ FactoryGirl.define do
       after(:create) do |match, evaluator|
         num_players = match.manager.referee.players_per_game
 
+       	if evaluator.player
+	  num_players -= 1
+	  create(:player_match, player: evaluator.player, match: match)
+	end
+
         num_players.times do
 	  player = create(:player, contest: match.manager.contest)
 	  create(:player_match, player: player, match: match)

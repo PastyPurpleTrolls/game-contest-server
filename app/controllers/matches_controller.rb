@@ -17,7 +17,7 @@ class MatchesController < ApplicationController
   def create	
     @contest = Contest.friendly.find(params[:contest_id])
     contest = Contest.friendly.find(params[:contest_id])
-    round_limit = params[:match][:round_limit]
+    round_limit = params[:match][:num_rounds]
     if params[:match][:player_ids] && params[:match][:player_ids].any? { |player_id, use| Player.find(player_id).user_id == current_user.id}
         round_limit.to_i.times do 
             @match = @contest.matches.build(acceptable_params)
@@ -64,13 +64,15 @@ class MatchesController < ApplicationController
 				end
 =end
 			end
-		
+
 			# ensure that user is logged in, and that the user has a player in contest's challenge matches
 			ensure_correct_user_from_list(@users_in_challenge_matches_of_contest, 'Unable to find matches')
 
+
 			# the following code is relevant if ensure_correct_user_from_list does not redirect to root or a login
 			# find all the contest's challenge matches in which the user has a player participating in
-
+			@matches = Match.joins(:players).where(players: {user: current_user , contest:@manager })
+			return 
 			# store in an array all the user's players in the contest 
 			@players_of_user_in_contest = Player.where(user: current_user, contest: @manager).to_a
 
@@ -125,7 +127,7 @@ class MatchesController < ApplicationController
   private
 
   def acceptable_params
-    params.require(:match).permit(:earliest_start, player_ids: @contest.players.try(:ids).map(&:to_s))
+    params.require(:match).permit(:earliest_start, :num_rounds, player_ids: @contest.players.try(:ids).map(&:to_s))
   end
 
 end

@@ -16,8 +16,8 @@ describe "MatchesPages" do
 
   let (:now) { Time.current }
   let (:submit) { 'Challenge!' }
-  let (:num_of_matches) { 3 }
-  let (:big_num_of_matches) { 100 }
+  let (:num_of_rounds) { 3 }
+  let (:big_num_of_rounds) { 100 }
 
 # CREATE MATCHES
   describe "create" do
@@ -55,10 +55,9 @@ describe "MatchesPages" do
 	    check("#{player2.name} | #{player2.user.username}")
 	    check("#{player3.name} | #{player3.user.username}")
 	    check("#{player4.name} | #{player4.user.username}")
-	    select num_of_matches, from: :match_round_limit
+	    select num_of_rounds, from: :match_num_rounds
             click_button submit
           end
-
           it { should have_alert(:danger) }
         end
       end # illegal date
@@ -71,7 +70,7 @@ describe "MatchesPages" do
           check("#{player3.name} | #{player3.user.username}")
           check("#{player4.name} | #{player4.user.username}")
           check("#{player5.name} | #{player5.user.username}")
-	  select num_of_matches, from: :match_round_limit
+	  select num_of_rounds, from: :match_num_rounds
 	  click_button submit
 	end
 	
@@ -85,7 +84,7 @@ describe "MatchesPages" do
           select_datetime(now, 'Start')
           check("#{player1.name} | #{player1.user.username}")
           check("#{player4.name} | #{player4.user.username}")
-          select num_of_matches, from: :match_round_limit
+          select num_of_rounds, from: :match_num_rounds
 	  click_button submit
         end
 
@@ -102,7 +101,7 @@ describe "MatchesPages" do
           check("#{player3.name} | #{player3.user.username}")
           check("#{player4.name} | #{player4.user.username}")
           check("#{player5.name} | #{player5.user.username}")
-          select num_of_matches, from: :match_round_limit
+          select num_of_rounds, from: :match_num_rounds
           click_button submit
         end
 
@@ -121,11 +120,11 @@ describe "MatchesPages" do
           check("#{player2.name} | #{player2.user.username}")
           check("#{player3.name} | #{player3.user.username}")
           check("#{player4.name} | #{player4.user.username}")
-	  select num_of_matches, from: :match_round_limit
+	  select num_of_rounds, from: :match_num_rounds
         end
 
         it "should create 3 matches" do
-	  #Change by count of 3 because num_of_matches = 3.
+	  #Change by count of 3 because num_of_rounds = 3.
           expect { click_button submit }.to change(Match, :count).by(3)
         end    
       end
@@ -137,11 +136,11 @@ describe "MatchesPages" do
           check("#{player2.name} | #{player2.user.username}")
           check("#{player3.name} | #{player3.user.username}")
           check("#{player4.name} | #{player4.user.username}")
-          select big_num_of_matches, from: :match_round_limit
+          select big_num_of_rounds, from: :match_num_rounds
         end
 
         it "should create 100 matches" do
-          #Change by count of 100 because big_num_of_matches = 100.
+          #Change by count of 100 because big_num_of_rounds = 100.
           expect { click_button submit }.to change(Match, :count).by(100)
         end
       end
@@ -152,7 +151,7 @@ describe "MatchesPages" do
           post contest_matches_path(contest),
             match: { earliest_start: now.strftime("%F %T"),
             player_ids: {player1.id => "1", player2.id => "1", player3.id => "1", player4.id => "1"},
-	    round_limit: 3 }
+	    num_rounds: 3 }
         end
 
         specify { expect(response).to redirect_to(contest_path(contest)) }
@@ -168,7 +167,7 @@ describe "MatchesPages" do
           check("#{player2.name} | #{player2.user.username}")
           check("#{player3.name} | #{player3.user.username}")
           check("#{player4.name} | #{player4.user.username}")
-          select num_of_matches, from: :match_round_limit
+          select num_of_rounds, from: :match_num_rounds
 	end
 
         before { click_button submit }
@@ -326,8 +325,13 @@ describe "MatchesPages" do
 #SHOW A CHALLENGE MATCH
   describe "show (challenge match)" do
     let (:match) { FactoryGirl.create(:challenge_match) }
-
-    before { visit match_path(match) }
+    let (:user ) { match.players.first.user }
+    before do
+       user.password = "password"
+       login user
+       visit match_path(match) 
+       end
+       
 
     it { should have_content(match.status) }
     it { should have_content(distance_of_time_in_words_to_now(match.earliest_start)) }
@@ -365,16 +369,20 @@ describe "MatchesPages" do
 
 # SHOW ALL CONTEST MATCHES
   describe "show all contest matches" do
-    let (:contest) { FactoryGirl.create(:contest) }
-
+#    let (:contest) { FactoryGirl.create(:contest) }
+#    let (:user) { FactoryGirl.create(:user) }
+#    let (:player) { FactoryGirl.create(:player, user: user, contest: contest) }
     before do
-      5.times { FactoryGirl.create(:challenge_match, manager: contest) }
-
+#      login user 
+      login creator
+      FactoryGirl.create_list(:challenge_match, 5, manager: contest, player: player1) 
       visit contest_matches_path(contest)
     end
 
     it "lists all the challenge matches for a contest in the system" do
       Match.where(manager: contest).each do |m|
+				'puts m'
+				puts m
         should have_selector('li', text: m.id)
         should have_link(m.id, match_path(m))
       end
@@ -391,7 +399,7 @@ describe "MatchesPages" do
       visit contest_matches_path(contest)
     end
 
-		it "lists all challenge matches for a contest, in which the user has a player participating" do
+		it "should list all challenge matches for a contest in which the user has a player participating" do
 		end
 =end
   end
