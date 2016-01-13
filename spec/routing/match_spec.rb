@@ -4,9 +4,9 @@ describe Match do
   describe "available routes" do
     specify { expect(get(tournament_matches_path(1))).to be_routable }
     specify { expect(get(match_path(1))).to be_routable }
-    specify { expect(get(matches_show_path)).to be_routable }
-    specify { expect(get(matches_index_path)).to be_routable }
-    #Added with challenge functionality
+   #specify { expect(get(matches_show_path)).to be_routable }
+   #specify { expect(get(matches_index_path)).to be_routable }
+   #Added with challenge functionality
     specify { expect(get(contest_matches_path(1))).to be_routable }
     specify { expect(get(new_contest_match_path(1))).to be_routable }
     specify { expect(delete(match_path(1))).to be_routable }
