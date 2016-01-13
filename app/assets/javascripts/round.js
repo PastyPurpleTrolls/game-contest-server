@@ -145,6 +145,7 @@
         var movesViewer = self.elements["moves-viewer"];
 
         var move, view;
+
         for (var i = 0; i < self.round.moves.length; i++) {
             move = self.round.moves[i];
             view = document.createElement("li");
