@@ -69,7 +69,7 @@
                 deltaIndex += 1;
             }
 
-            var move, moveData, currentPlayerColor, opponentPlayerColor, moveString, moveSpots,
+            var move, moveData, currentPlayerColor, moveString, moveSpots,
                 fromRow, fromCol, toRow, toCol, playerPiece, kingRow;
             //Move forward and generate the gamestates for each move along the way
             for (var i = deltaIndex; i <= self.currentMoveIndex; i++) {
@@ -77,7 +77,6 @@
                 moveData = self.parseJSON(move["data"]);
                 
                 currentPlayerColor = colors[moveData[0]];
-                opponentPlayerColor = (currentPlayerColor === "black") ? "red" : "black"; 
                 
                 //Create move spots array by splitting on ":"
                 moveSpots = moveData[1].split(":");
