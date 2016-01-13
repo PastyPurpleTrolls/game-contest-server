@@ -12,7 +12,10 @@ describe PlayerRound do
   it { should respond_to(:result) }
   it { should respond_to(:score) }
 
-	# Validations
-	it { should be_valid }
+	describe "validations" do
+		it { should be_valid }
+		specify { expect_required_attribute(:player) }
+		specify { expect_required_attribute(:round) }
+	end
 
 end

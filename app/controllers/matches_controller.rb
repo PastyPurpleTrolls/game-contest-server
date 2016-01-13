@@ -17,9 +17,9 @@ class MatchesController < ApplicationController
   def create	
     @contest = Contest.friendly.find(params[:contest_id])
     contest = Contest.friendly.find(params[:contest_id])
-    match_limit = params[:match][:match_limit]
+    round_limit = params[:match][:round_limit]
     if params[:match][:player_ids] && params[:match][:player_ids].any? { |player_id, use| Player.find(player_id).user_id == current_user.id}
-        match_limit.to_i.times do 
+        round_limit.to_i.times do 
             @match = @contest.matches.build(acceptable_params)
     	    @match.status = "waiting"
     	        if @match.save

@@ -56,7 +56,7 @@ class RefereesController < ApplicationController
   def acceptable_params
     params.require(:referee).permit(:name,
                                     :rules_url,
-				    :match_limit,
+				    :round_limit,
                                     :rounds_capable,
                                     :players_per_game,
 				    :time_per_game,

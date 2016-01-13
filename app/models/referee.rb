@@ -6,11 +6,12 @@ class Referee < ActiveRecord::Base
   has_many :contests
 
   validates :user,              presence: true
-  validates :match_limit,       presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :round_limit,       presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :name,              presence: true, uniqueness: true
   validates :rules_url,		format: { with: /\A((http|https):\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}(:[0-9]{1,5})?(([\/][a-z0-9]*)*(([\/][a-z0-9]+([\-]{1}[a-z0-9]+)?)*\.[a-z]{2,6})?)?([\?]([a-z0-9]+[\=][a-z0-9]+[\&]?)*)?\z/ }
   validates :players_per_game,  numericality: { only_integer: true, greater_than: 0, less_than: 11 }
   validates :time_per_game,     numericality: { only_integer: true, greater_than: 0, less_than: 16 }
+  validates :rounds_capable,	inclusion: { in: [true, false] }	
   #  validates :programming_language, presence: true
 
   include Uploadable

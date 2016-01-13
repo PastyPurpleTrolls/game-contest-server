@@ -17,7 +17,7 @@
 
 <div class="form-group">
     <%= f.label :rounds_per_match, 'Number of Matches per Combination' %>
-    <%= f.select :rounds_per_match, 1..@contest.referee.match_limit.to_i, {}, class: 'form-control' %>
+    <%= f.select :rounds_per_match, 1..@contest.referee.round_limit.to_i, {}, class: 'form-control' %>
     <br/>
 </div>
 

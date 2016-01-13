@@ -55,7 +55,7 @@ describe "MatchesPages" do
 	    check("#{player2.name} | #{player2.user.username}")
 	    check("#{player3.name} | #{player3.user.username}")
 	    check("#{player4.name} | #{player4.user.username}")
-	    select num_of_matches, from: :match_match_limit
+	    select num_of_matches, from: :match_round_limit
             click_button submit
           end
 
@@ -71,7 +71,7 @@ describe "MatchesPages" do
           check("#{player3.name} | #{player3.user.username}")
           check("#{player4.name} | #{player4.user.username}")
           check("#{player5.name} | #{player5.user.username}")
-	  select num_of_matches, from: :match_match_limit
+	  select num_of_matches, from: :match_round_limit
 	  click_button submit
 	end
 	
@@ -85,7 +85,7 @@ describe "MatchesPages" do
           select_datetime(now, 'Start')
           check("#{player1.name} | #{player1.user.username}")
           check("#{player4.name} | #{player4.user.username}")
-          select num_of_matches, from: :match_match_limit
+          select num_of_matches, from: :match_round_limit
 	  click_button submit
         end
 
@@ -102,7 +102,7 @@ describe "MatchesPages" do
           check("#{player3.name} | #{player3.user.username}")
           check("#{player4.name} | #{player4.user.username}")
           check("#{player5.name} | #{player5.user.username}")
-          select num_of_matches, from: :match_match_limit
+          select num_of_matches, from: :match_round_limit
           click_button submit
         end
 
@@ -121,7 +121,7 @@ describe "MatchesPages" do
           check("#{player2.name} | #{player2.user.username}")
           check("#{player3.name} | #{player3.user.username}")
           check("#{player4.name} | #{player4.user.username}")
-	  select num_of_matches, from: :match_match_limit
+	  select num_of_matches, from: :match_round_limit
         end
 
         it "should create 3 matches" do
@@ -137,7 +137,7 @@ describe "MatchesPages" do
           check("#{player2.name} | #{player2.user.username}")
           check("#{player3.name} | #{player3.user.username}")
           check("#{player4.name} | #{player4.user.username}")
-          select big_num_of_matches, from: :match_match_limit
+          select big_num_of_matches, from: :match_round_limit
         end
 
         it "should create 100 matches" do
@@ -152,7 +152,7 @@ describe "MatchesPages" do
           post contest_matches_path(contest),
             match: { earliest_start: now.strftime("%F %T"),
             player_ids: {player1.id => "1", player2.id => "1", player3.id => "1", player4.id => "1"},
-	    match_limit: 3 }
+	    round_limit: 3 }
         end
 
         specify { expect(response).to redirect_to(contest_path(contest)) }
@@ -168,7 +168,7 @@ describe "MatchesPages" do
           check("#{player2.name} | #{player2.user.username}")
           check("#{player3.name} | #{player3.user.username}")
           check("#{player4.name} | #{player4.user.username}")
-          select num_of_matches, from: :match_match_limit
+          select num_of_matches, from: :match_round_limit
 	end
 
         before { click_button submit }
