@@ -139,6 +139,7 @@ ActiveRecord::Schema.define(version: 20160113002215) do
     t.integer  "round_limit"
     t.integer  "time_per_game"
     t.boolean  "rounds_capable"
+    t.string   "replay_assets_location",   limit: 255
   end
 
   add_index "referees", ["name"], name: "index_referees_on_name", unique: true

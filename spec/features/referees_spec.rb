@@ -36,10 +36,10 @@ describe "RefereePages" do
 	before do
 	  fill_in 'Name', with: name
           fill_in 'Rules', with: rules
-          fill_in 'Round limit', with: round_limit_word
+          fill_in 'Round Limit (inclusive)', with: round_limit_word
           select num_players, from: 'Players'
           select time_per_game, from: 'Time per game'
-          attach_file('Upload file', file_location)
+          attach_file('Upload referee', file_location)
 	  click_button submit
         end
 	it { should have_alert(:danger) }
@@ -49,10 +49,10 @@ describe "RefereePages" do
         before do
           fill_in 'Name', with: name
           fill_in 'Rules', with: rules
-          fill_in 'Round limit', with: round_limit_negative
+          fill_in 'Round Limit (inclusive)', with: round_limit_negative
           select num_players, from: 'Players'
           select time_per_game, from: 'Time per game'
-          attach_file('Upload file', file_location)
+          attach_file('Upload referee', file_location)
 	  click_button submit
         end
 	it { should have_alert(:danger) }
@@ -62,10 +62,10 @@ describe "RefereePages" do
         before do
           fill_in 'Name', with: name
           fill_in 'Rules', with: rules
-          fill_in 'Round limit', with: round_limit_zero
+          fill_in 'Round Limit (inclusive)', with: round_limit_zero
           select num_players, from: 'Players'
           select time_per_game, from: 'Time per game'
-          attach_file('Upload file', file_location)
+          attach_file('Upload referee', file_location)
 	  click_button submit
         end
 	it { should have_alert(:danger) }
@@ -82,11 +82,11 @@ describe "RefereePages" do
       before do
         fill_in 'Name', with: name
         fill_in 'Rules', with: rules
-        fill_in 'Round limit', with: round_limit
+        fill_in 'Round Limit (inclusive)', with: round_limit
         select num_players, from: 'Players'
         select time_per_game, from: 'Time per game'
         check 'referee_rounds_capable'
-        attach_file('Upload file', file_location)
+        attach_file('Upload referee', file_location)
       end
 
       it "should create a referee" do
@@ -159,10 +159,10 @@ describe "RefereePages" do
       before do
         fill_in 'Name', with: ''
         fill_in 'Rules', with: "#{rules}/updated"
-        fill_in 'Round limit', with: round_limit
+        fill_in 'Round Limit (inclusive)', with: round_limit
         select num_players, from: 'Players'
         select time_per_game, from: 'Time per game'
-        attach_file('Upload file', file_location)
+        attach_file('Upload referee', file_location)
       end
 
       describe "does not change data" do
@@ -196,11 +196,11 @@ describe "RefereePages" do
       before do
         fill_in 'Name', with: name
         fill_in 'Rules', with: "#{rules}/updated"
-        fill_in 'Round limit', with: round_limit
+        fill_in 'Round Limit (inclusive)', with: round_limit
         select num_players, from: 'Players'
         select time_per_game, from: 'Time per game'
         check 'referee_rounds_capable'
-	attach_file('Upload file', file_location)
+	attach_file('Upload referee', file_location)
       end
 
       describe "changes the data" do

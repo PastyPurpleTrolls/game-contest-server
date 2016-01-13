@@ -25,9 +25,5 @@
 
 <h2><%= pluralize(@match.rounds.all.count, 'Round') %></h2>
 <ol>
-    <% @match.rounds.each do |r| %>
-    <li>
-        <%= link_to "Round " + r.id.to_s, round_path(r) %>	
-    </li> 
-    <% end %>
+    <%= render @match.rounds %>
 </ol>

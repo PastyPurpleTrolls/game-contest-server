@@ -13,6 +13,7 @@ describe Match do
   it { should respond_to(:status) }
   it { should respond_to(:earliest_start) }
   it { should respond_to(:completion) }
+	it { should respond_to(:num_rounds) }
 
   # Do not do manager_type tests as it is set by rails
 
@@ -280,7 +281,7 @@ describe Match do
     it { should_not be_valid }
   end
 
-=begin
+
 	describe "has 0 rounds" do
 		before do
 			match.num_rounds = 0
@@ -295,7 +296,14 @@ describe Match do
 
 		it { should be_valid }	
 	end
-=end
+
+	describe "num_rounds > referee round_limit" do
+		before do
+			match.num_rounds = match.manager.contest.referee.round_limit+1
+		end
+		it { should_not be_valid }
+	end
+
 
   describe "validations" do
     it { should be_valid }
