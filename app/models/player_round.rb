@@ -2,9 +2,9 @@ class PlayerRound < ActiveRecord::Base
   belongs_to :round, inverse_of: :player_rounds
   belongs_to :player
 	
-	validates :round_id, :presence => true
-	validates :player_id, :presence => true
-#	validates_uniqueness_of :round_id, scope: :player_id 
+	validates :round, presence: true
+	validates :player, presence: true
+
 	
 	validate :check_ids
 

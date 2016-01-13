@@ -247,9 +247,29 @@ describe "MatchesPages" do
         expect { delete match_path(challenge_match) }.to change(Match, :count).by(-1)
       end
 
+			it "removes all rounds associated with the match from the system (challenge round)" do
+				expect { delete match_path(challenge_match) }.to change(Round, :count).by(-4)
+			end
+
       it "removes a match from the system (tournament match)" do
         expect { delete match_path(tournament_match) }.to change(Match, :count).by(-1)
       end
+			
+			it "removes all player matches associated with the match from the system" do
+				expect { delete match_path(tournament_match) }.to change(PlayerMatch, :count).by(-4)
+			end
+
+			it "removes all rounds associated with the match from the system (tournament round)" do
+				expect { delete match_path(tournament_match) }.to change(Round, :count).by(-4)
+			end
+
+			it "removes all player rounds associated with the match from the system" do
+				expect { delete match_path(tournament_match) }.to change(PlayerRound, :count).by(-16)
+			end
+			
+			xit "removes match path associated with the match" do
+				expect { delete match_path(tournament_match) }.to change(MatchPath, :count).by(-1)
+			end
 
     end # logged in as contest creator
 
