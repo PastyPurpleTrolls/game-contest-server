@@ -26,6 +26,7 @@ describe User do
 
   describe "validations" do
     it { should be_valid }
+    specify { expect_required_attribute(:username) }
   end
 
   it { should_not be_admin }

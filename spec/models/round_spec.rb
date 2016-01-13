@@ -10,9 +10,22 @@ describe Round do
 	it { should respond_to(:players) }
 
 =begin
+<<<<<<< HEAD
+	describe "validations" do 
+    it { should be_valid }
+		specify { expect_required_attribute(:match) }
+	end
+
+=======
+>>>>>>> 2042a496d8a3de42ef23b5007c647a47bb77bb47
+=end
+	describe "validations" do 
+    it { should be_valid }
+		specify { expect_required_attribute(:match) }
+	end
+=begin
 	describe "does not have the same players as the match" do
 		before do
-=begin
 			match = FactoryGirl.create(:tournament_match)
       match.players.clear
 			player1 = FactoryGirl.create(:player)
@@ -22,7 +35,7 @@ describe Round do
 			player_match2 = FactoryGirl.create(:player_match, match: match, player: player2)
 			player_round1 = FactoryGirl.create(:player_round, match: match, player: player1)
 			player_round3 = FactoryGirl.create(:player_round, match: match, player: player3)
-=end
+end
 			# set up the match to have players p1 and p2
 =begin			
 			match = FactoryGirl.create(:tournament_match)
@@ -60,5 +73,13 @@ describe Round do
 
 		it { should_not be_valid }
 	end
+#<<<<<<< HEAD
+#=end
+	
+=begin
+=======
 		
+>>>>>>> 2042a496d8a3de42ef23b5007c647a47bb77bb47
+#=end
+=end
 end

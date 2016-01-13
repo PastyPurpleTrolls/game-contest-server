@@ -10,10 +10,10 @@ describe "RefereePages" do
   let (:time_per_game) { '10' }
   let (:file_location) { Rails.root.join('spec', 'files', 'referee.test') }
   let (:server_location) { Rails.root.join('code', 'referees', 'test').to_s }
-  let (:match_limit) { '5' }
-  let (:match_limit_word) { 'DEVIN' }
-  let (:match_limit_negative) { '-5' }
-  let (:match_limit_zero) { '0' }
+  let (:round_limit) { '5' }
+  let (:round_limit_word) { 'DEVIN' }
+  let (:round_limit_negative) { '-5' }
+  let (:round_limit_zero) { '0' }
 
   subject { page }
 
@@ -36,10 +36,10 @@ describe "RefereePages" do
 	before do
 	  fill_in 'Name', with: name
           fill_in 'Rules', with: rules
-          fill_in 'Match limit', with: match_limit_word
+          fill_in 'Round Limit (inclusive)', with: round_limit_word
           select num_players, from: 'Players'
           select time_per_game, from: 'Time per game'
-          attach_file('Upload file', file_location)
+          attach_file('Upload referee', file_location)
 	  click_button submit
         end
 	it { should have_alert(:danger) }
@@ -49,10 +49,10 @@ describe "RefereePages" do
         before do
           fill_in 'Name', with: name
           fill_in 'Rules', with: rules
-          fill_in 'Match limit', with: match_limit_negative
+          fill_in 'Round Limit (inclusive)', with: round_limit_negative
           select num_players, from: 'Players'
           select time_per_game, from: 'Time per game'
-          attach_file('Upload file', file_location)
+          attach_file('Upload referee', file_location)
 	  click_button submit
         end
 	it { should have_alert(:danger) }
@@ -62,10 +62,10 @@ describe "RefereePages" do
         before do
           fill_in 'Name', with: name
           fill_in 'Rules', with: rules
-          fill_in 'Match limit', with: match_limit_zero
+          fill_in 'Round Limit (inclusive)', with: round_limit_zero
           select num_players, from: 'Players'
           select time_per_game, from: 'Time per game'
-          attach_file('Upload file', file_location)
+          attach_file('Upload referee', file_location)
 	  click_button submit
         end
 	it { should have_alert(:danger) }
@@ -82,11 +82,11 @@ describe "RefereePages" do
       before do
         fill_in 'Name', with: name
         fill_in 'Rules', with: rules
-        fill_in 'Match limit', with: match_limit
+        fill_in 'Round Limit (inclusive)', with: round_limit
         select num_players, from: 'Players'
         select time_per_game, from: 'Time per game'
         check 'referee_rounds_capable'
-        attach_file('Upload file', file_location)
+        attach_file('Upload referee', file_location)
       end
 
       it "should create a referee" do
@@ -104,10 +104,11 @@ describe "RefereePages" do
           login creator, avoid_capybara: true
           post referees_path, referee: { name: name,
                                          rules_url: rules,
-                                         match_limit: match_limit,
+                                         round_limit: round_limit,
 					 players_per_game: num_players,
 					 time_per_game: time_per_game,
-					 referee_rounds_capable: true,
+#					 referee_rounds_capable: true,
+					 rounds_capable: true,
                                          upload: fixture_file_upload(file_location) }
         end
 
@@ -123,7 +124,7 @@ describe "RefereePages" do
 
         it { should have_alert(:success, text: 'Referee created') }
         it { should have_content(name) }
-        it { should have_content(match_limit) }
+        it { should have_content(round_limit) }
         it { should have_link('Rules', href: rules) }
         it { should have_content("Capable of rounds: true") }
 	it { should have_content(num_players) }
@@ -149,7 +150,7 @@ describe "RefereePages" do
     it { should have_field('Name', with: referee.name) }
     it { should have_field('Rules', with: referee.rules_url) }
 
-    #it { should have_field('Max match', with: referee.match_limit) } to be added soon. 
+    #it { should have_field('Max match', with: referee.round_limit) } to be added soon. 
     #Currently the edit page will repopulate with 100, instead of previously chosen value.
 
     it { should have_select('Players', selected: referee.players_per_game.to_s) }
@@ -158,10 +159,10 @@ describe "RefereePages" do
       before do
         fill_in 'Name', with: ''
         fill_in 'Rules', with: "#{rules}/updated"
-        fill_in 'Match limit', with: match_limit
+        fill_in 'Round Limit (inclusive)', with: round_limit
         select num_players, from: 'Players'
         select time_per_game, from: 'Time per game'
-        attach_file('Upload file', file_location)
+        attach_file('Upload referee', file_location)
       end
 
       describe "does not change data" do
@@ -195,11 +196,11 @@ describe "RefereePages" do
       before do
         fill_in 'Name', with: name
         fill_in 'Rules', with: "#{rules}/updated"
-        fill_in 'Match limit', with: match_limit
+        fill_in 'Round Limit (inclusive)', with: round_limit
         select num_players, from: 'Players'
         select time_per_game, from: 'Time per game'
         check 'referee_rounds_capable'
-	attach_file('Upload file', file_location)
+	attach_file('Upload referee', file_location)
       end
 
       describe "changes the data" do
@@ -208,7 +209,7 @@ describe "RefereePages" do
         it { should have_alert(:success) }
         specify { expect(referee.reload.name).to eq(name) }
         specify { expect(referee.reload.rules_url).to eq("#{rules}/updated") }
-	specify { expect(referee.reload.match_limit.to_s).to eq(match_limit) }
+	specify { expect(referee.reload.round_limit.to_s).to eq(round_limit) }
 	specify { expect(referee.reload.rounds_capable).to eq(true) }
         specify { expect(referee.reload.players_per_game).to eq(num_players.to_i) }
         specify { expect(referee.reload.time_per_game).to eq(time_per_game.to_i) }
@@ -223,7 +224,7 @@ describe "RefereePages" do
           login creator, avoid_capybara: true
           patch referee_path(referee), referee: { name: name,
                                                   rules_url: "#{rules}/updated",
-						  match_limit: match_limit,
+						  round_limit: round_limit,
                                                   players_per_game: num_players,
 						  time_per_game: time_per_game,
 					 	  referee_rounds_capable: true,
@@ -393,7 +394,7 @@ describe "RefereePages" do
 
     it { should have_content(referee.name) }
     it { should have_link('Rules', href: referee.rules_url) }
-    it { should have_content(referee.match_limit) }
+    it { should have_content(referee.round_limit) }
     it { should have_content(referee.players_per_game.to_s) }
     it { should have_content(referee.rounds_capable) }
     it { should_not have_content(referee.file_location) }

@@ -16,6 +16,58 @@ describe PlayerMatch do
     specify { expect_required_attribute(:player) }
     specify { expect_required_attribute(:match) }
   end
+=begin
+<<<<<<< HEAD
+=end
+
+	describe "result is (case-sensitive)" do
+		let (:list) { [nil, 'Win', 'Loss', 'Tie', 'Unknown Result'] }
+		it "in the list [nil, 'Win', 'Loss', 'Tie', 'Unknown Result']" do
+			list.each do |list_item|
+				player_match.result = list_item
+    		should be_valid 
+			end
+		end
+
+		it "not in the list [nil, 'Win', 'Loss', 'Tie', 'Unknown Result']" do
+			player_match.result = 'garbage'
+    	should_not be_valid
+		end
+=begin
+		describe "'Win'" do
+			before do
+				player_match.result = 'Win'
+			end
+    	it { should be_valid }
+		end
+
+		describe "'win'" do
+			before do
+				player_match.result = 'win'
+			end
+    	it { should_not be_valid }
+		end
+
+		describe "'Loss'" do
+			before do
+				player_match.result = 'Loss'
+			end
+    	it { should be_valid }
+		end
+
+		describe "'loss'" do
+			before do
+				player_match.result = 'loss'
+			end
+    	it { should_not be_valid }
+		end
+=end
+
+	end
+
+=begin
+=======
+=end
 	describe "has same player and match as a different player match" do
 		let (:player_match2) { FactoryGirl.create(:player_match, player_id: 1, match_id: 1) }
 		before do
@@ -26,4 +78,7 @@ describe PlayerMatch do
 
 		it { should_not be_valid }
 	end
+=begin
+>>>>>>> 2042a496d8a3de42ef23b5007c647a47bb77bb47
+=end
 end

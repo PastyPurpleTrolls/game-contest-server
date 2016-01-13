@@ -201,6 +201,12 @@ describe Referee do
   describe "validations" do
     it { should be_valid }
     specify { expect_required_attribute(:user) }
+#    specify { expect_required_attribute(:file_location) }
+    specify { expect_required_attribute(:name) }
+#    specify { expect_required_attribute(:round_limit) }
+    specify { expect_required_attribute(:rounds_capable) }
+=begin
+=end
   end
 
 end

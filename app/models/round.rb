@@ -24,4 +24,13 @@ class Round < ActiveRecord::Base
       
   extend FriendlyId
   friendly_id :name, use: :slugged
+
+
+	validate :same_players_as_match 
+
+	def same_players_as_match
+		if match.present? && match.players != players
+			errors.add(:players, "must be the same as the match's players")
+		end
+	end
 end

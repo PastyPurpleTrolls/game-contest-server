@@ -1,6 +1,6 @@
 class Match < ActiveRecord::Base
 
-  attr_accessor :match_limit
+  attr_accessor :round_limit
 
   belongs_to :manager, polymorphic: true
   has_many :player_matches , inverse_of: :match , dependent: :destroy
@@ -17,7 +17,7 @@ class Match < ActiveRecord::Base
   validates :completion,
     timeliness: { type: :datetime, on_or_before: :now },
     if: :completed?
-	validates :num_rounds,				presence: true
+	validates :num_rounds,				presence: true, numericality: { only_integer: true }
 
 #	validate :correct_number_of_rounds
   validate :correct_number_of_players, unless: :unassigned?
@@ -25,6 +25,19 @@ class Match < ActiveRecord::Base
 
 	validates_numericality_of :num_rounds, allow_nil: false
 	validates_numericality_of :num_rounds, greater_than: 0
+
+	validate :num_rounds_upper_bound
+	def num_rounds_upper_bound
+		if self.num_rounds.nil? || self.manager.nil?
+			errors.add(:num_rounds, "must not be nil")	
+		else
+			if self.is_a?(Contest) && self.num_rounds > self.manager.referee.round_limit
+					errors.add(:num_rounds, "must not be greater than referee's round_limit")	
+			elsif self.num_rounds > self.manager.contest.referee.round_limit # manager must be of class Tournament
+					errors.add(:num_rounds, "must not be greater than referee's round_limit")	
+			end
+		end
+	end
 
   def unassigned?
     status == 'unassigned'
