@@ -42,11 +42,13 @@
         if ("gamestate" in self.currentMove) {
             self.gamestate = self.parseJSON(self.currentMove.gamestate);
         } else {
+            //Get the colors associated with the names of each player in this game
             var colors = JSON.parse(self.round.info);
 
+            //Search for delta at least 10 moves from the current one
             var deltaStep = 10;
-            var gamestate = [];
             
+            //Store delta move and index
             var deltaMove = {};
             var deltaIndex = self.currentMoveIndex;
 
@@ -106,7 +108,6 @@
                 //Copy gamestate to move to allow for caching
                 move["gamestate"] = self.copy(self.gamestate);
             }
-
         }
     }
 
