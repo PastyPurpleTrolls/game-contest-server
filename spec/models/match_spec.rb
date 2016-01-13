@@ -297,6 +297,13 @@ describe Match do
 		it { should be_valid }	
 	end
 
+	describe "num_rounds > referee round_limit" do
+		before do
+			match.num_rounds = match.manager.contest.referee.round_limit+1
+		end
+		it { should_not be_valid }
+	end
+
 
   describe "validations" do
     it { should be_valid }

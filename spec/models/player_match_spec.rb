@@ -16,4 +16,14 @@ describe PlayerMatch do
     specify { expect_required_attribute(:player) }
     specify { expect_required_attribute(:match) }
   end
+	describe "has same player and match as a different player match" do
+		let (:player_match2) { FactoryGirl.create(:player_match, player_id: 1, match_id: 1) }
+		before do
+			player_match.match_id = 1
+			player_match.player_id = 1
+		end
+		subject { player_match2 }
+
+		it { should_not be_valid }
+	end
 end
