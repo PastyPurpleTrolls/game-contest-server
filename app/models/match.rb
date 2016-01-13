@@ -17,9 +17,14 @@ class Match < ActiveRecord::Base
   validates :completion,
     timeliness: { type: :datetime, on_or_before: :now },
     if: :completed?
+	validates :num_rounds,				presence: true
 
+#	validate :correct_number_of_rounds
   validate :correct_number_of_players, unless: :unassigned?
   validate :players_allowed_to_play, if: :tournament_match?
+
+	validates_numericality_of :num_rounds, allow_nil: false
+	validates_numericality_of :num_rounds, greater_than: 0
 
   def unassigned?
     status == 'unassigned'
@@ -52,6 +57,12 @@ class Match < ActiveRecord::Base
                  " players") unless self.player_matches.length ==
                                     self.manager.referee.players_per_game
   end
+
+#	def correct_number_of_rounds
+#		puts self.num_rounds
+#		puts Round.all.count
+#		return if (self.num_rounds >= Round.where(match_id: self.id).count)
+#	end
 
   def tournament_match?
     return if self.manager.nil?

@@ -84,6 +84,7 @@ FactoryGirl.define do
     status "waiting"
     completion Time.current
     earliest_start Time.current
+		num_rounds 1
 
     factory :tournament_match do
       association :manager, factory: :tournament
