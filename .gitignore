@@ -5,15 +5,7 @@
 #   git config --global core.excludesfile '~/.gitignore_global'
 
 # Ignore all uploaded data files
-/code/referees/development/*
-/code/referees/test/*
-/code/referees/production/*
-/code/players/development/*
-/code/players/test/*
-/code/players/production/*
-/code/environments/development/*
-/code/environments/test/*
-/code/environments/production/*
+/code
 
 
 #Ignore match logs
