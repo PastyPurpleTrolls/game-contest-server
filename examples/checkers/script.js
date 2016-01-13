@@ -9,15 +9,15 @@
         "black": [1, 2]
     };
 
-    Replay.prototype.gamestate = [
+    Replay.prototype.defaultGameState = [
         [0, 1, 0, 1, 0, 1, 0, 1], 
-        [1, 0, 1, 0, 0, 0, 1, 0], 
+        [1, 0, 1, 0, 1, 0, 1, 0], 
         [0, 1, 0, 1, 0, 1, 0, 1], 
         [0, 0, 0, 0, 0, 0, 0, 0], 
         [0, 0, 0, 0, 0, 0, 0, 0], 
-        [0, 3, 0, 3, 0, 3, 0, 3], 
         [3, 0, 3, 0, 3, 0, 3, 0], 
-        [0, 3, 0, 3, 0, 3, 0, 3]
+        [0, 3, 0, 3, 0, 3, 0, 3], 
+        [3, 0, 3, 0, 3, 0, 3, 0]
     ];
 
     Replay.prototype.rowMap = {
@@ -34,13 +34,16 @@
 
     Replay.prototype.generateGameState = function() {
         var self = this;
-
-        var colors = JSON.parse(self.round.info);
-        
+ 
+        //Reset the gamestate
+        self.gamestate = [];
+ 
         //Already calculated the gamestate, move on
         if ("gamestate" in self.currentMove) {
-            self.gamestate = JSON.parse(self.currentMove.gamestate);
+            self.gamestate = self.parseJSON(self.currentMove.gamestate);
         } else {
+            var colors = JSON.parse(self.round.info);
+
             var deltaStep = 10;
             var gamestate = [];
             
@@ -48,47 +51,63 @@
             var deltaIndex = self.currentMoveIndex;
 
             //Step backward through moves to find the most recent defined deltastep
-            for (deltaIndex = self.currentMoveIndex; deltaIndex > self.currentMoveIndex - deltaStep && deltaIndex >= 0; deltaIndex--) {
+            for (deltaIndex = self.currentMoveIndex; deltaIndex > self.currentMoveIndex - deltaStep && deltaIndex > 0; deltaIndex--) {
               deltaMove = self.round.moves[deltaIndex];
-              if ("gamestate" in deltaMove) break;
+              if ("gamestate" in deltaMove) {
+                  console.log("Found a delta", deltaIndex);
+                  self.gamestate =  self.copy(self.parseJSON(deltaMove["gamestate"]));
+                  break;
+              }
+            }
+            
+            //default gamestate if we didn't find a delta gamestate
+            if (self.gamestate.length === 0) {
+                console.log("Loading default game state");
+                self.gamestate = self.copy(self.defaultGameState);
+            } else {
+                //Don't recalculate the gamestate
+                deltaIndex += 1;
             }
 
-            //Gamestate has never been generated, add the default gamestate
-            if (!("gamestate" in deltaMove)) deltaMove["gamestate"] = self.gamestate.slice(0);
-            if (deltaIndex === self.currentMoveIndex) return;
-
-
-            var move, moveData, currentPlayerColor, opponentPlayerColor, moveString, moveSpots;
+            var move, moveData, currentPlayerColor, opponentPlayerColor, moveString, moveSpots,
+                fromRow, fromCol, toRow, toCol, playerPiece, kingRow;
             //Move forward and generate the gamestates for each move along the way
-            for (var i = (deltaIndex + 1); i <= self.currentMoveIndex; i++) {
+            for (var i = deltaIndex; i <= self.currentMoveIndex; i++) {
                 move = self.round.moves[i];
                 moveData = self.parseJSON(move["data"]);
                 
                 currentPlayerColor = colors[moveData[0]];
                 opponentPlayerColor = (currentPlayerColor === "black") ? "red" : "black"; 
-                console.log(currentPlayerColor, opponentPlayerColor);
                 
+                //Create move spots array by splitting on ":"
                 moveSpots = moveData[1].split(":");
-                console.log(moveSpots);
 
+                //Loop through each move made by the player in this turn and set the board accordingly
                 for (var j = 0; j < moveSpots.length - 1; j++) {
-                    var fromRow = self.rowMap[moveSpots[j][0]];
-                    var fromCol = parseInt(moveSpots[j][1]);
-                    console.log(fromRow, fromCol);
+                    fromRow = self.rowMap[moveSpots[j][0]];
+                    fromCol = parseInt(moveSpots[j][1]);
 
-                    var toRow = self.rowMap[moveSpots[j + 1][0]];
-                    var toCol = parseInt(moveSpots[j + 1][1]);
+                    //Go forward one element in the array to find where the player moved to
+                    toRow = self.rowMap[moveSpots[j + 1][0]];
+                    toCol = parseInt(moveSpots[j + 1][1]);
 
-                    var playerPiece = self.gamestate[fromRow][fromCol];
-                    var king = false;
-                    if ([2, 4].indexOf(playerPiece) !== -1) {
-                        king = true;
+                    playerPiece = self.gamestate[fromRow][fromCol];
+                    
+                    //Calculate king conversion (whether the player became a king on this turn)
+                    kingRow = (currentPlayerColor === "black") ? 0 : 7;
+                    if (toRow === kingRow) {
+                        playerPiece = self.pieces[currentPlayerColor][1];
                     }
+                    
+                    //Reset old spot and move to new spot
+                    self.gamestate[fromRow][fromCol] = 0;
+                    self.gamestate[toRow][toCol] = playerPiece;
                 }
-    
-                //Update move with gamedata
-                move["gamestate"] = self.gamestate.slice(0);
+ 
+                //Copy gamestate to move to allow for caching
+                move["gamestate"] = self.copy(self.gamestate);
             }
+
         }
     }
 

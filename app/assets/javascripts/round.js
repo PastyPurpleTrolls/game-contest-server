@@ -7,6 +7,8 @@
         console.error(this.message);
     }
 
+
+
     function $http(url) {
 
         // A small example of object
@@ -117,7 +119,14 @@
     Replay.prototype.roundLoaded = function() {
         var self = this;
         self.displayMoves();
-        self.loadMove(2);
+        self.loadMove(5);
+        console.table(self.gamestate);
+
+        self.loadMove(15);
+        console.table(self.gamestate);
+
+        self.loadMove(235);
+        console.table(self.gamestate);
     }
 
     /*
@@ -127,7 +136,10 @@
      */
     Replay.prototype.parseJSON = function(string) {
         var self = this;
-        
+
+        //If this isn't a JSON string, don't parse it
+        if (typeof string !== "string") return string;
+
         try {
             string = string.replace(/'/gi, '"');
             var obj = JSON.parse(string);
@@ -208,16 +220,15 @@
         //Create URL to json file file
         self.roundJsonUrl = [window.location.protocol + "//" + window.location.host, "match-logs", self.MatchID, self.RoundID + ".json"].join("/")
 
-        var callback = {
-            success: function(data) {
-                self.round = JSON.parse(data);
-                console.log("round", self.round);
-                self.roundLoaded();
-            },
-            error: function(data) {
-                throw new Exception("Can't load round file");
-            }
-        };
+            var callback = {
+                success: function(data) {
+                    self.round = JSON.parse(data);
+                    self.roundLoaded();
+                },
+                error: function(data) {
+                    throw new Exception("Can't load round file");
+                }
+            };
 
         $http(self.roundJsonUrl).get().then(callback.success).catch(callback.error);
     }
@@ -231,13 +242,13 @@
      */
     Replay.prototype.initRenderer = function() {
         var self = this;
-    
+
         self.stage = new PIXI.Stage(0x66FF99);
         console.log(self);
         self.renderer = PIXI.autoDetectRenderer(self.rendererWidth, self.rendererHeight);
-        
+
         self.elements["renderer"].appendChild(self.renderer.view);
-        
+
         self.loadTextures();
 
         self.sprites = {};
@@ -320,6 +331,59 @@
         self.textures[name] = PIXI.Texture.fromImage(self.assetsUrl + url);
     }
 
+    /*
+     * copy()
+     * Helper function to deep copy objects
+     */
+    Replay.prototype.copy = function(src) {
+        var self = this;
+        
+        var mixin = function (dest, source, copyFunc) {
+            var name, s, i, empty = {};
+            for(name in source){
+                // the (!(name in empty) || empty[name] !== s) condition avoids copying properties in "source"
+                // inherited from Object.prototype.	 For example, if dest has a custom toString() method,
+                // don't overwrite it with the toString() method that source inherited from Object.prototype
+                s = source[name];
+                if(!(name in dest) || (dest[name] !== s && (!(name in empty) || empty[name] !== s))){
+                    dest[name] = copyFunc ? copyFunc(s) : s;
+                }
+            }
+            return dest;
+        }
+
+        if (!src || typeof src != "object" || Object.prototype.toString.call(src) === "[object Function]") {
+            // null, undefined, any non-object, or function
+            return src;	// anything
+        }
+        if (src.nodeType && "cloneNode" in src) {
+            // DOM Node
+            return src.cloneNode(true); // Node
+        }
+        if (src instanceof Date) {
+            // Date
+            return new Date(src.getTime());	// Date
+        }
+        if (src instanceof RegExp) {
+            // RegExp
+            return new RegExp(src);   // RegExp
+        }
+
+        var r, i, l;
+        if (src instanceof Array) {
+            // array
+            r = [];
+            for(i = 0, l = src.length; i < l; ++i) {
+                if (i in src) {
+                    r.push(self.copy(src[i]));
+                }
+            }
+        } else {
+            // generic objects
+            r = src.constructor ? new src.constructor() : {};
+        }
+        return mixin(r, src, self.copy.bind(self));
+    }
 
     //Export class
     window.Replay = Replay
