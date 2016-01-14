@@ -106,6 +106,9 @@
     Replay.prototype.init = function() {
         var self = this;
 
+        //Hook for plugins
+        self.initPlugin();
+
         self.generateLayout();
         self.initRenderer();
         self.loadRound();
@@ -137,6 +140,13 @@
     }
 
     /*
+     * initPlugin()
+     * Hook for plugin to load
+     * Stub function, implemented in plugin
+     */
+    Replay.prototype.initPlugin = function() {}
+
+    /*
      * roundLoaded()
      * Run after the round has been loaded
      *
@@ -144,14 +154,11 @@
     Replay.prototype.roundLoaded = function() {
         var self = this;
         self.displayMoves();
-        self.loadMove(5);
-        console.table(self.gamestate);
+        self.loadMove(1);
 
-        self.loadMove(15);
-        console.table(self.gamestate);
+        //self.loadMove(15);
 
-        self.loadMove(235);
-        console.table(self.gamestate);
+        //self.loadMove(235);
     }
 
     /*

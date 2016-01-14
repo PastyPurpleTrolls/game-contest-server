@@ -6,8 +6,39 @@
 
     Replay.prototype.pieces = {
         "red": [3, 4],
-        "black": [1, 2]
+        "black": [1, 2],
+        3: "red",
+        4: "redKing",
+        1: "black",
+        2: "blackKing"
     };
+
+    
+    Replay.prototype.initPlugin = function() {
+        var self = this;
+
+        self.boardPositions = self.generateBoardPositions(8, 90, 91);
+    }
+
+    Replay.prototype.generateBoardPositions = function(rows, incrementX, incrementY) {
+        var self = this;
+                
+        var positions = [];
+
+        var row, col;
+        for (var i = 0; i < rows; i++) {
+            row = [];
+            
+            for (var y = 0; y < rows; y++) {
+                col = [y*incrementX, i*incrementY];
+                row.push(col);
+            }
+
+            positions.push(row);
+        }        
+
+        return positions;
+    }
 
     Replay.prototype.defaultGameState = [
         [0, 1, 0, 1, 0, 1, 0, 1], 
@@ -56,7 +87,6 @@
             for (deltaIndex = self.currentMoveIndex; deltaIndex > self.currentMoveIndex - deltaStep && deltaIndex > 0; deltaIndex--) {
               deltaMove = self.round.moves[deltaIndex];
               if ("gamestate" in deltaMove) {
-                  console.log("Found a delta", deltaIndex);
                   self.gamestate =  self.copy(self.parseJSON(deltaMove["gamestate"]));
                   break;
               }
@@ -64,7 +94,6 @@
             
             //default gamestate if we didn't find a delta gamestate
             if (self.gamestate.length === 0) {
-                console.log("Loading default game state");
                 self.gamestate = self.copy(self.defaultGameState);
             } else {
                 //Don't recalculate the gamestate
@@ -111,19 +140,68 @@
         }
     }
 
+    Replay.prototype.render = function() {
+        var self = this;
+
+        var numPieces = 12;
+        var numBlackPieces = 0;
+        var numRedPieces = 0;
+
+        var rowI, row, colI, col, pieceType, sprite, position;
+        for (rowI = 0; rowI < self.gamestate.length; rowI++) {
+            row = self.gamestate[rowI];
+            //loop through columns
+            for (colI = 0; colI < row.length; colI++) {
+                col = row[colI];
+
+                //Don't do anything with empty spots
+                if (col === 0) continue;
+
+                pieceType = self.pieces[col];
+                
+                //Detect piece color
+                if (pieceType === "black" || pieceType === "blackKing") {
+                    sprite = self.sprites["blackPieces"][numBlackPieces];
+                    numBlackPieces += 1;
+                } else {
+                    sprite = self.sprites["redPieces"][numRedPieces];
+                    numRedPieces += 1;
+                }
+ 
+                sprite.visible = true;
+            
+                //Set texture of sprite to match piece type
+                sprite.texture = self.textures[pieceType];
+
+                position = self.boardPositions[rowI][colI];
+
+                sprite.position.x = position[0];
+                sprite.position.y = position[1];
+            }
+        }
+
+        //Hide pieces that aren't being used anymore
+        for (var i = numBlackPieces; i < numPieces; i++) {
+            self.sprites["blackPieces"][i].visible = false;
+        }
+        for (var i = numRedPieces; i < numPieces; i++) {
+            self.sprites["redPieces"][i].visible = false;
+        }
+    }
+
     Replay.prototype.loadTextures = function() {
         var self = this;
 
         self.addTexture("checkerboard", "checkerboard.png");
-        self.addTexture("white", "white.png");
+        self.addTexture("red", "white.png");
         self.addTexture("black", "black.png");
-        self.addTexture("whiteKing", "whiteKing.png");
+        self.addTexture("redKing", "whiteKing.png");
         self.addTexture("blackKing", "blackKing.png");
     }
 
     Replay.prototype.loadSprites = function() {
         var self = this;
-       
+
         //Load checkerboard and set 1 pixel to the left
         self.sprites["checkerboard"] = new PIXI.Sprite(self.textures["checkerboard"]);
         self.sprites["checkerboard"].position.x = -1;
@@ -131,13 +209,13 @@
 
         //Load pieces
         self.sprites["blackPieces"] = [];
-        self.sprites["whitePieces"] = [];
+        self.sprites["redPieces"] = [];
 
         var numPieces = 12;
 
         for (var i = 0; i < numPieces; i++) {
             self.sprites["blackPieces"][i] = new PIXI.Sprite(self.textures["black"]);
-            self.sprites["whitePieces"][i] = new PIXI.Sprite(self.textures["white"]);
+            self.sprites["redPieces"][i] = new PIXI.Sprite(self.textures["red"]);
         }
     }
 
