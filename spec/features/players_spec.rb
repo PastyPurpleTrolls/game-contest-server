@@ -175,7 +175,8 @@ describe "PlayersPages" do
   describe "destroy", type: :request do
     let!(:player) { FactoryGirl.create(:player, user: user) }
 		let!(:player2) { FactoryGirl.create(:player, user: user) }
-		let!(:player_match){ FactoryGirl.create(:player_match, player: player) }
+		let!(:match) { FactoryGirl.create(:match) }
+		let!(:player_match) { FactoryGirl.create(:player_match, player: player2, match: match) }
 
     before do
       login user, avoid_capybara: true
@@ -204,6 +205,10 @@ describe "PlayersPages" do
     it "removes a player from the system" do
       expect { delete player_path(player) }.to change(Player, :count).by(-1)
     end
+
+#		after do
+#			puts player_match.player_id
+#		end
 
 		it "does not remove a player from the system that is in a match" do
 			expect { delete player_path(player2) }.to change(Player, :count).by(0)

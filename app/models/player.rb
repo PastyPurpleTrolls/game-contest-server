@@ -3,7 +3,7 @@ class Player < ActiveRecord::Base
   belongs_to :contest
   belongs_to :programming_language
 
-  has_many :player_matches
+  has_many :player_matches, dependent: :restrict_with_error
   has_many :matches, through: :player_matches
   has_many :player_tournaments
   has_many :tournaments, through: :player_tournaments

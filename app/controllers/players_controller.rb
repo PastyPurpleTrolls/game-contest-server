@@ -1,7 +1,7 @@
 class PlayersController < ApplicationController
   before_action :ensure_user_logged_in, except: [:index, :show]
   before_action :ensure_player_owner, only: [:edit, :update, :destroy]
-	before_action :ensure_not_in_match, only: [:destroy]
+
 
   require 'will_paginate/array'
 
@@ -68,13 +68,4 @@ class PlayersController < ApplicationController
     @player = Player.friendly.find(params[:id])
     ensure_correct_user(@player.user_id)
   end
-	
-	def	ensure_not_in_match
-		pm = PlayerMatch.where(player_id: :id).count
-		if pm < 1
-			return true
-		else
-			return false	
-		end
-	end
 end

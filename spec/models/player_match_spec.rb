@@ -75,7 +75,6 @@ describe PlayerMatch do
 			player_match.player_id = 1
 		end
 		subject { player_match2 }
-
 		it { should_not be_valid }
 	end
 =begin
