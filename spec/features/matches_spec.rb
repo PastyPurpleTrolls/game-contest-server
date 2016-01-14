@@ -311,7 +311,7 @@ describe "MatchesPages" do
         visit match_path(match)
       end
 
-      xit "should link to all players" do
+      it "should link to all players" do
         match.players.each_with_index do |p, i|
           selector = "//ol/li[position()=#{i + 1}]"
           should have_selector(:xpath, selector, text: p.name)
@@ -331,7 +331,7 @@ describe "MatchesPages" do
         visit match_path(match)
       end
 
-      xit "should link to all players" do
+      it "should link to all players" do
         match.players.each_with_index do |p, i|
           selector = "//ol/li[position()=#{match.players.size - i}]"
           should have_selector(:xpath, selector, text: p.name)
