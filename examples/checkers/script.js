@@ -72,15 +72,18 @@
         //Reset the gamestate
         self.gamestate = [];
 
-        //Render default game board
-        if (self.currentMoveIndex === -1) {
+        //Move "0" is the default game board
+        if (self.moveNumber === 0) {
             self.gamestate = self.copy(self.defaultGameState);
             return;
         }
+
+        var moveIndex = self.moveNumber - 1;
+        var currentMove = self.round.moves[moveIndex];
  
         //Already calculated the gamestate, move on
-        if ("gamestate" in self.currentMove) {
-            self.gamestate = self.parseJSON(self.currentMove.gamestate);
+        if ("gamestate" in currentMove) {
+            self.gamestate = self.parseJSON(currentMove.gamestate);
         } else {
             //Get the colors associated with the names of each player in this game
             var colors = self.parseJSON(self.round.info);
@@ -90,10 +93,10 @@
             
             //Store delta move and index
             var deltaMove = {};
-            var deltaIndex = self.currentMoveIndex;
+            var deltaIndex = moveIndex;
 
             //Step backward through moves to find the most recent defined deltastep
-            for (deltaIndex = self.currentMoveIndex; deltaIndex > self.currentMoveIndex - deltaStep && deltaIndex > 0; deltaIndex--) {
+            for (deltaIndex = moveIndex; deltaIndex > moveIndex - deltaStep && deltaIndex > 0; deltaIndex--) {
               deltaMove = self.round.moves[deltaIndex];
               if ("gamestate" in deltaMove) {
                   self.gamestate =  self.copy(self.parseJSON(deltaMove["gamestate"]));
@@ -112,7 +115,7 @@
             var move, moveData, currentPlayerColor, moveString, moveSpots,
                 fromRow, fromCol, toRow, toCol, playerPiece, kingRow, tweenRow, tweenCol;
             //Move forward and generate the gamestates for each move along the way
-            for (var i = deltaIndex; i <= self.currentMoveIndex; i++) {
+            for (var i = deltaIndex; i <= moveIndex; i++) {
                 move = self.round.moves[i];
                 moveData = self.parseJSON(move["data"]);
                 

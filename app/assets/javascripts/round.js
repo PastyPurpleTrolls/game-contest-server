@@ -94,7 +94,8 @@
         self.assetsUrl = assetsUrl;
         self.element = element;
 
-        self.moveNumber = -1;
+        self.moveNumber = 0;
+        self.lastMoveLoaded = -1;
 
         self.round = {};
 
@@ -159,13 +160,13 @@
         }
         
         //If I reach the last move, stop autoplaying
-        if (self.moveNumber === self.round.moves.length - 1) {
+        if (self.moveNumber === self.round.moves.length) {
             self.togglePlayback(false);
             return;
         }
 
         //Load the next move
-        self.loadMove(self.moveNumber + 1);
+        self.moveNumber += 1;
     }
 
     /*
@@ -209,9 +210,6 @@
         var self = this;
         self.createControls();
         self.displayMoves();
-
-        //Display default gameboard
-        self.loadMove(-1);
     }
 
     /*
@@ -250,7 +248,7 @@
         self.playbackSlider = document.createElement("input");
         self.playbackSlider.setAttribute("type", "range");
         self.playbackSlider.setAttribute("step", 1);
-        self.playbackSlider.setAttribute("min", -1);
+        self.playbackSlider.setAttribute("min", 0);
         self.playbackSlider.setAttribute("max", self.round.moves.length - 1);
         self.playbackSlider.setAttribute("value", 0);
 
@@ -259,7 +257,7 @@
             //Stop playback
             self.togglePlayback(false);
             //Parse the slider value as an integer and load the move 
-            self.loadMove(parseInt(self.playbackSlider.value));
+            self.moveNumber = parseInt(self.playbackSlider.value);
         }, false);
 
 
@@ -283,7 +281,7 @@
         for (var i = 0; i < self.round.moves.length; i++) {
             move = self.round.moves[i];
             view = document.createElement("li");
-            view.setAttribute("id", "move-" + i);
+            view.setAttribute("id", "move-" + (i + 1));
             view.textContent = move["description"];
             movesViewer.appendChild(view);
             self.elements["moves-controls"].push(view);
@@ -292,9 +290,8 @@
         //Assign click event to moves viewer
         movesViewer.addEventListener("click", function(e) {
             if (e.target && e.target.nodeName === "LI") {
-                var move = parseInt(e.target.id.replace("move-", ""));
                 self.togglePlayback(false);
-                self.loadMove(move);
+                self.moveNumber = parseInt(e.target.id.replace("move-", ""));
             }
         });
     }
@@ -302,22 +299,21 @@
     /*
      * loadMove()
      * Display a move in the renderer
-     * move {int} Index of move in moves object
      */
-    Replay.prototype.loadMove = function(move) {
+    Replay.prototype.loadMove = function() {
         var self = this;
 
-        //Sepcial case, display default game board
-        if (move === -1) {
-            self.currentMoveIndex = move;
-        } else {
-            //Prevent invalid move indexes by wrapping the index to 0
-            self.moveNumber = (move >= self.round.moves.length || move < 0) ? 0 : move;
+        //No data to display
+        if (typeof(self.round.moves) === "undefined") return;
 
-            self.currentMoveIndex = self.moveNumber;
-            //Grab the move from the moves object
-            self.currentMove = self.round.moves[self.currentMoveIndex];
-        }
+        //Move hasn't changed, do nothing
+        if (self.moveNumber === self.lastMoveLoaded) return;
+
+        //Wrap invalid move index
+        self.moveNumber = (self.moveNumber > self.round.moves.length || self.moveNumber < 0) ? 0 : self.moveNumber;
+
+        //Keep track of the last move loaded
+        self.lastMoveLoaded = self.moveNumber;
 
         //Update the playback slider with the current move index
         self.playbackSlider.value = self.moveNumber;
@@ -378,6 +374,9 @@
      */
     Replay.prototype.animate = function() {
         var self = this;
+
+        //Load the current move if necessary
+        self.loadMove();
 
         self.renderer.render(self.stage);
 
