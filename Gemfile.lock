@@ -84,6 +84,8 @@ GEM
     faker (1.1.2)
       i18n (~> 0.5)
     ffi (1.9.10)
+    font-awesome-rails (4.5.0.0)
+      railties (>= 3.2, < 5.0)
     formatador (0.2.5)
     friendly_id (5.1.0)
       activerecord (>= 4.0.0)
@@ -267,6 +269,7 @@ DEPENDENCIES
   eventmachine (~> 1.0.4)
   factory_girl_rails (~> 4.4.1)
   faker (= 1.1.2)
+  font-awesome-rails
   friendly_id (~> 5.1.0)
   guard-livereload
   guard-rspec (~> 4.5.0)

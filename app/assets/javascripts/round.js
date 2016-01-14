@@ -112,6 +112,7 @@
         self.initPlugin();
 
         self.generateLayout();
+        self.createControls();
         self.initRenderer();
         self.loadRound();
     }
@@ -127,7 +128,7 @@
         self.playIncrement = self.playIncrement || 4;
 
         //Toggle playing variable back and forth
-        if (typeof(state) !== "undefined") {
+        if (typeof(state) === "boolean") {
             self.playing = state;
         } else {
             self.playing = (!self.playing) ? true : false;
@@ -135,8 +136,10 @@
         
         //Create interval
         if (self.playing) {
+            self.playButton.innerHTML = '<i class="fa fa-pause"></i>';
             self.playInterval = window.setInterval(self.play.bind(self), self.playIncrement * 1000);
         } else {
+            self.playButton.innerHTML = '<i class="fa fa-play"></i>';
             if (self.playInterval) clearInterval(self.playInterval);
         }
     }
@@ -203,9 +206,8 @@
         var self = this;
         self.displayMoves();
 
+        //Display default gameboard
         self.loadMove(-1);
-
-        self.togglePlayState();
     }
 
     /*
@@ -217,15 +219,30 @@
 
         self.elements = {};
 
+        self.elements["controls"] = document.createElement("div");
         self.elements["renderer"] = document.createElement("div");
         self.elements["moves-viewer"] = document.createElement("ol");
-        self.elements["controls"] = document.createElement("div");
 
         //Add elements to viewer
         for (var key in self.elements) {
             self.elements[key].classList.add(key);
             self.element.appendChild(self.elements[key]);
         }
+    }
+
+    /*
+     * createControls
+     */
+    Replay.prototype.createControls = function() {
+        var self = this;
+        
+        self.playButton = document.createElement("button");
+        self.playButton.innerHTML = '<i class="fa fa-play"></i>';
+        self.playButton.classList.add("play-button");
+
+        self.playButton.addEventListener("click", self.togglePlayState.bind(self));
+
+        self.elements["controls"].appendChild(self.playButton);
     }
 
     /*
