@@ -127,12 +127,16 @@
         //Default increment value
         self.playIncrement = self.playIncrement || 4;
 
+        //Clicking play after the round has finished will start it from the beginning
+        if (!self.playing && self.moveNumber === self.round.moves.length) self.moveNumber = 0;
+
         //Toggle playing variable back and forth
         if (typeof(state) === "boolean") {
             self.playing = state;
         } else {
             self.playing = (!self.playing) ? true : false;
         }
+
         
         //Create interval
         if (self.playing) {
