@@ -9,19 +9,21 @@ describe Round do
 	it { should respond_to(:player_rounds) }
 	it { should respond_to(:players) }
 
-=begin
-<<<<<<< HEAD
 	describe "validations" do 
     it { should be_valid }
 		specify { expect_required_attribute(:match) }
 	end
 
-=======
->>>>>>> 2042a496d8a3de42ef23b5007c647a47bb77bb47
-=end
-	describe "validations" do 
-    it { should be_valid }
-		specify { expect_required_attribute(:match) }
+	describe "does not have the same players as the match" do
+		before do
+			round.match.players.destroy(round.match.players.first)
+			player1 = FactoryGirl.create(:player)
+			player_match1 = FactoryGirl.create(:player_match, player: player1, match: round.match)
+			player1.save	
+			player_match1.save
+			round.match.reload
+		end
+    it { should_not be_valid }
 	end
 =begin
 	describe "does not have the same players as the match" do

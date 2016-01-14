@@ -11,6 +11,7 @@ class PlayerRound < ActiveRecord::Base
 	
 	validates :round_id, :presence => true
 	validates :player_id, :presence => true
+  validates :result,  	inclusion: [nil, 'Win', 'Loss', 'Tie', 'Crash', 'Time out', 'Unknown Round Result']
 #	validates_uniqueness_of :round_id, scope: :player_id 
 	
 	validate :check_ids
