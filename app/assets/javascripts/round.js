@@ -323,11 +323,19 @@
             movesViewer.children[self.lastMoveLoaded - 1].classList.remove("current");
         }
 
+        var inRange = function(number, min, max) {
+            return number > min && number < max;
+        }
+
         //Add current class to move
         if (self.moveNumber > 0) {
             var move = movesViewer.children[self.moveNumber - 1]
             move.classList.add("current");
-            move.scrollIntoView(false);
+
+            //Check if element is visible in list
+            if (!inRange(move.offsetTop + move.offsetHeight, movesViewer.scrollTop, movesViewer.scrollTop + movesViewer.offsetHeight)) {
+                move.scrollIntoView(false);
+            }
         }
     }
 
