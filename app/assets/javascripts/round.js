@@ -253,7 +253,7 @@
         self.playbackSlider.setAttribute("type", "range");
         self.playbackSlider.setAttribute("step", 1);
         self.playbackSlider.setAttribute("min", 0);
-        self.playbackSlider.setAttribute("max", self.round.moves.length - 1);
+        self.playbackSlider.setAttribute("max", self.round.moves.length);
         self.playbackSlider.setAttribute("value", 0);
 
         //Change current move based upon slider location
