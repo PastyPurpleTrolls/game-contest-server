@@ -18,6 +18,15 @@ describe Referee do
   # For match.manager.referee if the manager is a referee
   #it { should respond_to(:referee) }
 
+  describe "validations" do
+    it { should be_valid }
+    specify { expect_required_attribute(:user) }
+    specify { expect_required_attribute(:players_per_game) }
+    specify { expect_required_attribute(:file_location) }
+    specify { expect_required_attribute(:name) }
+    specify { expect_required_attribute(:round_limit) }
+    specify { expect_required_attribute(:rounds_capable) }
+  end
 
   # name tests #
   describe "empty name" do
@@ -195,18 +204,6 @@ describe Referee do
     before { referee.file_location = '/path/to/non/existant/file' }
 
     it { should_not be_valid }
-  end
-
-
-  describe "validations" do
-    it { should be_valid }
-    specify { expect_required_attribute(:user) }
-#    specify { expect_required_attribute(:file_location) }
-    specify { expect_required_attribute(:name) }
-#    specify { expect_required_attribute(:round_limit) }
-    specify { expect_required_attribute(:rounds_capable) }
-=begin
-=end
   end
 
 end

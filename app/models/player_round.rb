@@ -1,17 +1,10 @@
 class PlayerRound < ActiveRecord::Base
   belongs_to :round, inverse_of: :player_rounds
   belongs_to :player
-=begin
-<<<<<<< HEAD
 
-  validates :round,           presence: true
-  validates :player,           presence: true
-=======
-=end
-	
-	validates :round, presence: true
-	validates :player, presence: true
-
+	validates :round_id, :presence => true
+	validates :player_id, :presence => true
+  validates :result,  	inclusion: [nil, 'Win', 'Loss', 'Tie', 'Crash', 'Time out', 'Unknown Round Result']
 	
 	validate :check_ids
 
@@ -21,7 +14,4 @@ class PlayerRound < ActiveRecord::Base
 			errors.add(:count, "you cannot have more than one player round with the same player and round id")
 		end
 	end
-=begin
->>>>>>> 2042a496d8a3de42ef23b5007c647a47bb77bb47
-=end
 end
