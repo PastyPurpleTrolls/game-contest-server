@@ -11,6 +11,7 @@
 # the additional setup, and require it from the spec files that actually need it.
 
 require 'simplecov'
+require 'fileutils'
 SimpleCov.start 'rails'
 
 # The `.rspec` file also contains a few flags that are not defaults but that
@@ -39,6 +40,40 @@ RSpec.configure do |config|
     # a real object. This is generally recommended, and will default to
     # `true` in RSpec 4.
     mocks.verify_partial_doubles = true
+  end
+  
+  config.after(:suite) do
+    FileUtils.rm_rf(Rails.root.join('code',
+                                    'referees',
+                                    'test').to_s)
+    FileUtils.mkdir(Rails.root.join('code',
+                                    'referees',
+                                    'test').to_s)
+    FileUtils.touch(Rails.root.join('code',
+                                    'referees',
+                                    'test',
+                                    '.gitkeep').to_s)
+    FileUtils.rm_rf(Rails.root.join('code',
+                                    'players',
+                                    'test').to_s)
+    FileUtils.mkdir(Rails.root.join('code',
+                                    'players',
+                                    'test').to_s)
+    FileUtils.touch(Rails.root.join('code',
+                                    'players',
+                                    'test',
+                                    '.gitkeep').to_s)
+    FileUtils.rm_rf(Rails.root.join('code',
+                                    'environments',
+                                    'test').to_s)
+    FileUtils.mkdir(Rails.root.join('code',
+                                    'environments',
+                                    'test').to_s) 
+    FileUtils.touch(Rails.root.join('code',
+                                    'environments',
+                                    'test',
+                                    '.gitkeep').to_s)
+
   end
 
 # The settings below are suggested to provide a good initial experience
