@@ -112,16 +112,15 @@
         self.initPlugin();
 
         self.generateLayout();
-        self.createControls();
         self.initRenderer();
         self.loadRound();
     }
 
     /*
-     * togglePlayState()
+     * togglePlayback()
      * Toggles playing the game
      */
-    Replay.prototype.togglePlayState = function(state) {
+    Replay.prototype.togglePlayback = function(state) {
         var self = this;
 
         //Default increment value
@@ -136,9 +135,11 @@
         
         //Create interval
         if (self.playing) {
+            //Update play button
             self.playButton.innerHTML = '<i class="fa fa-pause"></i>';
             self.playInterval = window.setInterval(self.play.bind(self), self.playIncrement * 1000);
         } else {
+            //Update play button and clear interval
             self.playButton.innerHTML = '<i class="fa fa-play"></i>';
             if (self.playInterval) clearInterval(self.playInterval);
         }
@@ -150,17 +151,19 @@
      */
     Replay.prototype.play = function() {
         var self = this;
-        
+
+        //Failsafe, don't play unless I should be playing 
         if (!self.playing) {
             clearInterval(self.playInterval);
             return;
         }
         
-        if (self.moveNumber === self.round.moves.length) {
-            self.togglePlayState();
+        //If I reach the last move, stop autoplaying
+        if (self.moveNumber === self.round.moves.length - 1) {
+            self.togglePlayback(false);
             return;
         }
- 
+
         //Load the next move
         self.loadMove(self.moveNumber + 1);
     }
@@ -204,6 +207,7 @@
      */
     Replay.prototype.roundLoaded = function() {
         var self = this;
+        self.createControls();
         self.displayMoves();
 
         //Display default gameboard
@@ -239,10 +243,28 @@
         self.playButton = document.createElement("button");
         self.playButton.innerHTML = '<i class="fa fa-play"></i>';
         self.playButton.classList.add("play-button");
+        //Toggle playback on click
+        self.playButton.addEventListener("click", self.togglePlayback.bind(self));
 
-        self.playButton.addEventListener("click", self.togglePlayState.bind(self));
+        //Playback slider
+        self.playbackSlider = document.createElement("input");
+        self.playbackSlider.setAttribute("type", "range");
+        self.playbackSlider.setAttribute("step", 1);
+        self.playbackSlider.setAttribute("min", -1);
+        self.playbackSlider.setAttribute("max", self.round.moves.length - 1);
+        self.playbackSlider.setAttribute("value", 0);
+
+        //Change current move based upon slider location
+        self.playbackSlider.addEventListener("input", function() {
+            //Stop playback
+            self.togglePlayback(false);
+            //Parse the slider value as an integer and load the move 
+            self.loadMove(parseInt(self.playbackSlider.value));
+        }, false);
+
 
         self.elements["controls"].appendChild(self.playButton);
+        self.elements["controls"].appendChild(self.playbackSlider);
     }
 
     /*
@@ -271,7 +293,7 @@
         movesViewer.addEventListener("click", function(e) {
             if (e.target && e.target.nodeName === "LI") {
                 var move = parseInt(e.target.id.replace("move-", ""));
-                self.togglePlayState(false);
+                self.togglePlayback(false);
                 self.loadMove(move);
             }
         });
@@ -290,12 +312,15 @@
             self.currentMoveIndex = move;
         } else {
             //Prevent invalid move indexes by wrapping the index to 0
-            self.moveNumber = (move > self.round.moves.length || move < 0) ? 0 : move;
+            self.moveNumber = (move >= self.round.moves.length || move < 0) ? 0 : move;
 
             self.currentMoveIndex = self.moveNumber;
             //Grab the move from the moves object
             self.currentMove = self.round.moves[self.currentMoveIndex];
         }
+
+        //Update the playback slider with the current move index
+        self.playbackSlider.value = self.moveNumber;
 
         //Calls user function to generate the game state for the current move
         self.generateGameState();

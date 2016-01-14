@@ -5,7 +5,7 @@
     Replay.prototype.rendererHeight = 728;
 
     //Time between rendered moves (in seconds)
-    Replay.prototype.playIncrement = 0.8;
+    Replay.prototype.playIncrement = 0.7;
 
     Replay.prototype.pieces = {
         "black": [3, 4],
