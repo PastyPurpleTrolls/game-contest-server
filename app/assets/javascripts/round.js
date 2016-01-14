@@ -398,10 +398,10 @@
         
         //Add renderer to page
         self.elements["renderer"].appendChild(self.renderer.view);
-
+        
         //Load all user defined textures
         self.loadTextures();
-
+        
         //Reset sprites and load user sprites
         self.sprites = {};
         self.loadSprites();
@@ -488,7 +488,7 @@
 
         if (!self.textures) self.textures = {};
         if (name in self.textures) return;
-
+        console.log(self.assetsUrl);
         self.textures[name] = PIXI.Texture.fromImage(self.assetsUrl + url);
     }
 

@@ -1,5 +1,5 @@
 <% content_for :javascript_includes do %>
-    <%= javascript_include_tag URI.join(@assets_url,"script.js") %>
+    <%= javascript_include_tag URI.join(@assets_url,"script.js"), "data-turbolinks-track" => true %>
 <% end %>
 
 <h1>Round Information</h1>

@@ -213,7 +213,7 @@
 
     Replay.prototype.loadTextures = function() {
         var self = this;
-
+        
         self.addTexture("checkerboard", "checkerboard.png");
         self.addTexture("red", "white.png");
         self.addTexture("black", "black.png");

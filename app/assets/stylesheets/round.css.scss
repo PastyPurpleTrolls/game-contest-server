@@ -20,6 +20,7 @@ $grey: #D9D9D9;
             color: white;
             border: none;
             cursor: pointer;
+            margin-right: 1em;
         }
     }
 
@@ -35,12 +36,12 @@ $grey: #D9D9D9;
     
     .moves-viewer {
         background: $blue;
-        color: white;
         overflow: auto;
         list-style-position: inside;
         padding: 0;
 
         li {
+            color: white;
             cursor: pointer;
             padding: 1em 2em;
             //transition: all 200ms ease-in;
