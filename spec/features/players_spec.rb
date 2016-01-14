@@ -181,6 +181,7 @@ describe "PlayersPages" do
 
     it "removes the player from the file system" do
       expect do
+				puts 'begin this broken test'
         delete player_path(player)
       end.to change{ Dir.entries(server_location).size }.by(-1)
 
