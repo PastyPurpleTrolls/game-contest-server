@@ -190,14 +190,25 @@
 
         var movesViewer = self.elements["moves-viewer"];
 
+        self.elements["moves-controls"] = [];
+
         var move, view;
 
         for (var i = 0; i < self.round.moves.length; i++) {
             move = self.round.moves[i];
             view = document.createElement("li");
+            view.setAttribute("id", "move-" + i);
             view.textContent = move["description"];
             movesViewer.appendChild(view);
-        }        
+            self.elements["moves-controls"].push(view);
+        } 
+
+        movesViewer.addEventListener("click", function(e) {
+            if (e.target && e.target.nodeName === "LI") {
+                var move = parseInt(e.target.id.replace("move-", ""));
+                self.loadMove(move);
+            }
+        });
     }
 
     /*

@@ -5,12 +5,12 @@
     Replay.prototype.rendererHeight = 728;
 
     Replay.prototype.pieces = {
-        "red": [3, 4],
-        "black": [1, 2],
-        3: "red",
-        4: "redKing",
-        1: "black",
-        2: "blackKing"
+        "black": [3, 4],
+        "red": [1, 2],
+        1: "red",
+        2: "redKing",
+        3: "black",
+        4: "blackKing"
     };
 
     
@@ -75,6 +75,7 @@
         } else {
             //Get the colors associated with the names of each player in this game
             var colors = self.parseJSON(self.round.info);
+            console.log(colors);
 
             //Search for delta at least 10 moves from the current one
             var deltaStep = 10;
@@ -101,7 +102,7 @@
             }
 
             var move, moveData, currentPlayerColor, moveString, moveSpots,
-                fromRow, fromCol, toRow, toCol, playerPiece, kingRow;
+                fromRow, fromCol, toRow, toCol, playerPiece, kingRow, tweenRow, tweenCol;
             //Move forward and generate the gamestates for each move along the way
             for (var i = deltaIndex; i <= self.currentMoveIndex; i++) {
                 move = self.round.moves[i];
@@ -126,7 +127,15 @@
                     //Calculate king conversion (whether the player became a king on this turn)
                     kingRow = (currentPlayerColor === "black") ? 0 : 7;
                     if (toRow === kingRow) {
+                        console.log(currentPlayerColor);
                         playerPiece = self.pieces[currentPlayerColor][1];
+                    }
+
+                    //Remove jumped piece
+                    if (Math.abs(fromRow - toRow) > 1) {
+                        tweenRow = Math.floor((fromRow + toRow) / 2);
+                        tweenCol = Math.floor((fromCol + toCol) / 2);
+                        self.gamestate[tweenRow][tweenCol] = 0;
                     }
                     
                     //Reset old spot and move to new spot
@@ -138,6 +147,7 @@
                 move["gamestate"] = self.copy(self.gamestate);
             }
         }
+        console.table(self.gamestate);
     }
 
     Replay.prototype.render = function() {
