@@ -49,12 +49,8 @@ class PlayersController < ApplicationController
   end
 
   def destroy
-		puts 'destroy beginning'
-    puts '@player.destroy'
     @player.destroy
-    puts 'redirect_to contest_players_path(@player.contest)'
     redirect_to contest_players_path(@player.contest)
-		puts 'destroy ending'
   end
 
   private
