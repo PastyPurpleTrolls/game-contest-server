@@ -61,9 +61,6 @@ gem 'coffee-rails', '~> 4.0.0'
 #Use jquery
 gem 'jquery-rails'
 
-#Use angular js
-gem 'angularjs-rails'
-
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 
