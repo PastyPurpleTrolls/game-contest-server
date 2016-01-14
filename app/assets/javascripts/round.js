@@ -1,33 +1,33 @@
 (function() {
     "use strict";
 
+    /*
+     * Custom exception
+     */
     var Exception = function(message) {
         this.message = "ERROR: " + message;
         this.name = "UserException";
-        console.error(this.message);
+        console.error(this.message);    
     }
 
-
-
-    function $http(url) {
-
-        // A small example of object
+    /*
+     * $http
+     * Wraps XMLHttpRequest() with Promise magic
+     */
+    var $http = function(url) {
         var core = {
-
             // Method that performs the ajax request
             ajax: function (method, url, args) {
-
                 // Creating a promise
                 var promise = new Promise(function (resolve, reject) {
-
                     // Instantiates the XMLHttpRequest
                     var client = new XMLHttpRequest();
                     var uri = url;
-
+                    
+                    //Encode data as a URL string for POSTs or PUTs
                     if (args && (method === 'POST' || method === 'PUT')) {
                         uri += '?';
                         var argcount = 0;
-
                         for (var key in args) {
                             if (args.hasOwnProperty(key)) {
                                 if (argcount++) {
@@ -37,10 +37,12 @@
                             }
                         }
                     }
-
+                    
+                    //Send request to client
                     client.open(method, uri);
                     client.send();
 
+                    //Resolve promise object on callback
                     client.onload = function () {
                         if (this.status >= 200 && this.status < 300) {
                             // Performs the function "resolve" when this.status is equal to 2xx
@@ -50,40 +52,39 @@
                             reject(this.statusText);
                         }
                     }
-
+                    //Reject the promise if the service is unreachable
                     client.onerror = function () {
                         reject(this.statusText);
                     }
                 });
-
                 // Return the promise
                 return promise;
             }
         };
-
-        // Adapter pattern
+        //Expose methods to user
         return {
-            'get' : function(args) {
+            'get': function(args) {
                 return core.ajax('GET', url, args);
             },
-                'post' : function(args) {
-                    return core.ajax('POST', url, args);
-                },
-                'put' : function(args) {
-                    return core.ajax('PUT', url, args);
-                },
-                'delete' : function(args) {
-                    return core.ajax('DELETE', url, args);
-                }
+            'post': function(args) {
+                return core.ajax('POST', url, args);
+            },
+            'put': function(args) {
+                return core.ajax('PUT', url, args);
+            },
+            'delete': function(args) {
+                return core.ajax('DELETE', url, args);
+            }
         };
     };
 
     /*
      * Replay
      * Displays a Replay of a given round
-     * element (HTMLDomElement) Element to render to
-     * MatchID (string)
-     * RoundID (string)
+     * element {DOMelement} HTML element to bind the viewer to
+     * assetsUrl {string} Absolute URL to the referee assets, http://localhost/referee/(refname)/assets/ 
+     * MatchID {string} ID of the match that this round is contained in
+     * RoundID {string} Round ID
      */
     var Replay = function(element, assetsUrl, MatchID, RoundID) {
         var self = this;
@@ -91,11 +92,9 @@
         self.MatchID = MatchID;
         self.RoundID = RoundID;
         self.assetsUrl = assetsUrl;
-
         self.element = element;
 
         self.round = {};
-        self.status = true;
 
         self.init();
     }
@@ -113,8 +112,34 @@
     }
 
     /*
+     * loadRound()
+     * Load the round JSON file given the matchID and the roundID
+     */
+    Replay.prototype.loadRound = function() {
+        var self = this;
+
+        //Create URL to json file file
+        self.roundJsonUrl = [window.location.protocol + "//" + window.location.host, "match-logs", self.MatchID, self.RoundID + ".json"].join("/");
+
+        //AJAX callback functions
+        var callback = {
+            success: function(data) {
+                self.round = JSON.parse(data);
+                self.roundLoaded();
+            },
+            error: function(data) {
+                throw new Exception("Can't load round file");
+            }
+        };
+
+        //Get round JSON log
+        $http(self.roundJsonUrl).get().then(callback.success).catch(callback.error);
+    }
+
+    /*
      * roundLoaded()
      * Run after the round has been loaded
+     *
      */
     Replay.prototype.roundLoaded = function() {
         var self = this;
@@ -130,27 +155,6 @@
     }
 
     /*
-     * parseJSON()
-     * Helper function, replaces all single quotes with double quotes and parses the string as JSON
-     * string {string} String to parse
-     */
-    Replay.prototype.parseJSON = function(string) {
-        var self = this;
-
-        //If this isn't a JSON string, don't parse it
-        if (typeof string !== "string") return string;
-
-        try {
-            string = string.replace(/'/gi, '"');
-            var obj = JSON.parse(string);
-        } catch(e) {
-            var obj = {};
-        }
-
-        return obj;
-    }
-
-    /*
      * generateLayout()
      * Creates HTML elements for the viewer
      */
@@ -163,6 +167,7 @@
         self.elements["moves-viewer"] = document.createElement("ol");
         self.elements["controls"] = document.createElement("div");
 
+        //Add elements to viewer
         for (var key in self.elements) {
             self.elements[key].classList.add(key);
             self.element.appendChild(self.elements[key]);
@@ -196,12 +201,24 @@
     Replay.prototype.loadMove = function(move) {
         var self = this;
 
+        //Prevent invalid move indexes by wrapping the index to 0
         self.currentMoveIndex = (move > self.round.moves.length || move < 0) ? 0 : move;
+        //Grab the move from the moves object
         self.currentMove = self.round.moves[self.currentMoveIndex];
 
+        //Calls user function to generate the game state for the current move
         self.generateGameState();
-        //self.renderGame();
+
+        //Update graphics to reflect current move
+        self.render();
     }
+
+    /*
+     * render()
+     * Takes gamestate and renders it to graphics window
+     * Stub function, define in plugin
+     */
+    Replay.prototype.render = function() {}
 
     /*
      * generateGameState()
@@ -211,51 +228,30 @@
     Replay.prototype.generateGameState = function() {}
 
     /*
-     * loadRound()
-     * Load the round JSON file given the matchID and the roundID
-     */
-    Replay.prototype.loadRound = function() {
-        var self = this;
-
-        //Create URL to json file file
-        self.roundJsonUrl = [window.location.protocol + "//" + window.location.host, "match-logs", self.MatchID, self.RoundID + ".json"].join("/")
-
-            var callback = {
-                success: function(data) {
-                    self.round = JSON.parse(data);
-                    self.roundLoaded();
-                },
-                error: function(data) {
-                    throw new Exception("Can't load round file");
-                }
-            };
-
-        $http(self.roundJsonUrl).get().then(callback.success).catch(callback.error);
-    }
-
-    Replay.prototype.render = function(gamedata) {}
-
-
-    /*
      * initRenderer()
      * Generates PIXI canvas element
      */
     Replay.prototype.initRenderer = function() {
         var self = this;
 
-        self.stage = new PIXI.Stage(0x66FF99);
-        console.log(self);
+        //Create stage and renderer
+        self.stage = new PIXI.Container();
         self.renderer = PIXI.autoDetectRenderer(self.rendererWidth, self.rendererHeight);
-
+        
+        //Add renderer to page
         self.elements["renderer"].appendChild(self.renderer.view);
 
+        //Load all user defined textures
         self.loadTextures();
 
+        //Reset sprites and load user sprites
         self.sprites = {};
         self.loadSprites();
 
+        //Add sprites to stage
         self.spawnSprites();
 
+        //Update on every animation frame (60 FPS)
         requestAnimationFrame(self.animate.bind(self));
     }
 
@@ -294,6 +290,7 @@
     Replay.prototype.spawnSprites = function() {
         var self = this;
         for (var key in self.sprites) {
+            //Recursively load all the sprites in the sprites object
             self.spritesHelper(self.sprites[key]);
         }
     }
@@ -305,9 +302,12 @@
      */
     Replay.prototype.spritesHelper = function(obj) {
         var self = this;
+        //Check if this is a PIXI object
         if ("_texture" in obj) {
+            //Add to stage and render in viewer
             self.stage.addChild(obj);            
         } else {
+            //Loop through children of current object
             for (var key in obj) {
                 if (obj.hasOwnProperty(key)) {
                     self.spritesHelper(obj[key]);
@@ -330,6 +330,26 @@
 
         self.textures[name] = PIXI.Texture.fromImage(self.assetsUrl + url);
     }
+
+ /*
+     * parseJSON()
+     * Helper function, replaces all single quotes with double quotes and parses the string as JSON
+     * string {string} String to parse
+     */
+    Replay.prototype.parseJSON = function(string) {
+        var self = this;
+        //If this isn't a JSON string, don't parse it (simply return the object)
+        if (typeof string !== "string") return string;
+        //Try to parse string as JSON, otherwise return an empty object
+        try {
+            string = string.replace(/'/gi, '"');
+            var obj = JSON.parse(string);
+        } catch(e) {
+            var obj = {};
+        }
+        return obj;
+    }
+
 
     /*
      * copy()
