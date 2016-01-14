@@ -43,7 +43,7 @@
             self.gamestate = self.parseJSON(self.currentMove.gamestate);
         } else {
             //Get the colors associated with the names of each player in this game
-            var colors = JSON.parse(self.round.info);
+            var colors = self.parseJSON(self.round.info);
 
             //Search for delta at least 10 moves from the current one
             var deltaStep = 10;
