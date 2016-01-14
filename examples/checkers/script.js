@@ -4,6 +4,9 @@
     Replay.prototype.rendererWidth = 722;
     Replay.prototype.rendererHeight = 728;
 
+    //Time between rendered moves (in seconds)
+    Replay.prototype.playIncrement = 0.8;
+
     Replay.prototype.pieces = {
         "black": [3, 4],
         "red": [1, 2],
@@ -68,6 +71,12 @@
  
         //Reset the gamestate
         self.gamestate = [];
+
+        //Render default game board
+        if (self.currentMoveIndex === -1) {
+            self.gamestate = self.copy(self.defaultGameState);
+            return;
+        }
  
         //Already calculated the gamestate, move on
         if ("gamestate" in self.currentMove) {
@@ -75,7 +84,6 @@
         } else {
             //Get the colors associated with the names of each player in this game
             var colors = self.parseJSON(self.round.info);
-            console.log(colors);
 
             //Search for delta at least 10 moves from the current one
             var deltaStep = 10;
@@ -127,7 +135,6 @@
                     //Calculate king conversion (whether the player became a king on this turn)
                     kingRow = (currentPlayerColor === "black") ? 0 : 7;
                     if (toRow === kingRow) {
-                        console.log(currentPlayerColor);
                         playerPiece = self.pieces[currentPlayerColor][1];
                     }
 
@@ -147,7 +154,6 @@
                 move["gamestate"] = self.copy(self.gamestate);
             }
         }
-        console.table(self.gamestate);
     }
 
     Replay.prototype.render = function() {
@@ -157,6 +163,7 @@
         var numBlackPieces = 0;
         var numRedPieces = 0;
 
+        //Loop through entire board and find player pieces
         var rowI, row, colI, col, pieceType, sprite, position;
         for (rowI = 0; rowI < self.gamestate.length; rowI++) {
             row = self.gamestate[rowI];
@@ -169,7 +176,7 @@
 
                 pieceType = self.pieces[col];
                 
-                //Detect piece color
+                //Detect piece color and grab appropriate sprite
                 if (pieceType === "black" || pieceType === "blackKing") {
                     sprite = self.sprites["blackPieces"][numBlackPieces];
                     numBlackPieces += 1;
@@ -178,11 +185,13 @@
                     numRedPieces += 1;
                 }
  
+                //Display sprite to user
                 sprite.visible = true;
             
                 //Set texture of sprite to match piece type
                 sprite.texture = self.textures[pieceType];
 
+                //Grab X, Y position 
                 position = self.boardPositions[rowI][colI];
 
                 sprite.position.x = position[0];

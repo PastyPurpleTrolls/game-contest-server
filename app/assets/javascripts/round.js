@@ -94,6 +94,8 @@
         self.assetsUrl = assetsUrl;
         self.element = element;
 
+        self.moveNumber = -1;
+
         self.round = {};
 
         self.init();
@@ -112,6 +114,52 @@
         self.generateLayout();
         self.initRenderer();
         self.loadRound();
+    }
+
+    /*
+     * togglePlayState()
+     * Toggles playing the game
+     */
+    Replay.prototype.togglePlayState = function(state) {
+        var self = this;
+
+        //Default increment value
+        self.playIncrement = self.playIncrement || 4;
+
+        //Toggle playing variable back and forth
+        if (typeof(state) !== "undefined") {
+            self.playing = state;
+        } else {
+            self.playing = (!self.playing) ? true : false;
+        }
+        
+        //Create interval
+        if (self.playing) {
+            self.playInterval = window.setInterval(self.play.bind(self), self.playIncrement * 1000);
+        } else {
+            if (self.playInterval) clearInterval(self.playInterval);
+        }
+    }
+
+    /*
+     * play()
+     * Play the animation
+     */
+    Replay.prototype.play = function() {
+        var self = this;
+        
+        if (!self.playing) {
+            clearInterval(self.playInterval);
+            return;
+        }
+        
+        if (self.moveNumber === self.round.moves.length) {
+            self.togglePlayState();
+            return;
+        }
+ 
+        //Load the next move
+        self.loadMove(self.moveNumber + 1);
     }
 
     /*
@@ -154,11 +202,10 @@
     Replay.prototype.roundLoaded = function() {
         var self = this;
         self.displayMoves();
-        self.loadMove(1);
 
-        //self.loadMove(15);
+        self.loadMove(-1);
 
-        //self.loadMove(235);
+        self.togglePlayState();
     }
 
     /*
@@ -203,9 +250,11 @@
             self.elements["moves-controls"].push(view);
         } 
 
+        //Assign click event to moves viewer
         movesViewer.addEventListener("click", function(e) {
             if (e.target && e.target.nodeName === "LI") {
                 var move = parseInt(e.target.id.replace("move-", ""));
+                self.togglePlayState(false);
                 self.loadMove(move);
             }
         });
@@ -219,10 +268,17 @@
     Replay.prototype.loadMove = function(move) {
         var self = this;
 
-        //Prevent invalid move indexes by wrapping the index to 0
-        self.currentMoveIndex = (move > self.round.moves.length || move < 0) ? 0 : move;
-        //Grab the move from the moves object
-        self.currentMove = self.round.moves[self.currentMoveIndex];
+        //Sepcial case, display default game board
+        if (move === -1) {
+            self.currentMoveIndex = move;
+        } else {
+            //Prevent invalid move indexes by wrapping the index to 0
+            self.moveNumber = (move > self.round.moves.length || move < 0) ? 0 : move;
+
+            self.currentMoveIndex = self.moveNumber;
+            //Grab the move from the moves object
+            self.currentMove = self.round.moves[self.currentMoveIndex];
+        }
 
         //Calls user function to generate the game state for the current move
         self.generateGameState();
