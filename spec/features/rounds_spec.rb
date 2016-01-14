@@ -48,6 +48,8 @@ describe "RoundsPages" do
 			FactoryGirl.create_list(:round, 5, match: tournament_match)
 			FactoryGirl.create_list(:round, 5, match: challenge_match)
 			FactoryGirl.create_list(:round, 5, match: challenge_match_2)
+      challenge_match.players.first.user.password = "password"
+			login challenge_match.players.first.user
 			visit match_path(challenge_match)
 		end
 
