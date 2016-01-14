@@ -334,7 +334,7 @@
 
             //Check if element is visible in list
             if (!inRange(move.offsetTop + move.offsetHeight, movesViewer.scrollTop, movesViewer.scrollTop + movesViewer.offsetHeight)) {
-                move.scrollIntoView(false);
+                movesViewer.scrollTop = move.offsetTop - movesViewer.offsetHeight + move.offsetHeight;
             }
         }
     }
