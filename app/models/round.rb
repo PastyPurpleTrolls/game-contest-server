@@ -14,14 +14,25 @@ class Round < ActiveRecord::Base
   end
 
 	def check_num_rounds
-		rounds = Round.where(match_id: self.match_id).count
-		num_rounds = Match.find(self.match_id).num_rounds
-#		puts rounds<=num_rounds
-		if rounds > num_rounds	
-			errors.add(:count, "you have more rounds than this match allows")
+		unless self.match.nil?
+			rounds = Round.where(match_id: self.match_id).count
+			num_rounds = Match.find(self.match_id).num_rounds
+#			puts rounds<=num_rounds
+			if rounds > num_rounds	
+				errors.add(:count, "you have more rounds than this match allows")
+			end
 		end
 	end
       
   extend FriendlyId
   friendly_id :name, use: :slugged
+
+
+	validate :same_players_as_match 
+
+	def same_players_as_match
+		if match.present? && players.present? && match.players != players
+			errors.add(:players, "must be the same as the match's players")
+		end
+	end
 end

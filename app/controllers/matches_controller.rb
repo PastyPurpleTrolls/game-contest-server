@@ -17,9 +17,9 @@ class MatchesController < ApplicationController
   def create	
     @contest = Contest.friendly.find(params[:contest_id])
     contest = Contest.friendly.find(params[:contest_id])
-    match_limit = params[:match][:num_rounds]
+    round_limit = params[:match][:num_rounds]
     if params[:match][:player_ids] && params[:match][:player_ids].any? { |player_id, use| Player.find(player_id).user_id == current_user.id}
-        match_limit.to_i.times do 
+        round_limit.to_i.times do 
             @match = @contest.matches.build(acceptable_params)
     	    @match.status = "waiting"
     	        if @match.save
@@ -40,11 +40,10 @@ class MatchesController < ApplicationController
 
   def show
     @match = Match.friendly.find(params[:id])
-#		unless @match.tournament_match?
+		unless @match.tournament_match?
 #			ensure that user is logged in, and that the user has a player in the challenge match
-#			@list_of_users_in_match = list_of_users_in_match(@match)
-#			ensure_correct_user_from_list(@list_of_users_in_match, 'You do not have a player in this challenge match')
-#		end
+			ensure_correct_user_from_list(list_of_users_in_match(@match), 'You do not have a player in this challenge match')
+		end
   end
 
   def index
@@ -73,6 +72,7 @@ class MatchesController < ApplicationController
 			# find all the contest's challenge matches in which the user has a player participating in
 			@matches = Match.joins(:players).where(players: {user: current_user , contest:@manager })
 			return 
+=begin
 			# store in an array all the user's players in the contest 
 			@players_of_user_in_contest = Player.where(user: current_user, contest: @manager).to_a
 
@@ -89,6 +89,7 @@ class MatchesController < ApplicationController
 				end
 				@keep
 			end
+=end
 
     else
       flash[:danger] = "Unable to find matches"

@@ -26,24 +26,29 @@ FactoryGirl.define do
       location = Rails.root.join('code',
                                  'referees',
                                  'test',
-                                 "FactoryGirl-fake-code-#{i}").to_s
-      FileUtils.touch(location)
-      location
+                                 SecureRandom.hex)
+      FileUtils.mkdir_p(location.to_s)
+      finalLocation = location.join("FactoryGirl-fake-code-#{i}").to_s
+      FileUtils.touch(finalLocation)
+      finalLocation
     end
     sequence(:compressed_file_location) do |i|
       location = Rails.root.join('code',
                                  'environments',
                                  'test',
-                                 "FactoryGirl-fake-code-#{i}").to_s
-      FileUtils.touch(location)
-      location
+                                 SecureRandom.hex)
+      FileUtils.mkdir_p(location.to_s)
+      finalLocation = location.join("FactoryGirl-fake-code-#{i}").to_s
+      FileUtils.touch(finalLocation)
+      finalLocation
     end
     sequence(:name) { |i| "Referee #{i}" }
     rules_url "http://example.com/path/to/rules"
     players_per_game 4
     time_per_game 10
     user
-    match_limit 150
+    round_limit 150
+		rounds_capable false 
   end
 
   factory :contest do
@@ -173,9 +178,11 @@ FactoryGirl.define do
       location = Rails.root.join('code',
                                  'players',
                                  'test',
-                                 "FactoryGirl-fake-code-#{i}").to_s
-      FileUtils.touch(location)
-      location
+                                 SecureRandom.hex)
+      FileUtils.mkdir_p(location.to_s)
+      finalLocation = location.join("FactoryGirl-fake-code-#{i}").to_s
+      FileUtils.touch(finalLocation)
+      finalLocation
     end
     description "Player Description Here"
     sequence(:name) { |i| "Player #{i}" }

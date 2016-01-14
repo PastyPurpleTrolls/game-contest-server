@@ -4,6 +4,7 @@ class PlayerMatch < ActiveRecord::Base
 
   validates :player,    presence: true
   validates :match,     presence: true
+  validates :result,  	inclusion: [nil,'Pending', 'Error', 'Win', 'Loss', 'Tie', 'Unknown Result']
 
 	validate :check_ids
 

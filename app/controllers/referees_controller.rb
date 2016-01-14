@@ -62,12 +62,38 @@ class RefereesController < ApplicationController
         end
     end
 
-    private
+		private
 
+=begin
+<<<<<<< HEAD
+  def acceptable_params
+    params.require(:referee).permit(:name,
+                                    :rules_url,
+				    :round_limit,
+                                    :rounds_capable,
+                                    :players_per_game,
+				    :time_per_game,
+                                    :upload,
+				    :upload2)
+  end
+=======
     def acceptable_params
         params.require(:referee).permit(:name,
                                         :rules_url,
                                         :match_limit,
+                                        :rounds_capable,
+                                        :players_per_game,
+                                        :time_per_game,
+                                        :upload,
+                                        :upload2,
+                                        :upload3)
+    end
+>>>>>>> 2042a496d8a3de42ef23b5007c647a47bb77bb47
+=end
+    def acceptable_params
+        params.require(:referee).permit(:name,
+                                        :rules_url,
+                                        :round_limit,
                                         :rounds_capable,
                                         :players_per_game,
                                         :time_per_game,

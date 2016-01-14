@@ -48,12 +48,15 @@ describe "RoundsPages" do
 			FactoryGirl.create_list(:round, 5, match: tournament_match)
 			FactoryGirl.create_list(:round, 5, match: challenge_match)
 			FactoryGirl.create_list(:round, 5, match: challenge_match_2)
+      challenge_match.players.first.user.password = "password"
+			login challenge_match.players.first.user
 			visit match_path(challenge_match)
 		end
 
 		it "lists all the rounds for the match" do
 				Round.where(match: challenge_match).each do |r|
-				should have_selector('li', text: /Round #{r.id}$/)	
+				should have_selector('li', text: 'Round '+ r.id.to_s)	
+				#should have_selector('li', text: /Round #{r.id}$/)	
         should have_link(r.id, href: round_path(r))
 			end
 		end

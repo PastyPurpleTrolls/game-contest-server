@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160112165939) do
+ActiveRecord::Schema.define(version: 20160113002215) do
 
   create_table "contests", force: :cascade do |t|
     t.integer  "user_id"
@@ -136,7 +136,7 @@ ActiveRecord::Schema.define(version: 20160112165939) do
     t.integer  "players_per_game"
     t.integer  "user_id"
     t.string   "compressed_file_location"
-    t.integer  "match_limit"
+    t.integer  "round_limit"
     t.integer  "time_per_game"
     t.boolean  "rounds_capable"
     t.string   "replay_assets_location",   limit: 255
