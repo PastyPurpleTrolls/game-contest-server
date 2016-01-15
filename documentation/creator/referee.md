@@ -101,7 +101,7 @@ Moves always have a description and data. Move data can be sent in any format by
 
 ###Example Plugin
 
-The GitHub repository contains an [example referee](https://github.com/PastyPurpleTrolls/test/blob/master/examples/test_referee.py), [player](https://github.com/PastyPurpleTrolls/test/blob/master/examples/test_player.py), and an example [Replay plugin](https://github.com/PastyPurpleTrolls/test/blob/test/examples/test-assets/script.js).
+The GitHub repository contains an [example referee](https://github.com/PastyPurpleTrolls/test/blob/master/examples/test_referee.py), [player](https://github.com/PastyPurpleTrolls/test/blob/master/examples/test_player.py), and an example [Replay plugin](https://github.com/PastyPurpleTrolls/test/blob/master/examples/test-assets/script.js).
 
 ###API
 
