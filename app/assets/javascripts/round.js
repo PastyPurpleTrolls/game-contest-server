@@ -124,8 +124,8 @@
     Replay.prototype.togglePlayback = function(state) {
         var self = this;
 
-        //Default increment value
-        self.playIncrement = self.playIncrement || 4;
+        //Default increment value (1 second)
+        self.playIncrement = self.playIncrement || 1;
 
         //Clicking play after the round has finished will start it from the beginning
         if (!self.playing && self.moveNumber === self.round.moves.length) self.moveNumber = 0;
@@ -237,7 +237,7 @@
             self.element.appendChild(self.elements[key]);
         }
 
-
+        //Add controls div to render column
         self.elements["controls"] = document.createElement("div");
         self.elements["controls"].classList.add("controls");
         self.elements["renderer"].appendChild(self.elements["controls"]);
@@ -288,10 +288,13 @@
         //Match height to height of renderer
         movesViewer.style.height = self.elements["renderer"].offsetHeight + "px";
 
+        window.addEventListener("resize", function(e) {
+            movesViewer.style.height = self.elements["renderer"].offsetHeight + "px";
+        });
+
         self.elements["moves-controls"] = [];
 
         var move, view;
-
         for (var i = 0; i < self.round.moves.length; i++) {
             move = self.round.moves[i];
             view = document.createElement("li");
@@ -303,6 +306,7 @@
 
         //Assign click event to moves viewer
         movesViewer.addEventListener("click", function(e) {
+            //Check that user clicked on list element
             if (e.target && e.target.nodeName === "LI") {
                 self.togglePlayback(false);
                 self.moveNumber = parseInt(e.target.id.replace("move-", ""));
@@ -332,9 +336,9 @@
             var move = movesViewer.children[self.moveNumber - 1]
             move.classList.add("current");
 
-            //Check if element is visible in list
+            //Check if element is visible in list, scroll to it if it isn't
             if (!inRange(move.offsetTop + move.offsetHeight, movesViewer.scrollTop, movesViewer.scrollTop + movesViewer.offsetHeight)) {
-                movesViewer.scrollTop = move.offsetTop - movesViewer.offsetHeight + move.offsetHeight;
+                movesViewer.scrollTop = (move.offsetTop + move.offsetHeight) - movesViewer.offsetHeight;
             }
         }
     }
@@ -365,7 +369,7 @@
         self.playbackSlider.value = self.moveNumber;
 
         //Calls user function to generate the game state for the current move
-        self.generateGameState();
+        self.generateGamestate();
 
         //Update graphics to reflect current move
         self.render();
@@ -379,11 +383,11 @@
     Replay.prototype.render = function() {}
 
     /*
-     * generateGameState()
+     * generateGamestate()
      * Generate the current gamestate based upon the current move
      * Stub function, define in plugin
      */
-    Replay.prototype.generateGameState = function() {}
+    Replay.prototype.generateGamestate = function() {}
 
     /*
      * initRenderer()
@@ -394,10 +398,16 @@
 
         //Create stage and renderer
         self.stage = new PIXI.Container();
-        self.renderer = PIXI.autoDetectRenderer(self.rendererWidth, self.rendererHeight);
+        self.renderer = PIXI.autoDetectRenderer(
+            self.rendererWidth, self.rendererHeight, 
+            {antialias: false, transparent: false, resolution: 1}
+        );
         
         //Add renderer to page
         self.elements["renderer"].appendChild(self.renderer.view);
+
+        //Plugin hook for renderer
+        self.rendererLoaded();
         
         //Load all user defined textures
         self.loadTextures();
@@ -421,18 +431,25 @@
     Replay.prototype.animate = function() {
         var self = this;
 
+        requestAnimationFrame(self.animate.bind(self));
+
         //Load the current move if necessary
         self.loadMove();
 
         self.renderer.render(self.stage);
-
-        requestAnimationFrame(self.animate.bind(self));
     }
 
     /*
-     * loadTextures()
+     * rendererLoaded()
+     * Called directly after the renderer has been defined and added to the page
      * Stub function, defined in plugin
+     */
+    Replay.prototype.rendererLoaded = function() {}
+
+    /*
+     * loadTextures()
      * Loads all the textures
+     * Stub function, defined in plugin
      */
     Replay.prototype.loadTextures = function() {}
 
@@ -488,7 +505,7 @@
 
         if (!self.textures) self.textures = {};
         if (name in self.textures) return;
-        console.log(self.assetsUrl);
+        
         self.textures[name] = PIXI.Texture.fromImage(self.assetsUrl + url);
     }
 

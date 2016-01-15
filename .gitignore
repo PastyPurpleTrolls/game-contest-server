@@ -14,6 +14,7 @@
 /code/environments/development/*
 /code/environments/test/*
 /code/environments/production/*
+/code/static/
 
 #Ignore match logs
 /public/match-logs
