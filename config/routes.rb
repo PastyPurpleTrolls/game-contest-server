@@ -12,7 +12,7 @@ GameContestServer::Application.routes.draw do
   
   resources :referees do
       member do
-          get 'assets/:asset', to: 'referees#show', :constraints => { :asset => /.*/ }
+          get 'assets/:asset', to: 'referees#show', :constraints => { :asset => /.*/ }, as: 'assets'
       end
   end
 

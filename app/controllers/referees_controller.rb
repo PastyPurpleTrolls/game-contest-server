@@ -1,4 +1,5 @@
 class RefereesController < ApplicationController
+    protect_from_forgery :except => :show
     before_action :ensure_user_logged_in, except: [:index, :show]
     before_action :ensure_contest_creator, except: [:index, :show]
     before_action :ensure_referee_owner, only: [:edit, :update, :destroy]

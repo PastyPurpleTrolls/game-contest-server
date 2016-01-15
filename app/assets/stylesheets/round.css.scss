@@ -1,3 +1,55 @@
 // Place all the styles related to the Round controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+$blue: #263248;
+$grey: #D9D9D9;
+
+.replay-viewer {
+
+    .controls {
+        margin-bottom: 2em; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .play-button {
+            width: 2.5em;
+            height: 2.5em;
+            background: $blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-right: 1em;
+        }
+    }
+
+    .renderer {
+        canvas {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: auto;
+        }
+        margin-bottom: 2em;
+    }
+    
+    .moves-viewer {
+        background: $blue;
+        overflow: auto;
+        list-style-position: inside;
+        padding: 0;
+
+        li {
+            color: white;
+            cursor: pointer;
+            padding: 1em 2em;
+            //transition: all 200ms ease-in;
+
+            &:hover, &.current {
+                background: $grey;
+                color: black;
+            }
+        }
+    }
+}
