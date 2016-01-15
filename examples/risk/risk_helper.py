@@ -48,7 +48,7 @@ class Player():
                 functionName, arguments = pickle.loads(self.ref_socket.recv(4096))
                 #Check that function exists
                 if (functionName in self.playerFunctions):
-                    ref_socket.send(pickle.dumps(self.playerFunctions[functionName](*arguments)))
+                    self.ref_socket.send(pickle.dumps(self.playerFunctions[functionName](*arguments)))
             except EOFError:
                 break
 

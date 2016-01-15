@@ -34,7 +34,6 @@ ref = MockPlayer.new("../examples/risk/risk_referee.py", "ref")
 round_wrapper = RoundWrapper.new(ref, 4, 40, [p1, p2, p3, p4], 8)
 round_wrapper.run_match
 
-#puts(round_wrapper.status)
-puts round_wrapper.rounds
+puts(round_wrapper.status)
 
 

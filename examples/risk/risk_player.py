@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 
+from risk_helper import *
 from riskStructs import *
 import random
 
@@ -106,7 +107,6 @@ def continueAttack(player,countryD,bookArmiesBonusList,playerDMe,manual=False):
         return ""
 
 def getBookCardIndices(player,countryD,bookArmiesBonusList,playerDMe,manual=False):
-    print("IN PLAYER",player)
     listOfCardIndicesToPlay=[]
     if manual: #MANUAL
         while not hasPickedABook(playerDMe,player,listOfCardIndicesToPlay):
@@ -205,7 +205,6 @@ def troopMove(player,countryD,bookArmiesBonusList,playerDMe,manual=False):
     return fromCountry,toCountry,howManyToMove
 
 def placeArmies(player,countryD,bookArmiesBonusList,playerDMe,manual=False):
-    print("PLAYER:",player)
     countryList=getPlayerCountryList(player,countryD)
     if manual: #MANUAL
         for index in range(len(countryList)):
@@ -233,7 +232,6 @@ def placeArmies(player,countryD,bookArmiesBonusList,playerDMe,manual=False):
         numberOfArmiesToPlace=playerDMe[player]["armies"]
     return countryList[countryIndex], numberOfArmiesToPlace
 
-import risk_helper
 
 #Load player with all the player functions
 player = Player({

@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 import cTurtle
 import random
 import pickle
@@ -5,6 +7,10 @@ import json
 from riskStructs import *
 from ref_helper import *
 
+import os
+import sys
+f = open(os.devnull, 'w')
+sys.stdout = f
 
 def report_results(resulttype):
     #The winner will own every single country, so just grab the united states
@@ -27,34 +33,32 @@ class Player():
 
     #Maps local player function to function defined in player connected via socket
     def send(self, functionName, arguments):
-        self.connection.send(pickle.dumps((
-            functionName, arguments
-        ))
+        self.connection.send(pickle.dumps((functionName, arguments)))
         return pickle.loads(self.connection.listen(4096))
 
     def attackFromCountry(self, player, countryD, bookArmiesBonusList, playerDMe, manual = False):
-        return self.send("attackFromCountry", [player, countryD, bookArmiesBonusList, playerDMe, manual])
+        return self.send("attackFromCountry", [player, countryD, bookArmiesBonusList, playerDMe, False])
 
     def attackToCountry(self, player, countryD, bookArmiesBonusList, playerDMe, manual = False):
-        return self.send("attackToCountry", [player, countryD, bookArmiesBonusList, playerDMe, manual]
+        return self.send("attackToCountry", [player, countryD, bookArmiesBonusList, playerDMe, manual])
 
     def attackContinueAttack(self, player, countryD, bookArmiesBonusList, playerDMe, manual = False):
-        return self.send("attackFromCountry", [player, countryD, bookArmiesBonusList, playerDMe, manual])
+        return self.send("attackFromCountry", [player, countryD, bookArmiesBonusList, playerDMe, False])
 
     def continueAttack(self, player,countryD,bookArmiesBonusList, playerDMe,manual=False):
         return self.send("continueAttack", [player,countryD,bookArmiesBonusList, playerDMe,manual])
 
     def tookCountryMoveArmiesHowMany(self, player,countryD,bookArmiesBonusList, playerDMe,attackFrom,manual=False):
-        return self.send("tookCountryMoveArmiesHowMany", [player,countryD,bookArmiesBonusList, playerDMe,attackFrom,manual])
+        return self.send("tookCountryMoveArmiesHowMany", [player,countryD,bookArmiesBonusList, playerDMe,attackFrom, False])
 
     def troopMove(self, player,countryD,bookArmiesBonusList, playerDMe,manual=False):
-        return self.send("troopMove", [player, countryD, bookArmiesBonusList, playerDMe, manual])
+        return self.send("troopMove", [player, countryD, bookArmiesBonusList, playerDMe, False])
 
     def getBookCardIndices(self, player,countryD,bookArmiesBonusList, playerDMe,manual=False):
-        return self.send("getBookCardIndices", [player,countryD,bookArmiesBonusList, playerDMe,manual])
+        return self.send("getBookCardIndices", [player,countryD,bookArmiesBonusList, playerDMe, False])
 
     def placeArmies(self, player,countryD,bookArmiesBonusList, playerDMe,manual=False):
-        return self.send("placeArmies", [player,countryD,bookArmiesBonusList, playerDMe,manual])
+        return self.send("placeArmies", [player,countryD,bookArmiesBonusList, playerDMe, False])
 
 #Create players
 P1 = Player(playerServer)
@@ -307,6 +311,17 @@ def attackNeighboringCountry(t,player):
         #present list of countries owned with more than one army, 0 element is no attack
         attackTo,defendingPlayer=pickAttackTo(attackFrom,player)
         print("\nAttacking",attackTo)
+
+        #Report move
+        description = "Player " + str(player) + " attacks " + attackTo + " (Player " + str(defendingPlayer) + ") from " + attackFrom
+        move = {
+            "player": player,
+            "type": "attack",
+            "fromCountry": attackFrom,
+            "toCountry": attackTo,
+        }
+        manager.send("move", [description, json.dumps(move)])
+
         continueAttack=""
         while continueAttack != "RETREAT" and countryD[attackTo]["armies"]>0 and countryD[attackFrom]["armies"]>1:
             rollDice(dT, player, attackFrom, defendingPlayer, attackTo)
@@ -315,10 +330,24 @@ def attackNeighboringCountry(t,player):
                 continueAttack=eval("P"+str(player)).continueAttack(player,countryD,bookArmiesBonusList,{player:playerD[player]})
             dT.clear()
         if continueAttack != "RETREAT" and countryD[attackTo]["armies"]<=0:  #wiped out the enemy from a country
+
             print("\nYou took over "+attackTo+"!")
             howManyToMove=eval("P"+str(player)).tookCountryMoveArmiesHowMany(player,countryD,bookArmiesBonusList,{player:playerD[player]},attackFrom)
             #howManyToMove=playerModuleNames[player-1].tookCountryMoveArmiesHowMany(player,countryD,bookArmiesBonusList,{player:playerD[player]},attackFrom)
             print("Moving",howManyToMove,"armies\n")
+
+            #Report captured country
+            description = "Player " + str(player) + " captured " + attackTo + " (Player " + str(defendingPlayer) + ") from " + attackFrom + " and moves " + str(howManyToMove) + " troops."
+            move = {
+                "player": player,
+                "type": "captured",
+                "fromCountry": attackFrom,
+                "toCountry": attackTo,
+                "howManyToMove": howManyToMove
+            }
+            manager.send("move", [description, json.dumps(move)])
+
+
             countryD[attackFrom]["armies"]-=howManyToMove
             countryD[attackTo]["armies"]=howManyToMove
             countryCaptured=True
@@ -358,6 +387,17 @@ def troopMovement(player,t):
     fromCountry,toCountry,howManyToMove=eval("P"+str(player)).troopMove(player,countryD,bookArmiesBonusList,{player:playerD[player]})
     #fromCountry,toCountry,howManyToMove=playerModuleNames[player-1].troopMove(player,countryD,bookArmiesBonusList,{player:playerD[player]})
     if fromCountry!="":
+        #Report move
+        description = "Player " + str(player) + "moves" + str(howManyToMove) + " troops from " + fromCountry + " to " + toCountry
+        move = {
+            "player": player,
+            "type": "troopMovement",
+            "fromCountry": fromCountry,
+            "toCountry": toCountry,
+            "howManyToMove": howManyToMove
+        }
+        manager.send("move", [description, json.dumps(move)])
+
         countryD[fromCountry]["armies"]-=howManyToMove
         countryD[toCountry]["armies"]+=howManyToMove
         drawRectangle(t,countryD[fromCountry]["loc"][0],countryD[fromCountry]["loc"][1],31,15,countryD[fromCountry]["armies"],12,playerD[player]["color"],-3)
@@ -404,6 +444,16 @@ def playBooks(player,t):
     #Display the players cards with and index number beside them, also display a menu item to exit
     #bookCardIndices=playerModuleNames[player-1].getBookCardIndices(player,countryD,bookArmiesBonusList,{player:playerD[player]})
     bookCardIndices=eval("P"+str(player)).getBookCardIndices(player,countryD,bookArmiesBonusList,{player:playerD[player]})
+
+    #Report move
+    description = "Player " + str(player) + " played some books"
+    move = {
+        "player": player,
+        "type": "playBooks",
+        "books": bookCardIndices,
+    }
+    manager.send("move", [description, json.dumps(move)])
+
     print("INDICES",bookCardIndices)
     print("CARDS",playerD[player]["cards"])
     if len(bookCardIndices)!=0:
@@ -440,7 +490,7 @@ def riskMain():
 
     #Tell the manager that the round has started
     #Also tell the manager which player is which
-    match.send("round", ["start", json.dumps({P1.name: 1, P2.name: 2, P3.name: 3, P4.name: 4})
+    manager.send("round", ["start", json.dumps({P1.name: 1, P2.name: 2, P3.name: 3, P4.name: 4})])
 
     #Choose a random player to start with
     player=random.randrange(1,5)
@@ -459,8 +509,8 @@ def riskMain():
     while not gameOver(): #Entire rest of game played in this loop
 
         #Temporary move reporting
-        description = eval("P" + str(player)).name + "is making a move"
-        match.send("move", [description, [eval("P" + str(player)).name, "move"])
+        #description = eval("P" + str(player)).name + " is making a move"
+        #manager.send("move", [description, [eval("P" + str(player)).name, "move"]])
 
 
         print("PLAYER",player,"CARDS:")
@@ -489,6 +539,9 @@ def riskMain():
         player=nextPlayer(player)
         while playerHasNoCountries(player):
             player=nextPlayer(player)
+
+        #Report the gamestate after the player has finished all their steps for the current move
+        manager.send("gamestate", json.dumps([countryD, bookArmiesBonusList]))
 
     manager.send("round", "end")
     report_results("roundresult")

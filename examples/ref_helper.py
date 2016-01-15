@@ -3,6 +3,12 @@
 from optparse import OptionParser
 import socket
 
+#Suppress the print function
+import os
+import sys
+f = open(os.devnull, 'w')
+sys.stdout = f
+
 #Create and listen to a socket
 class SocketServer():
     def __init__(self):
@@ -82,4 +88,3 @@ playerServer = SocketServer()
 
 #Tell the manager what port players should connect on
 manager.send("port", playerServer.port)
-
