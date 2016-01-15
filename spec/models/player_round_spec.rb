@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 describe PlayerRound do
+	let! (:round) { FactoryGirl.create(:challenge_round) }
   let (:player_round) { FactoryGirl.create(:player_round, result: "Win") }
-  subject { player_round }
+  subject { player_round } 
 
   # Tables
   it { should respond_to(:player) }
@@ -49,19 +50,19 @@ describe PlayerRound do
 			end
 		end
 
-		it "not in the list [nil, 'Win', 'Loss', 'Tie', 'Crash', 'Time out', 'Unknown Round Result']" do
-			player_round.result = 'garbage'
-    	should_not be_valid
+		describe "not in the list [nil, 'Win', 'Loss', 'Tie', 'Crash', 'Time out', 'Unknown Round Result']" do
+			before do
+				player_round.result = 'garbage'
+			end
+    	it { should_not be_valid }
 		end
 	end
 
 	describe "has same player and round as a different player round" do
-		let (:player_round2) { FactoryGirl.create(:player_round, player_id: 1, round_id: 1) }
 		before do
-			player_round.round_id = 1
-			player_round.player_id = 1
+			player_round.round_id = round.player_rounds.first.round_id 
+			player_round.player_id = round.player_rounds.first.player_id
 		end
-		subject { player_round2 }
 
 		it { should_not be_valid }
 	end

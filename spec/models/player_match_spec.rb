@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 describe PlayerMatch do
+	let! (:match) { FactoryGirl.create(:challenge_match) }
   let (:player_match) { FactoryGirl.create(:player_match) }
   subject { player_match }
 
@@ -35,13 +36,12 @@ describe PlayerMatch do
 		end
 	end
 
-	describe "has same player and match as a different player match" do
-		let (:player_match2) { FactoryGirl.create(:player_match, player_id: 1, match_id: 1) }
+	describe "has same player and match as a different player match" do	
 		before do
-			player_match.match_id = 1
-			player_match.player_id = 1
+			player_match.match_id = match.player_matches.first.match_id
+			player_match.player_id = match.player_matches.first.player_id
 		end
-		subject { player_match2 }
+
 		it { should_not be_valid }
 	end
 end

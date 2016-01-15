@@ -7,7 +7,7 @@ class Round < ActiveRecord::Base
   
   validates :match, presence: true
 
-	validate	:check_num_rounds
+	validate	:check_num_rounds, on: :create
 
   def name
     return SecureRandom.hex(5)

@@ -64,8 +64,6 @@ end
 =end
 
 	describe "is created if there are already num_round rounds for that match" do
-#		let! (:match2) { FactoryGirl.create(:tournament_match, num_rounds: 5) }	
-		
 
 		before do
 			match = FactoryGirl.create(:tournament_match, num_rounds: 5)
@@ -75,13 +73,5 @@ end
 
 		it { should_not be_valid }
 	end
-#<<<<<<< HEAD
-#=end
-	
-=begin
-=======
-		
->>>>>>> 2042a496d8a3de42ef23b5007c647a47bb77bb47
-#=end
-=end
+
 end

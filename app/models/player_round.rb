@@ -14,10 +14,12 @@ class PlayerRound < ActiveRecord::Base
 	
 	validate :check_ids
 
-	def check_ids 
-		pr_count =  PlayerRound.where(round_id: self.round_id, player_id: self.player_id).count
-		if pr_count > 1
-			errors.add(:count, "you cannot have more than one player round with the same player and round id")
+	def check_ids
+		pr_count =  PlayerRound.where(round_id: self.round_id, player_id: self.player_id).where.not(id: self.id).count
+#		puts pr_count
+		if pr_count > 0
+			errors.add(:round_id, "you cannot have more than one player round with the same player and round id")
 		end
 	end
+
 end
