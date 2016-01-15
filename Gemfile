@@ -16,6 +16,7 @@ group :test do
 end
 
 gem 'redcarpet', '~> 3.3', '>= 3.3.4'
+gem 'pygmentize'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.1.0'

@@ -79,7 +79,7 @@ Moves always have a description and data. Move data can be sent in any format by
 
 ####Example
 
-```json
+```javascript
 {
     "results": {
         "Player2": {
@@ -112,6 +112,17 @@ The Replay API is defined in [round.js](https://github.com/PastyPurpleTrolls/tes
 ####Replay API
 
 The Replay API is available through the global Replay object. Plugins should modify the prototype (`Replay.prototype`) to define functionality and attributes.
+
+Three settings are available to Replay plugins.
+
+```javascript
+//Width and height of the renderer
+Replay.prototype.rendererWidth = 750;
+Replay.prototype.rendererHeight = 750;
+
+//Time between moves (in seconds)
+Replay.prototype.playIncrement = 1;
+```
 
 - [**Replay.prototype.initPlugin()**](https://github.com/PastyPurpleTrolls/test/blob/master/app/assets/javascripts/round.js#L202)
   
