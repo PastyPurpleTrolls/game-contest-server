@@ -64,3 +64,98 @@ match:end
 matchresult:playername|result|roundswon
 matchresult:playername|result|roundswon
 ```
+
+##Replay Plugin
+
+Every referee should be uploaded along with a replay plugin. Replays are an important piece of the learning experience and allow students to figure out what their player did during competition matches.
+
+Replay plugins must be uploaded in a compressed file containing `script.js` and any other assets required by the plugin. Allowed compressed file formats are `.tar` and `.zip`.
+
+###Logs
+
+Log files are generated from data sent by the referee over the course of a round. This log is loaded and made available to the Replay plugin on load.
+
+Moves always have a description and data. Move data can be sent in any format by the game referee, but JSON is preferred to allow for easy parsing. Optionally, the game referee can send game state after a move to provide information as to what the game looked like after the move was completed. If provided, `gamestate` will be listed as an additional key:value pair in the move object.
+
+####Example
+
+```json
+{
+    "results": {
+        "Player2": {
+            "result": "Win",
+            "score": "1"
+        },
+        "Player1": {
+            "result": "Loss",
+            "score": "0"
+        }
+    },
+    "moves": [{
+        "description": "Player2 plays w",
+        "data": "[\"Player2\", \"w\"]"
+    }],
+    "info": "0"
+}
+```
+
+###Example Plugin
+
+The GitHub repository contains an [example referee](https://github.com/PastyPurpleTrolls/test/blob/master/examples/test_referee.py), [player](https://github.com/PastyPurpleTrolls/test/blob/master/examples/test_player.py), and an example [Replay plugin](https://github.com/PastyPurpleTrolls/test/blob/test/examples/test-assets/script.js).
+
+###API
+
+Every plugin must define `script.js`. This script defines the logic for generating gamestates and rendering the game to the screen.
+
+The Replay API is defined in [round.js](https://github.com/PastyPurpleTrolls/test/blob/master/app/assets/javascripts/round.js). Please refer the commented source for any questions on exact functionality. [PIXI.js](http://pixijs.com) runs the rendering code for displaying replays. Please refer to its [documentation](https://pixijs.github.io/docs/index.html) when writing rendering code.
+
+####Replay API
+
+The Replay API is available through the global Replay object. Plugins should modify the prototype (`Replay.prototype`) to define functionality and attributes.
+
+- [**Replay.prototype.initPlugin()**](https://github.com/PastyPurpleTrolls/test/blob/master/app/assets/javascripts/round.js#L202)
+  
+    Called immediately after initialization of the Replay object. This hook should be used for any logic that needs to be precomputed. 
+    
+    *Note: the round log will not be available when this function is called.*
+- [**Replay.prototype.generateGamestate()**](https://github.com/PastyPurpleTrolls/test/blob/master/app/assets/javascripts/round.js#L386)
+
+    Called whenever a new move is loaded. Any logic that is required in order to generate a gamestate should be executed in this method.
+    
+    Several attributes are available on the Round object to provide move data. Use [`self.parseJSON(string)`](https://github.com/PastyPurpleTrolls/test/blob/master/app/assets/javascripts/round.js#L513) to safely parse move data.
+
+    - `self.round` Contains the parsed contents of the round log JSON file.
+    
+    - `self.moveNumber` is available in order to access the current move. It is important to note that moveNumber is not 0 indexed. A value of 1 would translate to index 0 in the moves array.
+
+- [**Replay.prototype.render()**](https://github.com/PastyPurpleTrolls/test/blob/master/app/assets/javascripts/round.js#L379)
+
+    Renders the current move gamestate to the WebGL context. Called immediately after `self.generateGamestate()`
+
+- [**Replay.prototype.rendererLoaded()**](https://github.com/PastyPurpleTrolls/test/blob/master/app/assets/javascripts/round.js#L443)
+
+    Called directly after the PIXI renderer has been defined and added to the page. Should be used to change any options (like background color) on the renderer.
+
+- [**Replay.prototype.loadTextures()**](https://github.com/PastyPurpleTrolls/test/blob/master/app/assets/javascripts/round.js#L450)
+
+    Load any required textures into the PIXI context. Call `self.addTexture(name, url)` to add a new texture. The URL will be relative to the assets folder that `script.js` is located in. Textures are added to the `self.textures` object.
+
+- [**Replay.prototype.loadSprites()**](https://github.com/PastyPurpleTrolls/test/blob/master/app/assets/javascripts/round.js#L457)
+
+    Load any PIXI sprites on initial load. Creating new sprites in the `render()` method should be avoided if possible.
+
+    New sprites should be defined on `self.sprites` as a new key:value pair. Sprites can be added as a group (in an array) if that is convenient. For example:
+
+    ```javascript
+    self.sprites["spriteName"] = new PIXI.Sprite(self.textures["textureName"]);
+
+    self.sprites["pieces"] = [];
+
+    for (var i = 0; i < 10; i++) {
+        self.sprites["pieces"][i] = new PIXI.Sprite(self.textures["textureName"]);
+    }
+    ```
+
+- [**Replay.copy(src)**](https://github.com/PastyPurpleTrolls/test/blob/master/app/assets/javascripts/round.js#533) Helper function to deep copy objects (useful when calculating a new gamestate for each move)
+    
+    
