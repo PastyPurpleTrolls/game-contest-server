@@ -69,7 +69,7 @@ describe 'TournamentsPages' do
         select_datetime(now, 'Start')
         select tournament_type, from: 'Tournament type'
         check("#{player1.name} | #{player1.user.username}")
-	select 1, from: 'Number of Matches per Combination'
+	select 1, from: 'Number of rounds per match'
 
       end
 
