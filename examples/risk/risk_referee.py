@@ -12,6 +12,13 @@ import sys
 f = open(os.devnull, 'w')
 sys.stdout = f
 
+
+#Global object to track steps over the course of a move
+move = {
+    "description": [],
+    "steps": []
+}
+
 def report_results(resulttype):
     #The winner will own every single country, so just grab the united states
     winner = countryD["Western United States"]["owner"]
@@ -24,6 +31,12 @@ def report_results(resulttype):
             result = "Loss"
             score = 0
         manager.send(resulttype, [eval("P" + str(playerIndex)).name, result, str(score)])
+
+def createStep(obj, description = False):
+    global move
+    if description:
+        move["description"].append(description)
+    move["steps"].append(obj)
 
 #Connect with player functions over a socket
 class Player():
@@ -66,7 +79,8 @@ P2 = Player(playerServer)
 P3 = Player(playerServer)
 P4 = Player(playerServer)
 
-countryD={
+countryD = {
+    #North America
     "Alaska":{"loc":[-372,161],"owner":0},
     "Northwest Territory":{"loc":[-292,165],"owner":0},
     "Greenland":{"loc":[-149,196],"owner":0},
@@ -76,19 +90,19 @@ countryD={
     "Western United States":{"loc":[-294,54],"owner":0},
     "Eastern United States":{"loc":[-231,38],"owner":0},
     "Central America":{"loc":[-276,5],"owner":0},
-
+    #South America
     "Venezuela":{"loc":[-233,-40],"owner":0},
     "Peru":{"loc":[-206,-106],"owner":0},
     "Brazil":{"loc":[-165,-90],"owner":0},
     "Argentina":{"loc":[-183,-143],"owner":0},
-
+    #Africa
     "North Africa":{"loc":[-38,-77],"owner":0},
     "Egypt":{"loc":[30,-50],"owner":0},
     "East Africa":{"loc":[55,-99],"owner":0},
     "Central Africa":{"loc":[23,-108],"owner":0},
     "South Africa":{"loc":[25,-195],"owner":0},
     "Madagascar":{"loc":[116,-190],"owner":0},
-
+    #Europe
     "Western Europe":{"loc":[-77,3],"owner":0},
     "Southern Europe":{"loc":[0,23],"owner":0},
     "Northern Europe":{"loc":[-28,67],"owner":0},
@@ -96,7 +110,7 @@ countryD={
     "Great Britain":{"loc":[-92,73],"owner":0},
     "Iceland":{"loc":[-71,140],"owner":0},
     "Scandinavia":{"loc":[-6,130],"owner":0},
-
+    #Asia
     "Ural":{"loc":[149,120],"owner":0},
     "Siberia":{"loc":[193,142],"owner":0},
     "Yakutsk":{"loc":[249,185],"owner":0},
@@ -109,16 +123,19 @@ countryD={
     "Middle East":{"loc":[72,-5],"owner":0},
     "India":{"loc":[169,-13],"owner":0},
     "Southeast Asia":{"loc":[235,-4],"owner":0},
-
+    #Australia
     "Indonesia":{"loc":[231,-104],"owner":0},
     "New Guinea":{"loc":[304,-87],"owner":0},
     "Western Australia":{"loc":[262,-174],"owner":0},
-    "Eastern Australia":{"loc":[338,-156],"owner":0}}
+    "Eastern Australia":{"loc":[338,-156],"owner":0}
+}
 
-playerD={1:{"armies":30,"color":'green',"loc":(-350,257),"cards":[]},
-          2:{"armies":30,"color":'blue',"loc":(220,257),"cards":[]},
-          3:{"armies":30,"color":'purple',"loc":(220,-289),"cards":[]},
-          4:{"armies":30,"color":'red',"loc":(-350,-289),"cards":[]}}
+playerD={
+    1:{"armies":30,"color":'green',"loc":(-350,257),"cards":[]},
+    2:{"armies":30,"color":'blue',"loc":(220,257),"cards":[]},
+    3:{"armies":30,"color":'purple',"loc":(220,-289),"cards":[]},
+    4:{"armies":30,"color":'red',"loc":(-350,-289),"cards":[]}
+}
 
 bookArmiesBonusList=[4,6,8,10,12,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100]
 
@@ -195,11 +212,24 @@ def getPlayerCountryList(player):
     return countryList
 
 def armyPlacement(player,t,phase):
-    if playerD[player]["armies"]>0:
-        country,numberOfArmiesToPlace=eval("P"+str(player)).placeArmies(player,countryD,bookArmiesBonusList,{player:playerD[player]})
-        #country,numberOfArmiesToPlace=playerModuleNames[player-1].placeArmies(player,countryD,bookArmiesBonusList,{player:playerD[player]})
-        countryD[country]["armies"]=countryD[country]["armies"]+numberOfArmiesToPlace
-        playerD[player]["armies"]=playerD[player]["armies"]-numberOfArmiesToPlace
+    #As long as the player has new armies to place
+    if playerD[player]["armies"] > 0:
+
+        country,numberOfArmiesToPlace = eval("P"+str(player)).placeArmies(player,countryD,bookArmiesBonusList,{player:playerD[player]})
+
+        #Perform operations
+        countryD[country]["armies"] = countryD[country]["armies"] + numberOfArmiesToPlace
+        playerD[player]["armies"] = playerD[player]["armies"] - numberOfArmiesToPlace
+
+        #Report move step
+        step = {
+            "type": "armyplacement",
+            "country": country,
+            "armies": numberOfArmiesToPlace
+        }
+        createStep(step)
+
+        #Draw UI
         drawRectangle(t,countryD[country]["loc"][0],countryD[country]["loc"][1],31,15,countryD[country]["armies"],12,playerD[player]["color"],-3)
         drawPlayerBoxes(t,str(playerD[player]["armies"]),[player])
 
@@ -239,7 +269,7 @@ def findContinentsBonusBeginningOfTurn(player):
 
 def pickAttackTo(country,player):
     return eval("P"+str(player)).attackToCountry(player,countryD,bookArmiesBonusList,{player:playerD[player]},country)
-    #return playerModuleNames[player-1].attackToCountry(player,countryD,bookArmiesBonusList,{player:playerD[player]},country)
+#return playerModuleNames[player-1].attackToCountry(player,countryD,bookArmiesBonusList,{player:playerD[player]},country)
 
 def drawDice(t,aDice,dDice):
     t.up()
@@ -267,29 +297,53 @@ def drawDice(t,aDice,dDice):
     return attackIncrement, defendIncrement
 
 def rollDice(dT,attackingPlayer,attackFrom,defendingPlayer,attackTo):
-    attackNumDice=3
-    if countryD[attackFrom]["armies"]==3:
-        attackNumDice=2
-    elif countryD[attackFrom]["armies"]==2:
-        attackNumDice=1
-    aDice=[]
+    #Choose attacker dice
+    attackNumDice = 3
+    if countryD[attackFrom]["armies"] == 3:
+        attackNumDice = 2
+    elif countryD[attackFrom]["armies"] == 2:
+        attackNumDice = 1
+
+    #Create a list of random integers from 1 to 6
+    aDice = []
     for i in range(attackNumDice):
-        aDice.append(random.randint(1,6))
-    aDice.sort(reverse=True)
-    defendNumDice=2
-    if countryD[attackTo]["armies"]==1:
-        defendNumDice=1
-    dDice=[]
+        aDice.append(random.randint(1, 6))
+    #Sort the dice
+    aDice.sort(reverse = True)
+
+    #Get number of defender dice
+    defendNumDice = 2
+    if countryD[attackTo]["armies"] == 1:
+        defendNumDice = 1
+    #List of defender dice rolls
+    dDice = []
     for i in range(defendNumDice):
-        dDice.append(random.randint(1,6))
-    dDice.sort(reverse=True)
-    attackIncrement,defendIncrement=drawDice(dT,aDice,dDice)
-    countryD[attackFrom]["armies"]+=attackIncrement
-    countryD[attackTo]["armies"]+=defendIncrement
-    #print(countryD[attackFrom]["armies"],countryD[attackTo]["armies"])
-    if countryD[attackTo]["armies"]<=0:
-        countryD[attackTo]["armies"]=0
-        countryD[attackTo]["owner"]=attackingPlayer
+        dDice.append(random.randint(1, 6))
+    dDice.sort(reverse = True)
+
+    #Perform data operations
+    attackIncrement, defendIncrement = drawDice(dT, aDice, dDice)
+    countryD[attackFrom]["armies"] += attackIncrement
+    countryD[attackTo]["armies"] += defendIncrement
+
+    #Report dice roll
+    step = {
+        "type": "diceroll",
+        "attackFrom": attackFrom,
+        "attackTo": attackTo,
+        "attackIncrement": attackIncrement,
+        "defendIncrement": defendIncrement,
+        "attackerDice": aDice,
+        "defenderDice": dDice
+    }
+    createStep(step)
+
+    #Decide a winner
+    if countryD[attackTo]["armies"] <= 0:
+        countryD[attackTo]["armies"] = 0
+        countryD[attackTo]["owner"] = attackingPlayer
+
+    #Draw UI
     drawRectangle(dT,countryD[attackFrom]["loc"][0],countryD[attackFrom]["loc"][1],31,15,countryD[attackFrom]["armies"],12,playerD[attackingPlayer]["color"],-3)
     drawRectangle(dT,countryD[attackTo]["loc"][0],countryD[attackTo]["loc"][1],31,15,countryD[attackTo]["armies"],12,playerD[countryD[attackTo]["owner"]]["color"],-3)
 
@@ -304,32 +358,48 @@ def attackNeighboringCountry(t,player):
     dT=cTurtle.Turtle()
     dT.ht()
     countryCaptured=False
-    #attackFrom=playerModuleNames[player-1].attackFromCountry(player,countryD,bookArmiesBonusList,{player:playerD[player]})
-    attackFrom=eval("P"+str(player)).attackFromCountry(player,countryD,bookArmiesBonusList,{player:playerD[player]})
+
+    #Ask the player whether they want to attack
+    attackFrom = eval("P"+str(player)).attackFromCountry(player,countryD,bookArmiesBonusList,{player:playerD[player]})
+
     print("Attacking from",attackFrom)
+
+    #Report not attacking as a step
+    if attackFrom == "NO ATTACK":
+        step = {
+            "type": "attack",
+            "attackFrom": attackFrom
+        }
+        description = "Player " + str(player) + " chooses not to attack."
+        createStep(step, description)
+
+    #Keep looping until the player chooses not to attack
     while attackFrom != "NO ATTACK":
+
         #present list of countries owned with more than one army, 0 element is no attack
-        attackTo,defendingPlayer=pickAttackTo(attackFrom,player)
+        attackTo, defendingPlayer = pickAttackTo(attackFrom,player)
         print("\nAttacking",attackTo)
 
-        #Report move
-        description = "Player " + str(player) + " attacks " + attackTo + " (Player " + str(defendingPlayer) + ") from " + attackFrom
-        move = {
-            "player": player,
+        #Report step
+        step = {
             "type": "attack",
-            "fromCountry": attackFrom,
-            "toCountry": attackTo,
+            "attackFrom": attackFrom,
+            "attackTo": attackTo,
+            "defending": defendingPlayer
         }
-        manager.send("move", [description, json.dumps(move)])
+        description = "Player " + str(player) + " attacks " + attackTo + " (Player " + str(defendingPlayer) + ") from " + attackFrom
+        createStep(step, description)
 
         continueAttack=""
-        while continueAttack != "RETREAT" and countryD[attackTo]["armies"]>0 and countryD[attackFrom]["armies"]>1:
+        while continueAttack != "RETREAT" and countryD[attackTo]["armies"] > 0 and countryD[attackFrom]["armies"] > 1:
             rollDice(dT, player, attackFrom, defendingPlayer, attackTo)
-            if countryD[attackTo]["armies"]>0 and countryD[attackFrom]["armies"]>1:
-                #continueAttack=playerModuleNames[player-1].continueAttack(player,countryD,bookArmiesBonusList,{player:playerD[player]})
+            if countryD[attackTo]["armies"] >0 and countryD[attackFrom]["armies"] > 1:
+                #Ask the attacker if they want to continue
                 continueAttack=eval("P"+str(player)).continueAttack(player,countryD,bookArmiesBonusList,{player:playerD[player]})
             dT.clear()
-        if continueAttack != "RETREAT" and countryD[attackTo]["armies"]<=0:  #wiped out the enemy from a country
+
+        #Wiped out enemy country
+        if continueAttack != "RETREAT" and countryD[attackTo]["armies"] <= 0:
 
             print("\nYou took over "+attackTo+"!")
             howManyToMove=eval("P"+str(player)).tookCountryMoveArmiesHowMany(player,countryD,bookArmiesBonusList,{player:playerD[player]},attackFrom)
@@ -337,69 +407,103 @@ def attackNeighboringCountry(t,player):
             print("Moving",howManyToMove,"armies\n")
 
             #Report captured country
-            description = "Player " + str(player) + " captured " + attackTo + " (Player " + str(defendingPlayer) + ") from " + attackFrom + " and moves " + str(howManyToMove) + " troops."
-            move = {
-                "player": player,
+            description = "Player " + str(player) + " captured " + attackTo + " (Player " + str(defendingPlayer) + ") from " + attackFrom + " and moves " + str(howManyToMove) + " troops"
+            step = {
                 "type": "captured",
                 "fromCountry": attackFrom,
                 "toCountry": attackTo,
                 "howManyToMove": howManyToMove
             }
-            manager.send("move", [description, json.dumps(move)])
+            createStep(step, description)
 
-
+            #Update gamedata
             countryD[attackFrom]["armies"]-=howManyToMove
             countryD[attackTo]["armies"]=howManyToMove
-            countryCaptured=True
+            countryCaptured = True
+
             attackFromCountryIndex=countryD[attackFrom]["loc"]
             attackToCountryIndex=countryD[attackTo]["loc"]
+
+            #Update UI
             drawRectangle(t,attackFromCountryIndex[0],attackFromCountryIndex[1],31,15,countryD[attackFrom]["armies"],12,playerD[player]["color"],-3)
             drawRectangle(t,attackToCountryIndex[0],attackToCountryIndex[1],31,15,countryD[attackTo]["armies"],12,playerD[countryD[attackTo]["owner"]]["color"],-3)
+
+            #Check if you destroyed the player
             if noDefendingPlayerLeft(defendingPlayer):
                 print("You destroyed player",defendingPlayer,"- his cards are now yours!")
+
                 #give the defenders cards to the player
                 playerD[player]["cards"]+=(playerD[defendingPlayer]["cards"])
+
                 playerD[defendingPlayer]["cards"]=[]
+
+                #Check if player now has books and then play them
                 bookArmies=0
                 while hasABook(player):
                     bookArmies+=playBooks(player,t)
-                playerD[player]["armies"]=bookArmies
+
+                #Update the player's army bonus
+                playerD[player]["armies"] = bookArmies
+
+                #Draw UI
                 drawPlayerBoxes(t,bookArmies,[player])
-                #Repeat until no armies left in corner
+
+                #Ask player where they want to place their new armies
                 while stillArmiesToPlace(playerD):
                     #Display list and ask for country choice and number to place, update displays
                     armyPlacement(player,t,"Takeover Book Placement")
+
+                #Report move
+                step = {
+                    "type": "destruction",
+                    "player": defendingPlayer,
+                }
+                description = "Player " + str(player) + " destroyed Player " + str(defendingPlayer)
+                createStep(step, description)
         else: #attacker chose to retreat or attacker ran out of armies
+            step = {
+                "type": "retreat",
+                "reason": continueAttack
+            }
             if continueAttack=="RETREAT":
+                description = "Player " + str(player) + " chose to retreat"
                 print("Attacker chose to RETREAT!")
             else:
+                description = "Player " + str(player) + " ran out of armies"
                 print("Attacker ran out of armies!")
+            createStep(step, description)
+
+        #Update UI
         attackFromCountryIndex=countryD[attackFrom]["loc"]
         attackToCountryIndex=countryD[attackTo]["loc"]
         drawRectangle(t,attackFromCountryIndex[0],attackFromCountryIndex[1],31,15,countryD[attackFrom]["armies"],12,playerD[player]["color"],-3)
         drawRectangle(t,attackToCountryIndex[0],attackToCountryIndex[1],31,15,countryD[attackTo]["armies"],12,playerD[countryD[attackTo]["owner"]]["color"],-3)
-        #attackFrom=playerModuleNames[player-1].attackFromCountry(player,countryD,bookArmiesBonusList,{player:playerD[player]})
+
+        #Ask player if they want to continue attacking
         attackFrom=eval("P"+str(player)).attackFromCountry(player,countryD,bookArmiesBonusList,{player:playerD[player]})
         print("Attacking from",attackFrom)
+    #Return whether the player captured a country
     return countryCaptured
 
 def troopMovement(player,t):
     fromCountry,toCountry,howManyToMove=eval("P"+str(player)).troopMove(player,countryD,bookArmiesBonusList,{player:playerD[player]})
-    #fromCountry,toCountry,howManyToMove=playerModuleNames[player-1].troopMove(player,countryD,bookArmiesBonusList,{player:playerD[player]})
-    if fromCountry!="":
+    #Make sure they actually want to move
+    if fromCountry != "":
         #Report move
         description = "Player " + str(player) + "moves" + str(howManyToMove) + " troops from " + fromCountry + " to " + toCountry
-        move = {
-            "player": player,
+        step = {
             "type": "troopMovement",
             "fromCountry": fromCountry,
             "toCountry": toCountry,
             "howManyToMove": howManyToMove
         }
-        manager.send("move", [description, json.dumps(move)])
+        createStep(step)
 
+        #Update game data
         countryD[fromCountry]["armies"]-=howManyToMove
         countryD[toCountry]["armies"]+=howManyToMove
+
+        #Draw UI
         drawRectangle(t,countryD[fromCountry]["loc"][0],countryD[fromCountry]["loc"][1],31,15,countryD[fromCountry]["armies"],12,playerD[player]["color"],-3)
         drawRectangle(t,countryD[toCountry]["loc"][0],countryD[toCountry]["loc"][1],31,15,countryD[toCountry]["armies"],12,playerD[countryD[toCountry]["owner"]]["color"],-3)
 
@@ -445,15 +549,6 @@ def playBooks(player,t):
     #bookCardIndices=playerModuleNames[player-1].getBookCardIndices(player,countryD,bookArmiesBonusList,{player:playerD[player]})
     bookCardIndices=eval("P"+str(player)).getBookCardIndices(player,countryD,bookArmiesBonusList,{player:playerD[player]})
 
-    #Report move
-    description = "Player " + str(player) + " played some books"
-    move = {
-        "player": player,
-        "type": "playBooks",
-        "books": bookCardIndices,
-    }
-    manager.send("move", [description, json.dumps(move)])
-
     print("INDICES",bookCardIndices)
     print("CARDS",playerD[player]["cards"])
     if len(bookCardIndices)!=0:
@@ -469,6 +564,8 @@ def playBooks(player,t):
             print("Country OWNED IN BOOK BONUS")
             #Put two armies on that country
             countryD[card[0]]["armies"]=countryD[card[0]]["armies"]+2
+
+            #Draw UI
             drawRectangle(t,countryD[card[0]]["loc"][0],countryD[card[0]]["loc"][1],31,15,countryD[card[0]]["armies"],12,playerD[countryD[card[0]]["owner"]]["color"],-3)
     return bookArmies
 
@@ -477,6 +574,7 @@ def drawCountryArmies(t):
         drawRectangle(t,countryD[country]["loc"][0],countryD[country]["loc"][1],31,15,countryD[country]["armies"],12,playerD[countryD[country]["owner"]]["color"],-3)
 
 def riskMain():
+    global move
     #Tell the manager that the match is starting
     manager.send("match", "start")
 
@@ -490,7 +588,6 @@ def riskMain():
 
     #Tell the manager that the round has started
     #Also tell the manager which player is which
-    manager.send("round", ["start", json.dumps({P1.name: 1, P2.name: 2, P3.name: 3, P4.name: 4})])
 
     #Choose a random player to start with
     player=random.randrange(1,5)
@@ -505,21 +602,36 @@ def riskMain():
     print("\n\n"+"*"*30+"\nBEGINNING OF GAME PLAY\n"+"*"*30)
     bob.setup(width=836,height=625,startx=0,starty=0)
 
+    #Alert game manager to the beginning of the round
+    roundData = {
+        "players": {
+            P1.name: 1,
+            P2.name: 2,
+            P3.name: 3,
+            P4.name: 4
+        },
+        "gamestate": [
+            countryD,
+            playerD,
+            bookArmiesBonusList
+        ]
+    }
+    manager.send("round", ["start", json.dumps(roundData)])
+
+    moves = 0
+
     ##### MAIN GAME LOOP #####
     while not gameOver(): #Entire rest of game played in this loop
+        #Reset move object
+        move["steps"] = []
+        move["description"] = []
 
-        #Temporary move reporting
-        #description = eval("P" + str(player)).name + " is making a move"
-        #manager.send("move", [description, [eval("P" + str(player)).name, "move"]])
-
-
-        print("PLAYER",player,"CARDS:")
-        for card in playerD[player]["cards"]:
-            print(card)
+        #Allow the player to play a book for bonus armies
         print("NEXT BOOK:",bookArmiesBonusList[0])
         bookArmies=0
         if hasABook(player):
             bookArmies=playBooks(player,bob)
+
         #calculate base armies from num of countries
         armiesToPlace=calcBaseArmiesBeginningOfTurn(player)
         #calculate continent(s) bonus
@@ -527,21 +639,34 @@ def riskMain():
         #Post total armies to place in corner
         totalArmies=armiesToPlace+continentsBonus+bookArmies
         playerD[player]["armies"]=totalArmies
-        drawPlayerBoxes(bob,totalArmies,[player])
+
         #Repeat until no armies left in corner
         while stillArmiesToPlace(playerD):
             #Display list and ask for country choice and number to place, update displays
             armyPlacement(player,bob,"START OF TURN Placement")
+
+        #Bool value, whether the player captured a country
         countryCaptured=attackNeighboringCountry(bob,player)
-        if countryCaptured and len(riskCards)>0:
+        #Give the player a risk card if they captured at least one country
+        if countryCaptured and len(riskCards) > 0:
             playerD[player]["cards"].append(riskCards.pop())
+
+        #Ask player where they want to reinforce
         troopMovement(player,bob)
+
+        #Send the results of the move to the game manager
+        manager.send("move", [". ".join(move["description"]), json.dumps(move["steps"])])
+
+        #Send gamestate every 10 moves
+        if moves % 10 == 0:
+            manager.send("gamestate", json.dumps([countryD, playerD, bookArmiesBonusList]))
+
+        moves += 1
+
+        #Get next player
         player=nextPlayer(player)
         while playerHasNoCountries(player):
             player=nextPlayer(player)
-
-        #Report the gamestate after the player has finished all their steps for the current move
-        manager.send("gamestate", json.dumps([countryD, bookArmiesBonusList]))
 
     manager.send("round", "end")
     report_results("roundresult")
