@@ -1,5 +1,6 @@
 #! /usr/bin/env python3
 
+import time
 import cTurtle
 import random
 import pickle
@@ -10,8 +11,10 @@ from ref_helper import *
 import os
 import sys
 f = open(os.devnull, 'w')
-sys.stdout = f
+#sys.stdout = f
 
+#Set timeout for round
+timeout = time.time() + (options.time)
 
 #Global object to track steps over the course of a move
 move = {
@@ -362,8 +365,6 @@ def attackNeighboringCountry(t,player):
     #Ask the player whether they want to attack
     attackFrom = eval("P"+str(player)).attackFromCountry(player,countryD,bookArmiesBonusList,{player:playerD[player]})
 
-    print("Attacking from",attackFrom)
-
     #Report not attacking as a step
     if attackFrom == "NO ATTACK":
         step = {
@@ -378,7 +379,6 @@ def attackNeighboringCountry(t,player):
 
         #present list of countries owned with more than one army, 0 element is no attack
         attackTo, defendingPlayer = pickAttackTo(attackFrom,player)
-        print("\nAttacking",attackTo)
 
         #Report step
         step = {
@@ -400,14 +400,11 @@ def attackNeighboringCountry(t,player):
 
         #Wiped out enemy country
         if continueAttack != "RETREAT" and countryD[attackTo]["armies"] <= 0:
-
-            print("\nYou took over "+attackTo+"!")
             howManyToMove=eval("P"+str(player)).tookCountryMoveArmiesHowMany(player,countryD,bookArmiesBonusList,{player:playerD[player]},attackFrom)
             #howManyToMove=playerModuleNames[player-1].tookCountryMoveArmiesHowMany(player,countryD,bookArmiesBonusList,{player:playerD[player]},attackFrom)
-            print("Moving",howManyToMove,"armies\n")
 
             #Report captured country
-            description = "Player " + str(player) + " captured " + attackTo + " (Player " + str(defendingPlayer) + ") from " + attackFrom + " and moves " + str(howManyToMove) + " troops"
+            description = "Player " + str(player) + " captures " + attackTo + " (Player " + str(defendingPlayer) + ") from " + attackFrom + " and moves " + str(howManyToMove) + " troops"
             step = {
                 "type": "captured",
                 "fromCountry": attackFrom,
@@ -430,7 +427,6 @@ def attackNeighboringCountry(t,player):
 
             #Check if you destroyed the player
             if noDefendingPlayerLeft(defendingPlayer):
-                print("You destroyed player",defendingPlayer,"- his cards are now yours!")
 
                 #give the defenders cards to the player
                 playerD[player]["cards"]+=(playerD[defendingPlayer]["cards"])
@@ -467,10 +463,8 @@ def attackNeighboringCountry(t,player):
             }
             if continueAttack=="RETREAT":
                 description = "Player " + str(player) + " chose to retreat"
-                print("Attacker chose to RETREAT!")
             else:
                 description = "Player " + str(player) + " ran out of armies"
-                print("Attacker ran out of armies!")
             createStep(step, description)
 
         #Update UI
@@ -481,7 +475,6 @@ def attackNeighboringCountry(t,player):
 
         #Ask player if they want to continue attacking
         attackFrom=eval("P"+str(player)).attackFromCountry(player,countryD,bookArmiesBonusList,{player:playerD[player]})
-        print("Attacking from",attackFrom)
     #Return whether the player captured a country
     return countryCaptured
 
@@ -512,7 +505,6 @@ def playerHasNoCountries(player):
     for countryKey in countryD:
         if countryD[countryKey]["owner"]==player:
             count+=1
-    #print("COUNT",count)
     if count==0:
         return True
     else:
@@ -549,19 +541,14 @@ def playBooks(player,t):
     #bookCardIndices=playerModuleNames[player-1].getBookCardIndices(player,countryD,bookArmiesBonusList,{player:playerD[player]})
     bookCardIndices=eval("P"+str(player)).getBookCardIndices(player,countryD,bookArmiesBonusList,{player:playerD[player]})
 
-    print("INDICES",bookCardIndices)
-    print("CARDS",playerD[player]["cards"])
     if len(bookCardIndices)!=0:
         bookCardIndices.sort(reverse=True)
         bookArmies+=bookArmiesBonusList.pop(0)
     countryList=getPlayerCountryList(player)
     for index in bookCardIndices:
         #Allocate 2 armies to any country in my book and Get rid of the played cards
-        print("Popping",index)
-        print(playerD[player]["cards"])
         card=playerD[player]["cards"].pop(index)
         if card[0] in countryList:
-            print("Country OWNED IN BOOK BONUS")
             #Put two armies on that country
             countryD[card[0]]["armies"]=countryD[card[0]]["armies"]+2
 
@@ -577,7 +564,6 @@ def riskMain():
     global move
     #Tell the manager that the match is starting
     manager.send("match", "start")
-
 
     bob=cTurtle.Turtle()
     bob.tracer(False)
@@ -599,7 +585,6 @@ def riskMain():
         player=nextPlayer(player)
     riskCards = createCards(countryD)
 
-    print("\n\n"+"*"*30+"\nBEGINNING OF GAME PLAY\n"+"*"*30)
     bob.setup(width=836,height=625,startx=0,starty=0)
 
     #Alert game manager to the beginning of the round
@@ -627,7 +612,6 @@ def riskMain():
         move["description"] = []
 
         #Allow the player to play a book for bonus armies
-        print("NEXT BOOK:",bookArmiesBonusList[0])
         bookArmies=0
         if hasABook(player):
             bookArmies=playBooks(player,bob)
@@ -659,9 +643,13 @@ def riskMain():
 
         #Send gamestate every 10 moves
         if moves % 10 == 0:
-            manager.send("gamestate", json.dumps([countryD, playerD, bookArmiesBonusList]))
+            manager.send("gamestate", json.dumps(countryD))
 
         moves += 1
+
+        #Stop playing the game after a timeout (stupid way of handling infinite loops)
+        if (time.time() >= timeout):
+            break
 
         #Get next player
         player=nextPlayer(player)
@@ -673,6 +661,5 @@ def riskMain():
 
     manager.send("match", "end")
     report_results("matchresult")
-    print("Congratulations player "+str(countryD["Western United States"]["owner"])+", you are the winner!!!")
 
 riskMain()

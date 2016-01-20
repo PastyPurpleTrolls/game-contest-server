@@ -23,7 +23,7 @@ class RoundWrapper
         @number_of_players = number_of_players
         @max_match_time = max_match_time
         @num_rounds = rounds
-    
+ 
         @status = {}
         @rounds = []
         @match = {}
@@ -99,9 +99,9 @@ class RoundWrapper
         #Start referee process, giving it the port to talk to us on
         wrapper_server_port = @wrapper_server.addr[1]
 	    if File.exists?("#{File.dirname(@referee.file_location)}/Makefile")
-		    command="cd #{File.dirname(@referee.file_location)}; make run port=#{wrapper_server_port} num_players=#{@number_of_players} num_rounds=#{@num_rounds}"
+		    command="cd #{File.dirname(@referee.file_location)}; make run port=#{wrapper_server_port} num_players=#{@number_of_players} num_rounds=#{@num_rounds} max_time=#{@max_match_time}"
 	    else
-		    command="#{@referee.file_location} -p #{wrapper_server_port} -n  #{@number_of_players} -r #{@num_rounds}"
+		    command="#{@referee.file_location} -p #{wrapper_server_port} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time}"
 	    end
         @child_list.push(Process.spawn("#{command}"))
         
@@ -135,7 +135,8 @@ class RoundWrapper
         end
         
         begin
-            Timeout::timeout(@max_match_time) do
+            #Pad the max match time by 20% to allow for communication latency
+            Timeout::timeout(@max_match_time*1.2) do
                 self.handle_tcp_input
             end
         rescue Timeout::Error
