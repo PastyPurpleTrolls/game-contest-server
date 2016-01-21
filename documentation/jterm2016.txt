@@ -1,4 +1,0 @@
-
-
-the db:migrate error that rails will give you straight off wont work. run this before you run rail s
-rake db:schema:load
