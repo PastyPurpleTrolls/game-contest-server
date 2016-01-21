@@ -41,8 +41,8 @@ class RefereesController < ApplicationController
         @referee = Referee.friendly.find(params[:id])
         #GET param to grab an asset for the referee
         if params[:asset] 
-            filename = File.join(@referee.replay_assets_location, params[:asset])
             begin
+                filename = File.join(@referee.replay_assets_location, params[:asset])
                 send_file filename
             rescue
                 raise ActionController::RoutingError.new('Not Found')
