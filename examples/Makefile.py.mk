@@ -5,7 +5,7 @@ include player.mk
 manager:
 	nc -l -p $(port)
 
-run: test_referee.rb
+run: test_referee.py
 	./test_referee.py -p $(port) -n $(num_players) -r $(num_matches) -t $(max_time)
 
 contest: $(PLAYER)
