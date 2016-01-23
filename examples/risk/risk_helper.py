@@ -49,7 +49,7 @@ class Player():
                 #Check that function exists
                 if (functionName in self.playerFunctions):
                     self.ref_socket.send(pickle.dumps(self.playerFunctions[functionName](*arguments)))
-            except EOFError:
+            except:
                 break
 
     def __del__(self):

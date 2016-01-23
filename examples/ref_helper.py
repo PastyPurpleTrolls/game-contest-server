@@ -3,12 +3,6 @@
 from optparse import OptionParser
 import socket
 
-#Suppress the print function
-import os
-import sys
-f = open(os.devnull, 'w')
-sys.stdout = f
-
 #Create and listen to a socket
 class SocketServer():
     def __init__(self):
@@ -31,7 +25,10 @@ class Connection():
     def listen(self, buffersize):
         var = ""
         while var == "":
-            var = self.connection.recv(buffersize)
+            try:
+                var = self.connection.recv(buffersize)
+            except:
+                break
         return var
 
     def send(self, data):
@@ -76,8 +73,9 @@ class Manager():
 #Parse options from manager
 parser = OptionParser()
 parser.add_option("-p","--port",action="store",type="int",dest="port")
-parser.add_option("-n","--num",action="store",type="int",dest="num") #number of players, not used with checkers
-parser.add_option("-r", "--rounds", action="store", type="int", dest="rounds") #Number of rounds, not used
+parser.add_option("-n","--num",action="store",type="int",dest="num") #number of players
+parser.add_option("-r", "--rounds", action="store", type="int", dest="rounds") #Number of rounds
+parser.add_option("-t", "--time", action="store", type="int", dest="time") #Max amount of time for the match
 (options, args) = parser.parse_args()
 
 #connect to match wrapper

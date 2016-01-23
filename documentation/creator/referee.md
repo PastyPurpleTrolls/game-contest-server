@@ -16,8 +16,8 @@ include player.mk
 manager:
     nc -l -p $(port)
 
-run: test_referee.rb
-    ./test_referee.py -p $(port) -n $(num_players) -r $(num_matches)
+run: test_referee.py
+    ./test_referee.py -p $(port) -n $(num_players) -r $(num_matches) -t $(max_time)
 
 contest: $(PLAYER)
     ./$(PLAYER).py -p $(port) -n '$(name)'
@@ -30,6 +30,7 @@ Referees should be implemented to support three flags from the game manager.
 - `-p`: (int) TCP port to connect to the manager on. The referee must connect and send a player TCP port within 3 seconds of being started.
 - `-n`: (int) The number of players that will connect to the referee.
 - `-r`: (int) Number of rounds that the referee should run between the players. If your referee does not support rounds, you can ignore the value of this flag.
+- `-t`: (int) Maximum amount of time allowed per match. The game manager will enforce this time.
 
 ##Protocol
 

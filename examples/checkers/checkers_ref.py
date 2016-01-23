@@ -5,6 +5,7 @@ import math
 import random
 import pickle
 import json
+import time
 from ref_helper import *
 
 EMPTY=0
@@ -13,6 +14,8 @@ VALID_RANGE=range(8)
 DEBUG=False
 VISIBLE=True
 
+#Set timeout for round
+timeout = time.time() + options.time
 
 #Send results to manager
 def report_results(resulttype, p1wins,p2wins):
@@ -406,7 +409,21 @@ def showBoard(CB):
             line+=str(CB[row][col])+" "
         #print(line)
 
-def win(CB):
+def win(CB, byScore = False):
+    #Calculate win by who has the highest score
+    if byScore:
+        print()
+        print("FORCING WIN FROM BOARD SCORE")
+        print()
+        #index 0 is black, index 1 is red
+        rating = rateBoard(CB)
+        if (rating[0] > rating[1]):
+            return True, "black"
+        elif (rating[1] > rating[0]):
+            return True, "red"
+        else:
+            return True, "tie"
+    #Find the player that still has pieces
     for i in range(2):
         if i==0:
             player="red"
@@ -501,22 +518,33 @@ def checkers(CB,bob,PlayerB,PlayerR,Bwin,Rwin,totalPlayed):
         if moveCount % 10 == 0:
             manager.send("gamestate", json.dumps(CB))
 
+        #Check if game has exceeded max time
+        if (time.time() >= timeout):
+            #Find the player with the best score
+            return win(CB, True)[1]
+
         #showBoard(CB)
         player=switchPlayers(player)
     return win(CB)[1]
 
 def rateBoard(CB):
-    score=0
+    scoreRed = 0
+    scoreBlack = 0
+    blackTokens = [3, 4]
+    redTokens = [1, 2]
+    #Find score for player
     for row in CB:
         for col in row:
-            if col == 3:
-                score += 1
-            elif col == 4:
-                score += 2
-    return score
+            if col in blackTokens:
+                scoreBlack += (col - 2)
+            elif col in redTokens:
+                scoreRed += col
+    return scoreBlack, scoreRed
 
 def tourney(PlayerB,PlayerR):
     bob=cTurtle.Turtle()
+    totalRwin = 0
+    totalBwin = 0
     Rwin=0
     Bwin=0
     iters=1
@@ -524,24 +552,25 @@ def tourney(PlayerB,PlayerR):
     manager.send("match", "start")
     for i in range(1,iters+1):
         CB=[]
-        #print("Game:",i)
         manager.send("round", ["start", json.dumps({P1.name: PlayerB, P2.name: PlayerR})])
         result=checkers(CB,bob,PlayerB,PlayerR,Bwin,Rwin,i-1)
         manager.send("round", "end")
         bob.clear()
         if result=="black":
-            Bwin+=1
+            Bwin = 1
+        elif result=="red":
+            Rwin = 1
+        #Ties add a win to both players
         else:
-            Rwin+=1
-        #sys.stdout.write(".")
-        score+=rateBoard(CB)
-        #print()
-        #print("Black wins = ",Bwin)
-        #print("Red wins = ",Rwin)
-        #print("Black average score = ",score/i)
+            Bwin = 1
+            Rwin = 1
+        #Increment wins
+        totalRwin += Rwin
+        totalBwin += Bwin
+        #Report result
         report_results("roundresult", Bwin,Rwin)
     manager.send("match", "end")
-    report_results("matchresult", Bwin, Rwin)
+    report_results("matchresult", totalBwin, totalRwin)
     return
 
 #run the game!!!!
