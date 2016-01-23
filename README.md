@@ -92,9 +92,10 @@ The 2016 Jterm team has left some (not many) tests (in the branch 'uiBranch') as
 ###Tracking Issues with GitHub
 The 2016 Jterm team recommends using GitHub's [Issues](https://github.com/PastyPurpleTrolls/game-contest-server/issues) tracker. There, we have listed issues that are not described in pending tests.
 Here are necessary definitions of some of the labels on Github Issues:
-* enhancement- it would be nice to close the issue, but it is not strictly required that it become closed
-* futurework- a shortcoming of the application that must inevitably be resolved for basic functionality of the site
-* bug- a technical mistake that must inevitably be resolved for basic functionality of the site
+* the following 3 labels are defined so that an issue can have no more than one of these labels
+	* enhancement- it would be nice to close the issue, but it is not strictly required that it become closed
+	* futurework- a shortcoming of the application that must inevitably be resolved for basic functionality of the site
+	* bug- a technical mistake that must inevitably be resolved for basic functionality of the site
 * uiBranch or master- the issue would be best resolved in one of these two branches. Only use one of these labels with a given issue.
 	* when uiBranch and master finally merge (which should be as soon as possible), if the issue has been addressed in one of the branches, then the merge will hopefully resolve it in both branches (if the issue was in both branches; it is possible that the issue was only in one branch) 
 
