@@ -86,11 +86,11 @@ Frontend user interface files are located in `app/assets`. Views are in `app/vie
 
 ###JTerm 2016 group's description of mandatory future work
 We have made significant changes to the User Interface (UI). However, these changes are not merged in master. It should be merged with master as soon as possible. We regret that we did not do so. However, there are two steps for merging. They are not insignificant steps, but they are straightforward. 
-*One, take care of any issues tracked with the label 'uiBranch' in GitHub's [Issues](https://github.com/PastyPurpleTrolls/game-contest-server/issues) tracker. (see the "Tracking Issues with GitHub" section below).
-*Two, there are 0 failing tests in this branch. However, we wrote a number of tests with descriptions, but no bodies; we have marked them as pending. Please make sure that these tests correctly fail, then correctly pass.
-	*if there are other mandatory tests that are yet to be written, the 2016 Jterm team does not believe that there are many. That is, once all tests are neither pending nor failing, you can be fairly confident that the development in the uiBranch has been adequately tested. 
+* One, take care of any issues tracked with the label 'uiBranch' in GitHub's [Issues](https://github.com/PastyPurpleTrolls/game-contest-server/issues) tracker. (see the "Tracking Issues with GitHub" section below).
+* Two, there are 0 failing tests in this branch. However, we wrote a number of tests with descriptions, but no bodies; we have marked them as pending. Please make sure that these tests correctly fail, then correctly pass.
+	* if there are other mandatory tests that are yet to be written, the 2016 Jterm team does not believe that there are many. That is, once all tests are neither pending nor failing, you can be fairly confident that the development in the uiBranch has been adequately tested. 
 	* as a passing remark, the 2016 team recommends doing test-driven development in such a way that new development is known to be adequately tested before being merged into master. The idea is to keep the master branch in a "known good state".
-*While there may be more User Interface enhancements that can be made, once these two steps are taken care of, the uiBranch is then ready to merge into master. We recommend doing so sooner, rather than later.
+* While there may be more User Interface enhancements that can be made, once these two steps are taken care of, the uiBranch is then ready to merge into master. We recommend doing so sooner, rather than later.
 
 ###Test-Driven Development
 Both the 2015 and the 2016 Jterm teams recommend strongly that you stick with test-driven development. The long-term benefits outweigh the short-term struggles. 
