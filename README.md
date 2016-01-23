@@ -13,7 +13,7 @@ The user documentation can be found in [documentation](/documentation)
 
 ##Setup
 
-Clone the repo: `git clone https://github.com/PastyPurpleTrolls/test.git`
+Clone the repo: `git clone https://github.com/PastyPurpleTrolls/game-contest-server.git`
 
 Install prerequisites:
 ```bash
