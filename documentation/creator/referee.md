@@ -70,7 +70,7 @@ matchresult:playername|result|roundswon
 
 Every referee should be uploaded along with a replay plugin. Replays are an important piece of the learning experience and allow students to figure out what their player did during competition matches.
 
-Replay plugins must be uploaded in a compressed file containing `script.js` and any other assets required by the plugin. Allowed compressed file formats are `.tar` and `.zip`.
+Replay plugins must be uploaded in a compressed file containing `script.js` and any other assets required by the plugin. Allowed compressed file formats are `.tar` and `.zip`. The compressed file must be a flat directory structure, any folders uploaded will not be available for use.
 
 ###Logs
 
