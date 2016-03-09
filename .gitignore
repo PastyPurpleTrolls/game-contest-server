@@ -37,6 +37,7 @@
 
 # Ignore bundled gems
 /vendor/bundle
+/vendor/cache
 
 # Be sure to keep around this file if it matched earlier
 !.gitkeep
