@@ -6,7 +6,9 @@ Referees are the central system for controlling games between players. These pie
 
 Referees may be uploaded as is, or in a `.zip` file that contains the referee and a makefile.
 
-The makefile should implement three actions: manager, run, and contest. For example, a Python referee might have a makefile like this:
+###Makefile option
+
+The makefile should implement two actions: run, and contest. For example, a Python referee might have a makefile like this:
 
 ```makefile
 .PHONY: run contest manager clean
@@ -17,40 +19,76 @@ manager:
     nc -l -p $(port)
 
 run: test_referee.py
-    ./test_referee.py -p $(port) -n $(num_players) -r $(num_matches) -t $(max_time)
+    ./test_referee.py -p $(port) -n $(num_players) -r $(num_rounds) -t $(max_time)
 
 contest: $(PLAYER)
     ./$(PLAYER).py -p $(port) -n '$(name)'
 ```
 
+The run rule is called to start the referee.  When the referee is
+called through the Makefile, the manager will provide four flags:
+
+- `port`: (int) TCP port to connect to the manager on.  The referee
+must connect and send a TCP port for the players to connect to.  If
+the referee does not respond with a TCP port within 3 seconds of being
+started, the manager will terminate the referee due to a timeout.
+- `num_players`: (int) The number of players that will connect to the
+referee.
+- `num_rounds`: (int) The number of rounds that the referee should run
+between the players.  If your referee does not support rounds, you can
+ignore the value of this flag.
+- `max_time`: (int) Maximum amount of time allowed per round, in
+seconds.  The game manager will enforce this time.
+
+The contest rule is called to start the player.  When the player is
+called through the Makefile, the manager will provide two flags:
+
+- `name`: (string) The name of the player as registered on the contest
+server.  The player will be required to communicate this name to the
+referee so the referee can report the results to the manager properly.
+The player should not assume a particular name to report to the
+referee because the manager may choose to give a different name to the
+player for each match for disambiguation purposes.
+- `port`: (int) TCP port to connect to the referee on.  All
+communication with the referee will be done via this port; there is no
+other mechanism for communication between the referee or any other
+player.
+
 Further examples can be found on [GitHub](https://github.com/PastyPurpleTrolls/test/tree/master/examples).
 
-Referees should be implemented to support three flags from the game manager.
+###Standalone referees
 
-- `-p`: (int) TCP port to connect to the manager on. The referee must connect and send a player TCP port within 3 seconds of being started.
+Referees should be implemented to support four flags from the game manager.
+
+- `-p`: (int) TCP port to connect to the manager on. The referee must connect and send a TCP port for the players to connect to.  If the referee does not respond with a TCP port within 3 seconds of being started, the manager will terminate the referee due to a timeout.
 - `-n`: (int) The number of players that will connect to the referee.
-- `-r`: (int) Number of rounds that the referee should run between the players. If your referee does not support rounds, you can ignore the value of this flag.
-- `-t`: (int) Maximum amount of time allowed per match. The game manager will enforce this time.
+- `-r`: (int) The number of rounds that the referee should run between the players. If your referee does not support rounds, you can ignore the value of this flag.
+- `-t`: (int) Maximum amount of time allowed per match, in seconds. The game manager will enforce this time.
 
 ##Protocol
 
 Referees must communicate with the game manager via a TCP socket. Three main pieces of information are expected: a player TCP port number, results of rounds, final results of match (if rounds are supported). The referee must also send the moves made in each round.
 
-Every 10 moves, the referee should send the game state to the manager.
+For efficiency in the client visualizer, the referee should
+periodically should send the game state to the manager.  We have
+chosen a value of 10 moves for the initial games prototyped with the
+system.
 
 Commands are sent as key:value pairs. The first `:` in the command is seen as a special character and represents the end of a command name. Everything that follows is interpreted as the value. Pipes `|` represent separation between values that should be parsed.
 
 Do **not** use `|` for any purpose except as a delimiter to represent lists in the protocol. It should not be used in game state representations.
 
+### Defined Keywords
+
 - `port`: (int) TCP port that the players should connect on. This needs to be sent within the first 3 seconds of being started.
 - `match`: Values: `start`, `end`. Tell the manager to expect information about the match.
 - `round`: Pipe separated double. `start` or `end`. Round start can also contain any data about the round. 
 - `move`: Human readable description of the move as well as any round data needed by the visualizer. Data should be formatted in JSON to make parsing easier. 
-- `gamestate`: Implementation dependant value. Sent every 10 moves to represent the current state of the game. To ease parsing in the browser, please use JSON.
+- `gamestate`: Implementation dependant value. Sent periodically to represent the current state of the game. To ease parsing in the browser, please use JSON.
 - `roundresult`: Sent directly after `round:end`. Pipe separated tuple with player name, result, and score. Score is implementation dependant. Result can only be `Win`, `Loss`, and `Tie`.
 - `matchresult`: Sent directly after `match:end`. Pipe separated tuple with player name, result, and rounds won. 
 
-####Example communication
+###Example communication
 
 ```
 port:2222
