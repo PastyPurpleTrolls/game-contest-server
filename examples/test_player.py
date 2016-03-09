@@ -17,6 +17,7 @@ from random import choice
 parser = OptionParser()
 parser.add_option("-p", "--port", action="store", type="int", dest="port")
 parser.add_option("-n", "--name", action="store", type="string", dest="name")
+parser.add_option("-m", "--matches", action="store", type="int", dest="matches")
 (options, args) = parser.parse_args()
 
 HOST = 'localhost'
@@ -29,15 +30,16 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 ip = socket.gethostbyname(HOST)
 s.connect((ip,PORT)) #Connect to server
 
-message = str(NAME)
+message = str(NAME + "\n")
 s.send(message.encode())
 
 #Now receive data
-while True:
+for i in range(options.matches):
+  while True:
     reply = s.recv(4096).decode()
     if "move" in reply:
         guesses = ['a','b','c','w']
-        blah = choice(guesses)
+        blah = choice(guesses) + "\n"
         s.send(blah.encode())
     elif "wins" in reply:
         #print(NAME + ': ' + reply.strip())
