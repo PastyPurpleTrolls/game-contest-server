@@ -1,0 +1,19 @@
+CPPFLAGS = -g -Wall -O2 -pedantic
+AITester: main.o BoardV2.o Message.o PlayerV1.o AITester.o \
+	SmartPlayer.o CleanPlayer.o OrigGamblerPlayer.o HumanPlayer.o \
+	DumbPlayer.o
+	g++ $(CPPFLAGS) -o AITester main.o BoardV2.o Message.o PlayerV1.o AITester.o \
+	SmartPlayer.o CleanPlayer.o OrigGamblerPlayer.o HumanPlayer.o \
+	DumbPlayer.o
+main.o: main.cpp BoardV2.h AITester.h Message.h defines.h PlayerV1.h 
+	
+BoardV2.o: BoardV2.cpp BoardV2.h defines.h
+Message.o: Message.cpp Message.h defines.h
+PlayerV1.o: PlayerV1.cpp PlayerV1.h Message.h defines.h
+AITester.o: AITester.cpp defines.h Message.h BoardV2.h AITester.h \
+	PlayerV1.h
+DumbPlayer.o: DumbPlayer.cpp DumbPlayer.h PlayerV1.h Message.h defines.h
+SmartPlayer.o: SmartPlayer.cpp SmartPlayer.h PlayerV1.h Message.h defines.h
+CleanPlayer.o: CleanPlayer.cpp CleanPlayer.h PlayerV1.h Message.h defines.h
+OrigGamblerPlayer.o: OrigGamblerPlayer.cpp OrigGamblerPlayer.h PlayerV1.h Message.h defines.h
+HumanPlayer.o: HumanPlayer.cpp HumanPlayer.h PlayerV1.h Message.h defines.h
