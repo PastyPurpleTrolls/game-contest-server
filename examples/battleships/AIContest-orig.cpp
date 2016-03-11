@@ -8,7 +8,6 @@
  */
 
 #include <iostream>
-#include <iomanip>
 #include <string>
 #include <unistd.h>
 #include <cstdlib>
@@ -42,23 +41,6 @@ AIContest::AIContest( PlayerV2* player1, string player1Name,
     // General
     this->boardSize = boardSize;
     this->silent = silent;
-
-    // Ship stuff
-    shipNames[0] = "Submarine";
-    shipNames[1] = "Destroyer";
-    shipNames[2] = "Aircraft Carrier";
-    shipNames[3] = "Destroyer 2";
-    shipNames[4] = "Submarine 2";
-    shipNames[5] = "Aircraft Carrier 2";
-    
-    numShips = boardSize-2;
-    if( numShips > MAX_SHIPS ) {
-    	numShips = MAX_SHIPS;
-    }
-
-    for(int i=0; i<numShips; i++) {
-	shipLengths[i] = random()%(MIN_SHIP_SIZE) + 3;
-    }
 }
 
 AIContest::~AIContest() {
@@ -71,7 +53,21 @@ AIContest::~AIContest() {
  */
 //bool AIContest::placeShips( PlayerV2* player, BoardV3* board, BoardV3* testingBoard ) {
 bool AIContest::placeShips( PlayerV2* player, BoardV3* board ) {
-    for( int i=0; i<numShips; i++ ) {
+    const int NumShips = 6;
+    string shipNames[NumShips]  = { "Submarine", "Destroyer", "Aircraft Carrier", 
+			    "Destroyer 2", "Submarine 2", "Aircraft Carrier 2" };
+    int shipLengths[NumShips];
+    for(int i=0; i<NumShips; i++) {
+	shipLengths[i] = random()%((MAX_SHIP_SIZE+1)-MIN_SHIP_SIZE) + MIN_SHIP_SIZE;
+    }
+    //= { 3,3,4,3,3,4 };
+
+    int maxShips = boardSize-2;
+    if( maxShips > NumShips ) {
+    	maxShips = NumShips;
+    }
+
+    for( int i=0; i<maxShips; i++ ) {
 	Message loc = player->placeShip( shipLengths[i] );
 	bool placedOk = board->placeShip( loc.getRow(), loc.getCol(), shipLengths[i], loc.getDirection() );
 	if( ! placedOk ) {
@@ -85,40 +81,26 @@ bool AIContest::placeShips( PlayerV2* player, BoardV3* board ) {
 }
 
 void AIContest::showBoard(BoardV3* board, bool ownerView, string playerName,
-			  bool fullRedraw, Side side, bool hLMostRecentShot, int hLRow, int hLCol ) {
+			  bool hLMostRecentShot, int hLRow, int hLCol ) {
     if( silent ) return;
-    // 'fullRedraw' indicates full board draw or only an update.
-    // 'side' (Left / Right) indicates where to draw the board
-
-    // Line 1: board name
-    // Line 3: board columns
-    // Line 5-14: board rows
-    // Line 16: Shot location
-    // Line 17: shot results
 
     char ch;
-    // Left board starts at column 1, right board at column 30
-    int boardColOffset = side == Left ? 1 : 50;
 
-    cout << gotoRowCol(1, boardColOffset)
-         << playerName << flush;
-    // Top row
-    cout << gotoRowCol(3, boardColOffset) << " |";
-
+    cout << endl << playerName << endl;
+    cout << " |";
     for(int count=0; count<boardSize; count++) {
 	cout << count;
     }
-    cout << flush;
+    cout << endl;
 
-    cout << gotoRowCol(4, boardColOffset) << flush;
     // Put out horizontal header line
-    for(int col=0; col<boardSize+2; col++) {
+    for(int row=0; row<boardSize+2; row++) {
 	cout << '-';
     }
-    cout << flush;
+    cout << endl;
 
     for(int row=0; row<boardSize; row++) {
-	cout << gotoRowCol(5+row, boardColOffset) << (char)(row+'A') << "|";
+	cout << (char)(row+'A') << "|";
 	for(int col=0; col<boardSize; col++) {
 	    if( ownerView == true ) {
 		ch = board->getOwnerView(row,col);
@@ -142,7 +124,7 @@ void AIContest::showBoard(BoardV3* board, bool ownerView, string playerName,
 		}
 	    }
 	}
-	cout << resetAll() << flush;
+	cout << resetAll() << endl;
     }
     cout << resetAll() << endl;
 }
@@ -186,36 +168,29 @@ void AIContest::writeLog(int turn, string playerName, string status, int row, in
 }
 
 bool AIContest::processShot(string playerName, PlayerV2 *player, BoardV3 *board, 
-	                   Side side, int row, int col, PlayerV2* otherPlayer, int turn)
+                           int row, int col, PlayerV2 *otherPlayer, int turn) 
 {
     bool won = false;
-    int resultsRow = 16;
-    int shotColOffset = side == Right ? 1 : 50;
-    int boardColOffset = side == Left ? 1 : 50;
-    // Wipe any previous contents clean first
-    if( !silent ) cout << gotoRowCol( resultsRow, shotColOffset) << playerName 
-                       << "'s shot: [" <<row<< "," <<col<< "]" << endl;
+    if( !silent ) cout << "Processing " << playerName 
+                       << "'s shot [" <<row<< "," <<col<< "]." << endl;
     Message msg = board->processShot( row, col );
     // Hack because board doesn't set these properly.
     msg.setRow(row);
     msg.setCol(col);
-
     switch( msg.getMessageType() ) {
 	case MISS:
-	    if( !silent ) cout << gotoRowCol( resultsRow+1, boardColOffset ) << setw(30) << "";
-	    if( !silent ) cout << gotoRowCol( resultsRow+1, boardColOffset ) << "Miss" << flush;
+	    if( !silent ) cout << "Miss" << endl;
+	    //{ player: 1, result: "MISS", row: 1, col: 1 },
 	    writeLog( turn, playerName, "MISS", row, col );
 	    player->update(msg);
 	    break;
 	case HIT:
-	    if( !silent ) cout << gotoRowCol( resultsRow+1, boardColOffset ) << setw(30) << "";
-	    if( !silent ) cout << gotoRowCol( resultsRow+1, boardColOffset ) << "Hit" << flush;
+	    if( !silent ) cout << "Hit." << endl;
 	    writeLog( turn, playerName, "HIT", row, col );
 	    player->update(msg);
 	    break;
 	case KILL:
-	    if( !silent ) cout << gotoRowCol( resultsRow+1, boardColOffset ) << setw(30) << "";
-	    if( !silent ) cout << gotoRowCol( resultsRow+1, boardColOffset ) << "It's a KILL! " << msg.getString() << flush;
+	    if( !silent ) cout << "It's a KILL! " << msg.getString() << endl;
 	    // Notify that is a hit
 	    msg.setMessageType(HIT);
 	    player->update(msg);
@@ -230,34 +205,19 @@ bool AIContest::processShot(string playerName, PlayerV2 *player, BoardV3 *board,
 	    won = board->hasWon();
 	    break;
 	case DUPLICATE_SHOT:
-	    if( !silent ) {
-		cout << fgColor(RED) << bgColor(WHITE);
-	        cout << gotoRowCol( resultsRow+1, boardColOffset ) << setw(30) << "";
-	        cout << gotoRowCol( resultsRow+1, boardColOffset ) << "You already shot there.";
-		cout << resetAll() << flush;
-	    }
+	    if( !silent ) cout << "You already shot there." << endl;
 	    writeLog( turn, playerName, "DUPLICATE_SHOT", row, col );
 	    player->update(msg);
 	    break;
 	case INVALID_SHOT:
-	    if( !silent ) {
-		cout << fgColor(RED) << bgColor(WHITE);
-		cout << gotoRowCol( resultsRow+1, boardColOffset ) << setw(30) << "";
-	        cout << gotoRowCol( resultsRow+1, boardColOffset ) << playerName << "Invalid coordinates: [row="<<row<<
-	             ", col="<<col<<"]" << flush;
-		cout << resetAll() << flush;
-	    }
+	    cout << playerName << " shot at invalid board coordinates [row="<<row<<
+	             ", col="<<col<<"]." << endl;
 	    writeLog( turn, playerName, "INVALID_SHOT", row, col );
 	    player->update(msg);
 	    break;
 	default:
-	    if( !silent ) {
-		cout << fgColor(RED) << bgColor(WHITE);
-		cout << gotoRowCol( resultsRow+1, boardColOffset ) << setw(30) << "";
-	        cout << gotoRowCol( resultsRow+1, boardColOffset ) << "Invalid return from processShot: "
-	                       << msg.getMessageType() << "(" << msg.getString() << ")";
-		cout << resetAll() << flush;
-	    }
+	    if( !silent ) cout << "Invalid return from processShot: "
+	                       << msg.getMessageType() << "(" << msg.getString() << ")" << endl;
 	    writeLog( turn, playerName, "INVALID_SHOT", row, col );
 	    player->update(msg);
 	    break;
@@ -310,18 +270,20 @@ void AIContest::play( float secondsDelay, int& totalMoves, bool& player1Won, boo
 
 	Message shot1 = player1->getMove();
 	player1Won = processShot(player1Name, player1, player2Board, 
-		Left, shot1.getRow(), shot1.getCol(), player2, turnCount);
-	Message shot2 = player2->getMove();
-	++turnCount;
-	player2Won = processShot(player2Name, player2, player1Board, 
-		Right, shot2.getRow(), shot2.getCol(), player1, turnCount);
-
+                                 shot1.getRow(), shot1.getCol(), player2, turnCount);
 	if( ! silent ) {
-	    showBoard(player1Board, false, player1Name + "'s Board", false, Left, true, shot2.getRow(), shot2.getCol());
-	}
-	if( ! silent ) {
-	    showBoard(player2Board, false, player2Name + "'s Board", false, Right, 
+	    showBoard(player2Board, false, player2Name + "'s Board",
 		      true, shot1.getRow(), shot1.getCol());
+	}
+
+	++turnCount;
+	Message shot2 = player2->getMove();
+	player2Won = processShot(player2Name, player2, player1Board, 
+                                 shot2.getRow(), shot2.getCol(), player1, turnCount);
+	if( ! silent ) {
+	    showBoard(player1Board, false, player1Name + "'s Board",
+		      true, shot2.getRow(), shot2.getCol());
+	    cout << endl;
 	}
 
 	totalMoves++;
@@ -338,41 +300,27 @@ void AIContest::play( float secondsDelay, int& totalMoves, bool& player1Won, boo
     if( ! silent ) {
 	clearScreen();
 	showBoard(player1Board, true, "Final status of " + player1Name + "'s board", 
-	          true, Left, false, -1, -1);
+	          false, -1, -1);
 	cout << endl;
 	showBoard(player2Board, true, "Final status of " + player2Name + "'s board", 
-	          true, Right, false, -1, -1);
+	          false, -1, -1);
 	cout << endl;
     }
 
     if( player1Won && player2Won ) {
 	cout << "The game was a tie. Both players sunk all ships." << endl;
-	Message msg(TIE);
-	player1->update(msg);
-	player2->update(msg);
 	writeLog( turnCount, player1Name, "TIE", -1, -1 );
 	writeLog( turnCount, player2Name, "TIE", -1, -1 );
     } else if( player1Won ) {
 	cout << player1Name << " won." << endl;
-	Message msg(WIN);
-	player1->update(msg);
-	msg.setMessageType(LOSE);
-	player2->update(msg);
 	writeLog( turnCount, player1Name, "WIN", -1, -1 );
 	writeLog( turnCount, player2Name, "LOSE", -1, -1 );
     } else if( player2Won ) {
 	cout << player2Name << " won." << endl;
-	Message msg(WIN);
-	player2->update(msg);
-	msg.setMessageType(LOSE);
-	player1->update(msg);
 	writeLog( turnCount, player1Name, "LOSE", -1, -1 );
 	writeLog( turnCount, player2Name, "WIN", -1, -1 );
     } else {   // both timed out -- neither won
 	cout << "The game was a tie. Neither player sunk all ships." << endl;
-	Message msg(LOSE);
-	player1->update(msg);
-	player2->update(msg);
     }
     cout << "--- (Moves = " << totalMoves << ", percentage of board shot at = " <<
 			    (100.0*(float)totalMoves)/(boardSize*boardSize) << "%.)" << endl;

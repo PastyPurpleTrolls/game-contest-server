@@ -1,5 +1,5 @@
 /**
- * Message.java: a primitive message object.
+ * Message.cpp: a primitive message object.
  * @author Stefan Brandle, February 2004
  */
 
@@ -15,6 +15,8 @@ Message::Message( char messageType ) {
     this->row = -1;
     this->col = -1;
     this->str = "";
+    this->dir = Horizontal;
+    this->length = -1;
 }
 
 /**
@@ -26,7 +28,20 @@ Message::Message( char messageType ) {
  * @param str The string message related to the message.
  */
 Message::Message( char messageType, int row, int col, string str ) {
-    setMessage( messageType, row, col, str );
+    setMessage( messageType, row, col, str, None, 0 );
+}
+
+/**
+ * Initializes the object message type to the specified values.
+ * @param messageType This should be one of the defined 
+ *     "final static char" values in the Defines class.
+ * @param row The row related to the message.
+ * @param col The col related to the message.
+ * @param str The string message related to the message.
+ * @param dir The direction related to the message.
+ */
+Message::Message( char messageType, int row, int col, string str, Direction dir, int length ) {
+    setMessage( messageType, row, col, str, dir, length );
 }
 
 /**
@@ -37,11 +52,13 @@ Message::Message( char messageType, int row, int col, string str ) {
  * @param col The col related to the message.
  * @param str The string message related to the message.
  */
-void Message::setMessage( char messageType, int row, int col, string str ) {
+void Message::setMessage( char messageType, int row, int col, string str, Direction dir, int length ) {
     this->messageType = messageType;
     this->row = row;
     this->col = col;
     this->str = str;
+    this->dir = dir;
+    this->length = length;
 }
 
 /**
@@ -57,7 +74,7 @@ void Message::setMessageType( char messageType ) {
  * @return messageType 
  */
 char Message::getMessageType( ) {
-    return messageType;
+    return this->messageType;
 }
 
 /**
@@ -74,7 +91,7 @@ void Message::setRow( int row ) {
  * non shot related messages.
  */
 int Message::getRow( ) {
-    return row;
+    return this->row;
 }
 
 /**
@@ -91,7 +108,7 @@ void Message::setCol( int col ) {
  * non shot related messages.
  */
 int Message::getCol( ) {
-    return col;
+    return this->col;
 }
 
 /**
@@ -109,8 +126,39 @@ void Message::setString( string str ) {
  * discretion of the participants.
  */
 string Message::getString( ) {
-    return str;
+    return this->str;
+}
+
+/**
+ * Sets the Direction value.
+ * @param dir The direction value for this message.
+ */
+void Message::setDirection( Direction dir ) {
+    this->dir = dir;
+}
+
+/**
+ * Returns the direction value.
+ * @return Direction
+ */
+Direction Message::getDirection( ) {
+    return this->dir;
+}
+
+/**
+ * Sets the length value.
+ * @param dir The length value for this message.
+ */
+void Message::setLength( int length ) {
+    this->length = length;
+}
+
+/**
+ * Returns the length value.
+ * @return length
+ */
+int Message::getLength( ) {
+    return this->length;
 }
 
 #endif
-

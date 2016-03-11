@@ -1,7 +1,7 @@
 /**
  * @author Stefan Brandle and Jonathan Geisler
  * @date August, 2004
- * Main driver for BattleShipsV1 implementations.
+ * Main driver for BattleShipsV3 implementations.
  * Please type in your name[s] below:
  *
  *
@@ -12,68 +12,71 @@
 #include <cctype>
 #include <unistd.h>
 
-// Next to access and setup the random number generator.
+// Next 2 to access and setup the random number generator.
 #include <cstdlib>
 #include <ctime>
 
 // BattleShips project specific includes.
-#include "BoardV2.h"
+#include "BoardV3.h"
 #include "AIContest.h"
-#include "PlayerV1.h"
+#include "PlayerV2.h"
+#include "conio.h"
 
 // Include your player here
-
 //	Professor's contestants
-#include "HumanPlayer.h"
-#include "OrigGamblerPlayer.h"
-#include "CleanPlayer.h"
+#include "DumbPlayerV2.h"
+#include "CleanPlayerV2.h"
+#include "GamblerPlayerV2.h"
 
 
-PlayerV1* getPlayer( int playerId, int boardSize );
-int getPlayerChoice(string msg);
+PlayerV2* getPlayer( int playerId, int boardSize );
+void playMatch( int player1Id, int player2Id, bool showMoves );
+int comparePlayers (const void * a, const void * b);
 
 using namespace std;
+using namespace conio;
+
+float secondsPerMove = 1;
+int boardSize;	// BoardSize
+int totalGames = 0;
+int totalCountedMoves = 0;
+const int NumPlayers = 3;
+
+int wins[NumPlayers][NumPlayers];
+int playerIds[NumPlayers];
+int lives[NumPlayers];
+int winCount[NumPlayers];
+int statsShotsTaken[NumPlayers];
+int statsGamesCounted[NumPlayers];
+string playerNames[NumPlayers] = { 
+    "Dumb Player",
+    "Clean Player",
+    "Gambler Player",
+};
+
 
 int main() {
-    int numGames;
-    int boardSize;	// BoardSize
-    bool silent = false;
-    float secondsPerMove = 1;
-    int totalGames = 0;
-    int totalCountedMoves = 0;
-    bool player1Won=false, player2Won=false;
-    PlayerV1 *player1, *player2;
-    AIContest *game;
+    //bool silent = false;
 
     // Adjust based on the number of players!
-    const int numPlayers = 3;
-    int wins[numPlayers][numPlayers];
-    int winCount[numPlayers];
-    int statsShotsTaken[numPlayers];
-    int statsGamesCounted[numPlayers];
-    string playerNames[numPlayers] = { 
-	"HumanPlayer",
-	"CleanPlayer",
-	"Original Gambler Player",
-    };
-
     // Initialize various win statistics 
-    for(int i=0; i<numPlayers; i++) {
+    for(int i=0; i<NumPlayers; i++) {
 	statsShotsTaken[i] = 0;
 	statsGamesCounted[i] = 0;
 	winCount[i] = 0;
-	for(int j=0; j<numPlayers; j++) {
+	lives[i] = NumPlayers/2;
+	playerIds[i] = i;
+	for(int j=0; j<NumPlayers; j++) {
 	    wins[i][j] = 0;
     	}
     }
-
 
     // Seed (setup) the random number generator.
     // This only needs to happen once per program run.
     srand(time(NULL));
 
     // Now to get the board size.
-    cout << "Welcome to the AI Bot challenge." << endl << endl;
+    cout << "Welcome to the AI Bot contest." << endl << endl;
     cout << "What size board would you like? [Anything other than numbers 3-10 exits.] ";
     cin >> boardSize;
     // If have invalid board size input (non-number, or 0-2, or > 10).
@@ -82,7 +85,7 @@ int main() {
 	return 1;
     }
 
-    // Find out how many times to fight the AI.
+    // Find out how many times to test the AI.
     cout << "How many times should I test the game AI? ";
     cin >> totalGames;
 
@@ -90,44 +93,99 @@ int main() {
 	 << "all subsequent games are done without visual display." << endl
 	 << "How many seconds per move? (E.g., 1, 0.5, 1.3) : ";
     cin >> secondsPerMove;
-    /*
-    } else {
-        milliSecondsPerMove = 0;
-    }
-    */
 
     // And now it's show time!
-    int player1Wins, player2Wins, player1Ties, player2Ties;
+    int offset=1;
+    //int player=0;
+    while( offset<NumPlayers/2 ) {
+	for( int player=0; player+offset<NumPlayers; player+=offset+1 ) {
+	    playMatch(player, player+offset, true);
+	    usleep(2000000);	// Pause 2 seconds to let viewers see stats
+	}
+	++offset;
+    }
+    for( int player1Id=0; player1Id<NumPlayers; player1Id++ ) {
+	for( int player2Id=player1Id+1; player2Id<NumPlayers; player2Id++ ) {
 
-    // Select player 1
-    int player1Id = getPlayerChoice(("Select player 1"));
-    while( player1Id < 0 && player1Id >= numPlayers ) {
-	player1Id = getPlayerChoice("Select player 1");
+	    // Don't play anybody who has been eliminated
+	    if(lives[player1Id] == 0 || lives[player2Id] == 0) continue;
+
+	    playMatch(player1Id, player2Id, true);
+	    usleep(2000000);	// Pause 2 seconds to let viewers see stats
+	}
+    }
+    cout << endl << endl;
+
+    // Now calculate contest results
+    qsort (playerIds, NumPlayers, sizeof(int), comparePlayers);
+    // Add up the total wins per player
+    for( int i=0; i<NumPlayers; i++ ) {
+	for( int j=0; j<NumPlayers; j++ )
+	    winCount[i]+= wins[i][j];
     }
 
-    // Select player 2
-    int player2Id = getPlayerChoice(string("Select player 2"));
-    while( player2Id < 0 && player2Id >= numPlayers ) {
-	player2Id = getPlayerChoice("Select player 2");
+    // TESTING for TIE
+    //winCount[playerIds[1]] = winCount[playerIds[0]];
+    //lives[playerIds[1]] = lives[playerIds[0]];
+    //winCount[playerIds[2]] = winCount[playerIds[1]];
+    //lives[playerIds[2]] = lives[playerIds[1]];
+
+    int tiesInARow = 0;
+    for( int i=0; i<NumPlayers; ++i ) {
+	// If one of two or more that are tied for first place, switch on BOLD
+	if( lives[playerIds[i]] == lives[playerIds[0]] && winCount[playerIds[i]] == winCount[playerIds[0]]) {
+	    cout << setTextStyle( BOLD );
+	}
+	if(i>0 && lives[playerIds[i]] == lives[playerIds[i-1]] && winCount[playerIds[i]] == winCount[playerIds[i-1]]){
+	    // Have a tie: identify as such
+	    ++tiesInARow;
+	} else {
+	    tiesInARow = 0;
+	}
+
+	cout << setw(2) << i+1-tiesInARow << ": " << playerNames[playerIds[i]] << " (Lives=" << lives[playerIds[i]] 
+	     << ", Wins=" << winCount[playerIds[i]] << ")";
+	if( (i<NumPlayers-1 && lives[playerIds[1]] == lives[playerIds[1+1]] && winCount[playerIds[i]] == winCount[playerIds[i+1]] )) {
+	    cout << " -- tied ";
+	}
+	else if( tiesInARow > 0 || (i<NumPlayers-1 && lives[playerIds[i]] == lives[playerIds[i-1]] && winCount[playerIds[i]] == winCount[playerIds[i-1]] )) {
+	    cout << " -- tied ";
+	}
+	cout << resetAll () << endl;
     }
 
-    // Reset match scores
-    player1Wins=0; player2Wins=0; player1Ties=0; player2Ties=0;
+    return 0;
+}
+
+void playMatch( int player1Id, int player2Id, bool showMoves ) {
+    PlayerV2 *player1, *player2;
+    AIContest *game;
+    int matchWins[2] = {0, 0};
+    bool player1Won=false, player2Won=false;
+    int player1Ties=0, player2Ties=0;
+
+    player1 = getPlayer(player1Id, boardSize);
+    player2 = getPlayer(player2Id, boardSize);
+
+    bool silent = true;
     for( int count=0; count<totalGames; count++ ) {
 	player1Won = false; player2Won = false;
-	player1 = getPlayer(player1Id, boardSize);
-	player2 = getPlayer(player2Id, boardSize);
+	player1->newRound();
+	player2->newRound();
 
 	if( count==0 ) {
+	    silent = false;
 	    game = new AIContest( player1, playerNames[player1Id], 
 				  player2, playerNames[player2Id],
-		      boardSize, false /* !silent */ );
+				  boardSize, silent );
 	    game->play( secondsPerMove, totalCountedMoves, player1Won, player2Won );
-	} else {
+	} 
+	else {
+	    silent = true;
 	    game = new AIContest( player1, playerNames[player1Id], 
 				  player2, playerNames[player2Id],
-		      boardSize, true /* silent */ );
-	    game->play( 0 /* no delay */, totalCountedMoves, player1Won, player2Won );
+		      boardSize, silent );
+	    game->play( 0, totalCountedMoves, player1Won, player2Won );
 	}
 	if((player1Won && player2Won) || !(player1Won || player2Won)) {
 	    player1Ties++;
@@ -136,85 +194,84 @@ int main() {
 	    statsGamesCounted[player1Id]++;
 	    statsShotsTaken[player2Id] += totalCountedMoves;
 	    statsGamesCounted[player2Id]++;
-	} else if( player1Won ){
+	} else if( player1Won ) {
+	    matchWins[0]++;
 	    wins[player1Id][player2Id]++;
 	    statsShotsTaken[player1Id] += totalCountedMoves;
 	    statsGamesCounted[player1Id]++;
-	} else {
+	} else if( player2Won ) {
+	    matchWins[1]++;
 	    wins[player2Id][player1Id]++;
 	    statsShotsTaken[player2Id] += totalCountedMoves;
 	    statsGamesCounted[player2Id]++;
 	}
-	delete player1;
-	delete player2;
 	delete game;
     }
+    delete player1;
+    delete player2;
+
     cout << endl << "********************" << endl;
-    cout << playerNames[player1Id] << ": wins=" << wins[player1Id][player2Id] 
-	 << " losses=" << totalGames-wins[player1Id][player2Id]-player1Ties 
+    cout << playerNames[player1Id] << ": " << setTextStyle( NEGATIVE_IMAGE ) << "wins=" << matchWins[0] << resetAll()
+	 << " losses=" << totalGames-matchWins[0]-player1Ties 
 	 << " ties=" << player1Ties << " (cumulative avg. shots/game = "
 	 << (statsGamesCounted[player1Id]==0 ? 0.0 : 
 	    (float)statsShotsTaken[player1Id]/(float)statsGamesCounted[player1Id])
 	 << ")" << endl;
-    cout << playerNames[player2Id] << ": wins=" << wins[player2Id][player1Id] 
-	 << " losses=" << totalGames-wins[player2Id][player1Id]-player2Ties 
+    cout << playerNames[player2Id] << ": " << setTextStyle( NEGATIVE_IMAGE ) << "wins=" << matchWins[1] << resetAll()
+	 << " losses=" << totalGames-matchWins[1]-player2Ties 
 	 << " ties=" << player2Ties << " (cumulative avg. shots/game = "
 	 << (statsGamesCounted[player2Id]==0 ? 0.0 : 
 	    (float)statsShotsTaken[player2Id]/(float)statsGamesCounted[player2Id])
 	 << ")" << endl;
     cout << "********************" << endl;
-    usleep(5000000);	// Pause 5 seconds to let viewers see stats
 
-    cout << endl << endl;
-    int mostWins = -1;
-    int winnerCount = 0;
-    for( int i=0; i<numPlayers; i++ ) {
-	for( int j=0; j<numPlayers; j++ )
-	    winCount[i]+= wins[i][j];
-	if( winCount[i] > mostWins ) {
-	    mostWins = winCount[i];
-	    winnerCount = 1;
+    cout << setTextStyle( NEGATIVE_IMAGE );
+    if(wins[player1Id][player2Id] > wins[player2Id][player1Id]) {
+	// Player 2 lost the match
+	lives[player2Id]--;
+	cout << playerNames[player2Id] << " lost one life.";
+	if( lives[player2Id] == 0 ) {
+	    cout << fgColor(RED);
 	}
-	else if( winCount[i] == mostWins ) {
-	    winnerCount++;
+	cout << " Lives left: " << lives[player2Id] << resetAll() << endl;
+    } else if(wins[player1Id][player2Id] < wins[player2Id][player1Id]) {
+	// Player 1 lost the match
+	lives[player1Id]--;
+	cout << playerNames[player1Id] << " lost one life.";
+	if( lives[player1Id] == 0 ) {
+	    cout << fgColor(RED);
 	}
+	cout << " Lives left: " << lives[player1Id] << resetAll() << endl;
+    } else {
+	// Tied -- both players lose a life: the only time this likely happens is when both
+	// players are unable to do anythig worthwhile, so loosing a life is appropriate.
+	lives[player1Id]--;
+	lives[player2Id]--;
+	cout << setTextStyle( NEGATIVE_IMAGE ) << "A tie. Both players lose a life." << endl;
+	cout << playerNames[player2Id] << " Lives left: " << lives[player2Id] << endl;
+	cout << playerNames[player1Id] << " Lives left: " << lives[player1Id] << endl;
     }
-
-    for( int i=0; i<numPlayers; i++ ) {
-	cout << playerNames[i] << ": wins = " << winCount[i] 
-	     << " (avg. shots/game = " << (statsGamesCounted[i]==0 ? 0.0 : 
-		(float)statsShotsTaken[i]/(float)statsGamesCounted[i]) << ") ";
-
-	if( winCount[i] == mostWins ) {
-	    if( winnerCount == 1 ) {
-		cout << "\t\033[1m(The WINNER!)\033[0m";
-	    } else {	// tied win count
-		cout << "\t\033[1m(Tied for First!!)\033[0m";
-	    }
-	}
-	cout << endl;
-    }
-
-    return 0;
+    cout << resetAll() << "********************" << endl;
 }
 
-PlayerV1* getPlayer( int playerId, int boardSize ) {
+int comparePlayers (const void * a, const void * b) {
+    int p1 = *(int*)a;
+    int p2 = *(int*)b;
+    if( lives[p1] > lives[p2] ) return -1;
+    else if( lives[p1] < lives[p2] ) return 1;
+    else {
+        if( winCount[p1] > winCount[p2] ) return -1;
+        else if( winCount[p1] < winCount[p2] ) return 1;
+        else return 0;
+    }
+}
+
+PlayerV2* getPlayer( int playerId, int boardSize ) {
     switch( playerId ) {
-	// Professor provided
-	case 0: return new HumanPlayer( boardSize );
-	case 1: return new CleanPlayer( boardSize );
-	case 2: return new OrigGamblerPlayer( boardSize );
-	//case 3: return new Your_Player_Here( boardSize );
+	default:       // use 'default' to avoid compiler warning
+	case 0: return new DumbPlayerV2( boardSize );
+	case 1: return new CleanPlayerV2( boardSize );
+	case 2: return new GamblerPlayerV2( boardSize );
     }
-}
-
-int getPlayerChoice( string mesg ) {
-    int choice;
-    cout << mesg << endl
-         << "0) Human Player" << endl
-	 << "1) Clean Player" << endl
-	 << "2) Original Gambler Player" << endl;
-    cin >> choice;
-    return choice;
 }
 

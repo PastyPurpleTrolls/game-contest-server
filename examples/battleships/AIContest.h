@@ -12,39 +12,55 @@
 
 // BattleShips project specific includes.
 #include "Message.h"
-#include "BoardV2.h"
-#include "PlayerV1.h"
+#include "BoardV3.h"
+#include "PlayerV2.h"
 
 using namespace std;
 
 class AIContest {
   public:
-    AIContest( PlayerV1* player1, string player1Name,
-               PlayerV1* player2, string player2Name,
+    AIContest( PlayerV2* player1, string player1Name,
+               PlayerV2* player2, string player2Name,
 	       int boardSize, bool silent );
+    ~AIContest();
     void play( float secondsDelay, int& totalMoves, bool& player1Won, bool& player2Won );
 
   private:
-    void placeShips(BoardV2* board);
-    void showBoard(BoardV2* board, bool ownerView, string playerName,
-                   bool hLMostRecentShot, int hLRow, int hLCol );
+    enum Side { Left=1, Right=2 };
+    //bool placeShips( PlayerV2* player, BoardV3* board, BoardV3* testingBoard );
+    bool placeShips( PlayerV2* player, BoardV3* board);
+  //void showBoard(BoardV3* board, bool ownerView, string playerName,
+  //               bool hLMostRecentShot, int hLRow, int hLCol );
+    void showBoard(BoardV3* board, bool ownerView, string playerName,
+                   bool fullRedraw, Side side, bool hLMostRecentShot, int hLRow, int hLCol );
     void clearScreen();
-    void updateAI(PlayerV1 *player, BoardV2 *board);
+    void updateAI(PlayerV2 *player, string playerName, BoardV3 *board, int hitRow, int hitCol, int turn);
+  //void updateAI(PlayerV2 *player, BoardV3 *board, int hitRow, int hitCol);
     void snooze(float seconds);
-    bool processShot(string playerName, PlayerV1 *player, BoardV2 *board, 
-                     int row, int col, bool& playerQuit);
+    bool processShot(string playerName, PlayerV2 *player, BoardV3 *board, 
+	             Side side, int row, int col, PlayerV2* otherPlayer, int turn);
+    void writeLog(int turn, string playerName, string status, int row, int col);
 
     // Data
-    PlayerV1 *player1;
-    PlayerV1 *player2;
-    BoardV2 *player1Board;
-    BoardV2 *player2Board;
+    PlayerV2 *player1;
+    PlayerV2 *player2;
+    BoardV3 *player1Board;
+    BoardV3 *player2Board;
+
     string player1Name;
     string player2Name;
+
     int boardSize;
     bool silent;
     bool player1Won;
     bool player2Won;
+
+    // Ship information
+    int NumShips;
+    static const int MAX_SHIPS = 6;
+    string shipNames[MAX_SHIPS];
+    int shipLengths[MAX_SHIPS];
+    int numShips;
 };
 
 #endif

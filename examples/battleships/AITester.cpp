@@ -12,15 +12,14 @@
 #include <unistd.h>
 
 // BattleShips project specific includes.
-#include "defines.h"
-#include "Message.h"
-#include "BoardV2.h"
+#include "BoardV3.h"
 #include "AITester.h"
+#include "conio.h"
 
 using namespace std;
+using namespace conio;
 
-AITester::AITester( PlayerV1* player, BoardV2* playerBoard, string playerName,
-		      int boardSize, bool silent )
+AITester::AITester( PlayerV2* player, BoardV2* playerBoard, string playerName, int boardSize, bool silent )
 {
     // Set up player 1
     this->player = player;
@@ -31,13 +30,16 @@ AITester::AITester( PlayerV1* player, BoardV2* playerBoard, string playerName,
     this->boardSize = boardSize;
     this->silent = silent;
     this->playerWon = false;
+    this->placedShipsBoardCol = 20;
+    this->placedShipsBoardRow = 5;
+    this->testingBoard = new BoardV3(boardSize);
 }
 
 /**
  * Places a ship. rowVector and colVector are used to determine direction of ship from
  * starting row/col.
  */
-void AITester::placeShips( BoardV2* board ) {
+bool AITester::placeShips( PlayerV2* player, BoardV2* board, BoardV3* placingBoard ) {
     const int NumShips = 6;
     string shipNames[NumShips]  = { "Submarine", "Destroyer", "Aircraft Carrier", 
 			    "Destroyer 2", "Submarine 2", "Aircraft Carrier 2" };
@@ -49,15 +51,24 @@ void AITester::placeShips( BoardV2* board ) {
     }
 
     for( int i=0; i<maxShips; i++ ) {
-	//if( board->placeShip(shipLengths[i], shipNames[i]) == false ) {
-	if( board->placeShip(shipLengths[i]) == false ) {
-	    cerr << "Couldn't place "<<shipNames[i]<<" (length "<<shipLengths[i]<<")"<<endl;
+	Message loc = player->placeShip( shipLengths[i] );
+	bool placedOk = placingBoard->placeShip( loc.getRow(), loc.getCol(), shipLengths[i], loc.getDirection() );
+	if( ! placedOk ) {
+	    cerr << "Error: couldn't place "<<shipNames[i]<<" (length "<<shipLengths[i]<<")"<<endl;
+	    return false;
 	}
+	board->placeShip(shipLengths[i]);
     }
+
+    // All ships apparently placed ok.
+    return true;
 }
+
 
 void AITester::showBoard(BoardV2* board, bool ownerView, string playerName) {
     if( silent ) return;
+
+    char ch;
 
     cout << playerName << endl;
     cout << " |";
@@ -76,23 +87,68 @@ void AITester::showBoard(BoardV2* board, bool ownerView, string playerName) {
 	cout << (char)(row+'A') << "|";
 	for(int col=0; col<boardSize; col++) {
 	    if( ownerView == true ) {
-		cout << board->getOwnerView(row,col);
+		ch = board->getOwnerView(row,col);
 	    } else {
-		cout << board->getOpponentView(row,col);
+		ch = board->getOpponentView(row,col);
+	    }
+
+	    switch(ch) {
+		case KILL: cout << fgColor(BLACK) << bgColor(LIGHT_RED); break;
+	        case HIT: cout << fgColor(BLACK) << bgColor(LIGHT_YELLOW); break;
+	        case MISS: cout << fgColor(BLACK) << bgColor(GRAY); break;
+	        case WATER: cout << fgColor(BLUE) << bgColor(BLUE); break;
+	    }
+	    if( ch>= 'a' && ch<='k' ) {
+		cout << setTextStyle( NEGATIVE_IMAGE ) << ch << resetAll();
+	    } else {
+		cout << ch;
 	    }
 	}
-	cout << endl;
+	cout << resetAll() << endl;
+    }
+    cout << resetAll() << flush;
+}
+
+void AITester::showBoard(BoardV3* board, bool ownerView, string playerName) {
+    if( silent ) return;
+
+    char ch;
+    int br = baseRow;
+    int bc = baseCol;
+
+    cout << gotoRowCol(br,bc) << " |";
+    for(int count=0; count<boardSize; count++) {
+	cout << count;
+    }
+    cout << flush;
+
+    cout << gotoRowCol(br+1, bc);
+    for(int col=0; col<boardSize+2; col++) {
+	cout << '-';
+    }
+    cout << flush;
+
+    for(int row=0; row<boardSize; row++) {
+	cout << gotoRowCol(br+row+2, bc);
+	cout << (char)(row+'A') << "|";
+	for(int col=0; col<boardSize; col++) {
+	    if( ownerView == true ) {
+		ch = board->getOwnerView(row,col);
+	    } else {
+		ch = board->getOpponentView(row,col);
+	    }
+	    if(ch==WATER) cout << bgColor(BLUE);
+	    else cout << bgColor(CYAN);
+	    cout << ch;
+	}
+	cout << resetAll() << flush;
     }
 }
 
 // Clears the screen.
 void AITester::clearScreen() {
     if( silent ) return;
-#ifdef _POSIX_SOURCE
-    cout << "\033[H\033[2J";
-#else
-    for(int i=0; i<25; i++) cout << endl;
-#endif
+    cout << clrscr() << flush;
 }
 
 void AITester::snooze( int milliSeconds ) {
@@ -102,13 +158,7 @@ void AITester::snooze( int milliSeconds ) {
     usleep(sleepTime);
 }
 
-/*
-void AITester::snooze( int seconds ) {
-    sleep(seconds);
-}
-*/
-
-void AITester::updateAI(PlayerV1 *player, BoardV2 *board) {
+void AITester::updateAI(PlayerV2 *player, BoardV2 *board) {
     Message killMsg( KILL, -1, -1, "");
     for(int row=0; row<boardSize; row++) {
 	for(int col=0; col<boardSize; col++) {
@@ -121,7 +171,7 @@ void AITester::updateAI(PlayerV1 *player, BoardV2 *board) {
     }
 }
 
-bool AITester::processShot(string playerName, PlayerV1 *player, BoardV2 *board, 
+bool AITester::processShot(string playerName, PlayerV2 *player, BoardV2 *board, 
                            int row, int col) 
 {
     bool won = false;
@@ -162,11 +212,21 @@ bool AITester::processShot(string playerName, PlayerV1 *player, BoardV2 *board,
 }
 
 void AITester::play( int milliSecondsDelay, int& totalMoves ) {
+    // Used just for testing player AI ship placement.
     int maxShots = boardSize*boardSize*2;
     int shotCount = 0;
     totalMoves = 0;
     clearScreen();
-    placeShips(playerBoard);
+    if( ! placeShips(player, playerBoard, testingBoard) ) {
+	if( ! silent ) {
+	    cout << endl;
+	    cout << playerName << " placed ship in invalid location and forfeits game." << endl;
+	    cout << endl;
+	    snooze( milliSecondsDelay );
+	}
+
+	return;
+    }
 
     //showBoard(playerBoard, true, "Sneak peek at player's board");
 
@@ -174,6 +234,9 @@ void AITester::play( int milliSecondsDelay, int& totalMoves ) {
 	clearScreen();
 
 	Message shot = player->getMove();
+	// If they quit, break.
+	if(shot.getMessageType() == QUIT) break;
+
 	shotCount++;
 	/*
 	// This code kicks in when running in batch mode but want to see
@@ -188,8 +251,10 @@ void AITester::play( int milliSecondsDelay, int& totalMoves ) {
 	if( ! silent ) {
             if( playerWon ) {
 	        showBoard(playerBoard, true, "Final status of " + playerName + "'s board");
+	        showBoard(testingBoard, true, "Placement of ships on " + playerName + "'s board");
 	    } else {
 		showBoard(playerBoard, false, playerName + "'s Board");
+		showBoard(testingBoard, true, playerName + "'s Ships");
 	    }
 	    if( milliSecondsDelay > 0 ) {	// Slows program if call to sleep 0.
 		snooze( milliSecondsDelay );
