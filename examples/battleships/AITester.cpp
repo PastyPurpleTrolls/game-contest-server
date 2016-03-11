@@ -14,10 +14,8 @@
 // BattleShips project specific includes.
 #include "BoardV3.h"
 #include "AITester.h"
-#include "conio.h"
 
 using namespace std;
-using namespace conio;
 
 AITester::AITester( PlayerV2* player, BoardV2* playerBoard, string playerName, int boardSize, bool silent )
 {

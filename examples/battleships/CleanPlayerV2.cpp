@@ -9,10 +9,8 @@
 #include <cstdlib>
 
 #include "CleanPlayerV2.h"
-#include "conio.h"
 
 using namespace std;
-using namespace conio;
 
 /**
  * @brief Constructor that initializes any inter-round data structures.

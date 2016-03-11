@@ -9,10 +9,8 @@
 #include <cstdlib>
 
 #include "OrigGamblerPlayerV2.h"
-#include "conio.h"
 
 using namespace std;
-using namespace conio;
 
 OrigGamblerPlayerV2::OrigGamblerPlayerV2( int boardSize ):
     PlayerV2(boardSize)

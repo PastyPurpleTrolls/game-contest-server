@@ -27,16 +27,10 @@ class AIContest {
 
   private:
     enum Side { Left=1, Right=2 };
-    //bool placeShips( PlayerV2* player, BoardV3* board, BoardV3* testingBoard );
     bool placeShips( PlayerV2* player, BoardV3* board);
-  //void showBoard(BoardV3* board, bool ownerView, string playerName,
-  //               bool hLMostRecentShot, int hLRow, int hLCol );
     void showBoard(BoardV3* board, bool ownerView, string playerName,
                    bool fullRedraw, Side side, bool hLMostRecentShot, int hLRow, int hLCol );
-    void clearScreen();
     void updateAI(PlayerV2 *player, string playerName, BoardV3 *board, int hitRow, int hitCol, int turn);
-  //void updateAI(PlayerV2 *player, BoardV3 *board, int hitRow, int hitCol);
-    void snooze(float seconds);
     bool processShot(string playerName, PlayerV2 *player, BoardV3 *board, 
 	             Side side, int row, int col, PlayerV2* otherPlayer, int turn);
     void writeLog(int turn, string playerName, string status, int row, int col);

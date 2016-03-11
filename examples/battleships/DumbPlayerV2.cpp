@@ -14,10 +14,7 @@
 #include <iostream>
 #include <cstdio>
 
-#include "conio.h"
 #include "DumbPlayerV2.h"
-
-using namespace conio;
 
 /**
  * @brief Constructor that initializes any inter-round data structures.

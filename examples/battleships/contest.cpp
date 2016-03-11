@@ -20,7 +20,6 @@
 #include "BoardV3.h"
 #include "AIContest.h"
 #include "PlayerV2.h"
-#include "conio.h"
 
 // Include your player here
 //	Professor's contestants
@@ -34,7 +33,6 @@ void playMatch( int player1Id, int player2Id, bool showMoves );
 int comparePlayers (const void * a, const void * b);
 
 using namespace std;
-using namespace conio;
 
 float secondsPerMove = 1;
 int boardSize;	// BoardSize
@@ -100,7 +98,6 @@ int main() {
     while( offset<NumPlayers/2 ) {
 	for( int player=0; player+offset<NumPlayers; player+=offset+1 ) {
 	    playMatch(player, player+offset, true);
-	    usleep(2000000);	// Pause 2 seconds to let viewers see stats
 	}
 	++offset;
     }
@@ -111,7 +108,6 @@ int main() {
 	    if(lives[player1Id] == 0 || lives[player2Id] == 0) continue;
 
 	    playMatch(player1Id, player2Id, true);
-	    usleep(2000000);	// Pause 2 seconds to let viewers see stats
 	}
     }
     cout << endl << endl;
@@ -124,17 +120,10 @@ int main() {
 	    winCount[i]+= wins[i][j];
     }
 
-    // TESTING for TIE
-    //winCount[playerIds[1]] = winCount[playerIds[0]];
-    //lives[playerIds[1]] = lives[playerIds[0]];
-    //winCount[playerIds[2]] = winCount[playerIds[1]];
-    //lives[playerIds[2]] = lives[playerIds[1]];
-
     int tiesInARow = 0;
     for( int i=0; i<NumPlayers; ++i ) {
 	// If one of two or more that are tied for first place, switch on BOLD
 	if( lives[playerIds[i]] == lives[playerIds[0]] && winCount[playerIds[i]] == winCount[playerIds[0]]) {
-	    cout << setTextStyle( BOLD );
 	}
 	if(i>0 && lives[playerIds[i]] == lives[playerIds[i-1]] && winCount[playerIds[i]] == winCount[playerIds[i-1]]){
 	    // Have a tie: identify as such
@@ -151,7 +140,7 @@ int main() {
 	else if( tiesInARow > 0 || (i<NumPlayers-1 && lives[playerIds[i]] == lives[playerIds[i-1]] && winCount[playerIds[i]] == winCount[playerIds[i-1]] )) {
 	    cout << " -- tied ";
 	}
-	cout << resetAll () << endl;
+	cout << endl;
     }
 
     return 0;
@@ -211,13 +200,13 @@ void playMatch( int player1Id, int player2Id, bool showMoves ) {
     delete player2;
 
     cout << endl << "********************" << endl;
-    cout << playerNames[player1Id] << ": " << setTextStyle( NEGATIVE_IMAGE ) << "wins=" << matchWins[0] << resetAll()
+    cout << playerNames[player1Id] << ": " << "wins=" << matchWins[0]
 	 << " losses=" << totalGames-matchWins[0]-player1Ties 
 	 << " ties=" << player1Ties << " (cumulative avg. shots/game = "
 	 << (statsGamesCounted[player1Id]==0 ? 0.0 : 
 	    (float)statsShotsTaken[player1Id]/(float)statsGamesCounted[player1Id])
 	 << ")" << endl;
-    cout << playerNames[player2Id] << ": " << setTextStyle( NEGATIVE_IMAGE ) << "wins=" << matchWins[1] << resetAll()
+    cout << playerNames[player2Id] << ": " << "wins=" << matchWins[1]
 	 << " losses=" << totalGames-matchWins[1]-player2Ties 
 	 << " ties=" << player2Ties << " (cumulative avg. shots/game = "
 	 << (statsGamesCounted[player2Id]==0 ? 0.0 : 
@@ -225,33 +214,26 @@ void playMatch( int player1Id, int player2Id, bool showMoves ) {
 	 << ")" << endl;
     cout << "********************" << endl;
 
-    cout << setTextStyle( NEGATIVE_IMAGE );
     if(wins[player1Id][player2Id] > wins[player2Id][player1Id]) {
 	// Player 2 lost the match
 	lives[player2Id]--;
 	cout << playerNames[player2Id] << " lost one life.";
-	if( lives[player2Id] == 0 ) {
-	    cout << fgColor(RED);
-	}
-	cout << " Lives left: " << lives[player2Id] << resetAll() << endl;
+	cout << " Lives left: " << lives[player2Id] << endl;
     } else if(wins[player1Id][player2Id] < wins[player2Id][player1Id]) {
 	// Player 1 lost the match
 	lives[player1Id]--;
 	cout << playerNames[player1Id] << " lost one life.";
-	if( lives[player1Id] == 0 ) {
-	    cout << fgColor(RED);
-	}
-	cout << " Lives left: " << lives[player1Id] << resetAll() << endl;
+	cout << " Lives left: " << lives[player1Id] << endl;
     } else {
 	// Tied -- both players lose a life: the only time this likely happens is when both
 	// players are unable to do anythig worthwhile, so loosing a life is appropriate.
 	lives[player1Id]--;
 	lives[player2Id]--;
-	cout << setTextStyle( NEGATIVE_IMAGE ) << "A tie. Both players lose a life." << endl;
+	cout << "A tie. Both players lose a life." << endl;
 	cout << playerNames[player2Id] << " Lives left: " << lives[player2Id] << endl;
 	cout << playerNames[player1Id] << " Lives left: " << lives[player1Id] << endl;
     }
-    cout << resetAll() << "********************" << endl;
+    cout << "********************" << endl;
 }
 
 int comparePlayers (const void * a, const void * b) {
