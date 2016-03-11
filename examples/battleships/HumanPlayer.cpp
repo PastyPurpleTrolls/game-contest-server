@@ -17,7 +17,7 @@ using namespace std;
 
 
 HumanPlayer::HumanPlayer( int boardSize ):
-    PlayerV1(boardSize)
+    PlayerV2(boardSize)
 {
     //this->boardSize = boardSize;
     lastRow = -1;

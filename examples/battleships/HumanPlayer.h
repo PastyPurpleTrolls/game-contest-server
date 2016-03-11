@@ -11,11 +11,11 @@
 
 using namespace std;
 
-#include "PlayerV1.h"
+#include "PlayerV2.h"
 
-// HumanPlayer inherits from/extends PlayerV1
+// HumanPlayer inherits from/extends PlayerV2
 
-class HumanPlayer: public PlayerV1 {
+class HumanPlayer: public PlayerV2 {
     public:
 	HumanPlayer( int boardSize );
 	Message getMove();
@@ -25,6 +25,7 @@ class HumanPlayer: public PlayerV1 {
 	void showBoard();
         int lastRow;
         int lastCol;
+	char board[MAX_BOARD_SIZE][MAX_BOARD_SIZE];
 };
 
 #endif
