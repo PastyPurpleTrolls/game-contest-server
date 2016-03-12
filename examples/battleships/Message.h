@@ -22,22 +22,22 @@ class Message {
 	void setMessage( char messageType, int row, int col, string str, Direction dir, int length );
 
 	void setMessageType( char messageType );  // set/get message type functions
-	char getMessageType( );
+	char getMessageType( ) const;
 
 	void setRow( int row );                   // set/get row functions
-	int getRow( );
+	int getRow( ) const;
 
 	void setCol( int col );                   // set/get column functions
-	int getCol( );
+	int getCol( ) const;
 
 	void setString( string str );             // set/get string functions
-	string getString( );
+	string getString( ) const;
 
 	void setDirection( Direction dir );       // set/get direction functions
-	Direction getDirection( );
+	Direction getDirection( ) const;
 
 	void setLength( int length );       // set/get length functions
-	int getLength( );
+	int getLength( ) const;
 
     private:
         char messageType;                         // Fields
@@ -47,5 +47,8 @@ class Message {
         string str;
 	Direction dir;
 };
+
+ostream& operator<<(ostream& stream, const Direction& dir);
+istream& operator>>(istream& stream, Direction& dir);
 
 #endif

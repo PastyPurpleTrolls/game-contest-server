@@ -27,6 +27,9 @@ using namespace std;
     const char QUIT = 'Q';
     const char PEEK = 'P';
     const char PLACE_SHIP = 'Z';
+    const char PLACE_SHIP_REQUEST = 'z';
+    const char MOVE_REQUEST = '?';
+    const char NEW_ROUND = '>';
 
     const int MAX_BOARD_SIZE = 10;
     const int MAX_SHIP_SIZE = 5;

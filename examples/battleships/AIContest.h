@@ -14,38 +14,36 @@
 #include "Message.h"
 #include "BoardV3.h"
 #include "PlayerV2.h"
+#include "PlayerConnection.h"
+#include "socketstream.h"
 
 using namespace std;
 
 class AIContest {
   public:
-    AIContest( PlayerV2* player1, string player1Name,
-               PlayerV2* player2, string player2Name,
-	       int boardSize, bool silent );
+    AIContest( net::socketstream& manager,
+	       PlayerConnection& player1, PlayerConnection& player2,
+	       int boardSize );
     ~AIContest();
-    void play( float secondsDelay, int& totalMoves, bool& player1Won, bool& player2Won );
+    void play( int& totalMoves, bool& player1Won, bool& player2Won );
 
   private:
-    enum Side { Left=1, Right=2 };
-    bool placeShips( PlayerV2* player, BoardV3* board);
-    void showBoard(BoardV3* board, bool ownerView, string playerName,
-                   bool fullRedraw, Side side, bool hLMostRecentShot, int hLRow, int hLCol );
-    void updateAI(PlayerV2 *player, string playerName, BoardV3 *board, int hitRow, int hitCol, int turn);
-    bool processShot(string playerName, PlayerV2 *player, BoardV3 *board, 
-	             Side side, int row, int col, PlayerV2* otherPlayer, int turn);
-    void writeLog(int turn, string playerName, string status, int row, int col);
+    bool placeShips( PlayerConnection& player, BoardV3* board);
+    void updateAI(PlayerConnection& player, string playerName, BoardV3 *board, int hitRow, int hitCol);
+    bool processShot(string playerName, PlayerConnection& player, BoardV3 *board,
+	             int row, int col, PlayerConnection& otherPlayer);
 
     // Data
-    PlayerV2 *player1;
-    PlayerV2 *player2;
+    PlayerConnection& player1;
+    PlayerConnection& player2;
     BoardV3 *player1Board;
     BoardV3 *player2Board;
+    net::socketstream& manager;
 
     string player1Name;
     string player2Name;
 
     int boardSize;
-    bool silent;
     bool player1Won;
     bool player2Won;
 

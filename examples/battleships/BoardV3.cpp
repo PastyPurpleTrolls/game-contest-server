@@ -76,7 +76,7 @@ bool BoardV3::positionOk( int row, int col, int length, bool horiz  ) {
 
 	for(int r=row; r<row+length; r++) {
 	    if(shotBoard[r][col] == SHIP) {
-		cerr << "positionOk: horizontal collision at row=" << r << ", col="  << col << endl;
+		cerr << "positionOk: vertical collision at row=" << r << ", col="  << col << endl;
 		return false;
 	    }
 	}

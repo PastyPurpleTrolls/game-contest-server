@@ -6,6 +6,7 @@
 #ifndef MESSAGE_CPP		// Double inclusion protection
 #define MESSAGE_CPP
 
+#include <iostream>
 #include "Message.h"
 
 using namespace std;
@@ -73,7 +74,7 @@ void Message::setMessageType( char messageType ) {
  * Returns the message type.
  * @return messageType 
  */
-char Message::getMessageType( ) {
+char Message::getMessageType( ) const {
     return this->messageType;
 }
 
@@ -90,7 +91,7 @@ void Message::setRow( int row ) {
  * @return row The row value for this message. This is undefined for
  * non shot related messages.
  */
-int Message::getRow( ) {
+int Message::getRow( ) const {
     return this->row;
 }
 
@@ -107,7 +108,7 @@ void Message::setCol( int col ) {
  * @return col The col value for this message. This is undefined for
  * non shot related messages.
  */
-int Message::getCol( ) {
+int Message::getCol( ) const {
     return this->col;
 }
 
@@ -125,7 +126,7 @@ void Message::setString( string str ) {
  * field that may or may not be used for various messages at the
  * discretion of the participants.
  */
-string Message::getString( ) {
+string Message::getString( ) const {
     return this->str;
 }
 
@@ -141,7 +142,7 @@ void Message::setDirection( Direction dir ) {
  * Returns the direction value.
  * @return Direction
  */
-Direction Message::getDirection( ) {
+Direction Message::getDirection( ) const {
     return this->dir;
 }
 
@@ -157,8 +158,21 @@ void Message::setLength( int length ) {
  * Returns the length value.
  * @return length
  */
-int Message::getLength( ) {
+int Message::getLength( ) const {
     return this->length;
+}
+
+ostream& operator<<(ostream& stream, const Direction& dir) {
+    stream << static_cast<typename underlying_type<Direction>::type>(dir);
+    return stream;
+}
+
+istream& operator>>(istream& stream, Direction& dir) {
+    int value;
+    stream >> value;
+    dir = static_cast<Direction>(value);
+
+    return stream;
 }
 
 #endif
