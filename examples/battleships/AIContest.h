@@ -25,7 +25,7 @@ class AIContest {
 	       PlayerConnection& player1, PlayerConnection& player2,
 	       int boardSize );
     ~AIContest();
-    void play( int& totalMoves, bool& player1Won, bool& player2Won );
+    void play( bool& player1Won, bool& player2Won );
 
   private:
     bool placeShips( PlayerConnection& player, BoardV3* board);

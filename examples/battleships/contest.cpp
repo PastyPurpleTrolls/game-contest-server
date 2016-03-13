@@ -11,6 +11,8 @@
 #include <iomanip>
 #include <cctype>
 #include <unistd.h>
+#include <string.h>
+#include <signal.h>
 #include <vector>
 
 // Next 2 to access and setup the random number generator.
@@ -29,27 +31,15 @@ void playMatch(net::socketstream& manager,
 
 using namespace std;
 
-int boardSize;	// BoardSize
+const int boardSize = 10;
 int totalGames = 0;
-int totalCountedMoves = 0;
 const int NumPlayers = 2;
 
 int wins[NumPlayers];
-int playerIds[NumPlayers];
-int lives[NumPlayers];
-int winCount[NumPlayers];
-int statsShotsTaken[NumPlayers];
-int statsGamesCounted[NumPlayers];
 
 int main(int argc, char **argv) {
-    // Adjust based on the number of players!
-    // Initialize various win statistics 
+    // Initialize various win statistics
     for(int i=0; i<NumPlayers; i++) {
-	statsShotsTaken[i] = 0;
-	statsGamesCounted[i] = 0;
-	winCount[i] = 0;
-	lives[i] = NumPlayers/2;
-	playerIds[i] = i;
 	wins[i] = 0;
     }
 
@@ -57,11 +47,13 @@ int main(int argc, char **argv) {
     // This only needs to happen once per program run.
     srand(time(NULL));
 
-    // Now to get the board size.
-    boardSize = 10;
-
     // Find out how many times to test the AI.
     totalGames = atoi(argv[3]);
+
+    struct sigaction sa;
+    memset( &sa, 0, sizeof(sa) );
+    sa.sa_handler = SIG_IGN;
+    sigaction( SIGPIPE, &sa, NULL);
 
     net::socketstream manager("localhost", atoi(argv[1]));
     net::server referee;
@@ -105,7 +97,6 @@ int main(int argc, char **argv) {
 void playMatch(net::socketstream& manager,
 	       PlayerConnection& player1, PlayerConnection& player2)
 {
-    AIContest *game;
     bool player1Won=false, player2Won=false;
     int player1Ties=0, player2Ties=0;
 
@@ -115,23 +106,15 @@ void playMatch(net::socketstream& manager,
 	player2.newRound();
 
 	AIContest game(manager, player1, player2, boardSize);
-	game.play( totalCountedMoves, player1Won, player2Won );
+	game.play( player1Won, player2Won );
 
 	if((player1Won && player2Won) || !(player1Won || player2Won)) {
 	    player1Ties++;
 	    player2Ties++;
-	    statsShotsTaken[0] += totalCountedMoves;
-	    statsGamesCounted[0]++;
-	    statsShotsTaken[1] += totalCountedMoves;
-	    statsGamesCounted[1]++;
 	} else if( player1Won ) {
 	    wins[0]++;
-	    statsShotsTaken[0] += totalCountedMoves;
-	    statsGamesCounted[0]++;
 	} else if( player2Won ) {
 	    wins[1]++;
-	    statsShotsTaken[1] += totalCountedMoves;
-	    statsGamesCounted[1]++;
 	}
     }
 }

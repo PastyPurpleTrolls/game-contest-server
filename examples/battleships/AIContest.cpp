@@ -152,12 +152,9 @@ bool AIContest::processShot(string playerName, PlayerConnection& player, BoardV3
     return won;
 }
 
-void AIContest::play( int& totalMoves, bool& player1Won, bool& player2Won )
+void AIContest::play( bool& player1Won, bool& player2Won )
 {
     manager << "round:start|{}" << endl;
-
-    int maxShots = boardSize*boardSize*2;
-    totalMoves = 0;
 
     if( ! placeShips(player1, player1Board) ) {
 	player2Won = true;
@@ -167,6 +164,8 @@ void AIContest::play( int& totalMoves, bool& player1Won, bool& player2Won )
 	player1Won = true;
     }
 
+    const int maxShots = boardSize*boardSize*2;
+    int totalMoves = 0;
 
     while ( !(player1Won || player2Won) && totalMoves < maxShots ){
 	Message shot1 = player1.getMove();

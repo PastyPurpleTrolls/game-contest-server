@@ -57,26 +57,22 @@ bool BoardV3::positionOk( int row, int col, int length, bool horiz  ) {
     if( horiz ) {
 	// If starting point off board, of would go off board, instant false.
 	if( row<0 || row>=boardSize || col<0 || col+length-1>=boardSize ) {
-	    cerr << "positionOk: horizontal position invalid" << endl;
 	    return false;
 	}
 
 	for(int c=col; c<col+length; c++) {
 	    if(shotBoard[row][c] == SHIP) {
-		cerr << "positionOk: horizontal collision at row=" << row << ", col="  << c << endl;
 		return false;
 	    }
 	}
     } else {
 	// If starting point off board, of would go off board, instant false.
 	if( col<0 || col>=boardSize || row<0 || row+length-1>=boardSize ) {
-	    cerr << "positionOk: vertical position invalid" << endl;
 	    return false;
 	}
 
 	for(int r=row; r<row+length; r++) {
 	    if(shotBoard[r][col] == SHIP) {
-		cerr << "positionOk: vertical collision at row=" << r << ", col="  << col << endl;
 		return false;
 	    }
 	}
@@ -146,9 +142,6 @@ char BoardV3::processShot(int row, int col) {
 	        return HIT;
 	    };
 	default:
-	    cerr << "This didn't happen!!!!" << endl
-	         << shotBoard << "[" <<row<<"]["<<col<<"] had value " 
-	         << shotBoard[row][col] << endl;
 	    break;
     }
     return MISS;
