@@ -1,16 +1,10 @@
 /**
  * @author Stefan Brandle and Jonathan Geisler
  * @date August, 2004
- * Main driver for BattleShipsV2 implementations.
- * Please type in your name[s] below:
- *
+ * @date March, 2016
  *
  */
 
-#include <iostream>
-#include <iomanip>
-#include <string>
-#include <unistd.h>
 #include <cstdlib>
 
 // BattleShips project specific includes.
@@ -24,28 +18,17 @@ using namespace std;
 AIContest::AIContest( net::socketstream& contact,
 		      PlayerConnection& p1, PlayerConnection& p2,
 		      int boardSize )
-    : manager(contact), player1(p1), player2(p2)
+    : manager(contact), player1(p1), player2(p2),
+      player1Board(boardSize), player2Board(boardSize)
 {
     // Set up player 1
-    this->player1Board = new BoardV3(boardSize);
     this->player1Name = player1.get_name();
-    this->player1Won = false;
 
     // Set up player 2
-    this->player2Board = new BoardV3(boardSize);
     this->player2Name = player2.get_name();
-    this->player2Won = false;
 
     // General
     this->boardSize = boardSize;
-
-    // Ship stuff
-    shipNames[0] = "Submarine";
-    shipNames[1] = "Destroyer";
-    shipNames[2] = "Aircraft Carrier";
-    shipNames[3] = "Destroyer 2";
-    shipNames[4] = "Submarine 2";
-    shipNames[5] = "Aircraft Carrier 2";
 
     numShips = boardSize-2;
     if( numShips > MAX_SHIPS ) {
@@ -57,18 +40,13 @@ AIContest::AIContest( net::socketstream& contact,
     }
 }
 
-AIContest::~AIContest() {
-    delete this->player1Board;
-    delete this->player2Board;
-}
-
 /**
  * Places the ships. 
  */
-bool AIContest::placeShips( PlayerConnection& player, BoardV3* board ) {
+bool AIContest::placeShips( PlayerConnection& player, BoardV3& board ) {
     for( int i=0; i<numShips; i++ ) {
 	Message loc = player.placeShip( shipLengths[i] );
-	bool placedOk = board->placeShip( loc.getRow(), loc.getCol(), shipLengths[i], loc.getDirection() );
+	bool placedOk = board.placeShip( loc.getRow(), loc.getCol(), shipLengths[i], loc.getDirection() );
 	if( ! placedOk ) {
 	    return false;
 	}
@@ -78,13 +56,13 @@ bool AIContest::placeShips( PlayerConnection& player, BoardV3* board ) {
     return true;
 }
 
-void AIContest::updateAI(PlayerConnection& player, string playerName, BoardV3 *board, int hitRow, int hitCol) {
+void AIContest::updateAI(PlayerConnection& player, string playerName, BoardV3& board, int hitRow, int hitCol) {
     Message killMsg( KILL, -1, -1, "");
-    char shipMark = board->getShipMark(hitRow, hitCol);
+    char shipMark = board.getShipMark(hitRow, hitCol);
 
     for(int row=0; row<boardSize; row++) {
 	for(int col=0; col<boardSize; col++) {
-	    if(board->getShipMark(row,col) == shipMark) {
+	    if(board.getShipMark(row,col) == shipMark) {
 	        killMsg.setRow(row);
 	        killMsg.setCol(col);
 		player.update(killMsg);
@@ -93,12 +71,12 @@ void AIContest::updateAI(PlayerConnection& player, string playerName, BoardV3 *b
     }
 }
 
-bool AIContest::processShot(string playerName, PlayerConnection& player, BoardV3 *board, 
+bool AIContest::processShot(string playerName, PlayerConnection& player, BoardV3& board, 
 	                   int row, int col, PlayerConnection& otherPlayer)
 {
     bool won = false;
 
-    Message msg = board->processShot( row, col );
+    Message msg = board.processShot( row, col );
     // Hack because board doesn't set these properly.
     msg.setRow(row);
     msg.setCol(col);
@@ -130,7 +108,7 @@ bool AIContest::processShot(string playerName, PlayerConnection& player, BoardV3
 	    updateAI(player, playerName, board, row, col);
 
 	    // Chance to win after every kill. Check
-	    won = board->hasWon();
+	    won = board.hasWon();
 	    break;
 	case DUPLICATE_SHOT:
 	    manager << "duplicate";

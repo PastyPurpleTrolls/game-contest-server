@@ -1,18 +1,14 @@
 /**
  * @author Stefan Brandle and Jonathan Geisler
  * @date August, 2004
- * Main driver for BattleShipsV3 implementations.
- * Please type in your name[s] below:
- *
+ * @date March, 2016
  *
  */
 
 #include <iostream>
-#include <iomanip>
-#include <cctype>
 #include <unistd.h>
-#include <string.h>
-#include <signal.h>
+#include <cstring>
+#include <csignal>
 #include <vector>
 
 // Next 2 to access and setup the random number generator.
@@ -20,24 +16,21 @@
 #include <ctime>
 
 // BattleShips project specific includes.
-#include "BoardV3.h"
 #include "AIContest.h"
-#include "PlayerV2.h"
 #include "PlayerConnection.h"
 #include "socketstream.h"
 
-void playMatch(net::socketstream& manager,
+void playMatch(net::socketstream& manager, int totalGames, int *wins,
 	       PlayerConnection& p1, PlayerConnection& p2);
 
 using namespace std;
 
 const int boardSize = 10;
-int totalGames = 0;
 const int NumPlayers = 2;
 
-int wins[NumPlayers];
-
 int main(int argc, char **argv) {
+    int wins[NumPlayers];
+
     // Initialize various win statistics
     for(int i=0; i<NumPlayers; i++) {
 	wins[i] = 0;
@@ -48,7 +41,7 @@ int main(int argc, char **argv) {
     srand(time(NULL));
 
     // Find out how many times to test the AI.
-    totalGames = atoi(argv[3]);
+    int totalGames = atoi(argv[3]);
 
     struct sigaction sa;
     memset( &sa, 0, sizeof(sa) );
@@ -67,7 +60,7 @@ int main(int argc, char **argv) {
     }
 
     // And now it's show time!
-    playMatch(manager, players[0], players[1]);
+    playMatch(manager, totalGames, wins, players[0], players[1]);
 
     manager << "match:end" << endl;
 
@@ -94,7 +87,7 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-void playMatch(net::socketstream& manager,
+void playMatch(net::socketstream& manager, int totalGames, int *wins,
 	       PlayerConnection& player1, PlayerConnection& player2)
 {
     bool player1Won=false, player2Won=false;

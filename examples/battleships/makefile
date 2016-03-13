@@ -10,6 +10,8 @@ objects = AIContest.o BoardV3.o Message.o PlayerV2.o PlayerConnection.o
 contest : $(AIContestMain) $(objects)
 	g++ -o contest $(AIContestMain) $(objects)
 
+contest.o: contest.cpp AIContest.h PlayerConnection.h socketstream.h
+
 player: player.o PlayerV2.o $(Player).o Message.o
 player.o: player.cpp socketstream.h
 $(Player).o: $(Player).cpp socketstream.h
