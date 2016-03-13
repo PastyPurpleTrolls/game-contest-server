@@ -24,8 +24,8 @@ class AIContest {
 
   private:
     bool placeShips( PlayerConnection& player, BoardV3& board);
-    void updateAI(PlayerConnection& player, string playerName, BoardV3& board, int hitRow, int hitCol);
-    bool processShot(string playerName, PlayerConnection& player, BoardV3& board,
+    void updateAI(PlayerConnection& player, BoardV3& board, int hitRow, int hitCol);
+    bool processShot(PlayerConnection& player, BoardV3& board,
 	             int row, int col, PlayerConnection& otherPlayer);
 
     // Data

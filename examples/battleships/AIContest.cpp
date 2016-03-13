@@ -21,12 +21,6 @@ AIContest::AIContest( net::socketstream& contact,
     : manager(contact), player1(p1), player2(p2),
       player1Board(boardSize), player2Board(boardSize)
 {
-    // Set up player 1
-    this->player1Name = player1.get_name();
-
-    // Set up player 2
-    this->player2Name = player2.get_name();
-
     // General
     this->boardSize = boardSize;
 
@@ -56,7 +50,7 @@ bool AIContest::placeShips( PlayerConnection& player, BoardV3& board ) {
     return true;
 }
 
-void AIContest::updateAI(PlayerConnection& player, string playerName, BoardV3& board, int hitRow, int hitCol) {
+void AIContest::updateAI(PlayerConnection& player, BoardV3& board, int hitRow, int hitCol) {
     Message killMsg( KILL, -1, -1, "");
     char shipMark = board.getShipMark(hitRow, hitCol);
 
@@ -71,7 +65,7 @@ void AIContest::updateAI(PlayerConnection& player, string playerName, BoardV3& b
     }
 }
 
-bool AIContest::processShot(string playerName, PlayerConnection& player, BoardV3& board, 
+bool AIContest::processShot(PlayerConnection& player, BoardV3& board, 
 	                   int row, int col, PlayerConnection& otherPlayer)
 {
     bool won = false;
@@ -81,8 +75,9 @@ bool AIContest::processShot(string playerName, PlayerConnection& player, BoardV3
     msg.setRow(row);
     msg.setCol(col);
 
-    manager << "move:" << playerName << " shot @ " << row << "," << col
-	    << "|{\"player\": \"" << playerName << "\", "
+    manager << "move:" << player.get_name()
+	    << " shot @ " << col << "," << row
+	    << "|{\"player\": \"" << player.get_name() << "\", "
 	    << "\"row\": " << row << ", "
 	    << "\"col\": " << col << ", "
 	    << "\"result\": \"";
@@ -105,7 +100,7 @@ bool AIContest::processShot(string playerName, PlayerConnection& player, BoardV3
 	    player.update(msg);
 
 	    // and notify that all segments of ship are now a KILL
-	    updateAI(player, playerName, board, row, col);
+	    updateAI(player, board, row, col);
 
 	    // Chance to win after every kill. Check
 	    won = board.hasWon();
@@ -130,6 +125,14 @@ bool AIContest::processShot(string playerName, PlayerConnection& player, BoardV3
     return won;
 }
 
+static void logResult(net::socketstream& manager,
+		      const PlayerConnection& player,
+		      string result)
+{
+    manager << "roundresult:" << player.get_name() << "|"
+	    << result << "|" << player.get_kills() << endl;
+}
+
 void AIContest::play( bool& player1Won, bool& player2Won )
 {
     manager << "round:start|{}" << endl;
@@ -147,11 +150,11 @@ void AIContest::play( bool& player1Won, bool& player2Won )
 
     while ( !(player1Won || player2Won) && totalMoves < maxShots ){
 	Message shot1 = player1.getMove();
-	player1Won = processShot(player1Name, player1, player2Board, 
+	player1Won = processShot(player1, player2Board, 
 		shot1.getRow(), shot1.getCol(), player2);
 
 	Message shot2 = player2.getMove();
-	player2Won = processShot(player2Name, player2, player1Board, 
+	player2Won = processShot(player2, player1Board, 
 		shot2.getRow(), shot2.getCol(), player1);
 
 	totalMoves++;
@@ -163,27 +166,27 @@ void AIContest::play( bool& player1Won, bool& player2Won )
 	Message msg(TIE);
 	player1.update(msg);
 	player2.update(msg);
-	manager << "roundresult:" << player1Name << "|Tie|" << player1.get_kills() << endl;
-	manager << "roundresult:" << player2Name << "|Tie|" << player2.get_kills() << endl;
+	logResult(manager, player1, "Tie");
+	logResult(manager, player2, "Tie");
     } else if( player1Won ) {
 	Message msg(WIN);
 	player1.update(msg);
 	msg.setMessageType(LOSE);
 	player2.update(msg);
-	manager << "roundresult:" << player1Name << "|Win|" << player1.get_kills() << endl;
-	manager << "roundresult:" << player2Name << "|Lose|" << player2.get_kills() << endl;
+	logResult(manager, player1, "Win");
+	logResult(manager, player2, "Lose");
     } else if( player2Won ) {
 	Message msg(WIN);
 	player2.update(msg);
 	msg.setMessageType(LOSE);
 	player1.update(msg);
-	manager << "roundresult:" << player1Name << "|Lose|" << player1.get_kills() << endl;
-	manager << "roundresult:" << player2Name << "|Win|" << player2.get_kills() << endl;
+	logResult(manager, player1, "Lose");
+	logResult(manager, player2, "Win");
     } else {   // both timed out -- neither won
 	Message msg(LOSE);
 	player1.update(msg);
 	player2.update(msg);
-	manager << "roundresult:" << player1Name << "|Lose|" << player1.get_kills() << endl;
-	manager << "roundresult:" << player2Name << "|Lose|" << player2.get_kills() << endl;
+	logResult(manager, player1, "Lose");
+	logResult(manager, player2, "Lose");
     }
 }
