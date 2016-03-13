@@ -162,17 +162,43 @@ int Message::getLength( ) const {
     return this->length;
 }
 
-ostream& operator<<(ostream& stream, const Direction& dir) {
+static ostream& operator<<(ostream& stream, const Direction& dir) {
     stream << static_cast<typename underlying_type<Direction>::type>(dir);
     return stream;
 }
 
-istream& operator>>(istream& stream, Direction& dir) {
+static istream& operator>>(istream& stream, Direction& dir) {
     int value;
     stream >> value;
     dir = static_cast<Direction>(value);
 
     return stream;
+}
+
+ostream& operator<<(ostream& stream, const Message& msg) {
+    stream << msg.getMessageType() << " "
+           << msg.getRow() << " "
+           << msg.getCol() << " "
+           << msg.getDirection() << " "
+           << msg.getLength() << " "
+           << msg.getString() << std::endl;
+}
+
+istream& operator>>(istream& stream, Message& msg) {
+    char messageType;
+    int row, col, length;
+    Direction dir;
+    string str;
+
+    stream >> messageType >> row >> col >> dir >> length;
+    std::getline(stream, str);
+
+    msg.setMessageType(messageType);
+    msg.setRow(row);
+    msg.setCol(col);
+    msg.setDirection(dir);
+    msg.setLength(length);
+    msg.setString(str);
 }
 
 #endif

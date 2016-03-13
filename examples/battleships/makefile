@@ -11,6 +11,7 @@ contest : $(AIContestMain) $(objects)
 	g++ -o contest $(AIContestMain) $(objects)
 
 contest.o: contest.cpp AIContest.h PlayerConnection.h socketstream.h
+AIContest.o: AIContest.cpp BoardV3.h PlayerConnection.h socketstream.h
 
 player: player.o PlayerV2.o $(Player).o Message.o
 player.o: player.cpp socketstream.h

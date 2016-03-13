@@ -12,9 +12,9 @@ class PlayerConnection {
   public:
     PlayerConnection(net::socketstream* in_stream, int boardSize);
     void newRound();
-    void update(Message msg);
-    Message placeShip(int length);
-    Message getMove();
+    void update(Message msg) const;
+    Message placeShip(int length) const;
+    Message getMove() const;
 
     std::string get_name() const;
 
@@ -23,7 +23,7 @@ class PlayerConnection {
 
   private:
     Message getMessage() const;
-    void sendMessage(Message msg);
+    void sendMessage(Message msg) const;
 };
 
 #endif

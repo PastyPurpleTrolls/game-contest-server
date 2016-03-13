@@ -5,6 +5,7 @@
  *
  */
 
+#include <algorithm>
 #include <cstdlib>
 
 // BattleShips project specific includes.
@@ -24,13 +25,10 @@ AIContest::AIContest( net::socketstream& contact,
     // General
     this->boardSize = boardSize;
 
-    numShips = boardSize-2;
-    if( numShips > MAX_SHIPS ) {
-    	numShips = MAX_SHIPS;
-    }
+    numShips = min(boardSize-2, +MAX_SHIPS);
 
     for(int i=0; i<numShips; i++) {
-	shipLengths[i] = random()%(MIN_SHIP_SIZE) + 3;
+	shipLengths.push_back(random() % MIN_SHIP_SIZE + 3);
     }
 }
 
@@ -38,9 +36,9 @@ AIContest::AIContest( net::socketstream& contact,
  * Places the ships. 
  */
 bool AIContest::placeShips( PlayerConnection& player, BoardV3& board ) {
-    for( int i=0; i<numShips; i++ ) {
-	Message loc = player.placeShip( shipLengths[i] );
-	bool placedOk = board.placeShip( loc.getRow(), loc.getCol(), shipLengths[i], loc.getDirection() );
+    for (int length : shipLengths) {
+	Message loc = player.placeShip(length);
+	bool placedOk = board.placeShip( loc.getRow(), loc.getCol(), length, loc.getDirection() );
 	if( ! placedOk ) {
 	    return false;
 	}
@@ -140,29 +138,23 @@ void AIContest::play( bool& player1Won, bool& player2Won )
     manager << "round:end" << endl;
 
     if( player1Won && player2Won ) {
-	Message msg(TIE);
-	player1.update(msg);
-	player2.update(msg);
+	player1.update(TIE);
+	player2.update(TIE);
 	logResult(manager, player1, "Tie");
 	logResult(manager, player2, "Tie");
     } else if( player1Won ) {
-	Message msg(WIN);
-	player1.update(msg);
-	msg.setMessageType(LOSE);
-	player2.update(msg);
+	player1.update(WIN);
+	player2.update(LOSE);
 	logResult(manager, player1, "Win");
 	logResult(manager, player2, "Lose");
     } else if( player2Won ) {
-	Message msg(WIN);
-	player2.update(msg);
-	msg.setMessageType(LOSE);
-	player1.update(msg);
+	player1.update(LOSE);
+	player2.update(WIN);
 	logResult(manager, player1, "Lose");
 	logResult(manager, player2, "Win");
     } else {   // both timed out -- neither won
-	Message msg(LOSE);
-	player1.update(msg);
-	player2.update(msg);
+	player1.update(LOSE);
+	player2.update(LOSE);
 	logResult(manager, player1, "Lose");
 	logResult(manager, player2, "Lose");
     }

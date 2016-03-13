@@ -13,39 +13,29 @@ void PlayerConnection::newRound() {
     kills = 0;
 }
 
-void PlayerConnection::update(Message msg) {
+void PlayerConnection::update(Message msg) const {
     sendMessage(msg);
 }
 
-Message PlayerConnection::placeShip(int length) {
+Message PlayerConnection::placeShip(int length) const {
     sendMessage(Message(PLACE_SHIP_REQUEST, -1, -1, "", None, length));
     return getMessage();
 }
 
-Message PlayerConnection::getMove() {
+Message PlayerConnection::getMove() const {
     sendMessage(Message(MOVE_REQUEST));
     return getMessage();
 }
 
 Message PlayerConnection::getMessage() const {
-    char messageType;
-    int row, col, length;
-    Direction dir;
-    std::string str;
+    Message msg(INVALID_SHOT);
+    *stream >> msg;
 
-    *stream >> messageType >> row >> col >> dir >> length;
-    std::getline(*stream, str);
-
-    return Message(messageType, row, col, str, dir, length);
+    return msg;
 }
 
-void PlayerConnection::sendMessage(Message msg) {
-    *stream << msg.getMessageType() << " "
-	    << msg.getRow() << " "
-	    << msg.getCol() << " "
-	    << msg.getDirection() << " "
-	    << msg.getLength() << " "
-	    << msg.getString() << std::endl;
+void PlayerConnection::sendMessage(Message msg) const {
+    *stream << msg;
 }
 
 void PlayerConnection::inc_kills() {

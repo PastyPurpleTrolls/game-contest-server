@@ -8,6 +8,8 @@
 #ifndef AICONTEST_H
 #define AICONTEST_H
 
+#include <vector>
+
 // BattleShips project specific includes.
 #include "BoardV3.h"
 #include "PlayerConnection.h"
@@ -42,7 +44,7 @@ class AIContest {
 
     // Ship information
     static const int MAX_SHIPS = 6;
-    int shipLengths[MAX_SHIPS];
+    vector<int> shipLengths;
     int numShips;
 };
 
