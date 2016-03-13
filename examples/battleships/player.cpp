@@ -4,7 +4,7 @@
 
 #include "socketstream.h"
 #include "defines.h"
-#include "DumbPlayerV2.h"
+#include PLAYER_H
 
 const int boardSize = 10;
 
@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
     referee << argv[2] << std::endl;
 
     for( int count=0; count<totalGames; count++ ) {
-	DumbPlayerV2 player(boardSize);
+	PLAYER player(boardSize);
 
 	bool done = false;
 	char messageType;
