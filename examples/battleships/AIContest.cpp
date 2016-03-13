@@ -70,53 +70,30 @@ bool AIContest::processShot(PlayerConnection& player, BoardV3& board,
 {
     bool won = false;
 
-    Message msg = board.processShot( row, col );
-    // Hack because board doesn't set these properly.
-    msg.setRow(row);
-    msg.setCol(col);
+    Message msg(board.processShot( row, col ), row, col, "Shot results");
 
     manager << "move:" << player.get_name()
 	    << " shot @ " << col << "," << row
 	    << "|{\"player\": \"" << player.get_name() << "\", "
 	    << "\"row\": " << row << ", "
 	    << "\"col\": " << col << ", "
-	    << "\"result\": \"";
+	    << "\"result\": \"" << msg.getMessageType() << "\"}" << endl;
 
-    switch( msg.getMessageType() ) {
-	case MISS:
-	    manager << "miss";
-	    player.update(msg);
-	    break;
-	case HIT:
-	    manager << "hit";
-	    player.update(msg);
-	    break;
-	case KILL:
-	    manager << "kill";
-	    player.inc_kills();
+    if (msg.getMessageType() != KILL) {
+	player.update(msg);
+    } else {
+	player.inc_kills();
 
-	    // Notify that is a hit
-	    msg.setMessageType(HIT);
-	    player.update(msg);
+	// Notify that is a hit
+	msg.setMessageType(HIT);
+	player.update(msg);
 
-	    // and notify that all segments of ship are now a KILL
-	    updateAI(player, board, row, col);
+	// and notify that all segments of ship are now a KILL
+	updateAI(player, board, row, col);
 
-	    // Chance to win after every kill. Check
-	    won = board.hasWon();
-	    break;
-	case DUPLICATE_SHOT:
-	    manager << "duplicate";
-	    player.update(msg);
-	    break;
-	default:
-	case INVALID_SHOT:
-	    manager << "invalid";
-	    player.update(msg);
-	    break;
+	// Chance to win after every kill. Check
+	won = board.hasWon();
     }
-
-    manager << "\"}" << endl;
 
     // Notify the other player of the shot
     msg.setMessageType(OPPONENT_SHOT);
