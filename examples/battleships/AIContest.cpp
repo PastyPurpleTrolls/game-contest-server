@@ -39,6 +39,18 @@ bool AIContest::placeShips( PlayerConnection& player, BoardV3& board ) {
     for (int length : shipLengths) {
 	Message loc = player.placeShip(length);
 	bool placedOk = board.placeShip( loc.getRow(), loc.getCol(), length, loc.getDirection() );
+
+	manager << "move:" << player.get_name() << " place @ "
+		<< loc.getCol() << "," << loc.getRow()
+		<< "|{\"player\": \"" << player.get_name() << "\", "
+		<< "\"action\": \"place\", "
+		<< "\"row\": " << loc.getRow() << ", "
+		<< "\"col\": " << loc.getCol() << ", "
+		<< "\"result\": " << placedOk << ", "
+		<< "\"direction\": " << loc.getDirection() << ", "
+		<< "\"length\": " << length
+		<< "}" << endl;
+
 	if( ! placedOk ) {
 	    return false;
 	}
@@ -73,6 +85,7 @@ bool AIContest::processShot(PlayerConnection& player, BoardV3& board,
     manager << "move:" << player.get_name()
 	    << " shot @ " << col << "," << row
 	    << "|{\"player\": \"" << player.get_name() << "\", "
+	    << "\"action\": \"shot\", "
 	    << "\"row\": " << row << ", "
 	    << "\"col\": " << col << ", "
 	    << "\"result\": \"" << msg.getMessageType() << "\"}" << endl;
