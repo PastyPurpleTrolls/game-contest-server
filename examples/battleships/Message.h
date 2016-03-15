@@ -48,6 +48,9 @@ class Message {
 	Direction dir;
 };
 
+ostream& operator<<(ostream& stream, const Direction& msg);
+istream& operator>>(istream& stream, Direction& msg);
+
 ostream& operator<<(ostream& stream, const Message& msg);
 istream& operator>>(istream& stream, Message& msg);
 

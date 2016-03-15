@@ -162,12 +162,12 @@ int Message::getLength( ) const {
     return this->length;
 }
 
-static ostream& operator<<(ostream& stream, const Direction& dir) {
+ostream& operator<<(ostream& stream, const Direction& dir) {
     stream << static_cast<typename underlying_type<Direction>::type>(dir);
     return stream;
 }
 
-static istream& operator>>(istream& stream, Direction& dir) {
+istream& operator>>(istream& stream, Direction& dir) {
     int value;
     stream >> value;
     dir = static_cast<Direction>(value);

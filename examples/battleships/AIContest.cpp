@@ -159,16 +159,16 @@ void AIContest::play( bool& player1Won, bool& player2Won )
 	player1.update(WIN);
 	player2.update(LOSE);
 	logResult(manager, player1, "Win");
-	logResult(manager, player2, "Lose");
+	logResult(manager, player2, "Loss");
     } else if( player2Won ) {
 	player1.update(LOSE);
 	player2.update(WIN);
-	logResult(manager, player1, "Lose");
+	logResult(manager, player1, "Loss");
 	logResult(manager, player2, "Win");
     } else {   // both timed out -- neither won
 	player1.update(LOSE);
 	player2.update(LOSE);
-	logResult(manager, player1, "Lose");
-	logResult(manager, player2, "Lose");
+	logResult(manager, player1, "Loss");
+	logResult(manager, player2, "Loss");
     }
 }

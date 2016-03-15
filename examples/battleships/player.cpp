@@ -4,6 +4,7 @@
 
 #include "socketstream.h"
 #include "defines.h"
+#include "Message.h"
 #include PLAYER_H
 
 const int boardSize = 10;
@@ -18,15 +19,13 @@ void send_result(const Message& msg, net::socketstream& referee) {
 }
 
 int main(int argc, char **argv) {
-    int totalGames = std::atoi(argv[3]);
-
     srand(time(NULL));
 
     net::socketstream referee("localhost", std::atoi(argv[1]));
 
     referee << argv[2] << std::endl;
 
-    for( int count=0; count<totalGames; count++ ) {
+    while (1) {
 	PLAYER player(boardSize);
 
 	bool done = false;
@@ -64,7 +63,9 @@ int main(int argc, char **argv) {
 		player.update(Message(messageType, row, col, str));
 	    }
 	}
-    }
 
-    return 0;
+	if (!done) {
+	    return 0;
+	}
+    }
 }

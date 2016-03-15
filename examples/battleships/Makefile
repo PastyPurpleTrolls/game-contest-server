@@ -1,0 +1,37 @@
+.PRECIOUS: %.o
+.PHONY: run contest manager clean
+
+AIContestMain = referee.o
+
+ifeq ($(wildcard cpp-player.mk),)
+    Player =
+else
+    include cpp-player.mk
+endif
+
+CXXFLAGS += -std=gnu++11 -g -DPLAYER=$(Player) -DPLAYER_H=\"$(Player).h\"
+CC = $(CXX)
+
+objects = AIContest.o BoardV3.o Message.o PlayerV2.o PlayerConnection.o
+
+referee: $(AIContestMain) $(objects)
+	g++ -o referee $(AIContestMain) $(objects)
+
+referee.o: referee.cpp AIContest.h PlayerConnection.h socketstream.h
+AIContest.o: AIContest.cpp BoardV3.h PlayerConnection.h socketstream.h
+
+player: player.o PlayerV2.o $(Player).o Message.o
+player.o: player.cpp socketstream.h
+$(Player).o: $(Player).cpp socketstream.h
+
+clean:
+	rm -f contest $(AIContestMain) $(objects)
+
+manager:
+	nc -l -p $(port)
+
+run: referee
+	./referee $(port) $(num_players) $(num_rounds) $(max_time)
+
+contest: player
+	./player $(port) '$(name)'

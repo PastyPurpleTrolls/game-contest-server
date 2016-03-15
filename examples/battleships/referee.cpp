@@ -36,7 +36,7 @@ static void logResult(net::socketstream& manager, string name,
     if (wins > losses) {
 	manager << "Win";
     } else if (wins < losses) {
-	manager << "Lose";
+	manager << "Loss";
     } else {
 	manager << "Tie";
     }
