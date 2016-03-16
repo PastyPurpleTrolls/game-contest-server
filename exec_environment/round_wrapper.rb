@@ -127,9 +127,9 @@ class RoundWrapper
         @players.each do |player|
             #Name must be given before port because it crashes for mysterious ("--name not found") reasons otherwise
 			if File.exist?("#{File.dirname(player.file_location)}/Makefile")
-                command="cd #{Shellwords.escape File.dirname(player.file_location)}; make contest name=#{Shellwords.escape name} port=#{@client_port}"
+                command="cd #{Shellwords.escape File.dirname(player.file_location)}; make contest name=#{Shellwords.escape player.name} port=#{@client_port}"
 			else
-			    command="#{Shellwords.escape player.file_location} -n #{Shellwords.escape name} -p #{@client_port}"
+			    command="#{Shellwords.escape player.file_location} -n #{Shellwords.escape player.name} -p #{@client_port}"
 			end
             @child_list.push(Process.spawn("#{command}"))
         end

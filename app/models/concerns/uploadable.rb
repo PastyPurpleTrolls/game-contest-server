@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'shellwords'
 
 module Uploadable
     extend ActiveSupport::Concern
@@ -85,10 +86,10 @@ module Uploadable
     end
 
     def uncompress(src, dest)
-        system("tar -xvf #{src} -C #{dest} > /dev/null 2>&1") 
-        system("unzip #{src} -d #{dest} > /dev/null 2>&1")
-        system("chmod +x #{dest}/*")
-        system("dos2unix -q #{dest}/*")
+	system("tar -xvf #{Shellwords.escape src} -C #{Shellwords.escape dest} > /dev/null 2>&1")
+        system("unzip #{Shellwords.escape src} -d #{Shellwords.escape dest} > /dev/null 2>&1")
+        system("chmod +x #{Shellwords.escape dest}/*")
+        system("dos2unix -q #{Shellwords.escape dest}/*")
     end
 end
 
