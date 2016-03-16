@@ -97,7 +97,7 @@ class MatchRunner
             player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id).first
             player_match.result = "Error"
             player_match.save!
-            print_results(player.name, "Error", nil, "\n")
+            print_results(player.name, "Error", nil)
         end
         puts "    Match runner could not finish match #" + @match.id.to_s
     end
@@ -171,7 +171,7 @@ class MatchRunner
     end
     
     #Prints a name, result, and score
-    def print_results(name,result,score,separator="")    
+    def print_results(name,result,score,separator="\n")
         print "    "+name.ljust(24).slice(0,23)+
          " Result: "+result.ljust(10).slice(0,9)+
          " Score: "+score.to_s.ljust(10).slice(0,9)+
