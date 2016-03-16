@@ -17,9 +17,6 @@ describe PlayerMatch do
     specify { expect_required_attribute(:player) }
     specify { expect_required_attribute(:match) }
   end
-=begin
-<<<<<<< HEAD
-=end
 
 	describe "result is (case-sensitive)" do
 		let (:list) { [nil, 'Win', 'Loss', 'Tie', 'Unknown Result'] }
