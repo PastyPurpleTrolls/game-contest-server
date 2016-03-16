@@ -6,7 +6,8 @@
 require 'socket'
 require 'open-uri'
 require 'timeout'
-require 'json' 
+require 'json'
+require 'shellwords'
 
 class RoundWrapper
     
@@ -99,9 +100,9 @@ class RoundWrapper
         #Start referee process, giving it the port to talk to us on
         wrapper_server_port = @wrapper_server.addr[1]
 	    if File.exists?("#{File.dirname(@referee.file_location)}/Makefile")
-		    command="cd #{File.dirname(@referee.file_location)}; make run port=#{wrapper_server_port} num_players=#{@number_of_players} num_rounds=#{@num_rounds} max_time=#{@max_match_time}"
+		    command="cd #{Shellwords.escape File.dirname(@referee.file_location)}; make run port=#{wrapper_server_port} num_players=#{@number_of_players} num_rounds=#{@num_rounds} max_time=#{@max_match_time}"
 	    else
-		    command="#{@referee.file_location} -p #{wrapper_server_port} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time}"
+		    command="#{Shellwords.escape @referee.file_location} -p #{wrapper_server_port} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time}"
 	    end
         @child_list.push(Process.spawn("#{command}"))
         
@@ -125,11 +126,10 @@ class RoundWrapper
         #Start players
         @players.each do |player|
             #Name must be given before port because it crashes for mysterious ("--name not found") reasons otherwise
-			name = player.name.gsub("'"){'\'"\'"\''}
 			if File.exist?("#{File.dirname(player.file_location)}/Makefile")
-                command="cd #{File.dirname(player.file_location)}; make contest name='#{name}' port=#{@client_port}"
+                command="cd #{Shellwords.escape File.dirname(player.file_location)}; make contest name=#{Shellwords.escape name} port=#{@client_port}"
 			else
-			    command="#{player.file_location} -n '#{name}' -p #{@client_port}"
+			    command="#{Shellwords.escape player.file_location} -n #{Shellwords.escape name} -p #{@client_port}"
 			end
             @child_list.push(Process.spawn("#{command}"))
         end
