@@ -43,8 +43,8 @@ class Referee < ActiveRecord::Base
 	    if uri.kind_of?(URI::HTTP) || uri.scheme.nil?
 		self.errors.add(:rules_url, "is invalid")
 	    end
-	rescue URI::InvalidURIError
-	    self.errors.add(:rules_url, "is invalid")
 	end
+    rescue URI::InvalidURIError
+	self.errors.add(:rules_url, "is invalid")
     end
 end
