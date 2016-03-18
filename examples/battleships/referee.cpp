@@ -8,19 +8,22 @@
 #include <iostream>
 #include <unistd.h>
 #include <cstring>
-#include <csignal>
 #include <vector>
 
 // Next 2 to access and setup the random number generator.
 #include <cstdlib>
 #include <ctime>
 
+// Next 2 to handle timeout through SIGALRM
+#include <csignal>
+#include <csetjmp>
+
 // BattleShips project specific includes.
 #include "AIContest.h"
 #include "PlayerConnection.h"
 #include "socketstream.h"
 
-static void playMatch(net::socketstream& manager, int totalGames,
+static void playMatch(net::socketstream& manager, int& totalGames,
 		      vector<int>& wins,
 		      PlayerConnection& p1, PlayerConnection& p2);
 
@@ -43,6 +46,13 @@ static void logResult(net::socketstream& manager, string name,
     manager << "|" << wins << endl;
 }
 
+static jmp_buf alarm_buf;
+sig_atomic_t last_wait;
+
+static void timeout(int signal) {
+    longjmp(alarm_buf, signal);
+}
+
 int main(int argc, char **argv) {
     // Initialize various win statistics
     vector<int> wins = { 0, 0 };
@@ -62,15 +72,33 @@ int main(int argc, char **argv) {
     net::socketstream manager("localhost", atoi(argv[1]));
     net::server referee;
 
+    memset( &sa, 0, sizeof(sa) );
+    sa.sa_handler = timeout;
+    sigaction( SIGALRM, &sa, NULL);
+    alarm(atoi(argv[4]));
+
     manager << "port:" << referee.get_port() << endl;
     manager << "match:start" << endl;
 
-    vector<PlayerConnection> players
-	= { PlayerConnection(referee.serve(), boardSize),
-	    PlayerConnection(referee.serve(), boardSize) };
+    vector<PlayerConnection> players;
 
-    // And now it's show time!
-    playMatch(manager, totalGames, wins, players[0], players[1]);
+    if (setjmp(alarm_buf) == 0) {
+	last_wait = 0;
+	players.emplace_back(PlayerConnection(0, referee.serve(),
+					      boardSize));
+	last_wait = 1;
+	players.emplace_back(PlayerConnection(1, referee.serve(),
+					      boardSize));
+
+	// And now it's show time!
+	playMatch(manager, totalGames, wins, players[0], players[1]);
+    } else {
+	if (last_wait == 0) {
+	    wins[1] += totalGames;
+	} else {
+	    wins[0] += totalGames;
+	}
+    }
 
     manager << "match:end" << endl;
 
@@ -80,13 +108,13 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-void playMatch(net::socketstream& manager, int totalGames,
+void playMatch(net::socketstream& manager, int& totalGames,
 	       vector<int>& wins,
 	       PlayerConnection& player1, PlayerConnection& player2)
 {
     bool player1Won=false, player2Won=false;
 
-    for( int count=0; count<totalGames; count++ ) {
+    while (totalGames) {
 	player1Won = false; player2Won = false;
 	player1.newRound();
 	player2.newRound();
@@ -99,5 +127,7 @@ void playMatch(net::socketstream& manager, int totalGames,
 	} else if ( player2Won && !player1Won ) {
 	    wins[1]++;
 	}
+
+	--totalGames;
     }
 }

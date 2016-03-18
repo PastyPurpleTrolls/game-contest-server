@@ -1,9 +1,12 @@
+#include <csignal>
 #include <string>
 
 #include "PlayerConnection.h"
 
-PlayerConnection::PlayerConnection(net::socketstream* in_stream, int boardSize)
-    : stream(in_stream), kills(0)
+extern std::sig_atomic_t last_wait;
+
+PlayerConnection::PlayerConnection(int my_id, net::socketstream* in_stream, int boardSize)
+    : stream(in_stream), kills(0), id(my_id)
 {
     std::getline(*stream, name);
 }
@@ -29,12 +32,14 @@ Message PlayerConnection::getMove() const {
 
 Message PlayerConnection::getMessage() const {
     Message msg(INVALID_SHOT);
+    last_wait = id;
     *stream >> msg;
 
     return msg;
 }
 
 void PlayerConnection::sendMessage(Message msg) const {
+    last_wait = id;
     *stream << msg;
 }
 

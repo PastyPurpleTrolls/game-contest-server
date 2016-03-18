@@ -8,9 +8,10 @@ class PlayerConnection {
     net::socketstream *stream;
     std::string name;
     int kills;
+    int id;
 
   public:
-    PlayerConnection(net::socketstream* in_stream, int boardSize);
+    PlayerConnection(int id, net::socketstream* in_stream, int boardSize);
     void newRound();
     void update(Message msg) const;
     Message placeShip(int length) const;
