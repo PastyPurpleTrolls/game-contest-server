@@ -6,11 +6,6 @@
 # Checks the db for tournaments whose start time has passed and are "waiting" to be started
 # Tournament runner will then create necessary Match objects in the db
 
-begin
-  load File.expand_path("../spring", __FILE__)
-rescue LoadError
-end
-
 tournament = Tournament.where("start < ? and status = ?", Time.now.utc, "waiting").first
 if not tournament.nil? then
     tournament.status = "started"

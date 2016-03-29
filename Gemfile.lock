@@ -220,9 +220,6 @@ GEM
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
     slop (3.6.0)
-    spring (1.6.1)
-    spring-commands-rspec (1.0.4)
-      spring (>= 0.9.1)
     sprockets (2.12.4)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -283,8 +280,6 @@ DEPENDENCIES
   sass-rails (~> 4.0.3)
   sdoc
   simplecov
-  spring
-  spring-commands-rspec
   sqlite3
   test-unit
   timecop

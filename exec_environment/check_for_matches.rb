@@ -6,11 +6,6 @@
 #
 # TODO Queueing all available matches instead of just spawning one each time. Maybe using Delayed Job?
 
-begin
-  load File.expand_path("../spring", __FILE__)
-rescue LoadError
-end
-
 match = Match.where("earliest_start < ? and status = ?", Time.now.utc, "waiting").first
 if not match.nil? then
     match.status = "started"
