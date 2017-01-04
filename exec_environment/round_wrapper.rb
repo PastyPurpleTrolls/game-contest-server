@@ -104,7 +104,9 @@ class RoundWrapper
 	    else
 		    command="#{Shellwords.escape @referee.file_location} -p #{wrapper_server_port} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time}"
 	    end
-        @child_list.push(Process.spawn("#{command}"))
+
+	loc = "#{Shellwords.escape @referee.file_location[0, @referee.file_location.length-@referee.name.length]}" 
+        @child_list.push(Process.spawn("#{command}", :out=>"#{loc}/match_log.txt", :err=>"#{loc}/match_err.txt"))
         
         #Wait for referee to tell wrapper_server what port to start players on
         begin
