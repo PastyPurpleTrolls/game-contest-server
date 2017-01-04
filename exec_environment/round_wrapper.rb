@@ -131,7 +131,9 @@ class RoundWrapper
 			else
 			    command="#{Shellwords.escape player.file_location} -n #{Shellwords.escape player.name} -p #{@client_port}"
 			end
-            @child_list.push(Process.spawn("#{command}"))
+
+	    loc = player.file_location[0, player.file_location.length-player.name.length]
+            @child_list.push(Process.spawn("#{command}", :out=>"#{loc}/match_log.txt", :err=>"#{loc}/match_err.txt"))
         end
         
         begin
