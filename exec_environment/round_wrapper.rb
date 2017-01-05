@@ -29,6 +29,7 @@ class RoundWrapper
         @status = {}
         @rounds = []
         @match = {}
+	@match[:logs] = {}
 
         @command_char = ":"
         @value_char = "|"
@@ -106,9 +107,10 @@ class RoundWrapper
 		    command="#{Shellwords.escape @referee.file_location} -p #{wrapper_server_port} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time}"
 	    end
 
-	loc = "#{Shellwords.escape @referee.file_location[0, @referee.file_location.length-@referee.name.length]}/logs/match_#{@match_id}_round_#{@rounds.length + 1}" 
+	loc = "#{Shellwords.escape @referee.file_location[0, @referee.file_location.length-@referee.name.length]}logs/match_#{@match_id}_round_#{@rounds.length + 1}" 
         @child_list.push(Process.spawn("#{command}", :out=>"#{loc}_log.txt", :err=>"#{loc}_err.txt"))
-        
+	@match[:ref_logs] = loc        
+
         #Wait for referee to tell wrapper_server what port to start players on
         begin
             Timeout::timeout(3) do
@@ -135,8 +137,9 @@ class RoundWrapper
 			    command="#{Shellwords.escape player.file_location} -n #{Shellwords.escape player.name} -p #{@client_port}"
 			end
 
-	    loc = "#{Shellwords.escape player.file_location[0, player.file_location.length-player.name.length]}/logs/match_#{@match_id}_round_#{@rounds.length + 1}"
+	    loc = "#{Shellwords.escape player.file_location[0, player.file_location.length-player.name.length]}logs/match_#{@match_id}_round_#{@rounds.length + 1}"
             @child_list.push(Process.spawn("#{command}", :out=>"#{loc}_log.txt", :err=>"#{loc}_err.txt"))
+	    @match[:logs][player.name] = loc
         end
         
         begin
