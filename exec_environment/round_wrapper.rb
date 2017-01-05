@@ -14,12 +14,13 @@ class RoundWrapper
     attr_accessor :status, :rounds, :match
 
     #Constructor, sets socket for communication to referee and starts referee and players
-    def initialize(referee, number_of_players, max_match_time, players, rounds)  
+    def initialize(referee, match_id, number_of_players, max_match_time, players, rounds)  
         #Sets port for referee to talk to wrapper_server  
         @wrapper_server = TCPServer.new(0)
         
         @players = players
         @referee = referee
+	@match_id= match_id
         @child_list = []
         @number_of_players = number_of_players
         @max_match_time = max_match_time
@@ -105,8 +106,8 @@ class RoundWrapper
 		    command="#{Shellwords.escape @referee.file_location} -p #{wrapper_server_port} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time}"
 	    end
 
-	loc = "#{Shellwords.escape @referee.file_location[0, @referee.file_location.length-@referee.name.length]}" 
-        @child_list.push(Process.spawn("#{command}", :out=>"#{loc}/match_log.txt", :err=>"#{loc}/match_err.txt"))
+	loc = "#{Shellwords.escape @referee.file_location[0, @referee.file_location.length-@referee.name.length]}/match_#{@match_id}_round_#{@rounds.length + 1}" 
+        @child_list.push(Process.spawn("#{command}", :out=>"#{loc}_log.txt", :err=>"#{loc}_err.txt"))
         
         #Wait for referee to tell wrapper_server what port to start players on
         begin
@@ -134,8 +135,8 @@ class RoundWrapper
 			    command="#{Shellwords.escape player.file_location} -n #{Shellwords.escape player.name} -p #{@client_port}"
 			end
 
-	    loc = player.file_location[0, player.file_location.length-player.name.length]
-            @child_list.push(Process.spawn("#{command}", :out=>"#{loc}/match_log.txt", :err=>"#{loc}/match_err.txt"))
+	    loc = "#{Shellwords.escape player.file_location[0, player.file_location.length-player.name.length]}/match_#{@match_id}_round_#{@rounds.length + 1}"
+            @child_list.push(Process.spawn("#{command}", :out=>"#{loc}_log.txt", :err=>"#{loc}_err.txt"))
         end
         
         begin

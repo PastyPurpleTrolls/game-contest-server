@@ -14,7 +14,9 @@ module Uploadable
             random_hex = SecureRandom.hex
             self.file_location = '' if self.file_location.nil?
             delete_code(self.file_location)
-            self.file_location = store_file(uploaded_io, self.class.to_s.downcase.pluralize, random_hex)[:file]
+            location_data = store_file(uploaded_io, self.class.to_s.downcase.pluralize, random_hex)
+	    self.file_location = location_data[:file]
+	    FileUtils.mkdir_p "#{File.dirname(self.file_location)}/logs"
             uncompress(self.contest.referee.compressed_file_location, File.dirname(self.file_location)) if self.class == Player 
         end
     end

@@ -57,7 +57,7 @@ class MatchRunner
             return
         end
         #Call round wrapper which runs the executables and generates game hashes
-        round_wrapper = RoundWrapper.new(@referee,@number_of_players,@max_match_time,@match_participants,@num_rounds)
+        round_wrapper = RoundWrapper.new(@referee,@match_id,@number_of_players,@max_match_time,@match_participants,@num_rounds)
         puts "   Match runner running match #"+@match_id.to_s
         round_wrapper.run_match
         self.send_results_to_db(round_wrapper)
