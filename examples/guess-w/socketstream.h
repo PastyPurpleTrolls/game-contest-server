@@ -52,7 +52,7 @@ extern "C" {
 #include <unistd.h>
 #include <errno.h>
 }
-#include <exception>
+#include <stdexcept>
 #include <streambuf>
 #include <istream>
 #include <ostream>

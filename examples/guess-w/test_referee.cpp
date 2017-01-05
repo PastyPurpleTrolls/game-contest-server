@@ -21,7 +21,7 @@ void display_results(std::string result_type,
 void run_game(net::socketstream& manager,
 	      std::vector<PlayerConnection>& players)
 {
-    manager << "round:start" << std::endl;
+    manager << "round:start|{}" << std::endl;
     for (auto& player : players) {
 	player.clear_won();
     }
@@ -29,13 +29,13 @@ void run_game(net::socketstream& manager,
     std::string buffer;
     std::string winner;
     bool done = false;
-    while (!done) {
+    for (int i = 0; !done; ++i) {
 	for (auto& player : players) {
 	    player.sendline("move");
 
 	    buffer = player.getline();
 
-	    manager << "move:" << player.get_name() << " " << buffer;
+	    manager << "move: turn " << i << " is " << buffer;
 	    manager << "|{player: \"" << player.get_name() << "\", ";
 	    manager << "value: \"" << buffer << "\", ";
 	    manager << "win: \"" << (buffer == "w") << "\"}" << std::endl;
