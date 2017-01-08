@@ -14,12 +14,13 @@ class RoundWrapper
     attr_accessor :status, :rounds, :match
 
     #Constructor, sets socket for communication to referee and starts referee and players
-    def initialize(referee, number_of_players, max_match_time, players, rounds)  
+    def initialize(referee, match_id, number_of_players, max_match_time, players, rounds)  
         #Sets port for referee to talk to wrapper_server  
         @wrapper_server = TCPServer.new(0)
         
         @players = players
         @referee = referee
+	@match_id= match_id
         @child_list = []
         @number_of_players = number_of_players
         @max_match_time = max_match_time
@@ -28,6 +29,7 @@ class RoundWrapper
         @status = {}
         @rounds = []
         @match = {}
+	@match[:logs] = {}
 
         @command_char = ":"
         @value_char = "|"
@@ -104,8 +106,11 @@ class RoundWrapper
 	    else
 		    command="#{Shellwords.escape @referee.file_location} -p #{wrapper_server_port} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time}"
 	    end
-        @child_list.push(Process.spawn("#{command}"))
-        
+
+	loc = "#{Shellwords.escape @referee.file_location[0, @referee.file_location.length-@referee.name.length]}logs/match_#{@match_id}_round_#{@rounds.length + 1}" 
+        @child_list.push(Process.spawn("#{command}", :out=>"#{loc}_log.txt", :err=>"#{loc}_err.txt"))
+	@match[:ref_logs] = loc        
+
         #Wait for referee to tell wrapper_server what port to start players on
         begin
             Timeout::timeout(3) do
@@ -131,7 +136,10 @@ class RoundWrapper
 			else
 			    command="#{Shellwords.escape player.file_location} -n #{Shellwords.escape player.name} -p #{@client_port}"
 			end
-            @child_list.push(Process.spawn("#{command}"))
+
+	    loc = "#{Shellwords.escape player.file_location[0, player.file_location.length-player.name.length]}logs/match_#{@match_id}_round_#{@rounds.length + 1}"
+            @child_list.push(Process.spawn("#{command}", :out=>"#{loc}_log.txt", :err=>"#{loc}_err.txt"))
+	    @match[:logs][player.name] = loc
         end
         
         begin

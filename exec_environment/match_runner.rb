@@ -57,7 +57,7 @@ class MatchRunner
             return
         end
         #Call round wrapper which runs the executables and generates game hashes
-        round_wrapper = RoundWrapper.new(@referee,@number_of_players,@max_match_time,@match_participants,@num_rounds)
+        round_wrapper = RoundWrapper.new(@referee,@match_id,@number_of_players,@max_match_time,@match_participants,@num_rounds)
         puts "   Match runner running match #"+@match_id.to_s
         round_wrapper.run_match
         self.send_results_to_db(round_wrapper)
@@ -81,6 +81,9 @@ class MatchRunner
             @match_participants.each do |player|
                 player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id).first
                 player_match.result = round_runner.match[player.name][:result]
+		##player_match.log = :banana
+		player_match.log_out = round_runner.match[:logs][player.name]+"_log.txt"
+		player_match.log_err = round_runner.match[:logs][player.name]+"_err.txt"
                 player_match.save!
                 print_results(player.name, player_match.result, round_runner.match[player.name][:score])
                 self.schedule_matches(player, player_match, child_matches)

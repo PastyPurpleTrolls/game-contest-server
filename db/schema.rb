@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160113002215) do
+ActiveRecord::Schema.define(version: 20170105214505) do
 
   create_table "contests", force: :cascade do |t|
     t.integer  "user_id"
@@ -75,6 +75,8 @@ ActiveRecord::Schema.define(version: 20160113002215) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "result",     limit: 255
+    t.string   "log_out"
+    t.string   "log_err"
   end
 
   add_index "player_matches", ["match_id"], name: "index_player_matches_on_match_id"
