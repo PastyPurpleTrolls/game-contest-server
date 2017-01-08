@@ -9,6 +9,7 @@ body {
 // Keeps the bottom of the page separate from the
 // edge of the browser.
     padding-bottom: 20px;
+    font-family: Verdana, Geneva, sans-serif;
 }
 
 
@@ -39,6 +40,18 @@ body {
     }
 }
 
+.jumbotron {
+    //background-image: url('././images/battleship.jpg');
+    background-image: url('./battleship.jpg');    
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    height: 300px;
+}
+
+.display-container{
+    background-color: #4ea3b8;
+    color: white;
+}
 
 .field_with_errors {
 //  Stops datetime_select in form_for from moving to
@@ -75,7 +88,22 @@ body {
     }
 }
 
+.center{
+    text-align: center;
+}
+
+.header-title{
+    color: white;
+    padding-top: 160px;
+}
+
+.headings{
+    font-family: "Courier New", Courier, monospace;
+}
+
 // Form text areas should only resize vertically
 form textarea {
     resize: vertical;
 }
+
+@import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css");
