@@ -84,11 +84,13 @@ class MatchRunner
 
 		log_info.log_stdout = round_runner.match[:logs][player.name]+"_out.tgz"
 		log_info.log_stderr = round_runner.match[:logs][player.name]+"_err.tgz"
-		log_info.match_source = player_match
-		log_info.save!
 
                 player_match.result = round_runner.match[player.name][:result]
                 player_match.save!
+
+		log_info.match_source = player_match
+		log_info.save!
+
                 print_results(player.name, player_match.result, round_runner.match[player.name][:score])
                 self.schedule_matches(player, player_match, child_matches)
             end
