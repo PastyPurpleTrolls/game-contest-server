@@ -80,15 +80,26 @@ class MatchRunner
             #Loop through participants and find their results
             @match_participants.each do |player|
                 player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id).first
+		log_info = MatchLogInfo.create()
+
+		log_info.log_stdout = round_runner.match[:logs][player.name]+"_out.tgz"
+		log_info.log_stderr = round_runner.match[:logs][player.name]+"_err.tgz"
+		log_info.match_source = player_match
+		log_info.save!
+
                 player_match.result = round_runner.match[player.name][:result]
-		##player_match.log = :banana
-		player_match.log_out = round_runner.match[:logs][player.name]+"_log.txt"
-		player_match.log_err = round_runner.match[:logs][player.name]+"_err.txt"
                 player_match.save!
                 print_results(player.name, player_match.result, round_runner.match[player.name][:score])
                 self.schedule_matches(player, player_match, child_matches)
             end
             puts "   Match runner finished match #"+@match_id.to_s
+
+	    log_ref_info = MatchLogInfo.create()
+	    log_ref_info.log_stdout = round_runner.match[:ref_logs]+"_out.tgz"
+	    log_ref_info.log_stderr = round_runner.match[:ref_logs]+"_err.tgz"
+	    log_ref_info.match_source = @match
+	    log_ref_info.save!
+
             self.complete_match
         end
         #Check to see if the tournament can be completed

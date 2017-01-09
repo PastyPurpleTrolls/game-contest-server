@@ -1,6 +1,7 @@
 class PlayerMatch < ActiveRecord::Base
   belongs_to :player
   belongs_to :match , inverse_of: :player_matches
+  has_one :match_log_info, as: :match_source 
 
   validates :player,    presence: true
   validates :match,     presence: true

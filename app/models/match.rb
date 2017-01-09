@@ -6,6 +6,7 @@ class Match < ActiveRecord::Base
   has_many :player_matches , inverse_of: :match , dependent: :destroy
   has_many :players, through: :player_matches
   has_many :rounds, dependent: :destroy
+  has_one  :match_log_info, as: :match_source
 
   accepts_nested_attributes_for :player_matches
   has_many :parent_matches, class_name: 'MatchPath', foreign_key: 'child_match_id', dependent: :destroy
