@@ -277,8 +277,7 @@ describe "UsersPages" do
     it 'should return results' do
       should have_button('searchtest')
       should have_content('1 User')
-
-   end
+    end
    end
 
 
@@ -531,8 +530,8 @@ describe "UsersPages" do
       let! (:admin2) { FactoryGirl.create(:admin) }
       
       before do 
-	login admin2
-	visit users_path
+        login admin2
+        visit users_path
       end
     xit { should have_link('delete', href: user_path(admin1)) }
     it { should_not have_link('delete', href: user_path(admin2)) }

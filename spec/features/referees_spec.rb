@@ -414,6 +414,11 @@ describe "RefereePages" do
       visit referees_path
     end
 
+
+    it "has adding option" do
+          should have_link('', href: new_referee_path)
+    end
+
     it "lists all the referees in the system" do
       Referee.all.each do |ref|
         should have_selector('input.results-container')

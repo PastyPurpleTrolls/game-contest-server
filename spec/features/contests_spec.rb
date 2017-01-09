@@ -301,9 +301,6 @@ describe "ContestsPages" do
 
    end
 
-
-
-
   describe "show" do
     let (:contest) { FactoryGirl.create(:contest) }
 
@@ -337,6 +334,10 @@ describe "ContestsPages" do
       5.times { FactoryGirl.create(:contest) }
 
       visit contests_path
+    end
+
+    it "has adding option" do
+          should have_link('', href: new_contest_path)
     end
 
     it "lists all the contests in the system" do
