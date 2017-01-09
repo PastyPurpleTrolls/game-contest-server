@@ -295,10 +295,10 @@ describe "ContestsPages" do
     end
 
     it 'should return results' do
-      should have_content('searchtest')
+      should have_button('searchtest')
       should have_content('1 Contest')
+    end
 
-   end
    end
 
 
@@ -341,7 +341,8 @@ describe "ContestsPages" do
 
     it "lists all the contests in the system" do
       Contest.all.each do |c|
-        should have_link(c.name, contest_path(c))
+        should have_selector('input.results-container')
+        should have_button(c.name, contest_path(c))
       end
     end
   end

@@ -377,7 +377,7 @@ describe "RefereePages" do
     end
 
     it 'should return results' do
-      should have_content('searchtest')
+      should have_button('searchtest')
       should have_content('1 Referee')
 
    end
@@ -416,7 +416,8 @@ describe "RefereePages" do
 
     it "lists all the referees in the system" do
       Referee.all.each do |ref|
-        should have_link(ref.name, href: referee_path(ref))
+        should have_selector('input.results-container')
+        should have_button(ref.name, referee_path(ref))
       end
     end
   end
