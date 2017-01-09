@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 20170105214505) do
     t.string   "manager_type",   limit: 255
     t.string   "slug"
     t.integer  "num_rounds"
+    t.string   "match_name"
   end
 
   add_index "matches", ["manager_id", "manager_type"], name: "index_matches_on_manager_id_and_manager_type"
@@ -154,6 +155,7 @@ ActiveRecord::Schema.define(version: 20170105214505) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string   "slug"
+    t.string   "round_name"
   end
 
   add_index "rounds", ["match_id"], name: "index_rounds_on_match_id"

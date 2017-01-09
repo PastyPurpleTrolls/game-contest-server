@@ -13,18 +13,9 @@
                     wrap_tag: :li, active: :exclusive %>
             <%= active_link_to 'Referees', referees_path,
                     wrap_tag: :li, active: :exclusive %>
-            <%= active_link_to 'Help', help_path, wrap_tag: :li, active: :exclusive %>           
-            <% if current_user and current_user.contest_creator %>
-                <li class='dropdown'>
-                    <a href='#' class='dropdown-toggle' data-toggle='dropdown'>Create a New... <span class='caret' /></a>
-                    <ul class='dropdown-menu'>
-                        <li><%= link_to 'Contest', new_contest_path %></li>
-                        <li><%= link_to 'Referee', new_referee_path %></li>
-                    </ul>
-                </li>
-            <% end %>
         </ul>
         <ul class="nav navbar-nav navbar-right">
+            <%= active_link_to 'Help', help_path, wrap_tag: :li, active: :exclusive %>           
             <% if current_user %>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <span class="caret" /></a>

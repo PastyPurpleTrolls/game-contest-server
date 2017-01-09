@@ -341,7 +341,6 @@ describe "ContestsPages" do
 
     it "lists all the contests in the system" do
       Contest.all.each do |c|
-        should have_selector('li', text: c.name)
         should have_link(c.name, contest_path(c))
       end
     end

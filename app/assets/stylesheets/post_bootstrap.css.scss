@@ -46,10 +46,24 @@ body {
     background-size: 100% 100%;
     background-repeat: no-repeat;
     height: 300px;
+    margin-bottom: 0px;
 }
 
-.display-container{
+.row {
+    margin-bottom: 30px;
+    margin-left: 0px !important;
+    margin-right: 0px !important;    
+}
+
+.display-container {
     background-color: #4ea3b8;
+    color: white;
+    vertical-align:middle;
+    margin-top: 50px;
+    padding: 30px;
+}
+
+.display-container a {
     color: white;
 }
 
@@ -59,9 +73,43 @@ body {
     display: inline;
 }
 
+.glyphicon.glyphicon-plus {
+    font-size: 30px;
+}
+
+.glyphicon.glyphicon-plus:hover {
+    color: #FFCCCC;    
+}
+
+.plus-div {
+    padding-top: 20px;
+}
+
+.search-container {
+    color: #4999B4;
+    margin-bottom: 70px;
+}
+
+.results-container {
+    background-color: white;
+    border-radius: 25px;
+    color: #4999B4;
+    margin: 10px 0px;
+    padding: 5px;
+    list-style-type: none;
+    width: 80%;
+}
+
+.results-container a {
+    color: #4999B4;
+}
+
+.results-container:hover {
+    background-color: #FFCCCC;
+}
 
 // Allows for styling of datetime selectors
-.date-time{
+.date-time {
     @extend .form-control;
     display: inline;
     width: auto;
@@ -88,16 +136,24 @@ body {
     }
 }
 
-.center{
+.center {
     text-align: center;
 }
 
-.header-title{
+.right {
+    text-align: right;
+}
+
+.left {
+    text-align: left;
+}
+
+.header-title {
     color: white;
     padding-top: 160px;
 }
 
-.headings{
+.headings {
     font-family: "Courier New", Courier, monospace;
 }
 

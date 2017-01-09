@@ -416,7 +416,6 @@ describe "RefereePages" do
 
     it "lists all the referees in the system" do
       Referee.all.each do |ref|
-        should have_selector('li', text: ref.name)
         should have_link(ref.name, href: referee_path(ref))
       end
     end

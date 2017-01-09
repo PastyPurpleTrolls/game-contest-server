@@ -148,7 +148,7 @@ describe "UsersPages" do
 
       before(:each) { visit users_path }
 
-      it { should have_content('List of Users') }
+      it { should have_content('Users') }
       it { should have_content('10 Users') }
 
       # fix up with pagination later...
