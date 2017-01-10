@@ -7,15 +7,16 @@
         </div>
 
         <ul class="nav navbar-nav navbar-left">
-            <%= active_link_to 'Users', users_path,
-                    wrap_tag: :li, active: :exclusive %>
             <%= active_link_to 'Contests', contests_path,
                     wrap_tag: :li, active: :exclusive %>
+           
             <%= active_link_to 'Referees', referees_path,
+                    wrap_tag: :li, active: :exclusive %>
+            <%= active_link_to 'Users', users_path,
                     wrap_tag: :li, active: :exclusive %>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-            <%= active_link_to 'Help', help_path, wrap_tag: :li, active: :exclusive %>           
+            <%= active_link_to 'About', about_path, wrap_tag: :li, active: :exclusive %>            
             <% if current_user %>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account <span class="caret" /></a>
@@ -34,7 +35,7 @@
     </div>
 </nav>
 <div class="jumbotron">
-  <div class="container">
+  <div class="container banner-container">
     <h2 class="center header-title headings">Home</h2>
   </div>
 </div>

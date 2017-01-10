@@ -19,3 +19,10 @@
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })
+
+function redirectToContest() {
+    var f = $("#contest-form")[0];
+    var s = $("#contest-selector")[0];
+    f.action = f.action.replace("contest_id", s.value);
+    f.submit();
+}

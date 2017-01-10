@@ -1,0 +1,46 @@
+<br>
+<br>
+<div class="row">
+        <%= link_to(new_contest_player_path('not-specified'), method: :get, class: 'col-md-4 col-sm-6 col-xs-12 navbar-brand navbar-default-link-color center outer-home-container') do %>
+            <div class="home-container">
+                <p>Add Player</p>
+                <%= content_tag('i', nil, class: 'glyphicon glyphicon-user home-gly') %> <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus') %>
+            </div>
+        <% end %>
+        <%= link_to(new_contest_path, method: :get, class: 'col-md-4 col-sm-6 col-xs-12 navbar-brand navbar-default-link-color center outer-home-container') do %>
+            <div class="home-container">
+                <p>Add Contest</p>
+                <%= content_tag('i', nil, class: 'glyphicon glyphicon-list home-gly') %> <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus') %>
+            </div>
+            
+        <% end %>
+        <%= link_to(root_path, method: :get, class: 'col-md-4 col-sm-6 col-xs-12 navbar-brand navbar-default-link-color center outer-home-container') do %>
+            <div class="home-container">
+                <p>Add Tournament</p>
+                <%= content_tag('i', nil, class: 'glyphicon glyphicon-flag home-gly') %> <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus') %>
+            </div>
+            
+        <% end %>
+        <%= link_to(root_path, method: :get, class: 'col-md-4 col-sm-6 col-xs-12 navbar-brand navbar-default-link-color center outer-home-container') do %>
+            <div class="home-container">
+                <p>Challenge Players</p>
+                <%= content_tag('i', nil, class: 'glyphicon glyphicon-user home-gly') %> <%= content_tag('i', nil, class: 'glyphicon glyphicon-resize-horizontal') %> <%= content_tag('i', nil, class: 'glyphicon glyphicon-user home-gly') %>
+            </div>
+            
+        <% end %>
+        <%= link_to(contests_path, method: :get, class: 'col-md-4 col-sm-6 col-xs-12 navbar-brand navbar-default-link-color center outer-home-container') do %>
+            <div class="home-container">
+                <p>View Contests</p>
+                <%= content_tag('i', nil, class: 'glyphicon glyphicon-list home-gly') %>
+            </div>
+            
+        <% end %>
+        <%= link_to(root_path, method: :get, class: 'col-md-4 col-sm-6 col-xs-12 navbar-brand navbar-default-link-color center outer-home-container') do %>
+            <div class="home-container">
+                <p>View My Players</p>
+                <%= content_tag('i', nil, class: 'glyphicon glyphicon-user home-gly') %> <%= content_tag('i', nil, class: 'glyphicon glyphicon-user') %>
+            </div>
+            
+        <% end %>
+    </div>
+</div>

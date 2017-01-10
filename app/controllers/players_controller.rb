@@ -14,8 +14,13 @@ class PlayersController < ApplicationController
   end
 
   def new
-    contest = Contest.friendly.find(params[:contest_id])
-    @player = contest.players.build
+    if params[:contest_id] == 'not-specified'
+      @contests = Contest.all
+    else
+      contest = Contest.friendly.find(params[:contest_id])
+      @player = contest.players.build
+      @contests = Contest.all
+    end
   end
 
   def create

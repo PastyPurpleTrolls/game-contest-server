@@ -4,15 +4,6 @@ It is imported into js_color_scheme AFTER Bootsrap is
 loaded, so the classes are not overridden.
 */
 
-
-body {
-// Keeps the bottom of the page separate from the
-// edge of the browser.
-    padding-bottom: 20px;
-    font-family: Verdana, Geneva, sans-serif;
-}
-
-
 // This changes alerts to have no rounded corners.
 // NOTE: This is cancelled out below for alerts in
 //       containers, e.g. form error alerts.
@@ -26,6 +17,16 @@ body {
     text-align: center;
 }
 
+body {
+// Keeps the bottom of the page separate from the
+// edge of the browser.
+    padding-bottom: 20px;
+    font-family: Verdana, Geneva, sans-serif;
+}
+
+.center {
+    text-align: center;
+}
 
 // Resetting to .alert defaults
 // if alert is in a container
@@ -38,74 +39,6 @@ body {
         padding: 15px;
         margin-bottom: 20px;
     }
-}
-
-.jumbotron {
-    //background-image: url('././images/battleship.jpg');
-    background-image: url('./battleship.jpg');    
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    height: 300px;
-    margin-bottom: 0px;
-}
-
-.row {
-    margin-bottom: 30px;
-    margin-left: 0px !important;
-    margin-right: 0px !important;    
-}
-
-.display-container {
-    background-color: #4ea3b8;
-    color: white;
-    vertical-align:middle;
-    margin-top: 50px;
-    padding: 30px;
-}
-
-.display-container a {
-    color: white;
-}
-
-.field_with_errors {
-//  Stops datetime_select in form_for from moving to
-//  new line when it's an error field
-    display: inline;
-}
-
-.glyphicon.glyphicon-plus {
-    font-size: 30px;
-}
-
-.glyphicon.glyphicon-plus:hover {
-    color: #FFCCCC;    
-}
-
-.plus-div {
-    padding-top: 20px;
-}
-
-.search-container {
-    color: #4999B4;
-    margin-bottom: 70px;
-}
-
-.results-container {
-    background-color: white;
-    border-radius: 25px;
-    color: #4999B4;
-    margin: 10px 0px;
-    padding: 5px;
-    list-style-type: none;
-    width: 80%;
-}
-
-.results-container a {
-    color: #4999B4;
-}
-
-.results-container:hover {
-    background-color: #FFCCCC;
 }
 
 // Allows for styling of datetime selectors
@@ -136,16 +69,55 @@ body {
     }
 }
 
-.center {
-    text-align: center;
+.display-container, .home-container {
+    background-color: #4ea3b8;
+    color: white;
+    vertical-align:middle;
+    padding: 30px;
 }
 
-.right {
-    text-align: right;
+.display-container {
+    margin-top: 50px;
 }
 
-.left {
-    text-align: left;
+.display-container a {
+    color: white;
+}
+
+.field_with_errors {
+//  Stops datetime_select in form_for from moving to
+//  new line when it's an error field
+    display: inline;
+}
+
+// Form text areas should only resize vertically
+form textarea {
+    resize: vertical;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
+.form-checkbox {
+    width: 30px;
+    height: 15px;
+}
+
+.form-element:hover {
+    cursor: pointer;
+}
+
+.form-input{
+    color: #4999B4;
+}
+
+.gly-plus, .home-gly {
+    font-size: 30px;
+}
+
+.gly-plus:hover {
+    color: #FFCCCC;    
 }
 
 .header-title {
@@ -157,9 +129,73 @@ body {
     font-family: "Courier New", Courier, monospace;
 }
 
-// Form text areas should only resize vertically
-form textarea {
-    resize: vertical;
+label{
+    font-weight: normal;
+}
+
+.outer-home-container{
+    padding: 10px;
+}
+
+.jumbotron {
+    background-image: url('./battleship.jpg');    
+    background-size: 1140px 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #C10000;
+    height: 300px;
+    margin-bottom: 0px;
+}
+
+@media only screen and (max-width: 1000px) {
+    .jumbotron {
+        background-size: 100% 100%;
+    }
+}
+
+.left {
+    text-align: left;
+}
+
+.new-heading{
+    margin-bottom: 40px;
+}
+
+.plus-div {
+    padding-top: 20px;
+}
+
+.results-container {
+    background-color: white;
+    border-radius: 25px;
+    color: #4999B4;
+    margin: 10px 0px;
+    padding: 5px;
+    list-style-type: none;
+    width: 80%;
+}
+
+.results-container a {
+    color: #4999B4;
+}
+
+.results-container:hover, .home-container:hover {
+    background-color: #FFCCCC;
+}
+
+.right {
+    text-align: right;
+}
+
+.row {
+    margin-bottom: 30px;
+    margin-left: 0px !important;
+    margin-right: 0px !important;    
+}
+
+.search-container {
+    color: #4999B4;
+    margin-bottom: 70px;
 }
 
 @import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css");
