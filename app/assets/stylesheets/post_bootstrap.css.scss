@@ -104,6 +104,19 @@ form textarea {
     height: 15px;
 }
 
+.form-dropdown {
+    margin-top: 15px;
+}
+
+a.active {
+    color: #262626 !important;
+    background-color: white !important;
+}
+
+a.active:hover {
+    background-color: whitesmoke !important;
+}
+
 .form-element:hover {
     cursor: pointer;
 }
@@ -165,20 +178,35 @@ label{
     padding-top: 20px;
 }
 
-.results-container {
+.info-container a {
+    color: #4999B4;  
+    text-decoration: underline;  
+}
+
+.results-container, .info-container {
     background-color: white;
     border-radius: 25px;
     color: #4999B4;
     margin: 10px 0px;
     padding: 5px;
     list-style-type: none;
+    font-size: 16px;
+}
+
+.results-container {
     width: 80%;
+    margin: 5px;
 }
 
 .results-container a {
     color: #4999B4;
 }
 
+.profile-container {
+    width: 80%;
+    margin-left: 10%;
+
+}
 .results-container:hover, .home-container:hover {
     background-color: #FFCCCC;
 }

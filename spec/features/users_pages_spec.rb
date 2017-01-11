@@ -73,37 +73,23 @@ describe "UsersPages" do
         visit user_path(user)
       end
 
-      it { should have_content(user.username) }
-      it { should have_content(user.email) }
+      it { should_not have_content(user.username) }
+      it { should_not have_content(user.email) }
       it { should_not have_content(user.password) }
       it { should_not have_content(user.password_digest) }
 
-      it { should have_subheader(text: 'Players') }
+      it { should have_header(text: 'Players') }
       it "lists all the players for the user" do
         Player.all.each do |player|
-          should have_selector('li', text: player.name)
+          should have_selector('div', text: player.name)
           should have_link(player.name, player_path(player))
-          should_not have_link('delete', href: player_path(player))
         end
       end
       #it { should have_link('New Player', href: new_player_path) }
-      it { should have_content('5 Players') }
+      it { should have_content('My Players (5)') }
 
-      it { should_not have_subheader(text: 'Referees') }
+      it { should_not have_subheader(text: 'My Referees') }
       it { should_not have_link('New Referee', href: new_referee_path) }
-
-      describe "logged in" do
-        before do
-          login user
-          visit user_path(user)
-        end
-
-        it "gives delete links to all the players for the user" do
-          Player.all.each do |player|
-            should have_link('delete', href: player_path(player))
-          end
-        end
-      end
     end
 
     describe "individually (contest creator)" do
@@ -115,28 +101,14 @@ describe "UsersPages" do
         visit user_path(user)
       end
 
-      it { should have_subheader(text: 'Referees') }
+      it { should have_header(text: 'My Referees (5)') }
       it "lists all the referees for the user" do
         Referee.all.each do |ref|
-          should have_selector('li', text: ref.name)
-          should_not have_link('delete', href: referee_path(ref))
+          should have_selector('div', text: ref.name)
         end
       end
 
-      it { should have_content('5 Referees') }
-
-      describe "logged in" do
-        before do
-          login user
-          visit user_path(user)
-        end
-
-        it "gives delete links to all the referees for the user" do
-          Referee.all.each do |ref|
-            should have_link('delete', href: referee_path(ref))
-          end
-        end
-      end
+      it { should have_content('My Referees (5)') }
     end
 
     describe "individually (admin)" do

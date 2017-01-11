@@ -7,7 +7,7 @@
                 <%= collection_select(:player, :contest_id, @contests, :id, :name, {prompt: "Select a Contest"}, class: "form-element", id: "contest-selector", onchange: "redirectToContest()") %>
             <% end %>
         </div>
-        <% if @player != nil %>
+        <% if @player %>
             <%= form_for [@player.contest, @player] do |f| %>
                 <%= render 'shared/error_messages', object: @player %>
                 <%= render 'fields', f: f %>

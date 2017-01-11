@@ -72,8 +72,8 @@ describe "PlayersPages" do
         it { should have_content(name) }
         it { should have_content(description) }
         #it { should have_content(file_contents) }
-        it { should have_content('is available for matches') }
-        it { should_not have_content('can be downloaded') }
+        it { should have_content('can be challenged') }
+        it { should have_content('cannot be downloaded') }
         it { should have_link(player.contest.name,
                               href: contest_path(player.contest) ) }
         it { should have_link(player.user.username,
@@ -223,8 +223,8 @@ describe "PlayersPages" do
 
     it { should have_content(player.name) }
     it { should have_content(player.description) }
-    it { should have_content('Player is available for matches') }
-    it { should_not have_content('Player can be downloaded') }
+    it { should have_content('This player can be challenged') }
+    it { should_not have_content('This player can be downloaded') }
     it { should have_content(player.contest.name) }
     it { should have_link(player.contest.name, href: contest_path(player.contest)) }
     it { should have_content(player.user.username) }
@@ -241,7 +241,7 @@ describe "PlayersPages" do
 
       before { visit player_path(player) }
 
-      it { should have_subheader(text: 'Match') }
+      it { should have_header(text: 'Match') }
       it { should have_content(player_match.result) }
       it { should have_link(player_match.match_id, match_path(player_match.match)) }
 
@@ -255,7 +255,7 @@ describe "PlayersPages" do
         visit player_path(player)
       end
 
-      it { should have_subheader(text: 'Matches') }
+      it { should have_header(text: 'Matches') }
       it { should have_content('Win', count: 7) }
       #Should only have 3 losses displayed because the 4th is on the next page.
       it { should have_content('Loss', count: 3) }

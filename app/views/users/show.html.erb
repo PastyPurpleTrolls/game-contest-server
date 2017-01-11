@@ -1,29 +1,32 @@
-<h1><%= @user.username %></h1>
-<p>Email: <%= @user.email %></p>
-
-<h2><%= pluralize(@user.players.count, 'Player') %></h2>
-<ul>
-    <% @user.players.each do |player| %>
-        <li>
-            <%= link_to player.name, player %>
-            <% if current_user?(@user) %>
-                | <%= link_to 'delete', player_path(player), method: :delete %>
+<div class="row">
+    <div class="container center display-container col-md-offset-3 col-md-6">
+        <h1 class="headings left">My Players (<%= @user.players.count %>)</h1>
+        <br>
+        <div class="row">
+            <% @user.players.each do |player| %>
+                <div class="info-container profile-container">
+                    <%= link_to player.name, player %>
+                    (<%= link_to player.contest.name, player %>)                    
+                </div>
             <% end %>
-        </li>
-    <% end %>
-</ul>
+        </div>
+    </div>
+</div>
 
-
-<% if @user.contest_creator %>
-    <h2><%= pluralize(@user.referees.count, 'Referee') %></h2>
-    <ul>
-        <% @user.referees.each do |ref| %>
-            <li>
-                <%= link_to ref.name, ref %>
-                <% if current_user?(@user) %>
-                    | <%= link_to 'delete', referee_path(ref), method: :delete %>
-                <% end %>
-            </li>
-        <% end %>
-    </ul>
+<% if @user.referees.count > 0 %>
+    <div class="row">
+        <div class="container center display-container col-md-offset-3 col-md-6">
+            <% if @user.contest_creator %>
+                <h1 class="headings left">My Referees (<%= @user.referees.count %>)</h1>
+                <br>
+                <div>
+                    <% @user.referees.each do |ref| %>
+                        <div class="info-container profile-container">
+                            <%= link_to ref.name, ref %>
+                        </div>
+                    <% end %>
+                </div>
+            <% end %>
+        </div>
+    </div>
 <% end %>
