@@ -150,6 +150,15 @@ label{
     padding: 10px;
 }
 
+.info-link a{
+    text-decoration: underline;
+}
+
+.info-text, .info-link {
+    padding-left: 0px;
+    padding-right: 0px;    
+}
+
 .jumbotron {
     background-image: url('./battleship.jpg');    
     background-size: 1140px 100%;
@@ -191,6 +200,10 @@ label{
     padding: 5px;
     list-style-type: none;
     font-size: 16px;
+}
+
+.small-font {
+    font-size: 14px;
 }
 
 .results-container {

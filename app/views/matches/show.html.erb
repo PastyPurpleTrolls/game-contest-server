@@ -1,29 +1,50 @@
-<h1>Match Information</h1>
-
-<p>Match <%= @match.id %> for <%= link_to @match.manager.name, @match.manager %></p>
-<p>Status: <%= @match.status %></p>
-
-<% if @match.completed? %>
-    <p>
-    Completed: <%= distance_of_time_in_words_to_now(@match.completion) %> ago
-    </p>
-<% end %>
-
-<p>
-    Earliest start time:
-    <%= distance_of_time_in_words_to_now(@match.earliest_start) %>
-</p>
-
-<p>Referee: <%= @match.manager.referee.name %></p>
-
-<h2><%= pluralize(@match.manager.referee.players_per_game, 'Player') %></h2>
-<ol>
-    <%= render partial: 'player_matches/player_links',
-      collection: @match.player_matches,
-      as: 'player_match' %>
-</ol>
-
-<h2><%= pluralize(@match.rounds.all.count, 'Round') %></h2>
-<ol>
-    <%= render @match.rounds %>
-</ol>
+<div class="row">
+    <div class="container center display-container col-md-offset-1 col-md-10">
+        <div class="row">
+            <h1 class="headings left">Match Information</h1>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <p class="info-container">Name: Match <%= @match.id %></p>
+            </div>
+            <div class="col-md-6">
+                <p class="info-container">Contest: <%= link_to @match.manager.name, @match.manager %></p>
+            </div>
+            <div class="col-md-6">            
+                <p class="info-container">Status: <%= @match.status.capitalize %></p>
+            </div>
+            <% if @match.completed? %>
+                <div class="col-md-6">
+                    <p class="info-container">Completed: <%= distance_of_time_in_words_to_now(@match.completion) %> ago</p>
+                </div>
+            <% else %>                
+                <div class="col-md-6">
+                    <p class="info-container">Earliest start time: <%= distance_of_time_in_words_to_now(@match.earliest_start) %></p>
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>    
+<div class="row center">
+    <div class="container outer-home-container col-md-offset-1 col-md-5">
+        <div class="display-container">
+    
+        <h1 class="headings left row"><%= pluralize(@match.manager.referee.players_per_game, 'Player') %></h1>
+        <ol>
+            <%= render partial: 'player_matches/player_links',
+            collection: @match.player_matches,
+            as: 'player_match' %>
+        </ol>
+        </div>
+    </div>
+    <div class="container outer-home-container col-md-5">
+        <div class="display-container">
+    
+        <h1 class="headings left row"><%= pluralize(@match.rounds.all.count, 'Round') %></h1>
+        <ol>
+            <%= render @match.rounds %>
+        </ol>
+        </div>
+        
+    </div>
+</div> 

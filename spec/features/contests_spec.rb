@@ -329,15 +329,15 @@ describe "ContestsPages" do
 
   end
 
-  describe "show all" do
+  describe "show all as any user" do
     before do
       5.times { FactoryGirl.create(:contest) }
 
       visit contests_path
     end
 
-    it "has adding option" do
-          should have_link('', href: new_contest_path)
+    it "does not have adding option" do
+      should_not have_link('', href: new_contest_path)
     end
 
     it "lists all the contests in the system" do
@@ -345,6 +345,17 @@ describe "ContestsPages" do
         should have_selector('input.results-container')
         should have_button(c.name, contest_path(c))
       end
+    end
+  end
+  describe "show all as contest_creator" do
+    before do
+      login creator
+      
+      visit contests_path
+    end
+
+    it "has adding option" do
+      should have_link('', href: new_contest_path)
     end
   end
 end

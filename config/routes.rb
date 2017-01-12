@@ -4,7 +4,6 @@ GameContestServer::Application.routes.draw do
   get "visual_tests/colorscheme", as: :colorscheme
   root 'users#home'
 
-  get '/about/', to: 'about#index'
   get '/help/', to: 'help#index'
   get '/help/:category/(:page)', to: 'help#show'
 
