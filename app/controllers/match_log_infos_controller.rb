@@ -5,7 +5,8 @@ class MatchLogInfosController < ApplicationController
       def require_permission
         log_info = MatchLogInfo.find(params[:id])
         if current_user != log_info.get_owner then
-          redirect_to root_path
+	  #redirect_to "/login", alert: "Log Access, Permission Denied"
+	  deny_access
         end
       end
 
