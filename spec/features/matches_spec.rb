@@ -266,10 +266,6 @@ describe "MatchesPages" do
 			it "removes all player rounds associated with the match from the system" do
 				expect { delete match_path(tournament_match) }.to change(PlayerRound, :count).by(-16)
 			end
-			
-			xit "removes match path associated with the match" do
-				expect { delete match_path(tournament_match) }.to change(MatchPath, :count).by(-1)
-			end
 
     end # logged in as contest creator
 
@@ -281,10 +277,9 @@ describe "MatchesPages" do
 
     before { visit match_path(match) }
 
-    it { should have_content(match.status) }
+    it { should have_content(match.status.capitalize) }
     it { should have_content(distance_of_time_in_words_to_now(match.earliest_start)) }
     it { should have_content(match.manager.name) }
-    it { should have_content(match.manager.referee.name) }
     it { should have_content(match.manager.referee.players_per_game) }
 
     describe "completed" do
@@ -311,12 +306,9 @@ describe "MatchesPages" do
         visit match_path(match)
       end
 
-     xit "should link to all players" do
+     it "should link to all players" do
         match.players.each_with_index do |p, i|
-          selector = "//ol/li[position()=#{i + 1}]"
-          should have_selector(:xpath, selector, text: p.name)
           should have_link(p.name, player_path(p))
-          should have_selector(:xpath, selector, text: (10 - i).to_s)
         end
       end
     end
@@ -324,19 +316,15 @@ describe "MatchesPages" do
     describe "associated players (ascending scores)" do
       before do
         match.player_matches.each_with_index do |pm, i|
-         # pm.score = 10 + i
           pm.save
         end
 
         visit match_path(match)
       end
 
-     xit "should link to all players" do
+     it "should link to all players" do
         match.players.each_with_index do |p, i|
-          selector = "//ol/li[position()=#{match.players.size - i}]"
-          should have_selector(:xpath, selector, text: p.name)
           should have_link(p.name, player_path(p))
-          should have_selector(:xpath, selector, text: (10 + i).to_s)
         end
       end
     end
@@ -353,10 +341,9 @@ describe "MatchesPages" do
        end
        
 
-    it { should have_content(match.status) }
+    it { should have_content(match.status.capitalize) }
     it { should have_content(distance_of_time_in_words_to_now(match.earliest_start)) }
     it { should have_content(match.manager.name) }
-    it { should have_content(match.manager.referee.name) }
     it { should have_content(match.manager.referee.players_per_game) }
   end
 

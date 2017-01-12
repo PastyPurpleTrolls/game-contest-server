@@ -4,15 +4,14 @@
 		<% @tmp << p.name %>
 	<% end %>
 
-    <li>
-	<%= link_to @tmp.to_sentence, match_path(player_match.match) %>
-	<% if player_match.result.nil? %>
-		(Waiting)
-	<% else %>
-	 	(<%= player_match.result %>)
+	<%= button_to(match_path(player_match.match), method: :get, class: 'results-container') do %>
+		<%= @tmp.to_sentence %>
+		<% if player_match.result.nil? %>
+			(Waiting)
+		<% else %>
+			(<%= player_match.result %>)
+		<% end %>
 	<% end %>
-    </li>
-
 
 <% end %>
 

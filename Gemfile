@@ -47,6 +47,9 @@ gem 'bootstrap-sass', '~> 3.3.1'
 #Font awesome
 gem "font-awesome-rails"
 
+#Boostrap Popover Rails
+gem 'bootstrap-popover-rails'
+
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 

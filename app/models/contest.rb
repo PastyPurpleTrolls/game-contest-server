@@ -13,6 +13,8 @@ class Contest < ActiveRecord::Base
   validates :description,   presence: true
   validates :name,          presence: true, uniqueness: true
 
+  default_scope -> { order("created_at DESC") }
+
   def contest
       self
   end

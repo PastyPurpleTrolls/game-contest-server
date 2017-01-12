@@ -295,14 +295,11 @@ describe "ContestsPages" do
     end
 
     it 'should return results' do
-      should have_content('searchtest')
+      should have_button('searchtest')
       should have_content('1 Contest')
+    end
 
    end
-   end
-
-
-
 
   describe "show" do
     let (:contest) { FactoryGirl.create(:contest) }
@@ -332,18 +329,33 @@ describe "ContestsPages" do
 
   end
 
-  describe "show all" do
+  describe "show all as any user" do
     before do
       5.times { FactoryGirl.create(:contest) }
 
       visit contests_path
     end
 
+    it "does not have adding option" do
+      should_not have_link('', href: new_contest_path)
+    end
+
     it "lists all the contests in the system" do
       Contest.all.each do |c|
-        should have_selector('li', text: c.name)
-        should have_link(c.name, contest_path(c))
+        should have_selector('input.results-container')
+        should have_button(c.name, contest_path(c))
       end
+    end
+  end
+  describe "show all as contest_creator" do
+    before do
+      login creator
+      
+      visit contests_path
+    end
+
+    it "has adding option" do
+      should have_link('', href: new_contest_path)
     end
   end
 end

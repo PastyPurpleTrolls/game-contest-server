@@ -52,10 +52,14 @@ class RefereesController < ApplicationController
     end
 
     def destroy
-        if ! Contest.exists?(:referee_id => @referee.id) 
+        if  @referee.deletable?(current_user)
             @referee.destroy
             flash[:success] = 'Referee deleted.'
-            redirect_to referees_path
+            if params[:returnto] == 'profile'
+                redirect_to user_path(current_user)
+            else 
+                redirect_to referees_path
+            end
         else
             flash[:danger] = 'This referee is currently being used in a contest'
             render 'show'

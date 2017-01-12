@@ -43,6 +43,7 @@ GEM
       execjs
       json
     bcrypt (3.1.10)
+    bootstrap-popover-rails (0.1.0)
     bootstrap-sass (3.3.5)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.2.19)
@@ -256,6 +257,7 @@ PLATFORMS
 DEPENDENCIES
   active_link_to
   bcrypt (~> 3.1.7)
+  bootstrap-popover-rails
   bootstrap-sass (~> 3.3.1)
   capybara (~> 2.4.4)
   childprocess

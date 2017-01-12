@@ -200,7 +200,7 @@ describe "RefereePages" do
         select num_players, from: 'Players'
         select time_per_game, from: 'Time per game'
         check 'referee_rounds_capable'
-	attach_file('Upload referee', file_location)
+	      attach_file('Upload referee', file_location)
       end
 
       describe "changes the data" do
@@ -209,8 +209,8 @@ describe "RefereePages" do
         it { should have_alert(:success) }
         specify { expect(referee.reload.name).to eq(name) }
         specify { expect(referee.reload.rules_url).to eq("#{rules}/updated") }
-	specify { expect(referee.reload.round_limit.to_s).to eq(round_limit) }
-	specify { expect(referee.reload.rounds_capable).to eq(true) }
+        specify { expect(referee.reload.round_limit.to_s).to eq(round_limit) }
+        specify { expect(referee.reload.rounds_capable).to eq(true) }
         specify { expect(referee.reload.players_per_game).to eq(num_players.to_i) }
         specify { expect(referee.reload.time_per_game).to eq(time_per_game.to_i) }
 
@@ -377,7 +377,7 @@ describe "RefereePages" do
     end
 
     it 'should return results' do
-      should have_content('searchtest')
+      should have_button('searchtest')
       should have_content('1 Referee')
 
    end
@@ -407,18 +407,34 @@ describe "RefereePages" do
     end
   end
 
-  describe "show all" do
+  describe "show all as any user" do
     before do
       5.times { FactoryGirl.create(:referee) }
 
       visit referees_path
     end
 
+    it "does not have adding option" do
+      should_not have_link('', href: new_referee_path)
+    end
+
     it "lists all the referees in the system" do
       Referee.all.each do |ref|
-        should have_selector('li', text: ref.name)
-        should have_link(ref.name, href: referee_path(ref))
+        should have_selector('input.results-container')
+        should have_button(ref.name, referee_path(ref))
       end
+    end
+  end
+
+  describe "show all as contest_creator" do
+    before do
+      login creator
+      
+      visit referees_path
+    end
+
+    it "has adding option" do
+      should have_link('', href: new_referee_path)
     end
   end
 end

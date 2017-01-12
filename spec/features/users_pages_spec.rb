@@ -46,7 +46,7 @@ describe "UsersPages" do
                                    password_confirmation: 'password' }
         end
 
-        specify { expect(response).to redirect_to(user_path(assigns(:user))) }
+        specify { expect(response).to redirect_to(root_path) }
       end
 
       it "adds a new user to the system" do
@@ -78,32 +78,18 @@ describe "UsersPages" do
       it { should_not have_content(user.password) }
       it { should_not have_content(user.password_digest) }
 
-      it { should have_subheader(text: 'Players') }
+      it { should have_header(text: 'Players') }
       it "lists all the players for the user" do
         Player.all.each do |player|
-          should have_selector('li', text: player.name)
+          should have_selector('div', text: player.name)
           should have_link(player.name, player_path(player))
-          should_not have_link('delete', href: player_path(player))
         end
       end
-      #it { should have_link('New Player', href: new_player_path) }
-      it { should have_content('5 Players') }
+      it { should have_link('', href: new_contest_player_path('not-specified')) }
+      it { should have_content('My Players (5)') }
 
-      it { should_not have_subheader(text: 'Referees') }
+      it { should_not have_subheader(text: 'My Referees') }
       it { should_not have_link('New Referee', href: new_referee_path) }
-
-      describe "logged in" do
-        before do
-          login user
-          visit user_path(user)
-        end
-
-        it "gives delete links to all the players for the user" do
-          Player.all.each do |player|
-            should have_link('delete', href: player_path(player))
-          end
-        end
-      end
     end
 
     describe "individually (contest creator)" do
@@ -115,28 +101,14 @@ describe "UsersPages" do
         visit user_path(user)
       end
 
-      it { should have_subheader(text: 'Referees') }
+      it { should have_header(text: 'My Referees (5)') }
       it "lists all the referees for the user" do
         Referee.all.each do |ref|
-          should have_selector('li', text: ref.name)
-          should_not have_link('delete', href: referee_path(ref))
+          should have_selector('div', text: ref.name)
         end
       end
 
-      it { should have_content('5 Referees') }
-
-      describe "logged in" do
-        before do
-          login user
-          visit user_path(user)
-        end
-
-        it "gives delete links to all the referees for the user" do
-          Referee.all.each do |ref|
-            should have_link('delete', href: referee_path(ref))
-          end
-        end
-      end
+      it { should have_content('My Referees (5)') }
     end
 
     describe "individually (admin)" do
@@ -148,7 +120,7 @@ describe "UsersPages" do
 
       before(:each) { visit users_path }
 
-      it { should have_content('List of Users') }
+      it { should have_content('Users') }
       it { should have_content('10 Users') }
 
       # fix up with pagination later...
@@ -275,10 +247,9 @@ describe "UsersPages" do
     end
 
     it 'should return results' do
-      should have_content('searchtest')
+      should have_button('searchtest')
       should have_content('1 User')
-
-   end
+    end
    end
 
 
@@ -479,9 +450,9 @@ describe "UsersPages" do
     describe "as anonymous" do
       let!(:user) { FactoryGirl.create(:user) }
 
-      before { visit users_path }
+      before { visit user_path(user) }      
 
-      it { should_not have_link('delete') }
+      it { should_not have_link('Delete') }
     end
 
     describe "as a user" do
@@ -489,10 +460,10 @@ describe "UsersPages" do
 
       before do
         login user
-        visit users_path
+        visit user_path(user)
       end
 
-      it { should_not have_link('delete') }
+      it { should_not have_link('Delete') }
     end
 
     describe "as admin" do
@@ -501,11 +472,10 @@ describe "UsersPages" do
 
       before do
         login admin
-        visit users_path
+        visit user_path(user)
       end
 
-      it { should have_link('delete', href: user_path(user)) }
-      it { should_not have_link('delete', href: user_path(admin)) }
+      it { should have_link('Delete', href: user_path(user)) }
 
       describe "redirects properly", type: :request do
         before do
@@ -517,12 +487,12 @@ describe "UsersPages" do
       end
 
       it "produces a delete message" do
-        click_link('delete', match: :first)
+        click_link('Delete', match: :first)
         should have_alert(:success)
       end
 
       it "removes a user from the system" do
-        expect { click_link('delete', match: :first) }.to change(User, :count).by(-1)
+        expect { click_link('Delete', match: :first) }.to change(User, :count).by(-1)
       end
     end
 
@@ -531,27 +501,31 @@ describe "UsersPages" do
       let! (:admin2) { FactoryGirl.create(:admin) }
       
       before do 
-	login admin2
-	visit users_path
-      end
-    it { should have_link('delete', href: user_path(admin1)) }
-    it { should_not have_link('delete', href: user_path(admin2)) }
-    
-    describe "redirects properly", type: :request do
-      before do 
-        login admin2, avoid_capybara: true
-        delete user_path(admin1) 
+        login admin2
+        visit user_path(admin1)
       end
 
-    specify { expect(response).to redirect_to(users_path) }
-    end
+      it { should have_link('Delete', href: user_path(admin1)) }
     
-    # Currently this test is useless because it just sees that any delete was clicked and not the correct admin....
-    it "removes an admin from the system" do 
-      #expect { click_link('delete', match: :first) }.to change(User, :count).by(-1)
-      expect { find("a[href='#{ user_path(admin1) }']" , text: 'delete').click }.to change(User, :count).by(-1)
+      describe "redirects properly", type: :request do
+        before do 
+          login admin2, avoid_capybara: true
+          delete user_path(admin1) 
+        end
+
+      specify { expect(response).to redirect_to(users_path) }
+      end
+    end
+    describe "as admin deleting yourself" do 
+      let! (:admin) { FactoryGirl.create(:admin) }
+
+      before do
+        login admin
+        visit user_path(admin)
+      end
+
+      it { should_not have_link('Delete', href: user_path(admin)) }
     end
   end
-end
-end
+  end
 end

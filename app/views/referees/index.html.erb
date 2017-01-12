@@ -1,32 +1,34 @@
 <!-- TODO: Add this to other pages -->
 <% provide(:title, 'All referees') %>
 
-<h1>List of Referees</h1>
-<%= form_tag referees_path, method: :get, id: :referee_search do %>
-    <%= hidden_field_tag :direction, params[:direction] %>
-    <%= hidden_field_tag :sort, params[:sort] %>
-
-    <p>
-    <%= text_field_tag :search, params[:search] %>
-    <%= submit_tag "Search", name: nil %>
-    </p>
-<% end %>
-
-<h3><%= pluralize(@referees.length, 'Referee') %></h3>
-
-<div id= "pagination">
-    <% if @referees.blank? %>
-        <h3><%= "There are no contests available!" %></h3>
-    <% else %>
-        <% @referees.each do |referee| %>
-            <li><%= link_to referee.name, referee %>
-                <% if current_user == referee.user and current_user.contest_creator %>
-                    | <%= link_to 'edit', edit_referee_path(referee) %>
-                <% end %>
-            </li>
+<div class="row">
+    <div class="container center display-container col-md-offset-3 col-md-6">
+        <div class="row">
+            <h1 class="headings col-xs-10 left">Referees</h1>
+            <% if current_user && current_user.contest_creator? %> 
+                <div class="col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Referee">
+                    <%= link_to(new_referee_path, method: :get) do %>
+                        <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
+                    <% end %>
+                </div>
+            <% end %>            
+        </div>
+        <%= form_tag referees_path, method: :get, id: :referee_search do %>
+            <%= hidden_field_tag :direction, params[:direction] %>
+            <%= hidden_field_tag :sort, params[:sort] %>
+            <p class="search-container">
+                <%= text_field_tag :search, params[:search] %>
+                <%= submit_tag "Search", name: nil %>
+            </p>
         <% end %>
-    <% end %>
-
-    <%= will_paginate %>
-
+        <div id= "pagination">
+            <% if !@referees.blank? %>
+                <% @referees.each do |referee| %>
+                    <%= button_to referee.name, referee, method: :get, class: 'results-container' %>
+                <% end %>
+            <% end %>
+            <%= will_paginate %>
+        </div>
+        <div><%= pluralize(@referees.length, 'Referee') %> Found</div>
+    </div>
 </div>

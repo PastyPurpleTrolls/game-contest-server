@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 20170109183954) do
     t.string   "slug"
     t.integer  "num_rounds"
     t.integer  "ref_log_info_id"
+    t.string   "match_name"
   end
 
   add_index "matches", ["manager_id", "manager_type"], name: "index_matches_on_manager_id_and_manager_type"
@@ -169,6 +170,7 @@ ActiveRecord::Schema.define(version: 20170109183954) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string   "slug"
+    t.string   "round_name"
   end
 
   add_index "rounds", ["match_id"], name: "index_rounds_on_match_id"

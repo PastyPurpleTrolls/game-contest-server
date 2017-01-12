@@ -13,7 +13,7 @@ describe "AuthenticationPages" do
       it { should have_alert(:danger, text: 'Invalid') }
 
       describe "visiting another page" do
-        before { click_link 'Users' }
+        before { click_link 'Contests' }
 
         it { should_not have_alert(:danger) }
       end

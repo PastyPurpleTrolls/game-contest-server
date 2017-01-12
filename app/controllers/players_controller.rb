@@ -14,8 +14,11 @@ class PlayersController < ApplicationController
   end
 
   def new
-    contest = Contest.friendly.find(params[:contest_id])
-    @player = contest.players.build
+    @contests = Contest.all
+    if params[:contest_id] != 'not-specified'
+      contest = Contest.friendly.find(params[:contest_id])
+      @player = contest.players.build
+    end
   end
 
   def create
@@ -27,6 +30,7 @@ class PlayersController < ApplicationController
       flash[:success] = 'New Player created.'
       redirect_to @player
     else
+      @contests = Contest.all
       render 'new'
     end
   end
@@ -51,7 +55,11 @@ class PlayersController < ApplicationController
 
   def destroy
     @player.destroy
-    redirect_to contest_players_path(@player.contest)
+    if params[:returnto] == 'profile'
+      redirect_to user_path(current_user)
+    else 
+      redirect_to contest_players_path(@player.contest)
+    end
   end
 
   private
