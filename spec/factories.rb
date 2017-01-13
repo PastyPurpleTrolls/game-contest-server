@@ -93,7 +93,8 @@ FactoryGirl.define do
 
     factory :tournament_match do
       association :manager, factory: :tournament
-
+      #association :match_log_info, factory: :match_log_info_referee
+      
       factory :winning_match do
 	after(:create) do |match, evaluator|
 	  pm = PlayerMatch.where(match: match,
@@ -199,6 +200,7 @@ FactoryGirl.define do
   factory :player_match do
     player
     association :match, factory: :tournament_match
+    #association :match_log_info, factory: :match_log_info_player
     result "Unknown Result"
   end
   
@@ -207,6 +209,37 @@ FactoryGirl.define do
     association :round, factory: :challenge_round 
     result nil 
     score 1.0
+  end
+
+  factory :match_log_info do
+
+    factory :match_log_info_referee do
+      association :match_source, factory: :tournament_match
+
+      after(:create) do |log_info, evaluator|
+        location = File.dirname(log_info.match_source.manager.referee.file_location)+"/logs/"
+        log_info.log_stdout = location+"test_out.tgz"
+        log_info.log_stderr = location+"test_err.tgz"
+	FileUtils.mkdir_p(location)
+        FileUtils.touch(log_info.log_stdout)
+        FileUtils.touch(log_info.log_stderr)
+        log_info.save!
+      end
+    end
+
+    factory :match_log_info_player do
+      association :match_source, factory: :player_match
+  
+      after(:create) do |log_info, evaluator|
+        location = File.dirname(log_info.match_source.player.file_location)+"/logs/"
+        log_info.log_stdout = location+"test_out.tgz"
+        log_info.log_stderr = location+"test_err.tgz"
+        FileUtils.mkdir_p(location)
+        FileUtils.touch(log_info.log_stdout)
+        FileUtils.touch(log_info.log_stderr)
+        log_info.save!
+      end
+    end
   end
 
 end

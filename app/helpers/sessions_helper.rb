@@ -19,6 +19,20 @@ module SessionsHelper
     session[:user_id] = nil
   end
 
+  def deny_access
+    store_location
+    flash[:warning] = "Access Denied"
+    #redirect_to "/login"
+    redirect_back_to_previous
+  end
+
+  def redirect_back_to_previous
+    return_to = session[:return_to]
+    clear_return_to
+    redirect_to(return_to || root_path)
+  end
+
+
   private
 
   def ensure_user_logged_in
@@ -60,6 +74,15 @@ module SessionsHelper
       flash[:danger] = 'Unable to edit another user\'s stuff.'
       redirect_to root_path
     end
+  end
+
+  
+  def store_location
+    session[:return_to] = request.referrer
+  end
+
+  def clear_return_to
+    session[:return_to] = nil
   end
 
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170105214505) do
+ActiveRecord::Schema.define(version: 20170109183954) do
 
   create_table "contests", force: :cascade do |t|
     t.integer  "user_id"
@@ -42,6 +42,19 @@ ActiveRecord::Schema.define(version: 20170105214505) do
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id"
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type"
 
+  create_table "match_log_infos", force: :cascade do |t|
+    t.string   "log_stdout"
+    t.string   "log_stderr"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.integer  "logger_id"
+    t.integer  "match_source_id"
+    t.string   "match_source_type"
+  end
+
+  add_index "match_log_infos", ["logger_id"], name: "index_match_log_infos_on_logger_id"
+  add_index "match_log_infos", ["match_source_type", "match_source_id"], name: "index_match_log_infos_on_match_source_type_and_match_source_id"
+
   create_table "match_paths", force: :cascade do |t|
     t.integer  "parent_match_id"
     t.integer  "child_match_id"
@@ -58,16 +71,18 @@ ActiveRecord::Schema.define(version: 20170105214505) do
     t.datetime "completion"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "status",         limit: 255
+    t.string   "status",          limit: 255
     t.datetime "earliest_start"
-    t.string   "manager_type",   limit: 255
+    t.string   "manager_type",    limit: 255
     t.string   "slug"
     t.integer  "num_rounds"
+    t.integer  "ref_log_info_id"
     t.string   "match_name"
   end
 
   add_index "matches", ["manager_id", "manager_type"], name: "index_matches_on_manager_id_and_manager_type"
   add_index "matches", ["manager_id"], name: "index_matches_on_manager_id"
+  add_index "matches", ["ref_log_info_id"], name: "index_matches_on_ref_log_info_id"
   add_index "matches", ["slug"], name: "index_matches_on_slug", unique: true
 
   create_table "player_matches", force: :cascade do |t|
@@ -75,11 +90,11 @@ ActiveRecord::Schema.define(version: 20170105214505) do
     t.integer  "match_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "result",     limit: 255
-    t.string   "log_out"
-    t.string   "log_err"
+    t.string   "result",      limit: 255
+    t.integer  "log_info_id"
   end
 
+  add_index "player_matches", ["log_info_id"], name: "index_player_matches_on_log_info_id"
   add_index "player_matches", ["match_id"], name: "index_player_matches_on_match_id"
   add_index "player_matches", ["player_id"], name: "index_player_matches_on_player_id"
 

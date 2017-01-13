@@ -6,6 +6,8 @@ GameContestServer::Application.routes.draw do
 
   get '/help/', to: 'help#index'
   get '/help/:category/(:page)', to: 'help#show'
+  get '/match_logs/:id/std_out', to: 'match_log_infos#std_out'
+  get '/match_logs/:id/std_err', to: 'match_log_infos#std_err'
 
   resources :users
   

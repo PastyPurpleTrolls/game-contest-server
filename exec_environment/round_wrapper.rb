@@ -46,6 +46,7 @@ class RoundWrapper
                 end
             end
             calculate_results
+	    compress_logs
         end
     end
     
@@ -107,7 +108,7 @@ class RoundWrapper
 		    command="#{Shellwords.escape @referee.file_location} -p #{wrapper_server_port} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time}"
 	    end
 
-	loc = "#{Shellwords.escape @referee.file_location[0, @referee.file_location.length-@referee.name.length]}logs/match_#{@match_id}_round_#{@rounds.length + 1}" 
+	loc = "#{Shellwords.escape @referee.file_location[0, @referee.file_location.length-@referee.name.length]}logs/#{@referee.name}_match_#{@match_id}_round_#{@rounds.length() + 1}" 
         @child_list.push(Process.spawn("#{command}", :out=>"#{loc}_log.txt", :err=>"#{loc}_err.txt"))
 	@match[:ref_logs] = loc        
 
@@ -137,7 +138,7 @@ class RoundWrapper
 			    command="#{Shellwords.escape player.file_location} -n #{Shellwords.escape player.name} -p #{@client_port}"
 			end
 
-	    loc = "#{Shellwords.escape player.file_location[0, player.file_location.length-player.name.length]}logs/match_#{@match_id}_round_#{@rounds.length + 1}"
+	    loc = "#{Shellwords.escape player.file_location[0, player.file_location.length-player.name.length]}logs/#{player.name}_match_#{@match_id}_round_#{@rounds.length() + 1}"
             @child_list.push(Process.spawn("#{command}", :out=>"#{loc}_log.txt", :err=>"#{loc}_err.txt"))
 	    @match[:logs][player.name] = loc
         end
@@ -208,5 +209,20 @@ class RoundWrapper
         end
         @child_list = []
     end 
+
+    def compress_logs
+	locs = []
+	locs << "#{Shellwords.escape @referee.file_location[0, @referee.file_location.length-@referee.name.length]}logs/"
+	@match[:ref_logs] = locs.last+"match_#{@match_id}_logs"
+        @players.each do |player|
+	    locs << "#{Shellwords.escape player.file_location[0, player.file_location.length-player.name.length]}logs/"
+	    @match[:logs][player.name] = locs.last+"match_#{@match_id}_logs"
+	end
+
+	locs.each do |loc|
+	    command = "tar czf match_#{@match_id}_logs_out.tgz *log.txt; tar czf match_#{@match_id}_logs_err.tgz *err.txt; rm *.txt"
+            Process.spawn(command, :chdir=>loc) 
+        end
+    end
 end
 

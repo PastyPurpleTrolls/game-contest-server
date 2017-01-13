@@ -20,6 +20,16 @@
                 <div class="col-md-6">
                     <p class="info-container">Completed: <%= distance_of_time_in_words_to_now(@match.completion) %> ago</p>
                 </div>
+
+		<% if @match.match_log_info %>
+			<div class="col-md-6">
+			    <p class="info-container"><a href="/match_logs/<%= @match.match_log_info.id %>/std_out">Referee STDOUT Log</a></p>
+			</div>
+			<div class="col-md-6">
+			    <p class="info-container"><a href="/match_logs/<%= @match.match_log_info.id %>/std_err">Referee STDERR Log</a></p>
+			</div>
+		<% end %>
+
             <% else %>                
                 <div class="col-md-6">
                     <p class="info-container">Earliest Start Time: <%= distance_of_time_in_words_to_now(@match.earliest_start) %></p>
