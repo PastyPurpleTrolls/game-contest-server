@@ -19,28 +19,14 @@ class MatchesController < ApplicationController
     contest = Contest.friendly.find(params[:contest_id])
     round_limit = params[:match][:num_rounds]
     if params[:match][:player_ids] && params[:match][:player_ids].any? { |player_id, use| Player.find(player_id).user_id == current_user.id}
-	
-	# Code below was causing a bug where if you challenged a player to a multi-round 
-	#  match it would create x matches of x rounds instead of 1 match with x rounds.
-	#  Legacy code remains in case this served some additional purpose presently
-	#  unknown to myself.  My assumption would be that this was initially necessary
-	#  prior to the match_runner being able to handle multiple rounds in non-rounds
-	#  capable referees.
-
-	#round_limit = 1 if contest.referee.rounds_capable
-	round_limit = 1
-        
-
-	round_limit.to_i.times do 
-            @match = @contest.matches.build(acceptable_params)
-    	    @match.status = "waiting"
-    	        if @match.save
-		    flash[:success] = 'Match created.'
-		else
-		    flash.now[:danger] = 'Match not saved'
-		    render 'new'
-		    return
-		end
+        @match = @contest.matches.build(acceptable_params)
+        @match.status = "waiting"
+        if @match.save
+	    flash[:success] = 'Match created.'
+	else
+	    flash.now[:danger] = 'Match not saved'
+	    render 'new'
+	    return
 	end
 	redirect_to @contest
     else   	

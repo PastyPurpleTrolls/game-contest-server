@@ -42,6 +42,9 @@ class MatchRunner
        end
 
        @number_of_players = @referee.players_per_game
+       while @match_participants.length < @number_of_players do
+		@match_participants << @match.players.first
+       end
        @max_match_time = @referee.time_per_game
        @tournament = @match.manager
        @num_rounds = @match.num_rounds

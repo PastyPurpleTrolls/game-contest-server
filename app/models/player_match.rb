@@ -8,7 +8,7 @@ class PlayerMatch < ActiveRecord::Base
 
   validates :result,  	inclusion: [nil,'Pending', 'Error', 'Win', 'Loss', 'Tie', 'Unknown Result']
 
-	validate :check_ids
+#	validate :check_ids
 
   default_scope -> { order("player_matches.result DESC") }
   scope :wins, -> { where(result: 'Win') }
