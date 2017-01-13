@@ -47,21 +47,45 @@
         </div>
     </div>
 </div>
-
-<% if @user.referees.count > 0 %>
-    <div class="row">
-        <div class="container center display-container col-md-offset-3 col-md-6">
-            <% if @user.contest_creator %>
-                <h1 class="headings left">My Referees (<%= @user.referees.count %>)</h1>
-                <br>
-                <div>
+<div class="row center">
+    <% if @user.contest_creator %>
+        <div class="container outer-home-container col-md-offset-1 col-md-5">
+            <div class="display-container">
+                <div class="row">            
+                    <h1 class="headings info-text col-xs-10 left">My Referees (<%= @user.referees.count %>)</h1>
+                    <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Referee">
+                        <%= link_to(new_referee_path, method: :get) do %>
+                            <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
+                        <% end %>
+                    </div>
+                </div>                    
+                <div class="row">
                     <% @user.referees.each do |ref| %>
                         <div class="info-container">
                             <%= link_to ref.name, ref %>
                         </div>
                     <% end %>
                 </div>
-            <% end %>
+            </div>
         </div>
-    </div>
-<% end %>
+        <div class="container outer-home-container col-md-5">
+            <div class="display-container">
+                <div class="row">            
+                    <h1 class="headings info-text col-xs-10 left">My Contests(<%= @user.contests.count %>)</h1>
+                    <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Contest">
+                        <%= link_to(new_contest_path, method: :get) do %>
+                            <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
+                        <% end %>
+                    </div>
+                </div>                    
+                <div class="row">
+                    <% @user.contests.each do |c| %>
+                        <div class="info-container">
+                            <%= link_to c.name, c %>
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    <% end %>
+</div>

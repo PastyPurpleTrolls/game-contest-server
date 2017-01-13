@@ -20,8 +20,8 @@ describe "RoundsPages" do
 
 		it "lists all the rounds for the match" do
 			Round.where(match: tournament_match).each do |r|
-			should have_selector('li', text: /Round #{r.id}$/)	
-                        should have_link(r.id, href: round_path(r))
+			should have_selector('div', text: /Round #{r.id}$/)	
+      should have_link(r.id, href: round_path(r))
 			end
 		end
 
@@ -56,7 +56,7 @@ describe "RoundsPages" do
 		it "lists all the rounds for the match" do
 				Round.where(match: challenge_match).each do |r|
 				#should have_selector('li', text: 'Round '+ r.id.to_s)	
-				should have_selector('li', text: /Round #{r.id}$/)	
+				should have_selector('div', text: /Round #{r.id}$/)	
         should have_link(r.id, href: round_path(r))
 			end
 		end

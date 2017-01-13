@@ -9,7 +9,7 @@
 		<% if player_match.result.nil? %>
 			(Waiting)
 		<% else %>
-			(<%= player_match.result %>)
+			(<%= player_match.result %> on <%= player_match.created_at.strftime("%m-%d-%y") %>)
 		<% end %>
 	<% end %>
 

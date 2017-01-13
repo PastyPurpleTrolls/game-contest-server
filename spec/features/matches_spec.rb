@@ -149,13 +149,12 @@ describe "MatchesPages" do
         before do
           login creator, avoid_capybara: true
           post contest_matches_path(contest),
-            match: { earliest_start: now.strftime("%F %T"),
+            match: { manager_id: 1, earliest_start: now.strftime("%F %T"),
             player_ids: {player1.id => "1", player2.id => "1", player3.id => "1", player4.id => "1"},
-	    num_rounds: 3 }
+	          num_rounds: 3 }
         end
-
-        specify { expect(response).to redirect_to(contest_path(contest)) }
-	specify { expect(assigns(:match).manager).to eq(contest) }	
+        specify { expect(response).to redirect_to(match_path(1)) }
+	      specify { expect(assigns(:match).manager).to eq(contest) }	
 
       end # redirects
 
@@ -172,9 +171,9 @@ describe "MatchesPages" do
 
         before { click_button submit }
 
-	it { should have_content('Contest Information') }
+	      it { should have_content('Match Information') }
         it { should have_alert(:success, text: 'Match created.') }
-        it { should have_content(contest.referee.name) }
+        it { should have_content(contest.name) }
 
 	#The following tests were removed when successful redirect was changed from
 	#the newly created match page to the contest page.

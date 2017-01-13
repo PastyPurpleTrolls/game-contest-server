@@ -27,6 +27,9 @@ class Match < ActiveRecord::Base
 	validates_numericality_of :num_rounds, greater_than: 0
 
 	validate :num_rounds_upper_bound
+
+  default_scope -> { order("created_at DESC") }  
+
 	def num_rounds_upper_bound
 		if self.num_rounds.nil? || self.manager.nil?
 			errors.add(:num_rounds, "must not be nil")	
