@@ -149,11 +149,11 @@ describe "MatchesPages" do
         before do
           login creator, avoid_capybara: true
           post contest_matches_path(contest),
-            match: { manager_id: 1, earliest_start: now.strftime("%F %T"),
+            match: { earliest_start: now.strftime("%F %T"),
             player_ids: {player1.id => "1", player2.id => "1", player3.id => "1", player4.id => "1"},
 	          num_rounds: 3 }
         end
-        specify { expect(response).to redirect_to(match_path(1)) }
+        specify { expect(response).to redirect_to(match_path(assigns(:match))) }
 	      specify { expect(assigns(:match).manager).to eq(contest) }	
 
       end # redirects

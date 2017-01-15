@@ -80,7 +80,7 @@ body {
     margin-top: 50px;
 }
 
-.display-container a {
+.display-container a, .player-label {
     color: white;
 }
 
@@ -211,7 +211,7 @@ label{
     margin: 5px;
 }
 
-.results-container a, .home-container:hover {
+.results-container a, .multiselector, .home-container:hover {
     color: #4999B4;
 }
 
@@ -240,3 +240,20 @@ label{
 }
 
 @import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css");
+
+.player-select {
+    width: 200px;
+}
+
+.multiselector > DIV {
+    float: left;
+    padding: 4px;
+}
+
+.player-selectors {
+    width: 50px;
+}
+
+.first-player-select {
+    margin-left: 15px;
+}
