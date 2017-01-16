@@ -44,10 +44,10 @@ class MatchRunner
        @number_of_players = @referee.players_per_game
        @duplicate_players = false
        if @match_participants.length == 1 then
-	       while @match_participants.length < @number_of_players do
-			@match_participants << @match.players.first
-			@duplicate_players = true
-	       end
+           @duplicate_players = true
+           while @match_participants.length < @number_of_players do
+               @match_participants << @match.players.first
+	   end
        end
        @max_match_time = @referee.time_per_game
        @tournament = @match.manager
@@ -67,7 +67,9 @@ class MatchRunner
         round_wrapper = RoundWrapper.new(@referee,@match_id,@number_of_players,@max_match_time,@match_participants,@num_rounds,@duplicate_players)
         puts "   Match runner running match #"+@match_id.to_s
         round_wrapper.run_match
-
+	
+	@match_participants = [@match.players.first] if @duplicate_players
+		
         self.send_results_to_db(round_wrapper)
     end
 
@@ -87,20 +89,20 @@ class MatchRunner
             puts "   Match runner writing results match #"+@match_id.to_s
             #Loop through participants and find their results
             @match_participants.each do |player|
-                player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id).first
-		log_info = MatchLogInfo.create()
+                PlayerMatch.where(match_id: @match_id, player_id: player.id).each do |player_match|
+	            log_info = MatchLogInfo.create()
 
-		log_info.log_stdout = round_runner.match[:logs][player.name]+"_out.tgz"
-		log_info.log_stderr = round_runner.match[:logs][player.name]+"_err.tgz"
+	            log_info.log_stdout = round_runner.match[:logs][player.name]+"_out.tgz"
+	            log_info.log_stderr = round_runner.match[:logs][player.name]+"_err.tgz"
 
-                player_match.result = round_runner.match[player.name][:result]
-                player_match.save!
+                    player_match.result = round_runner.match[player.name][:result]
+                    player_match.save!
 
-		log_info.match_source = player_match
-		log_info.save!
-
-                print_results(player.name, player_match.result, round_runner.match[player.name][:score])
-                self.schedule_matches(player, player_match, child_matches)
+        	    log_info.match_source = player_match
+                    log_info.save!
+                    print_results(player.name, player_match.result, round_runner.match[player.name][:score])
+                    self.schedule_matches(player, player_match, child_matches)
+		end
             end
             puts "   Match runner finished match #"+@match_id.to_s
 
