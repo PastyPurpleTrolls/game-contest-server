@@ -155,7 +155,7 @@ describe "MatchesPages" do
             player_ids: {player1.id => "1", player2.id => "1", player3.id => "1", player4.id => "1"},
 	          num_rounds: 3 }
         end
-        specify { expect(response).to redirect_to(match_path(1)) }
+        specify { expect(response).to redirect_to(match_path( contest.matches.first.slug )) }
 	      specify { expect(assigns(:match).manager).to eq(contest) }	
 
       end # redirects
