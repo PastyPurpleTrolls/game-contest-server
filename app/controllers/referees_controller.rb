@@ -21,6 +21,9 @@ class RefereesController < ApplicationController
             flash[:success] = 'Referee created.'
 	    test_contest = current_user.contests.build( deadline:Time.now+1.day, description:"Test Contest", name:@referee.name+" test contest", referee_id:@referee.id)
 	    test_contest.save!
+	    test_player = test_contest.players.build( upload: params[:upload4], name:@referee.name+" test player", description: "Test Player", downloadable:false, playable:true )
+	    test_player.user = current_user
+	    test_player.save!
             
             redirect_to @referee
         else
@@ -80,7 +83,7 @@ class RefereesController < ApplicationController
                                         :time_per_game,
                                         :upload,
                                         :upload2,
-                                        :upload3)
+                                        :upload3 )
     end
 
     def ensure_referee_owner
