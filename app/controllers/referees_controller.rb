@@ -19,6 +19,9 @@ class RefereesController < ApplicationController
         @referee = current_user.referees.build(acceptable_params)
         if @referee.save
             flash[:success] = 'Referee created.'
+	    test_contest = current_user.contests.build( deadline:Time.now+1.day, description:"Test Contest", name:@referee.name+" test contest", referee_id:@referee.id)
+	    test_contest.save!
+            
             redirect_to @referee
         else
             render 'new'
