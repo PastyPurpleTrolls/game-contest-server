@@ -33,12 +33,4 @@ describe PlayerMatch do
 		end
 	end
 
-	describe "has same player and match as a different player match" do	
-		before do
-			player_match.match_id = match.player_matches.first.match_id
-			player_match.player_id = match.player_matches.first.player_id
-		end
-
-		it { should_not be_valid }
-	end
 end

@@ -20,20 +20,17 @@ class MatchesController < ApplicationController
     contest = Contest.friendly.find(params[:contest_id])
     round_limit = params[:match][:num_rounds]
     if params[:match][:player_ids] && params[:match][:player_ids].any? { |player_id, use| Player.find(player_id).user_id == current_user.id}
-				round_limit = 1 if contest.referee.rounds_capable
-        round_limit.to_i.times do 
-          @match = @contest.matches.build(acceptable_params)
-    	    @match.status = "waiting"
-    	    if @match.save
-		    		flash[:success] = 'Match created.'
-					else
-		    		flash.now[:danger] = 'Match not saved'
-						@contests = Contest.all
-						render 'new'
-						return
-					end
-			end
-			redirect_to @match
+        @match = @contest.matches.build(acceptable_params)
+        @match.status = "waiting"
+        if @match.save
+	    flash[:success] = 'Match created.'
+	else
+	    @contests = Contest.all
+	    flash.now[:danger] = 'Match not saved'
+	    render 'new'
+	    return
+	end
+	redirect_to @match
     else   	
         @match = @contest.matches.build(acceptable_params)
 				@contests = Contest.all

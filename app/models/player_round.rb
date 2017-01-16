@@ -12,7 +12,7 @@ class PlayerRound < ActiveRecord::Base
 #	validates_uniqueness_of :round_id, scope: :player_id 
 
 	
-	validate :check_ids
+#	validate :check_ids
 
 	def check_ids
 		pr_count =  PlayerRound.where(round_id: self.round_id, player_id: self.player_id).where.not(id: self.id).count

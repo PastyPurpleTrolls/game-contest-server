@@ -36,13 +36,4 @@ describe PlayerRound do
 		end
 	end
 
-	describe "has same player and round as a different player round" do
-		before do
-			player_round.round_id = round.player_rounds.first.round_id 
-			player_round.player_id = round.player_rounds.first.player_id
-		end
-
-		it { should_not be_valid }
-	end
-
 end
