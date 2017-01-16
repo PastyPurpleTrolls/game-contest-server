@@ -90,7 +90,7 @@ describe "ContestsPages" do
         it { should have_content(description) }
         it { should have_content(name) }
         it { should have_content(contest.referee.name) }
-        it { should have_link('New Player',
+        it { should have_link('',
           href: new_contest_player_path(contest)) }
       end
     end
@@ -109,14 +109,13 @@ describe "ContestsPages" do
     it { expect_datetime_select(contest.deadline, 'Deadline') }
     it { should have_field('Description', with: contest.description) }
     it { should have_field('Name', with: contest.name) }
-    it { should have_select('Referee', selected: contest.referee.name) }
+    it { should have_content( contest.referee.name) }
 
     describe "with invalid information" do
       before do
         select_datetime(now, 'Deadline')
         fill_in 'Name', with: ''
         fill_in 'Description', with: description
-        select referee.name, from: 'Referee'
       end
 
       describe "does not change data" do
@@ -141,7 +140,6 @@ describe "ContestsPages" do
         select_datetime(now, 'Deadline')
         fill_in 'Name', with: name
         fill_in 'Description', with: description
-        select referee.name, from: 'Referee'
       end
 
       describe "changes the data" do
@@ -151,9 +149,7 @@ describe "ContestsPages" do
         specify { expect_same_minute(contest.reload.deadline, now) }
         specify { expect(contest.reload.name).to eq(name) }
         specify { expect(contest.reload.description).to eq(description) }
-        specify { expect(contest.reload.referee.name).to eq(referee.name) }
-        it { should have_link('New Player',
-          href: new_contest_player_path(contest)) }
+        it { should have_link('', href: new_contest_player_path(contest)) }
       end
 
       describe "redirects properly", type: :request do
@@ -321,10 +317,10 @@ describe "ContestsPages" do
       end
     end
 
-    it { should have_link('New Player',
+    it { should have_link('',
       href: new_contest_player_path(contest)) }
 
-    it { should have_link('Challenge other players.',
+    it { should have_link('',
       href: new_contest_match_path(contest)) }
 
   end

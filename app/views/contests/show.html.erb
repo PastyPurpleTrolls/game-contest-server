@@ -51,7 +51,7 @@
             <div class="display-container center">
                 <div class="row">
                     <h1 class="headings info-text col-xs-10 left">Tournaments (<%= @contest.tournaments.count %>)</h1>
-                    <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Tournament">
+                    <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Tournament to Contest">
                         <%= link_to(new_contest_tournament_path(@contest), method: :get) do %>
                             <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
                         <% end %>
@@ -79,7 +79,7 @@
             <div class="display-container center">
                 <div class="row">
                     <h1 class="headings info-text col-xs-10 left">Players (<%= @contest.players.count %>)</h1>
-                    <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Player">
+                    <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Player to Contest">
                         <%= link_to(new_contest_player_path(@contest), method: :get) do %>
                             <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
                         <% end %>

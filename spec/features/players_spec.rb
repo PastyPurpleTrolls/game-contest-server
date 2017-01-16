@@ -39,7 +39,7 @@ describe "PlayersPages" do
         fill_in 'Description', with: description
         check('Allow others to compete against this player')
         uncheck('Allow others to download this player')
-        attach_file('Upload file', file_location)
+        attach_file('Player File', file_location)
       end
 
       it "should create a player" do
@@ -138,7 +138,7 @@ describe "PlayersPages" do
       before do
         fill_in 'Name', with: name
         fill_in 'Description', with: description
-        attach_file('Upload file', file_location)
+        attach_file('Player File', file_location)
       end
 
       describe "changes the data" do
@@ -193,7 +193,7 @@ describe "PlayersPages" do
     describe "redirects properly" do
       before { delete player_path(player) }
 
-      specify { expect(response).to redirect_to(contest_players_path(player.contest)) }
+      specify { expect(response).to redirect_to(contest_path(player.contest)) }
     end
 
     it "produces a delete message" do
@@ -229,9 +229,6 @@ describe "PlayersPages" do
     it { should have_link(player.contest.name, href: contest_path(player.contest)) }
     it { should have_content(player.user.username) }
     it { should have_link(player.user.username, href: user_path(player.user)) }
-
-    pending { should have_link('Challenge another player',
-                               href: new_contest_player_path(contest)) }
 
     describe "show match" do
       let!(:player_match) do

@@ -27,11 +27,6 @@ function redirectToContest() {
     f.submit();
 }
 
-function checkRedirectToReferee() {
-    var f = $("#ref-form")[0];
-    console.log(f);
-}
-
 function removePlayer() {
     var selectedItem = $("#rightValues option:selected");
     $("#leftValues").append(selectedItem);

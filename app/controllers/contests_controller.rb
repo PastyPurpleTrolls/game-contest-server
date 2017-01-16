@@ -22,6 +22,7 @@ class ContestsController < ApplicationController
       flash[:success] = 'Contest created.'
       redirect_to @contest
     else
+      @referees = Referee.all
       render 'new'
     end
   end
