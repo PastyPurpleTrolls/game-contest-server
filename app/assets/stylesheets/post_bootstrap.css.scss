@@ -130,7 +130,7 @@ a.active:hover {
 }
 
 .gly-plus:hover {
-    color: #FFCCCC;    
+    color: #D6FFFF;    
 }
 
 .header-title {
@@ -211,7 +211,7 @@ label{
     margin: 5px;
 }
 
-.results-container a {
+.results-container a, .home-container:hover {
     color: #4999B4;
 }
 
@@ -221,7 +221,7 @@ label{
 
 }
 .results-container:hover, .home-container:hover {
-    background-color: #FFCCCC;
+    background-color: #D6FFFF;
 }
 
 .right {

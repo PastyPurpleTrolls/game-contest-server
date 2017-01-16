@@ -1,3 +1,6 @@
+<% unless @match.completed? %>
+    <% content_for :refresh_rate do %>15<% end %>
+<% end %>
 <div class="row">
     <div class="container center display-container col-md-offset-1 col-md-10">
         <div class="row">
@@ -29,7 +32,7 @@
 
             <% else %>                
                 <div class="col-md-6">
-                    <p class="info-container">Earliest start time: <%= distance_of_time_in_words_to_now(@match.earliest_start) %></p>
+                    <p class="info-container">Earliest Start Time: <%= distance_of_time_in_words_to_now(@match.earliest_start) %></p>
                 </div>
             <% end %>
         </div>
@@ -38,23 +41,14 @@
 <div class="row center">
     <div class="container outer-home-container col-md-offset-1 col-md-5">
         <div class="display-container">
-    
-        <h1 class="headings left row"><%= pluralize(@match.manager.referee.players_per_game, 'Player') %></h1>
-        <ol>
-            <%= render partial: 'player_matches/player_links',
-            collection: @match.player_matches,
-            as: 'player_match' %>
-        </ol>
+            <h1 class="headings left row"><%= pluralize(@match.manager.referee.players_per_game, 'Player') %></h1>
+            <%= render partial: 'player_matches/player_links', collection: @match.player_matches, as: 'player_match' %>
         </div>
     </div>
     <div class="container outer-home-container col-md-5">
         <div class="display-container">
-    
-        <h1 class="headings left row"><%= pluralize(@match.rounds.all.count, 'Round') %></h1>
-        <ol>
+            <h1 class="headings left row"><%= pluralize(@match.rounds.all.count, 'Round') %></h1>
             <%= render @match.rounds %>
-        </ol>
         </div>
-        
     </div>
 </div> 

@@ -2,17 +2,30 @@
     <%= javascript_include_tag URI.join(@assets_url,"script.js"), "data-turbolinks-track" => true %>
 <% end %>
 
-<h1>Round Information</h1>
-<p>Round <%= @round.id %> for <%= link_to "Match " + @round.match_id.to_s, @round.match %></p>
-<h2>Results</h2>
-<ol>
-    <%= render partial: 'player_rounds/player_links',
-        collection: @round.player_rounds,
-        as: 'player_round' %> 
-</ol>
+<div class="row">
+    <div class="container center display-container col-md-offset-1 col-md-10">
+        <div class="row">
+            <h1 class="headings left">Round Information</h1>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <p class="info-container">Round: Round <%= @round.id %></p>
+            </div>
+            <div class="col-md-6">
+                <p class="info-container">Match: <%= link_to "Match " + @round.match_id.to_s, @round.match %></p>
+            </div>     
+            <%= render partial: 'player_rounds/player_links', collection: @round.player_rounds, as: 'player_round' %> 
+        </div>       
+    </div>
+</div>
 
-<h2>Replay</h2>
-<div class="replay-viewer row"></div>
+<div class="row">
+    <div class="container center display-container">
+        <div class="row">
+            <h1 class="headings left">Replay</h1>
+        </div>
+    <div class="replay-viewer row"></div>
+</div>
 <script>
     (function() {
         new Replay(document.querySelector(".replay-viewer"), "<%= @assets_url %>", "<%= @match.slug %>", "<%= @round.slug %>"); 
