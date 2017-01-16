@@ -7,9 +7,9 @@
 	<li>
 		<%= link_to @tmp.to_sentence, round_path(player_round.round) %>
 		<% if player_round.result.nil? %>
-			(Waiting)
+			<span class="xs-font">(Waiting)</span>
 		<% else %>
-			(<%= player_round.result %>)
+			<span class="xs-font">(<%= player_round.result %>)</span>
 		<% end %>
 	</li>
 

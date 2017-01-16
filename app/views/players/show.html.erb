@@ -12,7 +12,7 @@
                             <%= active_link_to 'Edit', edit_player_path(@player), wrap_tag: :li %>
                         <% end %>
                         <% if @player.deletable?(current_user) %>
-                            <%= active_link_to 'Delete', player_path(@player), method: :delete, wrap_tag: :li %>
+                            <%= active_link_to 'Delete', player_path(@player), method: :delete, data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
                         <% end %>
                     </ul>
                 </div>

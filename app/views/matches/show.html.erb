@@ -23,10 +23,10 @@
 
 		<% if @match.match_log_info %>
 			<div class="col-md-6">
-			    <p class="info-container"><a href="/match_logs/<%= @match.match_log_info.id %>/std_out">Referee STDOUT Log</a></p>
+			    <p class="info-container" data-toggle="tooltip" data-placement="bottom" title="Click link to download">Standard Log:<a href="/match_logs/<%= @match.match_log_info.id %>/std_out">Referee STDOUT Log</a></p>
 			</div>
 			<div class="col-md-6">
-			    <p class="info-container"><a href="/match_logs/<%= @match.match_log_info.id %>/std_err">Referee STDERR Log</a></p>
+			    <p class="info-container" data-toggle="tooltip" data-placement="bottom" title="Click link to download">Error Log:<a href="/match_logs/<%= @match.match_log_info.id %>/std_err">Referee STDERR Log</a></p>
 			</div>
 		<% end %>
 
@@ -41,13 +41,13 @@
 <div class="row center">
     <div class="container outer-home-container col-md-offset-1 col-md-5">
         <div class="display-container">
-            <h1 class="headings left row"><%= pluralize(@match.manager.referee.players_per_game, 'Player') %></h1>
+            <h1 class="headings left row">Players (<%= @match.manager.referee.players_per_game %>)</h1>
             <%= render partial: 'player_matches/player_links', collection: @match.player_matches, as: 'player_match' %>
         </div>
     </div>
     <div class="container outer-home-container col-md-5">
         <div class="display-container">
-            <h1 class="headings left row"><%= pluralize(@match.rounds.all.count, 'Round') %></h1>
+            <h1 class="headings left row">Rounds (<%= @match.rounds.all.count %>)</h1>
             <%= render @match.rounds %>
         </div>
     </div>

@@ -8,7 +8,7 @@
                     <ul class="dropdown-menu">
                         <%= active_link_to 'Edit', edit_user_path(@user), wrap_tag: :li %>
                         <% if current_user != @user %>                        
-                            <%= active_link_to 'Delete', user_path(@user), method: :delete, wrap_tag: :li %>
+                            <%= active_link_to 'Delete', user_path(@user), method: :delete, data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
                         <% end %>                                                  
                     </ul>
                 </div>
@@ -40,7 +40,7 @@
             <div class="row">
                 <% @user.players.each do |player| %>
                     <div class="info-container">
-                        <%= link_to player.name, player %> <span class="small-font">(<%= player.contest.name %>)</span>             
+                        <%= link_to player.name, player %> <span class="xs-font">(<%= player.contest.name %>)</span>             
                     </div>
                 <% end %>
             </div>

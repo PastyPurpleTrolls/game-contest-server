@@ -6,14 +6,9 @@
 	<%= button_to(match_path(player_match.match), method: :get, class: 'results-container') do %>
 		<%= @tmp.to_sentence %>
 		<% unless player_match.result %>
-			(Waiting)
+			<span class="xs-font">(Waiting)</span>
 		<% else %>
-			(<%= player_match.result %> on <%= player_match.created_at.strftime("%m-%d-%y") %>)
-			<% if player_match.match_log_info %>
-				Logs: 
-				<a href="/match_logs/<%=player_match.match_log_info.id %>/std_out"><u>STDOUT</u></a>
-				<a href="/match_logs/<%=player_match.match_log_info.id %>/std_err"><u>STDERR</u></a>
-			<% end %>
+			<span class="xs-font">(<%= player_match.result %> on <%= player_match.created_at.strftime("%m-%d-%y") %>)</span>
 		<% end %>
 	<% end %>
 <% end %>

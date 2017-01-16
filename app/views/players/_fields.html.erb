@@ -2,24 +2,25 @@
     <div class="col-xs-4">
         <%= f.label :name %>:
     </div>
-    <%= f.text_field :name, class: 'form-input col-xs-8' %>
+    <%= f.text_field :name, class: 'form-input col-xs-7' %>
 </div>
 
 <div class="form-group row left">
     <div class="col-xs-4">
         <%= f.label :description %>:
     </div>
-    <%= f.text_area :description, class: 'form-input col-xs-8' %>
+    <%= f.text_area :description, class: 'form-input col-xs-7' %>
+</div>
+
+<div class="form-group row left" data-toggle="tooltip" data-placement="bottom" title="Single file containing the logic for this player">
+    <%= f.label :upload, 'Upload File:', class: 'col-xs-4' %>
+    <%= f.file_field :upload %>
 </div>
 
 <div class="form-group row left">
-    <%= f.label :upload, 'Upload file:', class: 'col-xs-4' %>
-    <%= f.file_field :upload %>
-</div>
-<div class="form-group row left">
     <div class="col-xs-12">
         <%= f.label :playable, 'Allow others to compete against this player:' %>
-        <%= f.check_box :playable, class: 'form-checkbox form-element'%>
+        <%= f.check_box :playable, class: 'form-checkbox form-element' %>
     </div>
 </div>
 

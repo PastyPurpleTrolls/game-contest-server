@@ -80,8 +80,12 @@ body {
     margin-top: 50px;
 }
 
-.display-container a, .player-label {
+.display-container a, .player-label, .warning-label {
     color: white;
+}
+
+.small-box {
+    width: 45px;
 }
 
 .field_with_errors {
@@ -97,6 +101,11 @@ form textarea {
 
 .bold-text {
     font-weight: bold;
+}
+
+.contest-challenge {
+    width: 100%;
+    padding: 0px;
 }
 
 .form-checkbox {
@@ -204,6 +213,10 @@ label{
 
 .small-font {
     font-size: 14px;
+}
+
+.xs-font {
+    font-size: 12px;
 }
 
 .results-container {
