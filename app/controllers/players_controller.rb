@@ -30,7 +30,7 @@ class PlayersController < ApplicationController
       flash[:success] = 'New Player created.'
 
       match_params = { player_ids: [@player.id], num_rounds: 1, status:"waiting", earliest_start:Time.now }
-      contest.matches.create( match_params )!
+      played_match = contest.matches.create!( match_params )
 
       redirect_to @player
     else

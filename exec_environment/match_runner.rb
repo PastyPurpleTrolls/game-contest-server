@@ -42,8 +42,12 @@ class MatchRunner
        end
 
        @number_of_players = @referee.players_per_game
-       while @match_participants.length < @number_of_players do
-		@match_participants << @match.players.first
+       @duplicate_players = false
+       if @match_participants.length == 1 then
+	       while @match_participants.length < @number_of_players do
+			@match_participants << @match.players.first
+			@duplicate_players = true
+	       end
        end
        @max_match_time = @referee.time_per_game
        @tournament = @match.manager
@@ -60,9 +64,10 @@ class MatchRunner
             return
         end
         #Call round wrapper which runs the executables and generates game hashes
-        round_wrapper = RoundWrapper.new(@referee,@match_id,@number_of_players,@max_match_time,@match_participants,@num_rounds)
+        round_wrapper = RoundWrapper.new(@referee,@match_id,@number_of_players,@max_match_time,@match_participants,@num_rounds,@duplicate_players)
         puts "   Match runner running match #"+@match_id.to_s
         round_wrapper.run_match
+
         self.send_results_to_db(round_wrapper)
     end
 

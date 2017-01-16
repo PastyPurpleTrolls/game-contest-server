@@ -14,7 +14,7 @@ class RoundWrapper
     attr_accessor :status, :rounds, :match
 
     #Constructor, sets socket for communication to referee and starts referee and players
-    def initialize(referee, match_id, number_of_players, max_match_time, players, rounds)  
+    def initialize(referee, match_id, number_of_players, max_match_time, players, rounds, duplicate_players)  
         #Sets port for referee to talk to wrapper_server  
         @wrapper_server = TCPServer.new(0)
         
@@ -25,6 +25,7 @@ class RoundWrapper
         @number_of_players = number_of_players
         @max_match_time = max_match_time
         @num_rounds = rounds
+	@duplicate_players = duplicate_players
  
         @status = {}
         @rounds = []
@@ -69,6 +70,9 @@ class RoundWrapper
                 "result": (player == winner[0]) ? "Win" : "Loss",
                 "score": wins
             }
+	    if @duplicate_players then
+		@match[player][:result]= "Tie"
+	    end
         end
     end
 
