@@ -1,12 +1,11 @@
-
-<div class="form-group">
-    <%= f.label :earliest_start, "Start" %>
+<div class="form-group row left">
+    <div class="col-xs-4">
+        <%= f.label :earliest_start, "Start:" %>
+    </div>
     <% Time.use_zone("America/Indianapolis") do %>
-        <%= f.datetime_select :earliest_start, { start_year: Time.now.year, use_short_month: true, minute_step: 5, order: [:month, :day, :year], with_css_classes: true, datetime_separator: " at " } %>
+        <%= f.datetime_select :earliest_start, { start_year: Time.now.year, use_short_month: true, minute_step: 5, order: [:month, :day, :year],  datetime_separator: " @ " }, class: 'form-input' %>
     <% end %>
 </div>
-
-
 
 <div class="form-group">
     <p><strong>My Player</strong></p>
@@ -18,7 +17,6 @@
 	<%end%>
     <% end %>
 </div>
-
 
 <!-- shows players not made by current user entered in contest-->
 <div class="form-group">
@@ -32,8 +30,29 @@
     <% end %>
 </div>
 
-<div class="form-gorup">
-    <p><strong>Number of Rounds</strong></p>
-    <%= f.select :num_rounds, 1..@contest.referee.round_limit.to_i, {},  class: 'form-control' %>
-    <br/>
+<div class="form-group row left">
+    <div class="col-xs-4">Number of Rounds:</div>
+    <%= f.select :num_rounds, 1..@contest.referee.round_limit.to_i, {}, class: 'form-input' %>
+</div>
+
+<div class="row multiselector">
+    <div class="col-xs-5 first-player-select right">
+        <p class="center player-label">Available Players:</p>
+        <select id="leftValues" class="player-select" size="5" multiple>
+            <% @contest.players.each do |p| %>
+                <option><%= p.name %> (<%= p.user.username %>)</option>
+            <%end%>  
+        </select>
+    </div>
+    <div class="player-selectors">
+        <br>
+        <br>
+        <input type="button" id="btnLeft" onclick="removePlayer()" value="&lt;&lt;" />
+        <input type="button" id="btnRight" onclick="addPlayer()" value="&gt;&gt;" />
+    </div>
+    <div>
+        <p class="player-label">Selected Players:</p>    
+        <select id="rightValues" class="player-select" size="5" multiple>
+        </select>
+    </div>
 </div>

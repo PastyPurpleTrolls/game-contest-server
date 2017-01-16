@@ -59,11 +59,8 @@ class PlayersController < ApplicationController
 
   def destroy
     @player.destroy
-    if params[:returnto] == 'profile'
-      redirect_to user_path(current_user)
-    else 
-      redirect_to contest_players_path(@player.contest)
-    end
+      flash[:success] = 'Player deleted.'
+      redirect_to contest_path(@player.contest)
   end
 
   private

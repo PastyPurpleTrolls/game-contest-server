@@ -11,7 +11,7 @@
             <%= form_for [@match.manager, @match] do |f| %>
                 <%= render 'shared/error_messages', object: @match %>
                 <%= render 'fields', f: f %>
-                <%= f.submit 'Challenge!', class: 'btn btn-primary' %>
+                <%= f.submit 'Challenge!', class: 'btn btn-warning' %>
             <% end %>
         <% end %>
     </div>

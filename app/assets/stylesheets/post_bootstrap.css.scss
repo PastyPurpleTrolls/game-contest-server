@@ -80,8 +80,12 @@ body {
     margin-top: 50px;
 }
 
-.display-container a {
+.display-container a, .player-label, .warning-label {
     color: white;
+}
+
+.small-box {
+    width: 45px;
 }
 
 .field_with_errors {
@@ -97,6 +101,11 @@ form textarea {
 
 .bold-text {
     font-weight: bold;
+}
+
+.contest-challenge {
+    width: 100%;
+    padding: 0px;
 }
 
 .form-checkbox {
@@ -159,6 +168,10 @@ label{
     padding-right: 0px;    
 }
 
+.left-padding {
+    padding-left: 10px;
+}
+
 .jumbotron {
     background-image: url('./battleship.jpg');    
     background-size: 1140px 100%;
@@ -206,12 +219,16 @@ label{
     font-size: 14px;
 }
 
+.xs-font {
+    font-size: 12px;
+}
+
 .results-container {
     width: 80%;
     margin: 5px;
 }
 
-.results-container a, .home-container:hover {
+.results-container a, .multiselector, .home-container:hover {
     color: #4999B4;
 }
 
@@ -240,3 +257,20 @@ label{
 }
 
 @import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css");
+
+.player-select {
+    width: 200px;
+}
+
+.multiselector > DIV {
+    float: left;
+    padding: 4px;
+}
+
+.player-selectors {
+    width: 50px;
+}
+
+.first-player-select {
+    margin-left: 15px;
+}

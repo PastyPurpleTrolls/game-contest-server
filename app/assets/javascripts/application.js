@@ -26,3 +26,14 @@ function redirectToContest() {
     f.action = f.action.replace("contest_id", s.value);
     f.submit();
 }
+
+function removePlayer() {
+    var selectedItem = $("#rightValues option:selected");
+    $("#leftValues").append(selectedItem);
+    console.log(selectedItem);
+}
+
+function addPlayer() {
+    var selectedItem = $("#leftValues option:selected");
+    $("#rightValues").append(selectedItem);
+};
