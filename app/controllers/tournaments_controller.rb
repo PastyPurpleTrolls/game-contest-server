@@ -4,12 +4,14 @@ class TournamentsController < ApplicationController
   before_action :ensure_contest_owner, only: [:new ,:edit, :update , :destroy]
 
   def new
-    contest = Contest.friendly.find(params[:contest_id])
-    @tournament = contest.tournaments.build
-    @tournament.contest.players.each do |f|
-      @tournament.player_tournaments.build(player: f )
+    @contests = Contest.all
+    if params[:contest_id] != 'not-specified'
+      @tournament = @contest.tournaments.build
+      @tournament.contest.players.each do |f|
+        @tournament.player_tournaments.build(player: f )
+      end
+      @tournament.start = Time.now
     end
-    @tournament.start = Time.now
   end
 
   def create
@@ -20,6 +22,7 @@ class TournamentsController < ApplicationController
       flash[:success] = 'Tournament created.'
       redirect_to @tournament
     else
+      @contests = Contest.all
       render 'new'
     end
   end
@@ -71,7 +74,8 @@ class TournamentsController < ApplicationController
   end
 
   def ensure_contest_owner
-    if params.include? :contest_id
+
+    if params.include?(:contest_id) && params[:contest_id] != "not-specified"
       @contest = Contest.friendly.find(params[:contest_id])
       ensure_correct_user(@contest.user_id)
     elsif params.include? :id

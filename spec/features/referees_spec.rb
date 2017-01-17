@@ -133,10 +133,10 @@ describe "RefereePages" do
         it { should have_alert(:success, text: 'Referee created') }
         it { should have_content(name) }
         it { should have_content(round_limit) }
-        it { should have_link('Rules', href: rules) }
-        it { should have_content("Capable of rounds: true") }
-	it { should have_content(num_players) }
-	it { should have_content(time_per_game) }
+        it { should have_link(rules) }
+        it { should have_content("This referee is capable of handling rounds") }
+        it { should have_content(num_players) }
+        it { should have_content(time_per_game) }
 
         it "stores the contents of the file correctly" do
           expect_same_contents(referee.file_location, file_location)
@@ -405,15 +405,15 @@ describe "RefereePages" do
     end
 
     it { should have_content(referee.name) }
-    it { should have_link('Rules', href: referee.rules_url) }
+    it { should have_link(referee.rules_url) }
     it { should have_content(referee.round_limit) }
     it { should have_content(referee.players_per_game.to_s) }
-    it { should have_content(referee.rounds_capable) }
+    it { should have_content("This referee is not capable of handling rounds") }
     it { should_not have_content(referee.file_location) }
     it { should have_content(referee.user.username) }
     it "lists all the contests that use this referee" do
       Contest.all.each do |contest|
-        should have_selector('li', text: contest.name)
+        should have_selector('div', text: contest.name)
         should have_link(contest.name, href: contest_path(contest))
       end
     end

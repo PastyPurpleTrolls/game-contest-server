@@ -52,7 +52,7 @@ describe 'TournamentsPages' do
           before do
             fill_in 'Name', with: name
             select_illegal_datetime('Start', date)
-            select tournament_type, from: 'Tournament type'
+            select tournament_type, from: 'Tournament Type'
             click_button submit
           end
 
@@ -67,9 +67,9 @@ describe 'TournamentsPages' do
       before do
         fill_in 'Name', with: name
         select_datetime(now, 'Start')
-        select tournament_type, from: 'Tournament type'
+        select tournament_type, from: 'Tournament Type'
         check("#{player1.name} | #{player1.user.username}")
-	select 1, from: 'Number of rounds per match'
+	      select 1, from: 'Rounds per Match'
 
       end
 
@@ -102,11 +102,9 @@ describe 'TournamentsPages' do
         it { should have_alert(:success, text: 'Tournament created') }
         it { should have_content(/less than a minute|1 minute/) }
         it { should have_content(tournament.name) }
-        it { should have_content(tournament.status) }
+        it { should have_content(tournament.status.capitalize) }
         it { should have_link(tournament.contest.name,
                               href: contest_path(tournament.contest)) }
-        it { should have_link(tournament.referee.name,
-                              href: referee_path(tournament.referee)) }
         it { should have_content("Player") }
         it { should have_link(player1.name,
                               href: player_path(player1)) }
@@ -132,7 +130,7 @@ describe 'TournamentsPages' do
 
     it { should have_field('Name', with: tournament.name) }
     it { expect_datetime_select(tournament.start, 'Start') }
-    it { should have_select('Tournament type',
+    it { should have_select('Tournament Type',
                             options: %w[ Round\ Robin   Single\ Elimination ],
                             selected: tournament_type) }
 
@@ -146,7 +144,7 @@ describe 'TournamentsPages' do
       before do
         select_datetime(now, 'Start')
         fill_in 'Name', with: ''
-        select tournament_type, from: 'Tournament type'
+        select tournament_type, from: 'Tournament Type'
       end
 
       describe "does not change data" do
@@ -191,7 +189,7 @@ describe 'TournamentsPages' do
       before do
         fill_in 'Name', with: edit_name
         select_datetime(edit_time, 'Start')
-        select edit_tournament_type, from: 'Tournament type'
+        select edit_tournament_type, from: 'Tournament Type'
         uncheck ("#{player1.name} | #{player1.user.username}")
         check ("#{player2.name} | #{player2.user.username}")
       end
@@ -260,9 +258,9 @@ describe 'TournamentsPages' do
 
     # Tournament attributes
     it { should have_content(tournament.name) }
-    it { should have_content(tournament.status) }
+    it { should have_content(tournament.status.capitalize) }
     it { should have_content(distance_of_time_in_words_to_now(tournament.start)) }
-    it { should have_content(tournament.tournament_type) }
+    it { should have_content(tournament.tournament_type.split.map { |i| i.capitalize }.join(' ')) }
 
 =begin
     # Edit
@@ -275,10 +273,6 @@ describe 'TournamentsPages' do
 
     it { should have_content(tournament.contest.name) }
     it { should have_link(tournament.contest.name, contest_path(tournament.contest)) }
-
-    # Referee
-    it { should have_content(tournament.referee.name) }
-    it { should have_link(tournament.referee.name, referee_path(tournament.referee)) }
 
     it "lists all the players in the tournament" do
       PlayerTournament.where(tournament: tournament).each do |pt|

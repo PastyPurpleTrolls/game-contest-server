@@ -86,6 +86,7 @@ body {
 
 .small-box {
     width: 45px;
+    height: 20px;
 }
 
 .field_with_errors {
@@ -168,6 +169,14 @@ label{
     padding-right: 0px;    
 }
 
+.no-left-padding {
+    padding-left: 0px;
+}
+
+.no-right-padding {
+    padding-right: 0px;        
+}
+
 .left-padding {
     padding-left: 10px;
 }
@@ -223,7 +232,7 @@ label{
     font-size: 12px;
 }
 
-.results-container {
+.results-container, .ref-contest-container {
     width: 80%;
     margin: 5px;
 }

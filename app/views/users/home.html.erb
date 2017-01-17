@@ -1,3 +1,4 @@
+<% setTitle("Home") %>
 <br>
 <br>
 <% if current_user %>
@@ -15,7 +16,7 @@
                     <%= content_tag('i', nil, class: 'glyphicon glyphicon-list home-gly') %> <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus') %>
                 </div>
             <% end %>
-            <%= link_to(root_path, method: :get, class: 'col-md-4 col-sm-6 col-xs-12 navbar-brand navbar-default-link-color center outer-home-container') do %>
+            <%= link_to(new_contest_tournament_path('not-specified'), method: :get, class: 'col-md-4 col-sm-6 col-xs-12 navbar-brand navbar-default-link-color center outer-home-container') do %>
                 <div class="home-container">
                     <p>Add Tournament</p>
                     <%= content_tag('i', nil, class: 'glyphicon glyphicon-flag home-gly') %> <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus') %>
