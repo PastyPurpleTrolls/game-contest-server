@@ -1,22 +1,73 @@
-<h1>Tournament Information</h1>
+<% setTitle("Tournament") %>
+<div class="row">
+    <div class="container center display-container col-md-offset-1 col-md-10">
+        <div class="row">
+            <div class="col-xs-9">
+                <h1 class="headings left">Tournament Information</h1>
+            </div>
+            <% if current_user==@tournament.contest.user and current_user.contest_creator %>
+                <div class="col-xs-3 right form-dropdown">                
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">Options <span class="caret"/></a>
+                        <ul class="dropdown-menu">
+                            <%= active_link_to 'Edit', edit_tournament_path(@tournament), wrap_tag: :li %>
+                            <%= active_link_to 'Delete', tournament_path(@tournament), method: :delete, data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
+                        </ul>
+                    </div>
+                </div>
+            <% end %>            
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <p class="info-container">Name: <%= @tournament.name %></p>
+            </div>
+            <div class="col-md-6">
+                <p class="info-container">Status: <%= @tournament.status.capitalize %></p>
+            </div>
+            <div class="col-md-6">
+                <% if @tournament.status == "completed" %>
+                    <p class="info-container">Finished: <%= distance_of_time_in_words_to_now(@tournament.start).split.map { |i| i.capitalize }.join(' ') %> Ago</p>
+                <% else %>
+                    <p class="info-container">Start: in <%= distance_of_time_in_words_to_now(@tournament.start)%></p>
+                <% end %>
+            </div>
+            <div class="col-md-6">
+                <p class="info-container">Tournament Type: <%= @tournament.tournament_type.split.map { |i| i.capitalize }.join(' ') %></p>
+            </div>
+            <div class="col-md-6">
+                <p class="info-container">Contest: <%= link_to @tournament.contest.name, @tournament.contest %></p>
+            </div>
+            <div class="col-md-6">
+                <p class="info-container">Contest Owner: <%= link_to @tournament.contest.user.username, @tournament.contest.user %></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="container outer-home-container col-md-5 col-md-offset-1">
+        <div class="row">
+            <div class="display-container center">
+                <div class="row">
+                    <h1 class="headings info-text col-xs-10 left">Players (<%= @tournament.players.count %>)</h1>
+                    <% if @tournament.start > Time.now %>
+                        <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Player to Tournament">
+                            <%= link_to(edit_tournament_path(@tournament), method: :get) do %>
+                                <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
+                            <% end %>
+                        </div>
+                    <% end %>                    
+                </div>
+                <div class="row">
+                    <% @tournament.players.each do |player| %>
+                        <div class="info-container">
+                            <%= link_to player.name, player %>           
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
 
-<% if current_user == @tournament.contest.user and current_user.contest_creator %>
-    <%= link_to 'edit', edit_tournament_path(@tournament) %>
-<% end %>
 
-<br/>
-<p>Name: <%= @tournament.name %></p>
-<% if @tournament.status == "completed" %>
-    <p>Finished: <%= distance_of_time_in_words_to_now(@tournament.start) %></p>
-<% else %>
-    <p>Start: <%= distance_of_time_in_words_to_now(@tournament.start) %></p>
-<% end %>
-<p>Status: <%= @tournament.status %></p>
-<p>Tournament type: <%= @tournament.tournament_type %></p>
-<p>Contest: <%= link_to @tournament.contest.name, @tournament.contest %></p>
-
-<p>Contest owner: <%= link_to @tournament.contest.user.username, @tournament.contest.user %></p>
-<p>Referee: <%= link_to @tournament.referee.name, @tournament.referee %></p>
 <h2><%= pluralize(@tournament.players.count, 'Player') %></h2>
 <ul>
     <%= render @tournament.players %>

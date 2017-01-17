@@ -4,28 +4,28 @@
     <div class="col-xs-4">
         <%= f.label :username %>:
     </div>
-    <%= f.text_field :username, class: 'form-input col-xs-8' %>
+    <%= f.text_field :username, class: 'form-input col-xs-7' %>
 </div>
 
 <div class="form-group row left">
     <div class="col-xs-4">
         <%= f.label :email %>:
     </div>
-    <%= f.text_field :email, class: 'form-input col-xs-8' %>
+    <%= f.text_field :email, class: 'form-input col-xs-7' %>
 </div>
 
 <div class="form-group row left">
     <div class="col-xs-4">
         <%= f.label :password %>:
     </div>
-    <%= f.password_field :password, class: 'form-input col-xs-8' %>
+    <%= f.password_field :password, class: 'form-input col-xs-7' %>
 </div>
 
 <div class="form-group row left">
     <div class="col-xs-4">
         <%= f.label :password_confirmation, 'Confirmation' %>:
     </div>
-    <%= f.password_field :password_confirmation, class: 'form-input col-xs-8' %>
+    <%= f.password_field :password_confirmation, class: 'form-input col-xs-7' %>
 </div>
 
 <% if current_user && current_user.admin? %>

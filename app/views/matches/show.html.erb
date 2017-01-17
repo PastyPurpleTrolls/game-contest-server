@@ -1,6 +1,7 @@
 <% unless @match.completed? %>
     <% content_for :refresh_rate do %>15<% end %>
 <% end %>
+<% setTitle("Match") %>
 <div class="row">
     <div class="container center display-container col-md-offset-1 col-md-10">
         <div class="row">
@@ -18,21 +19,19 @@
             </div>
             <% if @match.completed? %>
                 <div class="col-md-6">
-                    <p class="info-container">Completed: <%= distance_of_time_in_words_to_now(@match.completion) %> ago</p>
+                    <p class="info-container">Completed: <%= distance_of_time_in_words_to_now(@match.completion).split.map { |i| i.capitalize }.join(' ') %> Ago</p>
                 </div>
-
-		<% if @match.match_log_info %>
-			<div class="col-md-6">
-			    <p class="info-container" data-toggle="tooltip" data-placement="bottom" title="Click link to download">Standard Log:<a href="/match_logs/<%= @match.match_log_info.id %>/std_out">Referee STDOUT Log</a></p>
-			</div>
-			<div class="col-md-6">
-			    <p class="info-container" data-toggle="tooltip" data-placement="bottom" title="Click link to download">Error Log:<a href="/match_logs/<%= @match.match_log_info.id %>/std_err">Referee STDERR Log</a></p>
-			</div>
-		<% end %>
-
             <% else %>                
                 <div class="col-md-6">
-                    <p class="info-container">Earliest Start Time: <%= distance_of_time_in_words_to_now(@match.earliest_start) %></p>
+                    <p class="info-container">Earliest Start Time: <%= distance_of_time_in_words_to_now(@match.earliest_start).split.map { |i| i.capitalize }.join(' ') %> Left</p>
+                </div>
+            <% end %>
+            <% if @match.match_log_info %>
+                <div class="col-md-6">
+                    <p class="info-container" data-toggle="tooltip" data-placement="bottom" title="Click link to download">Standard Log:<a href="/match_logs/<%= @match.match_log_info.id %>/std_out">Referee STDOUT Log</a></p>
+                </div>
+                <div class="col-md-6">
+                    <p class="info-container" data-toggle="tooltip" data-placement="bottom" title="Click link to download">Error Log:<a href="/match_logs/<%= @match.match_log_info.id %>/std_err">Referee STDERR Log</a></p>
                 </div>
             <% end %>
         </div>

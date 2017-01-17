@@ -280,7 +280,7 @@ describe "MatchesPages" do
     before { visit match_path(match) }
 
     it { should have_content(match.status.capitalize) }
-    it { should have_content(distance_of_time_in_words_to_now(match.earliest_start)) }
+    it { should have_content(distance_of_time_in_words_to_now(match.earliest_start).split.map { |i| i.capitalize }.join(' ')) }
     it { should have_content(match.manager.name) }
     it { should have_content(match.manager.referee.players_per_game) }
 
@@ -293,7 +293,7 @@ describe "MatchesPages" do
         visit match_path(match)
       end
 
-      it { should have_content(distance_of_time_in_words_to_now(match.completion)) }
+      it { should have_content(distance_of_time_in_words_to_now(match.completion).split.map { |i| i.capitalize }.join(' ')) }
     end
 
     describe "associated players (descending scores)" do
@@ -344,7 +344,7 @@ describe "MatchesPages" do
        
 
     it { should have_content(match.status.capitalize) }
-    it { should have_content(distance_of_time_in_words_to_now(match.earliest_start)) }
+    it { should have_content(distance_of_time_in_words_to_now(match.earliest_start).split.map { |i| i.capitalize }.join(' ')) }
     it { should have_content(match.manager.name) }
     it { should have_content(match.manager.referee.players_per_game) }
   end
