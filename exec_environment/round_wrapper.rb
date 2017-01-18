@@ -73,6 +73,7 @@ class RoundWrapper
 	    if @duplicate_players then
 		@match[player][:result]= "Tie"
 	    end
+	    
         end
     end
 
