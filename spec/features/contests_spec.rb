@@ -302,7 +302,7 @@ describe "ContestsPages" do
       it { should have_selector("h2", "Contest") }      
       it { should have_content(contest.name) }
       it { should have_content(contest.description) }
-      it { should have_content(distance_of_time_in_words_to_now(contest.deadline)) }
+      it { should have_content(distance_of_time_in_words_to_now(contest.deadline).split.map { |i| i.capitalize }.join(' ')) }
       it { should have_content(contest.user.username) }
       it { should have_link(contest.user.username, user_path(contest.user)) }
       it { should have_content(contest.referee.name) }
@@ -331,7 +331,7 @@ describe "ContestsPages" do
       it { should have_selector("h2", "Contest") }      
       it { should have_content(contest.name) }
       it { should have_content(contest.description) }
-      it { should have_content(distance_of_time_in_words_to_now(contest.deadline)) }
+      it { should have_content(distance_of_time_in_words_to_now(contest.deadline).split.map { |i| i.capitalize }.join(' ')) }
       it { should have_content(contest.user.username) }
       it { should have_link(contest.user.username, user_path(contest.user)) }
       it { should have_content(contest.referee.name) }
