@@ -1,4 +1,5 @@
 class PlayersController < ApplicationController
+  include ApplicationHelper
   before_action :ensure_user_logged_in, except: [:index, :show]
   before_action :ensure_player_owner, only: [:edit, :update, :destroy]
 
@@ -29,8 +30,7 @@ class PlayersController < ApplicationController
     if @player.save
       flash[:success] = 'New Player created.'
 
-      match_params = { player_ids: [@player.id], num_rounds: 1, status:"waiting", earliest_start:Time.now }
-      played_match = contest.matches.create!( match_params )
+      startTestMatch(@player.id, contest) #if params[:player][:run_test]
 
       redirect_to @player
     else

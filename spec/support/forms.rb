@@ -1,3 +1,5 @@
+require_relative 'dates.rb'
+
 # code credit from
 # http://stackoverflow.com/questions/6729786/how-to-select-date-from-a-select-box-using-capybara-in-rails-3
 #
@@ -16,10 +18,10 @@ end
 def select_datetime(datetime, field)
   base_id = date_base_id(field)
 
-  select_date(datetime, field)
-  select datetime.hour.to_s.rjust(2, '0'), from: "#{base_id}_4i"
-  min = datetime.min - datetime.min % 5  # minutes must be a multiple of 5
-  select min.to_s.rjust(2, '0'), from: "#{base_id}_5i"
+  dt = mins_multiple_of_5(datetime)
+  select_date(dt, field)
+  select dt.hour.to_s.rjust(2, '0'), from: "#{base_id}_4i"
+  select dt.min.to_s.rjust(2, '0'), from: "#{base_id}_5i"
 end
 
 # begin JGG code
@@ -31,13 +33,14 @@ def select_illegal_datetime(field, bad_values)
   # the past.  This just ensures we don't make any silly time
   # mistakes.
   #
-  select_datetime(1.year.from_now, field)
+  select_date(1.year.from_now, field)
   [:year, :month, :day, :hour, :min].each_with_index do |type, index|
     select_id = "#{base_id}_#{(index + 1).to_s}i"
 
     if bad_values[type]
       select_value = bad_values[type]
       if type == :hour || type == :min
+        select_value = multiple_of_5(select_value) if type == :min
         select_value = select_value.to_s.rjust(2, '0')
       end
 
@@ -57,7 +60,8 @@ end
 def expect_datetime_select(datetime, field)
   base_id = date_base_id(field)
 
-  expect_date_select(datetime, field)
-  should have_select "#{base_id}_4i", selected: datetime.hour.to_s.rjust(2, '0')
-  should have_select "#{base_id}_5i", selected: datetime.min.to_s.rjust(2, '0')
+  dt = mins_multiple_of_5(datetime)
+  expect_date_select(dt, field)
+  should have_select "#{base_id}_4i", selected: dt.hour.to_s.rjust(2, '0')
+  should have_select "#{base_id}_5i", selected: dt.min.to_s.rjust(2, '0')
 end
