@@ -124,8 +124,11 @@ describe Match do
   describe "completion now" do
     before do
       match.status = 'completed'
+      Timecop.freeze
       match.completion = Time.current
     end
+
+    after { Timecop.return }
 
     it { should be_valid }
   end
