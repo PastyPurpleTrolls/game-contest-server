@@ -81,7 +81,6 @@ class TournamentsController < ApplicationController
   end
 
   def ensure_contest_owner
-
     if params.include?(:contest_id) && params[:contest_id] != "not-specified"
       @contest = Contest.friendly.find(params[:contest_id])
       ensure_correct_user(@contest.user_id)

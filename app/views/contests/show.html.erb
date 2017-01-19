@@ -29,7 +29,7 @@
             </div>
             <div class="col-md-6">
                 <p class="info-container">
-                    Deadline: <%= distance_of_time_in_words_to_now(@contest.deadline) %>
+                    Deadline: <%= distance_of_time_in_words_to_now(@contest.deadline).split.map { |i| i.capitalize }.join(' ') %>
                     <% if @contest.deadline > Time.now %>
                         <span> left</span>
                     <% else %>

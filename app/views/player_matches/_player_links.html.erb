@@ -1,4 +1,13 @@
 <div class="info-container">
-    <%= link_to player_match.player.name, player_path(player_match.player) %>
-    <span class="xs-font">(<%= player_match.result %>)</span>
+    <div>
+        <%= link_to player_match.player.name, player_path(player_match.player) %>
+        <span>(<%= player_match.result %>)</span>
+    </div>
+    <div class="top-padding">    
+        <% if player_match.match_log_info %>
+            <span class="xs-font">Logs: </span>
+            <a class="xs-font" href="/match_logs/<%= player_match.match_log_info.id %>/std_out" data-toggle="tooltip" data-placement="bottom" title="Click link to download"><u>Standard Out</u></a>
+            <a class="xs-font" href="/match_logs/<%= player_match.match_log_info.id %>/std_err" data-toggle="tooltip" data-placement="bottom" title="Click link to download"><u>Standard Error</u></a>
+        <% end %>
+    </div>    
 </div>

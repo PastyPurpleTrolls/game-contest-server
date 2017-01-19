@@ -131,8 +131,8 @@ describe 'TournamentsPages' do
       visit edit_tournament_path(tournament)
     end
 
-    it { should have_selector("h2", "Edit Tournament") }                       
-    it { should have_content(tournament.name) }
+    it { should have_selector("h2", "Edit Tournament") }
+    it { should have_field("Name", with: tournament.name) }    
     it { expect_datetime_select(tournament.start, 'Start') }
     it { should have_select('Tournament Type',
                             options: %w[ Round\ Robin   Single\ Elimination ],
@@ -215,7 +215,7 @@ describe 'TournamentsPages' do
                               href: player_path(player2)) }
       end # changes the data
 
-      describe "redirects properly", type: :request do
+      describe "redirects properly", type: :request, js: false do
         before do
           login creator, avoid_capybara: true
           patch tournament_path(tournament), tournament: { start: now.strftime("%F %T"),
@@ -228,7 +228,10 @@ describe 'TournamentsPages' do
       end # redirects properly
 
       it "does not add a new tournament to the system" do
-        expect { click_button submit }.not_to change(Tournament, :count)
+        expect do 
+          click_button submit
+          page.find('.alert')          
+        end.not_to change(Tournament, :count)
       end
 
     end # valid information
