@@ -31,7 +31,13 @@ describe Contest do
   end
 
   describe "deadline now" do
-    before { contest.deadline = Time.current }
+    before do
+      Timecop.freeze
+      contest.deadline = Time.current
+    end
+
+    after { Timecop.return }
+
     it { should be_valid }
   end
 

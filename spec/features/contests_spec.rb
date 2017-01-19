@@ -5,7 +5,7 @@ include ActionView::Helpers::DateHelper
 describe "ContestsPages" do
   let (:creator) { FactoryGirl.create(:contest_creator) }
   let!(:referee) { FactoryGirl.create(:referee) }
-  let (:now) { Time.current }
+  let (:now) { mins_multiple_of_5(1.hour.from_now) }
   let (:name) { 'Test Contest' }
   let (:description) { 'Contest description' }
 
@@ -32,13 +32,6 @@ describe "ContestsPages" do
         end
       end
 
-      illegal_dates = [{month: 'Feb', day: '30'},
-        {month: 'Feb', day: '31'},
-        {year: '2015', month: 'Feb', day: '29'},
-        {month: 'Apr', day: '31'},
-        {month: 'Jun', day: '31'},
-        {month: 'Sep', day: '31'},
-        {month: 'Nov', day: '31'}]
       illegal_dates.each do |date|
         describe "illegal date (#{date.to_s})" do
           before do
@@ -86,7 +79,7 @@ describe "ContestsPages" do
         specify { expect(contest.user).to eq(creator) }
 
         it { should have_alert(:success, text: 'Contest created') }
-        it { should have_content(/less than a minute|1 minute/) }
+        it { should have_content(/about 1 hour/) }
         it { should have_content(description) }
         it { should have_content(name) }
         it { should have_content(contest.referee.name) }
@@ -97,7 +90,7 @@ describe "ContestsPages" do
   end
 
   describe "edit" do
-    let (:contest) { FactoryGirl.create(:contest, user: creator) }
+    let (:contest) { FactoryGirl.create(:contest, user: creator, deadline: now) }
     let!(:orig_name) { contest.name }
     let (:submit) { 'Update Contest' }
 
