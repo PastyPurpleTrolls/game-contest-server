@@ -11,6 +11,8 @@ group :test do
   gem 'factory_girl_rails', '~> 4.4.1'
   gem 'libnotify'
   gem 'timecop'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
 
   gem 'simplecov', :require => false
 end

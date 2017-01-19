@@ -3,14 +3,16 @@
     <div class="container center display-container col-md-offset-1 col-md-10">
         <div class="row">
             <div class="col-xs-9">
-                <h1 class="headings left">Tournament Information</h1>
+                <h1 class="headings left"><%= @tournament.name %></h1>
             </div>
             <% if current_user==@tournament.contest.user and current_user.contest_creator %>
                 <div class="col-xs-3 right form-dropdown">                
                     <div class="dropdown">
                         <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">Options <span class="caret"/></a>
                         <ul class="dropdown-menu">
-                            <%= active_link_to 'Edit', edit_tournament_path(@tournament), wrap_tag: :li %>
+                            <% if @tournament.status != "completed" %>
+                                <%= active_link_to 'Edit', edit_tournament_path(@tournament), wrap_tag: :li %>
+                            <% end %>                            
                             <%= active_link_to 'Delete', tournament_path(@tournament), method: :delete, data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
                         </ul>
                     </div>
@@ -19,60 +21,44 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <p class="info-container">Name: <%= @tournament.name %></p>
-            </div>
-            <div class="col-md-6">
                 <p class="info-container">Status: <%= @tournament.status.capitalize %></p>
             </div>
             <div class="col-md-6">
                 <% if @tournament.status == "completed" %>
                     <p class="info-container">Finished: <%= distance_of_time_in_words_to_now(@tournament.start).split.map { |i| i.capitalize }.join(' ') %> Ago</p>
                 <% else %>
-                    <p class="info-container">Start: in <%= distance_of_time_in_words_to_now(@tournament.start)%></p>
+                    <p class="info-container">Start: In <%= distance_of_time_in_words_to_now(@tournament.start).split.map { |i| i.capitalize }.join(' ')%></p>
                 <% end %>
             </div>
             <div class="col-md-6">
                 <p class="info-container">Tournament Type: <%= @tournament.tournament_type.split.map { |i| i.capitalize }.join(' ') %></p>
             </div>
             <div class="col-md-6">
-                <p class="info-container">Contest: <%= link_to @tournament.contest.name, @tournament.contest %></p>
-            </div>
-            <div class="col-md-6">
                 <p class="info-container">Contest Owner: <%= link_to @tournament.contest.user.username, @tournament.contest.user %></p>
+            </div>
+            <div class="col-md-12">
+                <p class="info-container">Contest: <%= link_to @tournament.contest.name, @tournament.contest %></p>
             </div>
         </div>
     </div>
 </div>
 <div class="row">
-    <div class="container outer-home-container col-md-5 col-md-offset-1">
+    <div class="container center display-container col-md-10 col-md-offset-1">
+        <h1 class="headings row left">Player Information</h1>
         <div class="row">
-            <div class="display-container center">
-                <div class="row">
-                    <h1 class="headings info-text col-xs-10 left">Players (<%= @tournament.players.count %>)</h1>
-                    <% if @tournament.start > Time.now %>
-                        <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Player to Tournament">
-                            <%= link_to(edit_tournament_path(@tournament), method: :get) do %>
-                                <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
-                            <% end %>
-                        </div>
-                    <% end %>                    
-                </div>
-                <div class="row">
-                    <% @tournament.players.each do |player| %>
-                        <div class="info-container">
-                            <%= link_to player.name, player %>           
-                        </div>
-                    <% end %>
-                </div>
-            </div>
+            <div class="col-xs-3">Place</div>        
+            <div class="col-xs-3">Name</div>
+            <div class="col-xs-3">Creator</div>
+            <div class="col-xs-3">Wins</div>
         </div>
+        <div class="player-results-container">
+            <%= render @tournament.players.sort_by{|p| p.wins(@tournament)}.reverse %>
+        </div>
+    </div>
+</div>
 
-
-<h2><%= pluralize(@tournament.players.count, 'Player') %></h2>
-<ul>
-    <%= render @tournament.players %>
-</ul>
-<h2><%= pluralize(@tournament.matches.count, 'Match')%></h2>
-<ul>
-    <%= render @tournament.matches %>
-</ul>
+<% if @tournament.tournament_type == "round robin" %>
+<% else %>
+    <%= render "round-robin-tournament.html.erb" %>
+    <%= render @single-elimination-tournament %>
+<% end %>

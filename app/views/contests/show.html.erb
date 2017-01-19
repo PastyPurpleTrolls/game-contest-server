@@ -3,7 +3,7 @@
     <div class="container center display-container col-md-offset-1 col-md-10">
         <div class="row">
             <div class="col-xs-9">
-                <h1 class="headings left">Contest Information</h1>
+                <h1 class="headings left"><%= @contest.name %></h1>
             </div>
             <% if current_user==@contest.user and current_user.contest_creator %>
                 <div class="col-xs-3 right form-dropdown">                
@@ -18,10 +18,7 @@
             <% end %>            
         </div>
         <div class="row">
-            <div class="col-md-6">
-                <p class="info-container">Name: <%= @contest.name %></p>
-            </div>
-            <div class="col-md-6">            
+            <div class="col-md-12">            
                 <p class="info-container">Description: <%= @contest.description %></p>
             </div>
             <div class="col-md-6">
@@ -52,11 +49,13 @@
             <div class="display-container center">
                 <div class="row">
                     <h1 class="headings info-text col-xs-10 left">Tournaments (<%= @contest.tournaments.count %>)</h1>
-                    <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Tournament to Contest">
-                        <%= link_to(new_contest_tournament_path(@contest), method: :get) do %>
-                            <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
-                        <% end %>
-                    </div>
+                    <% if current_user==@contest.user and current_user.contest_creator %>
+                        <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Tournament to Contest">
+                            <%= link_to(new_contest_tournament_path(@contest), method: :get) do %>
+                                <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
+                            <% end %>
+                        </div>
+                    <% end %>
                 </div>
                 <div class="row">
                     <% @contest.tournaments.each do |tournament| %>
@@ -80,11 +79,13 @@
             <div class="display-container center">
                 <div class="row">
                     <h1 class="headings info-text col-xs-10 left">Players (<%= @contest.players.count %>)</h1>
-                    <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Player to Contest">
-                        <%= link_to(new_contest_player_path(@contest), method: :get) do %>
-                            <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
-                        <% end %>
-                    </div>
+                    <% if current_user==@contest.user and current_user.contest_creator %>
+                        <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Player to Contest">
+                            <%= link_to(new_contest_player_path(@contest), method: :get) do %>
+                                <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
+                            <% end %>
+                        </div>
+                    <% end %>                    
                 </div>
                 <div class="row">
                     <% @contest.players.each do |player| %>

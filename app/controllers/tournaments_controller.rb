@@ -16,6 +16,12 @@ class TournamentsController < ApplicationController
 
   def create
     @contest = Contest.friendly.find(params[:contest_id])
+    contest = Contest.friendly.find(params[:contest_id])
+    if params[:tournament][:player_ids] && params[:tournament][:player_ids].uniq{|p| Player.find(p).contest_id}.length > 1
+      flash.now[:danger] = 'Players from multiple contests'
+      render 'new'					
+      return
+    end
     @tournament = @contest.tournaments.build(acceptable_params)
     @tournament.status = "waiting"
     if @tournament.save
@@ -23,6 +29,7 @@ class TournamentsController < ApplicationController
       redirect_to @tournament
     else
       @contests = Contest.all
+      flash.now[:danger] = 'Tournament not saved'
       render 'new'
     end
   end
@@ -61,7 +68,7 @@ class TournamentsController < ApplicationController
     @tournament.player_tournaments.each{|m|m.destroy}
     @tournament.matches.each{|m|m.destroy}
     @tournament.destroy
-    redirect_to contest_tournaments_path(@tournament.contest)
+    redirect_to contest_path(@tournament.contest)
   end
 
 
@@ -70,7 +77,7 @@ class TournamentsController < ApplicationController
   def acceptable_params
     # Status should not be acceptable.
     # The backend should set it.
-    params.require(:tournament).permit(:name , :start, :tournament_type,:rounds_per_match, player_ids: @contest.players.try(:ids).map(&:to_s))
+    params.require(:tournament).permit(:name , :start, :tournament_type,:rounds_per_match, player_ids: [])
   end
 
   def ensure_contest_owner

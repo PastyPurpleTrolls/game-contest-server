@@ -18,7 +18,8 @@ def select_datetime(datetime, field)
 
   select_date(datetime, field)
   select datetime.hour.to_s.rjust(2, '0'), from: "#{base_id}_4i"
-  select datetime.min.to_s.rjust(2, '0'), from: "#{base_id}_5i"
+  min = datetime.min - datetime.min % 5  # minutes must be a multiple of 5
+  select min.to_s.rjust(2, '0'), from: "#{base_id}_5i"
 end
 
 # begin JGG code
@@ -36,7 +37,7 @@ def select_illegal_datetime(field, bad_values)
 
     if bad_values[type]
       select_value = bad_values[type]
-      if type = :hour || :type == :min
+      if type == :hour || type == :min
         select_value = select_value.to_s.rjust(2, '0')
       end
 

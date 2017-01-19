@@ -8,11 +8,11 @@ describe "MatchesPages" do
   let (:user) { FactoryGirl.create(:user) }
   let (:creator) { FactoryGirl.create(:contest_creator) }
   let (:contest) { FactoryGirl.create(:contest, user: creator) }
-  let! (:player1) { FactoryGirl.create(:player, contest: contest, user: creator) }
-  let! (:player2) { FactoryGirl.create(:player, contest: contest) }
-  let! (:player3) { FactoryGirl.create(:player, contest: contest) }
-  let! (:player4) { FactoryGirl.create(:player, contest: contest) }
-  let! (:player5) { FactoryGirl.create(:player, contest: contest) }
+  let!(:player1) { FactoryGirl.create(:player, contest: contest, user: creator) }
+  let!(:player2) { FactoryGirl.create(:player, contest: contest) }
+  let!(:player3) { FactoryGirl.create(:player, contest: contest) }
+  let!(:player4) { FactoryGirl.create(:player, contest: contest) }
+  let!(:player5) { FactoryGirl.create(:player, contest: contest) }
 
   let (:now) { Time.current }
   let (:submit) { 'Challenge!' }
@@ -26,6 +26,8 @@ describe "MatchesPages" do
       login creator
       visit new_contest_match_path(contest)
     end
+
+    it { should have_selector("h2", "Challenge Match") }                       
 
     describe "invalid information" do
       describe "missing information" do
@@ -42,20 +44,22 @@ describe "MatchesPages" do
 
       illegal_dates = [{month: 'Feb', day: '30'},
         {month: 'Feb', day: '31'},
-        {year: '2015', month: 'Feb', day: '29'},
+        {year: '2019', month: 'Feb', day: '29'},
         {month: 'Apr', day: '31'},
         {month: 'Jun', day: '31'},
         {month: 'Sep', day: '31'},
         {month: 'Nov', day: '31'}]
       illegal_dates.each do |date|
-        describe "illegal date (#{date.to_s})" do
+        describe "illegal date (#{date.to_s})", js: true do
           before do
             select_illegal_datetime('Start', date)
-	    check("#{player1.name} | #{player1.user.username}")
-	    check("#{player2.name} | #{player2.user.username}")
-	    check("#{player3.name} | #{player3.user.username}")
-	    check("#{player4.name} | #{player4.user.username}")
-	    select num_of_rounds, from: :match_num_rounds
+            select("#{player1.name} (#{player1.user.username})")
+            select("#{player2.name} (#{player2.user.username})")
+            select("#{player3.name} (#{player3.user.username})")
+            select("#{player4.name} (#{player4.user.username})")
+            click_button("btnRight")
+
+            select num_of_rounds, from: :match_num_rounds
             click_button submit
           end
           it { should have_alert(:danger) }
@@ -63,27 +67,31 @@ describe "MatchesPages" do
       end # illegal date
       
       # Test that one of the current user's players are chosen.
-      describe "didn't select a current user's player" do
+      describe "didn't select a current user's player", js: true do
         before do
-	  select_datetime(now, 'Start')
-          check("#{player2.name} | #{player2.user.username}")
-          check("#{player3.name} | #{player3.user.username}")
-          check("#{player4.name} | #{player4.user.username}")
-          check("#{player5.name} | #{player5.user.username}")
-	  select num_of_rounds, from: :match_num_rounds
-	  click_button submit
-	end
+	        select_datetime(now, 'Start')
+          select("#{player2.name} (#{player2.user.username})")
+          select("#{player3.name} (#{player3.user.username})")
+          select("#{player4.name} (#{player4.user.username})")
+          select("#{player5.name} (#{player5.user.username})")
+          click_button("btnRight")
+
+          select num_of_rounds, from: :match_num_rounds
+          click_button submit
+        end
 	
 	it { should have_alert(:danger) }
 
       end # no current user's player	
 
       #Test that enough players are chosen.
-      describe "didn't select enough players" do
+      describe "didn't select enough players", js: true do
         before do
           select_datetime(now, 'Start')
-          check("#{player1.name} | #{player1.user.username}")
-          check("#{player4.name} | #{player4.user.username}")
+          select("#{player1.name} (#{player1.user.username})")
+          select("#{player4.name} (#{player4.user.username})")
+          click_button("btnRight")
+
           select num_of_rounds, from: :match_num_rounds
 	  click_button submit
         end
@@ -93,14 +101,16 @@ describe "MatchesPages" do
       end # not enough players
 
       #Test that there aren't too many players chosen.
-      describe "selected too many players" do
+      describe "selected too many players", js: true do
         before do
           select_datetime(now, 'Start')
-          check("#{player1.name} | #{player1.user.username}")
-          check("#{player2.name} | #{player2.user.username}")
-          check("#{player3.name} | #{player3.user.username}")
-          check("#{player4.name} | #{player4.user.username}")
-          check("#{player5.name} | #{player5.user.username}")
+          select("#{player1.name} (#{player1.user.username})")
+          select("#{player2.name} (#{player2.user.username})")
+          select("#{player3.name} (#{player3.user.username})")
+          select("#{player4.name} (#{player4.user.username})")
+          select("#{player5.name} (#{player5.user.username})")
+          click_button("btnRight")
+
           select num_of_rounds, from: :match_num_rounds
           click_button submit
         end
@@ -113,15 +123,18 @@ describe "MatchesPages" do
 
     describe "valid information" do
 
-      describe "create a few matches" do
+      describe "create a few matches", js: true do
         before do
           select_datetime(now, 'Start')
-          check("#{player1.name} | #{player1.user.username}")
-          check("#{player2.name} | #{player2.user.username}")
-          check("#{player3.name} | #{player3.user.username}")
-          check("#{player4.name} | #{player4.user.username}")
-	  select num_of_rounds, from: :match_num_rounds
+          select("#{player1.name} (#{player1.user.username})")
+          select("#{player2.name} (#{player2.user.username})")
+          select("#{player3.name} (#{player3.user.username})")
+          select("#{player4.name} (#{player4.user.username})")
+          click_button("btnRight")
+
+	        select num_of_rounds, from: :match_num_rounds
         end
+
 
         it "should create 3 matches" do
 	  #Change by count of 3 because num_of_rounds = 3.
@@ -130,13 +143,15 @@ describe "MatchesPages" do
         end    
       end
 
-      describe "create many matches" do
+      describe "create many matches", js: true do
         before do
           select_datetime(now, 'Start')
-          check("#{player1.name} | #{player1.user.username}")
-          check("#{player2.name} | #{player2.user.username}")
-          check("#{player3.name} | #{player3.user.username}")
-          check("#{player4.name} | #{player4.user.username}")
+          select("#{player1.name} (#{player1.user.username})")
+          select("#{player2.name} (#{player2.user.username})")
+          select("#{player3.name} (#{player3.user.username})")
+          select("#{player4.name} (#{player4.user.username})")
+          click_button("btnRight")
+
           select big_num_of_rounds, from: :match_num_rounds
         end
 
@@ -152,8 +167,8 @@ describe "MatchesPages" do
           login creator, avoid_capybara: true
           post contest_matches_path(contest),
             match: { earliest_start: now.strftime("%F %T"),
-            player_ids: {player1.id => "1", player2.id => "1", player3.id => "1", player4.id => "1"},
-	          num_rounds: 3 }
+            player_ids: [ player1.id, player2.id, player3.id, player4.id ],
+            num_rounds: 3 }
         end
 
         specify { expect(response).to redirect_to(match_path( contest.matches.first.slug )) }
@@ -161,20 +176,23 @@ describe "MatchesPages" do
 
       end # redirects
 
-      describe "after submission" do
+      describe "after submission", js: true do
 
-	before do
+	      before do
           select_datetime(now, 'Start')
-          check("#{player1.name} | #{player1.user.username}")
-          check("#{player2.name} | #{player2.user.username}")
-          check("#{player3.name} | #{player3.user.username}")
-          check("#{player4.name} | #{player4.user.username}")
+          select("#{player1.name} (#{player1.user.username})")
+          select("#{player2.name} (#{player2.user.username})")
+          select("#{player3.name} (#{player3.user.username})")
+          select("#{player4.name} (#{player4.user.username})")
+          click_button("btnRight")
+
           select num_of_rounds, from: :match_num_rounds
-	end
+	        
+          click_button(submit)
+          page.find('.alert')
+	      end
 
-        before { click_button submit }
-
-	      it { should have_content('Match Information') }
+	      it { should have_content('Match') }
         it { should have_alert(:success, text: 'Match created.') }
         it { should have_content(contest.name) }
 
@@ -279,6 +297,7 @@ describe "MatchesPages" do
 
     before { visit match_path(match) }
 
+    it { should have_selector("h2", "Match") }                       
     it { should have_content(match.status.capitalize) }
     it { should have_content(distance_of_time_in_words_to_now(match.earliest_start).split.map { |i| i.capitalize }.join(' ')) }
     it { should have_content(match.manager.name) }
@@ -342,7 +361,7 @@ describe "MatchesPages" do
        visit match_path(match) 
        end
        
-
+    it { should have_selector("h2", "Match") }                       
     it { should have_content(match.status.capitalize) }
     it { should have_content(distance_of_time_in_words_to_now(match.earliest_start).split.map { |i| i.capitalize }.join(' ')) }
     it { should have_content(match.manager.name) }
@@ -360,6 +379,8 @@ describe "MatchesPages" do
 
       visit tournament_matches_path(tournament)
     end
+    
+    it { should have_selector("h2", "Match") }                       
     
     it "lists all the tournament matches for a single tournament in the system" do
       Match.where(manager: tournament).each do |m|
@@ -403,6 +424,8 @@ describe "MatchesPages" do
       visit contest_matches_path(contest)
     end
 
+    it { should have_selector("h2", "Match") }                       
+    
     it "should list all the challenge matches for a contest in which the user has a player participating" do
       challenge_matches_player1_is_in.each do |m|
         should have_selector('li', text: m.id)
