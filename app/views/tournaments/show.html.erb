@@ -58,7 +58,7 @@
 </div>
 
 <% if @tournament.tournament_type == "round robin" %>
+    <%= render "round_robin_tournament" %>
 <% else %>
-    <%= render "round-robin-tournament.html.erb" %>
-    <%= render @single-elimination-tournament %>
+    <%= render "single_elimination_tournament" %>
 <% end %>
