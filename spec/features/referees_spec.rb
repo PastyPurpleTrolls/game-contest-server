@@ -25,6 +25,8 @@ describe "RefereePages" do
       visit new_referee_path
     end
 
+    it { should have_selector("h2", "Add Referee") }             
+
     describe "invalid information" do
       describe "missing information" do
         it "should not create a referee" do
@@ -155,6 +157,7 @@ describe "RefereePages" do
       visit edit_referee_path(referee)
     end
 
+    it { should have_selector("h2", "Edit Referee") }             
     it { should have_field('Name', with: referee.name) }
     it { should have_field('Rules', with: referee.rules_url) }
 
@@ -404,6 +407,7 @@ describe "RefereePages" do
       visit referee_path(referee)
     end
 
+    it { should have_selector("h2", "Referee") }             
     it { should have_content(referee.name) }
     it { should have_link(referee.rules_url) }
     it { should have_content(referee.round_limit) }
@@ -426,6 +430,8 @@ describe "RefereePages" do
       visit referees_path
     end
 
+    it { should have_selector("h2", "Referee") }             
+
     it "does not have adding option" do
       should_not have_link('', href: new_referee_path)
     end
@@ -444,6 +450,8 @@ describe "RefereePages" do
       
       visit referees_path
     end
+
+    it { should have_selector("h2", "Referee") }             
 
     it "has adding option" do
       should have_link('', href: new_referee_path)

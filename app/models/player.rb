@@ -44,4 +44,10 @@ class Player < ActiveRecord::Base
   def deletable?(u)
     u == user && player_matches.size == 0
   end
+
+  def wins(tournament)
+    PlayerMatch.where(player: self,
+      match: Match.where(manager: tournament),
+      result: "Win").count
+  end
 end

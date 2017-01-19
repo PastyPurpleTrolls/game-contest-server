@@ -25,11 +25,27 @@
     <%= f.select :rounds_per_match, 1..@contest.referee.round_limit.to_i, {}, class: 'form-input form-element' %>
 </div>
 
-<div class="form-group">
-    <p><strong>Select Players</strong></p>
-    <% @tournament.contest.players.each do |p| %>
-        <%= check_box_tag "tournament[player_ids][#{p.id}]", 1, @tournament.players.include?(p) %>
-        <%= label_tag "tournament[player_ids][#{p.id}]","#{p.name} | #{p.user.username}" %>
-        <br />
-    <% end %>
+<div class="row multiselector">
+    <div class="col-xs-5 first-player-select right">
+        <p class="center"><%= f.label :leftValues, "Available Players:", class: "player-label" %></p>
+        <select id="leftValues" class="player-select" size="5" multiple>
+            <% @tournament.contest.players.select{ |p| !p.tournaments.include?(@tournament)}.each do |p| %>
+                <option value=<%= p.id %>><%= p.name %> (<%= p.user.username %>)</option>
+            <% end %>  
+        </select>
+    </div>
+    <div class="player-selectors">
+        <br>
+        <br>
+        <input type="button" id="btnRight" onclick="addPlayer()" value="&gt;&gt;" />
+        <input type="button" id="btnLeft" onclick="removePlayer()" value="&lt;&lt;" />
+    </div>
+    <div>
+        <p class="center"><%= f.label :rightValues, "Selected Players:", class: "player-label" %></p>
+        <select name="tournament[player_ids][]" id="rightValues" class="player-select" size="5" multiple>
+        <% @tournament.players.each do |p| %>
+            <option value=<%= p.id %>><%= p.name %> (<%= p.user.username %>)</option>
+        <% end %>  
+        </select>
+    </div>
 </div>

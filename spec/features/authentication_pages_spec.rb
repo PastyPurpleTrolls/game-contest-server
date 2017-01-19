@@ -5,7 +5,7 @@ describe "AuthenticationPages" do
   describe "login page" do
     before { visit login_path }
 
-    it { should have_content('Login') }
+    it { should have_selector("h2", "Login") }                       
 
     describe "with invalid account" do
       before { click_button 'Log In' }

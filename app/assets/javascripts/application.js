@@ -30,10 +30,10 @@ function redirectToContest() {
 function removePlayer() {
     var selectedItem = $("#rightValues option:selected");
     $("#leftValues").append(selectedItem);
-    console.log(selectedItem);
 }
 
 function addPlayer() {
     var selectedItem = $("#leftValues option:selected");
     $("#rightValues").append(selectedItem);
 };
+

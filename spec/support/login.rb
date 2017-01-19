@@ -6,6 +6,7 @@ def login(user, options = {})
     fill_in 'Username', with: user.username
     fill_in 'Password', with: user.password
     click_button 'Log In'
+    page.find('.alert')
   end
 end
 

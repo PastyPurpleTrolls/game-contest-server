@@ -19,18 +19,23 @@ class MatchesController < ApplicationController
     @contest = Contest.friendly.find(params[:contest_id])
     contest = Contest.friendly.find(params[:contest_id])
     round_limit = params[:match][:num_rounds]
-    if params[:match][:player_ids] && params[:match][:player_ids].any? { |player_id, use| Player.find(player_id).user_id == current_user.id}
-        @match = @contest.matches.build(acceptable_params)
+    if params[:match][:player_ids] && params[:match][:player_ids].any? { |player_id, use| Player.find(player_id).user_id == current_user.id }
+        if params[:match][:player_ids].uniq{|p| Player.find(p).contest_id}.length > 1
+					flash.now[:danger] = 'Players from multiple contests'
+					render 'new'					
+					return
+				end
+				@match = @contest.matches.build(acceptable_params)
         @match.status = "waiting"
         if @match.save
-	    flash[:success] = 'Match created.'
-	else
-	    @contests = Contest.all
-	    flash.now[:danger] = 'Match not saved'
-	    render 'new'
-	    return
-	end
-	redirect_to @match
+						flash[:success] = 'Match created.'
+				else
+						@contests = Contest.all
+						flash.now[:danger] = 'Match not saved'
+						render 'new'
+						return
+				end
+				redirect_to @match
     else   	
         @match = @contest.matches.build(acceptable_params)
 				@contests = Contest.all
@@ -129,7 +134,7 @@ class MatchesController < ApplicationController
   private
 
   def acceptable_params
-    params.require(:match).permit(:earliest_start, :num_rounds, player_ids: @contest.players.try(:ids).map(&:to_s))
+    params.require(:match).permit(:earliest_start, :num_rounds, player_ids: [])
   end
 
 end

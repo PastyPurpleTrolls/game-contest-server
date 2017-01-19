@@ -19,6 +19,8 @@ describe "PlayersPages" do
       visit new_contest_player_path(contest)
     end
 
+    it { should have_selector("h2", "Add Player") }                 
+
     describe "invalid information" do
       describe "missing information" do
         it "should not create a player" do
@@ -92,6 +94,7 @@ describe "PlayersPages" do
       visit edit_player_path(player)
     end
 
+    it { should have_selector("h2", "Edit Player") }                 
     it { should have_field('Name', with: player.name) }
     it { should have_field('Description', with: player.description) }
     it { should have_unchecked_field('download') }
@@ -221,6 +224,7 @@ describe "PlayersPages" do
 
     before { visit player_path(player) }
 
+    it { should have_selector("h2", "Player") }                 
     it { should have_content(player.name) }
     it { should have_content(player.description) }
     it { should have_content('This player can be challenged') }
@@ -394,6 +398,7 @@ describe "PlayersPages" do
       visit contest_players_path(contest)
     end
 
+    it { should have_selector("h2", "Player") }                 
     it "lists all the players for a contest in the system" do
       Player.where(contest: contest).each do |p|
         should have_selector('li', text: p.name)

@@ -27,6 +27,8 @@ describe 'TournamentsPages' do
       visit new_contest_tournament_path(contest)
     end
 
+    it { should have_selector("h2", "Add Tournament") }             
+
     describe 'invalid information' do
       describe 'missing information' do
         it 'should not create a tournament' do
@@ -55,22 +57,27 @@ describe 'TournamentsPages' do
 
     end # invalid info
 
-    describe 'valid information' do
+    describe 'valid information', js: true do
 
       before do
         fill_in 'Name', with: name
         select_datetime(now, 'Start')
         select tournament_type, from: 'Tournament Type'
-        check("#{player1.name} | #{player1.user.username}")
+        select("#{player1.name} (#{player1.user.username})")
+        click_button("btnRight")
 	      select 1, from: 'Rounds per Match'
 
       end
 
       it "should create a tournament" do
-        expect { click_button submit }.to change(Tournament, :count).by(1)
+        #pending "concurrent access by database"
+        expect do 
+          click_button submit 
+          page.find('.alert')
+        end.to change(Tournament, :count).by(1)
       end
 
-      describe 'redirects properly', type: :request do
+      describe 'redirects properly', type: :request, js: false do
         before do
           login creator, avoid_capybara: true
           post contest_tournaments_path(contest),
@@ -78,7 +85,7 @@ describe 'TournamentsPages' do
               start: now.strftime("%F %T"),
               tournament_type: tournament_type.downcase,
               players: [player1],
-	      rounds_per_match: 1
+	            rounds_per_match: 1
           }
         end
 
@@ -88,12 +95,15 @@ describe 'TournamentsPages' do
       describe "after submission" do
         let (:tournament) { Tournament.find_by(name: name) }
 
-        before { click_button submit }
+        before do 
+          click_button submit
+          page.find('.alert')
+        end
 
         specify { expect(tournament.contest.user).to eq(creator) }
 
         it { should have_alert(:success, text: 'Tournament created') }
-        it { should have_content(/about 1 hour/) }
+        it { should have_content(/About 1 Hour/) }
         it { should have_content(tournament.name) }
         it { should have_content(tournament.status.capitalize) }
         it { should have_link(tournament.contest.name,
@@ -116,22 +126,20 @@ describe 'TournamentsPages' do
 
     before do
       tournament.players << player1
-      player1.tournaments << tournament
+      tournament.save
       login creator
       visit edit_tournament_path(tournament)
     end
 
-    it { should have_field('Name', with: tournament.name) }
+    it { should have_selector("h2", "Edit Tournament") }
+    it { should have_field("Name", with: tournament.name) }    
     it { expect_datetime_select(tournament.start, 'Start') }
     it { should have_select('Tournament Type',
                             options: %w[ Round\ Robin   Single\ Elimination ],
                             selected: tournament_type) }
 
-    it { should have_checked_field("#{player1.name} | #{player1.user.username}") }
-    it { should_not have_unchecked_field("#{player1.name} | #{player1.user.username}") }
-
-    it { should_not have_checked_field("#{player2.name} | #{player2.user.username}") }
-    it { should have_unchecked_field("#{player2.name} | #{player2.user.username}") }
+    it { should have_select("rightValues", options: ["#{player1.name} (#{player1.user.username})"]) } 
+    it { should have_select("leftValues", options: ["#{player2.name} (#{player2.user.username})"]) }     
 
     describe "with invalid information" do
       before do
@@ -178,17 +186,23 @@ describe 'TournamentsPages' do
 
     end # forbidden attributes
 
-    describe "with valid information" do
+    describe "with valid information", js: true do
       before do
         fill_in 'Name', with: edit_name
         select_datetime(edit_time, 'Start')
         select edit_tournament_type, from: 'Tournament Type'
-        uncheck ("#{player1.name} | #{player1.user.username}")
-        check ("#{player2.name} | #{player2.user.username}")
+        select("#{player1.name} (#{player1.user.username})")
+        click_button("btnLeft")
+        unselect("#{player1.name} (#{player1.user.username})")        
+        select("#{player2.name} (#{player2.user.username})")
+        click_button("btnRight")
       end
 
       describe "changes the data" do
-        before { click_button submit }
+        before do 
+          click_button submit
+          page.find('.alert')
+        end          
 
         it { should have_alert(:success) }
         specify { expect(tournament.reload.name).to eq(edit_name) }
@@ -201,7 +215,7 @@ describe 'TournamentsPages' do
                               href: player_path(player2)) }
       end # changes the data
 
-      describe "redirects properly", type: :request do
+      describe "redirects properly", type: :request, js: false do
         before do
           login creator, avoid_capybara: true
           patch tournament_path(tournament), tournament: { start: now.strftime("%F %T"),
@@ -214,7 +228,10 @@ describe 'TournamentsPages' do
       end # redirects properly
 
       it "does not add a new tournament to the system" do
-        expect { click_button submit }.not_to change(Tournament, :count)
+        expect do 
+          click_button submit
+          page.find('.alert')          
+        end.not_to change(Tournament, :count)
       end
 
     end # valid information
@@ -230,7 +247,7 @@ describe 'TournamentsPages' do
     describe "redirects properly" do
       before { delete tournament_path(tournament) }
 
-      specify { expect(response).to redirect_to(contest_tournaments_path(tournament.contest)) }
+      specify { expect(response).to redirect_to(contest_path(tournament.contest)) }
     end
 
     it "produces a delete message" do
@@ -250,9 +267,10 @@ describe 'TournamentsPages' do
     before { visit tournament_path(tournament) }
 
     # Tournament attributes
+    it { should have_selector("h2", "Tournament") }                       
     it { should have_content(tournament.name) }
     it { should have_content(tournament.status.capitalize) }
-    it { should have_content(distance_of_time_in_words_to_now(tournament.start)) }
+    it { should have_content(distance_of_time_in_words_to_now(tournament.start).split.map { |i| i.capitalize }.join(' ')) }
     it { should have_content(tournament.tournament_type.split.map { |i| i.capitalize }.join(' ')) }
 
 =begin
@@ -285,6 +303,8 @@ describe 'TournamentsPages' do
       visit contest_tournaments_path(contest)
     end
 
+    it { should have_selector("h2", "Tournament") }                       
+
     it "lists all the tournaments for a contest in the system" do
       Tournament.where(contest: contest).each do |tournament|
         should have_selector('li', text: tournament.name)
@@ -293,32 +313,3 @@ describe 'TournamentsPages' do
     end
   end # show all
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
