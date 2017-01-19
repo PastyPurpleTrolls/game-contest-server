@@ -64,6 +64,11 @@ $ rails c
 
 Run tests: `rspec`
 
+Note, if you are running a machine not capable of using a xwindows program (like Windows) then you cannot run the tests that need javascript. However, to get around it you can run
+```
+rspec  --tag ~js
+```
+which will ignore the tests that need javascript and run the rest. But you must use a xwindows program to run the javascript tests.
 
 ###Migrations
 
