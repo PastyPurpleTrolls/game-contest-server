@@ -1,16 +1,15 @@
-#Game Contest Server - Admin Documentation
+<div class="row center">
+    <div class="container center display-container col-md-offset-1 col-md-10">
+		<h1 class="headings row left">Admin Capabilities</h1>		
+		<div class="row left">
+			<ul>
+				<li>All Student and Contest Creator Capabilities</li>
+				<li>Deleting Users</li>
+				<li>Changing User Roles</li>                
+			</ul>
+		</div>
+	</div>
+</div>
 
-The Game Contest Website is an interactive, web based manager for automated turn-based game contests.
-
-##Terminology
-
-* See terminology in [User Documentation](/help/user)
-
-##Admin Capabilities
-
-Capable of 
-
-* all User and Contest Creator permissions
-* deleting Users
-* changing User roles (but there is currently no user interface for that)
+[View terminology in student documentation](/help/student)
 
