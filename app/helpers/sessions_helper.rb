@@ -26,6 +26,18 @@ module SessionsHelper
     redirect_back_to_previous
   end
 
+  def file_does_not_exist
+    store_location
+    flash[:warning] = "File Does Not Exist"
+    redirect_back_to_previous
+  end
+
+  def friendly_redirect_to_previous(message=nil)
+    store_location
+    flash[:warning] = message unless message.nil?
+    redirect_back_to_previous
+  end
+
   def redirect_back_to_previous
     return_to = session[:return_to]
     clear_return_to
