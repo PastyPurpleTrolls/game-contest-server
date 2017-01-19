@@ -8,8 +8,6 @@
 				<li>Changing User Roles</li>                
 			</ul>
 		</div>
+        <div class="left"><a href="/help/student"><u>View Terminology in Student Documentation</u></a></div>		
 	</div>
 </div>
-
-[View terminology in student documentation](/help/student)
-
