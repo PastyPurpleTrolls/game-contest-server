@@ -3,40 +3,40 @@ class MatchesController < ApplicationController
   before_action :ensure_contest_creator, only: [:edit, :update, :destroy]
 
  def new
-   contest = Contest.friendly.find(params[:contest_id])
-   @contest = Contest.friendly.find(params[:contest_id])
-   @match = contest.matches.build
-   @match.manager.players.each do |f|
-	@match.player_matches.build(player: f )
-   end
+	 @contests = Contest.all
+    if params[:contest_id] != 'not-specified'
+   		@contest = Contest.friendly.find(params[:contest_id])
+      contest = Contest.friendly.find(params[:contest_id])
+			@match = contest.matches.build
+			@match.manager.players.each do |f|
+				@match.player_matches.build(player: f )
+			end
+   	end
    #@match.earliest_start = Time.now
-  
   end 
-
 
   def create	
     @contest = Contest.friendly.find(params[:contest_id])
     contest = Contest.friendly.find(params[:contest_id])
     round_limit = params[:match][:num_rounds]
     if params[:match][:player_ids] && params[:match][:player_ids].any? { |player_id, use| Player.find(player_id).user_id == current_user.id}
-	round_limit = 1 if contest.referee.rounds_capable
-        round_limit.to_i.times do 
-            @match = @contest.matches.build(acceptable_params)
-    	    @match.status = "waiting"
-    	        if @match.save
-		    flash[:success] = 'Match created.'
-		else
-		    flash.now[:danger] = 'Match not saved'
-		    render 'new'
-		    return
-		end
+        @match = @contest.matches.build(acceptable_params)
+        @match.status = "waiting"
+        if @match.save
+	    flash[:success] = 'Match created.'
+	else
+	    @contests = Contest.all
+	    flash.now[:danger] = 'Match not saved'
+	    render 'new'
+	    return
 	end
-	redirect_to @contest
+	redirect_to @match
     else   	
         @match = @contest.matches.build(acceptable_params)
-	flash.now[:danger] = 'You need to select at least one of your own players.'
-	render action: 'new'
-    end
+				@contests = Contest.all
+				flash.now[:danger] = 'You need to select at least one of your own players.'
+				render action: 'new'
+		end
   end
 
   def show

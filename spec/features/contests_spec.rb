@@ -83,7 +83,7 @@ describe "ContestsPages" do
         it { should have_content(description) }
         it { should have_content(name) }
         it { should have_content(contest.referee.name) }
-        it { should have_link('New Player',
+        it { should have_link('',
           href: new_contest_player_path(contest)) }
       end
     end
@@ -102,14 +102,13 @@ describe "ContestsPages" do
     it { expect_datetime_select(contest.deadline, 'Deadline') }
     it { should have_field('Description', with: contest.description) }
     it { should have_field('Name', with: contest.name) }
-    it { should have_select('Referee', selected: contest.referee.name) }
+    it { should have_content( contest.referee.name) }
 
     describe "with invalid information" do
       before do
         select_datetime(now, 'Deadline')
         fill_in 'Name', with: ''
         fill_in 'Description', with: description
-        select referee.name, from: 'Referee'
       end
 
       describe "does not change data" do
@@ -134,7 +133,6 @@ describe "ContestsPages" do
         select_datetime(now, 'Deadline')
         fill_in 'Name', with: name
         fill_in 'Description', with: description
-        select referee.name, from: 'Referee'
       end
 
       describe "changes the data" do
@@ -144,9 +142,7 @@ describe "ContestsPages" do
         specify { expect_same_minute(contest.reload.deadline, now) }
         specify { expect(contest.reload.name).to eq(name) }
         specify { expect(contest.reload.description).to eq(description) }
-        specify { expect(contest.reload.referee.name).to eq(referee.name) }
-        it { should have_link('New Player',
-          href: new_contest_player_path(contest)) }
+        it { should have_link('', href: new_contest_player_path(contest)) }
       end
 
       describe "redirects properly", type: :request do
@@ -288,14 +284,11 @@ describe "ContestsPages" do
     end
 
     it 'should return results' do
-      should have_content('searchtest')
+      should have_button('searchtest')
       should have_content('1 Contest')
+    end
 
    end
-   end
-
-
-
 
   describe "show" do
     let (:contest) { FactoryGirl.create(:contest) }
@@ -317,26 +310,41 @@ describe "ContestsPages" do
       end
     end
 
-    it { should have_link('New Player',
+    it { should have_link('',
       href: new_contest_player_path(contest)) }
 
-    it { should have_link('Challenge other players.',
+    it { should have_link('',
       href: new_contest_match_path(contest)) }
 
   end
 
-  describe "show all" do
+  describe "show all as any user" do
     before do
       5.times { FactoryGirl.create(:contest) }
 
       visit contests_path
     end
 
+    it "does not have adding option" do
+      should_not have_link('', href: new_contest_path)
+    end
+
     it "lists all the contests in the system" do
       Contest.all.each do |c|
-        should have_selector('li', text: c.name)
-        should have_link(c.name, contest_path(c))
+        should have_selector('input.results-container')
+        should have_button(c.name, contest_path(c))
       end
+    end
+  end
+  describe "show all as contest_creator" do
+    before do
+      login creator
+      
+      visit contests_path
+    end
+
+    it "has adding option" do
+      should have_link('', href: new_contest_path)
     end
   end
 end

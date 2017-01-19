@@ -1,4 +1,5 @@
 class PlayersController < ApplicationController
+  include ApplicationHelper
   before_action :ensure_user_logged_in, except: [:index, :show]
   before_action :ensure_player_owner, only: [:edit, :update, :destroy]
 
@@ -14,8 +15,11 @@ class PlayersController < ApplicationController
   end
 
   def new
-    contest = Contest.friendly.find(params[:contest_id])
-    @player = contest.players.build
+    @contests = Contest.all
+    if params[:contest_id] != 'not-specified'
+      contest = Contest.friendly.find(params[:contest_id])
+      @player = contest.players.build
+    end
   end
 
   def create
@@ -25,8 +29,12 @@ class PlayersController < ApplicationController
     @player.user = current_user
     if @player.save
       flash[:success] = 'New Player created.'
+
+      startTestMatch(@player.id, contest) #if params[:player][:run_test]
+
       redirect_to @player
     else
+      @contests = Contest.all
       render 'new'
     end
   end
@@ -51,7 +59,8 @@ class PlayersController < ApplicationController
 
   def destroy
     @player.destroy
-    redirect_to contest_players_path(@player.contest)
+      flash[:success] = 'Player deleted.'
+      redirect_to contest_path(@player.contest)
   end
 
   private

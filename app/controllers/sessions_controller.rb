@@ -6,11 +6,15 @@ class SessionsController < ApplicationController
   end
 
   def create
+    if session[:redirect_to] != nil then
+      redirect_back_to_previous user
+    end
+
     user = User.find_by(username: params[:username])
     if user && user.authenticate(params[:password])
       login user
       flash[:success] = 'Logged in.'
-      redirect_to user
+      redirect_to root_path
     else
       flash.now[:danger] = 'Invalid username or password'
       render 'new'

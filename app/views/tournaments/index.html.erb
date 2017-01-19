@@ -1,3 +1,4 @@
+<% setTitle("Tournament") %>
 <h1>List of Tournaments</h1>
 <%= form_tag contest_tournaments_path, method: :get, id: :tournaments_search do %>
     <%= hidden_field_tag :direction, params[:direction] %>

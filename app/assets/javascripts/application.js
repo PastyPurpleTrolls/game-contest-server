@@ -15,3 +15,25 @@
 //= require turbolinks
 //= require bootstrap
 //= require_tree .
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
+function redirectToContest() {
+    var f = $("#contest-form")[0];
+    var s = $("#contest-selector")[0];
+    f.action = f.action.replace("contest_id", s.value);
+    f.submit();
+}
+
+function removePlayer() {
+    var selectedItem = $("#rightValues option:selected");
+    $("#leftValues").append(selectedItem);
+    console.log(selectedItem);
+}
+
+function addPlayer() {
+    var selectedItem = $("#leftValues option:selected");
+    $("#rightValues").append(selectedItem);
+};

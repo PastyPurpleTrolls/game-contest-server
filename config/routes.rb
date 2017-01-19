@@ -2,11 +2,12 @@ GameContestServer::Application.routes.draw do
 #  get "matches/show"
 #  get "matches/index"
   get "visual_tests/colorscheme", as: :colorscheme
-  root 'users#welcome'
-
+  root 'users#home'
 
   get '/help/', to: 'help#index'
   get '/help/:category/(:page)', to: 'help#show'
+  get '/match_logs/:id/std_out', to: 'match_log_infos#std_out'
+  get '/match_logs/:id/std_err', to: 'match_log_infos#std_err'
 
   resources :users
   
@@ -22,7 +23,7 @@ GameContestServer::Application.routes.draw do
     resources :tournaments, shallow: true do
       resources :players
       resources :matches, only: [:index] do
-	resources :rounds, only: [:show]
+	      resources :rounds, only: [:show]
       end
     end
   end

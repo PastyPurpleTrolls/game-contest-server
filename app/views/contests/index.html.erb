@@ -1,26 +1,28 @@
-<h1>List of Contests</h1>
-<%= form_tag contests_path, :method => 'get', :id => "contest_search" do %>
-  <%= hidden_field_tag :direction, params[:direction] %>
-  <%= hidden_field_tag :sort, params[:sort] %>
-  <p>
-    <%= text_field_tag :search, params[:search] %>
-    <%= submit_tag "Search", :description => nil %>
-  </p>
-<%end%>
-
-<h3><%= pluralize(@contests.length, 'Contest', 'Contests') %></h3>
-
-<div id= "pagination">
-  <%if @contests.blank?%>
-    <h3><%="There are no contests available!"%></h3>
-  <% else %>
-     <% @contests.each do |contest| %>
-        <li><%= link_to contest.name, contest %>
-          <% if current_user==contest.user and current_user.contest_creator %>
-            | <%= link_to 'edit', edit_contest_path(contest) %>
-          <% end %>
-        </li>
-    <% end %>
-  <% end %>
-  <%= will_paginate %>
+<% setTitle("Contest") %>
+<div class="row">
+    <div class="container center display-container col-md-offset-3 col-md-6">
+        <div class="row">
+            <h1 class="headings col-xs-10 left">Contests</h1>
+            <% if current_user && current_user.contest_creator? %> 
+                <div class="col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Contest">
+                    <%= link_to(new_contest_path, method: :get) do %>
+                        <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
+                    <% end %>
+                </div>
+            <% end %>            
+        </div>
+        <%= form_tag contests_path, :method => 'get', :id => "contest_search" do %>
+            <%= hidden_field_tag :direction, params[:direction] %>
+            <%= hidden_field_tag :sort, params[:sort] %>
+            <p class="search-container">
+              <%= text_field_tag :search, params[:search] %>
+              <%= submit_tag "Search", :description => nil %>
+            </p>
+        <% end %>
+        <div id= "pagination">
+            <%= render @contests %>
+            <%= will_paginate %>
+        </div>
+        <div><%= pluralize(@contests.length, 'Contest') %> Found</div>
+    </div>
 </div>

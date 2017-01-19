@@ -14,20 +14,23 @@ class RoundWrapper
     attr_accessor :status, :rounds, :match
 
     #Constructor, sets socket for communication to referee and starts referee and players
-    def initialize(referee, number_of_players, max_match_time, players, rounds)  
+    def initialize(referee, match_id, number_of_players, max_match_time, players, rounds, duplicate_players)  
         #Sets port for referee to talk to wrapper_server  
         @wrapper_server = TCPServer.new(0)
         
         @players = players
         @referee = referee
+	@match_id= match_id
         @child_list = []
         @number_of_players = number_of_players
         @max_match_time = max_match_time
         @num_rounds = rounds
+	@duplicate_players = duplicate_players
  
         @status = {}
         @rounds = []
         @match = {}
+	@match[:logs] = {}
 
         @command_char = ":"
         @value_char = "|"
@@ -44,6 +47,7 @@ class RoundWrapper
                 end
             end
             calculate_results
+	    compress_logs
         end
     end
     
@@ -66,6 +70,10 @@ class RoundWrapper
                 "result": (player == winner[0]) ? "Win" : "Loss",
                 "score": wins
             }
+	    if @duplicate_players then
+		@match[player][:result]= "Tie"
+	    end
+	    
         end
     end
 
@@ -104,8 +112,11 @@ class RoundWrapper
 	    else
 		    command="#{Shellwords.escape @referee.file_location} -p #{wrapper_server_port} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time}"
 	    end
-        @child_list.push(Process.spawn("#{command}"))
-        
+
+	loc = "#{Shellwords.escape @referee.file_location[0, @referee.file_location.length-@referee.name.length]}logs/#{@referee.name}_match_#{@match_id}_round_#{@rounds.length() + 1}" 
+        @child_list.push(Process.spawn("#{command}", :out=>"#{loc}_log.txt", :err=>"#{loc}_err.txt"))
+	@match[:ref_logs] = loc        
+
         #Wait for referee to tell wrapper_server what port to start players on
         begin
             Timeout::timeout(3) do
@@ -131,7 +142,10 @@ class RoundWrapper
 			else
 			    command="#{Shellwords.escape player.file_location} -n #{Shellwords.escape player.name} -p #{@client_port}"
 			end
-            @child_list.push(Process.spawn("#{command}"))
+
+	    loc = "#{Shellwords.escape player.file_location[0, player.file_location.length-player.name.length]}logs/#{player.name}_match_#{@match_id}_round_#{@rounds.length() + 1}"
+            @child_list.push(Process.spawn("#{command}", :out=>"#{loc}_log.txt", :err=>"#{loc}_err.txt"))
+	    @match[:logs][player.name] = loc
         end
         
         begin
@@ -200,5 +214,20 @@ class RoundWrapper
         end
         @child_list = []
     end 
+
+    def compress_logs
+	locs = []
+	locs << "#{Shellwords.escape @referee.file_location[0, @referee.file_location.length-@referee.name.length]}logs/"
+	@match[:ref_logs] = locs.last+"match_#{@match_id}_logs"
+        @players.each do |player|
+	    locs << "#{Shellwords.escape player.file_location[0, player.file_location.length-player.name.length]}logs/"
+	    @match[:logs][player.name] = locs.last+"match_#{@match_id}_logs"
+	end
+
+	locs.each do |loc|
+	    command = "tar czf match_#{@match_id}_logs_out.tgz *log.txt; tar czf match_#{@match_id}_logs_err.tgz *err.txt; rm *.txt"
+            Process.spawn(command, :chdir=>loc) 
+        end
+    end
 end
 

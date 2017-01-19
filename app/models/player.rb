@@ -16,6 +16,8 @@ class Player < ActiveRecord::Base
   validates :name,          presence: true, uniqueness: { scope: :contest }
   #  validates :programming_language, presence: true
 
+  default_scope -> { order("created_at DESC") }
+
   include Uploadable
   def self.search(search)
     if search
@@ -37,5 +39,9 @@ class Player < ActiveRecord::Base
 
   def move_friendly_id_error_to_name
     errors.add :name, *errors.delete(:friendly_id) if errors[:friendly_id].present?
+  end
+
+  def deletable?(u)
+    u == user && player_matches.size == 0
   end
 end

@@ -1,4 +1,3 @@
-<li>
-	<%= link_to player_round.player.name, player_path(player_round.player) %>
-		(<%= player_round.result %>)
-</li>
+<div class="col-md-6">
+	<p class="info-container"><%= link_to player_round.player.name, player_path(player_round.player) %> <span class="xs-font">(<%= player_round.result %>)</span></p>
+</div>

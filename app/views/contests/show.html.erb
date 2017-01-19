@@ -1,37 +1,100 @@
-<h1>Contest Information</h1>
-
-<% if current_user==@contest.user and current_user.contest_creator %>
-  <%= link_to 'edit', edit_contest_path(@contest) %>
- | <%= link_to 'delete', @contest, method: :delete, data: { confirm: 'Are you sure?' } %>
-<% end %>
-<br/>
-
-<p>Name: <%= @contest.name %></p>
-<p>Deadline: <%= distance_of_time_in_words_to_now(@contest.deadline) %></p>
-<p>Description: <%= @contest.description %></p>
-<% if @contest.referee %>
-    <p>Managing referee: <%= link_to @contest.referee.name, @contest.referee %></p>
-<%else%>
-    <p> Referee cannot be found, edit for a new referee or delete contest.</p>
-<%end%>
-<p>Contest creator: <%= link_to @contest.user.username, @contest.user %></p
-<br/>
-
-<h2>Tournaments</h2>
-<ul>
-    <%= render @contest.tournaments %>
-</ul>
-
-<h2>Actions</h2>
-<ul>
-    <li>Create <%= link_to 'New Player', new_contest_player_path(@contest) %> for this contest.</li>
-    <% if current_user==@contest.user and current_user.contest_creator %>
-        <li>Create <%= link_to 'New Tournament', new_contest_tournament_path(@contest) %> for this contest.</li>
-    <% end %>
-    <li> <%= link_to ' Challenge other players.', new_contest_match_path(@contest)%>  </li>
-    	
-</ul>
-
-
-
+<% setTitle("Contest") %>
+<div class="row">
+    <div class="container center display-container col-md-offset-1 col-md-10">
+        <div class="row">
+            <div class="col-xs-9">
+                <h1 class="headings left">Contest Information</h1>
+            </div>
+            <% if current_user==@contest.user and current_user.contest_creator %>
+                <div class="col-xs-3 right form-dropdown">                
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">Options <span class="caret"/></a>
+                        <ul class="dropdown-menu">
+                            <%= active_link_to 'Edit', edit_contest_path(@contest), wrap_tag: :li %>
+                            <%= active_link_to 'Delete', contest_path(@contest), method: :delete, data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
+                        </ul>
+                    </div>
+                </div>
+            <% end %>            
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <p class="info-container">Name: <%= @contest.name %></p>
+            </div>
+            <div class="col-md-6">            
+                <p class="info-container">Description: <%= @contest.description %></p>
+            </div>
+            <div class="col-md-6">
+                <p class="info-container">Referee: <%= link_to @contest.referee.name, @contest.referee %></p>
+            </div>
+            <div class="col-md-6">
+                <p class="info-container">Creator: <%= link_to @contest.user.username, @contest.user %></p>
+            </div>
+            <div class="col-md-6">
+                <p class="info-container">
+                    Deadline: <%= distance_of_time_in_words_to_now(@contest.deadline) %>
+                    <% if @contest.deadline > Time.now %>
+                        <span> left</span>
+                    <% else %>
+                        <span> ago</span>    
+                    <% end %>
+                </p>
+            </div>
+            <div class="col-md-6">
+                <p class="info-container">Rules: <%= link_to @contest.referee.rules_url, @contest.referee %></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="container outer-home-container col-md-5 col-md-offset-1">
+        <div class="row">
+            <div class="display-container center">
+                <div class="row">
+                    <h1 class="headings info-text col-xs-10 left">Tournaments (<%= @contest.tournaments.count %>)</h1>
+                    <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Tournament to Contest">
+                        <%= link_to(new_contest_tournament_path(@contest), method: :get) do %>
+                            <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
+                        <% end %>
+                    </div>
+                </div>
+                <div class="row">
+                    <% @contest.tournaments.each do |tournament| %>
+                        <div class="info-container">
+                            <%= link_to tournament.name, tournament %>           
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <%= link_to(new_contest_match_path(@contest), method: :get, class: 'navbar-brand navbar-default-link-color center contest-challenge') do %>
+                <div class="home-container">
+                    <p>Challenge Players</p>
+                    <%= content_tag('i', nil, class: 'glyphicon glyphicon-user home-gly') %> <%= content_tag('i', nil, class: 'glyphicon glyphicon-resize-horizontal') %> <%= content_tag('i', nil, class: 'glyphicon glyphicon-user home-gly') %>
+                </div> 
+            <% end %>
+        </div>
+    </div>
+    <div class="container outer-home-container col-md-5">
+            <div class="display-container center">
+                <div class="row">
+                    <h1 class="headings info-text col-xs-10 left">Players (<%= @contest.players.count %>)</h1>
+                    <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Player to Contest">
+                        <%= link_to(new_contest_player_path(@contest), method: :get) do %>
+                            <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
+                        <% end %>
+                    </div>
+                </div>
+                <div class="row">
+                    <% @contest.players.each do |player| %>
+                        <div class="info-container">
+                            <%= link_to player.name, player %> <span class="xs-font">(<%= player.user.username %>)</span>  
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 

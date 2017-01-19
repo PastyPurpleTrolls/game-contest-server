@@ -5,7 +5,7 @@ describe "AuthenticationPages" do
   describe "login page" do
     before { visit login_path }
 
-    it { should have_content('Log In') }
+    it { should have_content('Login') }
 
     describe "with invalid account" do
       before { click_button 'Log In' }
@@ -13,7 +13,7 @@ describe "AuthenticationPages" do
       it { should have_alert(:danger, text: 'Invalid') }
 
       describe "visiting another page" do
-        before { click_link 'Users' }
+        before { click_link 'Contests' }
 
         it { should_not have_alert(:danger) }
       end

@@ -6,6 +6,7 @@ class Match < ActiveRecord::Base
   has_many :player_matches , inverse_of: :match , dependent: :destroy
   has_many :players, through: :player_matches
   has_many :rounds, dependent: :destroy
+  has_one  :match_log_info, as: :match_source
 
   accepts_nested_attributes_for :player_matches
   has_many :parent_matches, class_name: 'MatchPath', foreign_key: 'child_match_id', dependent: :destroy
@@ -27,6 +28,9 @@ class Match < ActiveRecord::Base
 	validates_numericality_of :num_rounds, greater_than: 0
 
 	validate :num_rounds_upper_bound
+
+  default_scope -> { order("created_at DESC") }  
+
 	def num_rounds_upper_bound
 		if self.num_rounds.nil? || self.manager.nil?
 			errors.add(:num_rounds, "must not be nil")	
@@ -68,7 +72,8 @@ class Match < ActiveRecord::Base
                  self.manager.referee.players_per_game.to_s +
                  " you have " + self.player_matches.length.to_s +
                  " players") unless self.player_matches.length ==
-                                    self.manager.referee.players_per_game
+                                    self.manager.referee.players_per_game ||
+					self.player_matches.length == 1
   end
 
 #	def correct_number_of_rounds

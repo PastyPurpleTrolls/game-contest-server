@@ -1,4 +1,5 @@
 class RefereesController < ApplicationController
+    include ApplicationHelper
     protect_from_forgery :except => :show
     before_action :ensure_user_logged_in, except: [:index, :show]
     before_action :ensure_contest_creator, except: [:index, :show]
@@ -19,6 +20,17 @@ class RefereesController < ApplicationController
         @referee = current_user.referees.build(acceptable_params)
         if @referee.save
             flash[:success] = 'Referee created.'
+	    	   
+ 	    unless params[:referee][:upload4].nil?
+	        test_contest = current_user.contests.build( deadline:Time.now+1.day, description:"Test Contest", name:@referee.name+" test contest", referee_id:@referee.id)
+	        test_contest.save!
+                test_player = test_contest.players.build( {name:@referee.name+" test player", description: "Test Player", downloadable:false, playable:true} )
+                test_player.upload= params[:referee][:upload4]
+		test_player.user = current_user
+	        test_player.save!
+	        startTestMatch(test_player.id, test_contest)
+	    end
+            
             redirect_to @referee
         else
             render 'new'
@@ -52,10 +64,14 @@ class RefereesController < ApplicationController
     end
 
     def destroy
-        if ! Contest.exists?(:referee_id => @referee.id) 
+        if  @referee.deletable?(current_user)
             @referee.destroy
             flash[:success] = 'Referee deleted.'
-            redirect_to referees_path
+            if params[:returnto] == 'profile'
+                redirect_to user_path(current_user)
+            else 
+                redirect_to referees_path
+            end
         else
             flash[:danger] = 'This referee is currently being used in a contest'
             render 'show'
@@ -73,7 +89,7 @@ class RefereesController < ApplicationController
                                         :time_per_game,
                                         :upload,
                                         :upload2,
-                                        :upload3)
+                                        :upload3 )
     end
 
     def ensure_referee_owner

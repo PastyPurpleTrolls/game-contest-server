@@ -1,13 +1,14 @@
 class PlayerMatch < ActiveRecord::Base
   belongs_to :player
   belongs_to :match , inverse_of: :player_matches
+  has_one :match_log_info, as: :match_source 
 
   validates :player,    presence: true
   validates :match,     presence: true
 
   validates :result,  	inclusion: [nil,'Pending', 'Error', 'Win', 'Loss', 'Tie', 'Unknown Result']
 
-	validate :check_ids
+#	validate :check_ids
 
   default_scope -> { order("player_matches.result DESC") }
   scope :wins, -> { where(result: 'Win') }

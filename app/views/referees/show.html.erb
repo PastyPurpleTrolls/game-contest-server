@@ -1,25 +1,69 @@
-<h1>Referee Information</h1>
-
-<% if current_user == @referee.user and current_user.contest_creator %>
-    <%= link_to 'edit', edit_referee_path(@referee) %>
-    | <%= link_to 'delete', @referee, method: :delete, data: { confirm: 'Make sure this referee is not being used before you delete it'} %>
-<% end %>
-
-<p>Name: <%= @referee.name %></p>
-
-<p><%= link_to 'Rules', @referee.rules_url %></p>
-
-<p>Round limit: <%= @referee.round_limit %></p>
-
-<p>Capable of rounds: <%= @referee.rounds_capable? %></p>
-
-<p>Players per game: <%= @referee.players_per_game %></p>
-<p>Time per game: <%= @referee.time_per_game %> </p>
-<p>Created by: <%= @referee.user.username %></p>
-
-<h2>Contests</h2>
-<ul>
-    <% @referee.contests.each do |contest| %>
-        <li><%= link_to contest.name, contest %></li>
-    <% end %>
-</ul>
+<% setTitle("Referee") %>
+<div class="row">
+    <div class="container center display-container col-md-offset-1 col-md-10">
+        <div class="row">
+            <div class="col-xs-9">
+                <h1 class="headings left">Referee Information</h1>
+            </div>
+            <div class="col-xs-3 right form-dropdown">                
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">Options <span class="caret"/></a>
+                    <ul class="dropdown-menu">
+                        <% if current_user == @referee.user and current_user.contest_creator %>
+                            <%= active_link_to 'Edit', edit_referee_path(@referee), wrap_tag: :li %>
+                        <% end %>
+                        <% if @referee.deletable?(current_user) %>
+                            <%= active_link_to 'Delete', referee_path(@referee), method: :delete, data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
+                        <% end %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <p class="info-container">Name: <%= @referee.name %></p>
+            </div>
+            <div class="col-md-6">
+                <p class="info-container">Rules: <%= link_to @referee.rules_url, @referee %></p>
+            </div>
+            <div class="col-md-6">
+                <p class="info-container">Limit of Rounds (Inclusive): <%= @referee.round_limit %></p>
+            </div>
+            <div class="col-md-6">
+                <p class="info-container">Players per Game: <%= @referee.players_per_game %></p>
+            </div>
+            <div class="col-md-6">
+                <p class="info-container">Time per Game: <%= @referee.time_per_game %> sec</p>
+            </div>
+            <div class="col-md-6">
+                <p class="info-container">Created by: <%= @referee.user.username %></p>
+            </div>
+        </div> 
+        <% if @referee.rounds_capable %>
+            <p>This referee is capable of handling rounds <%= content_tag('i', nil, class: 'glyphicon glyphicon-ok') %></p>
+        <% else %>
+            <p>This referee is not capable of handling rounds <%= content_tag('i', nil, class: 'glyphicon glyphicon-remove') %></p>                
+        <% end %>       
+    </div>
+</div>
+<div class="row">
+    <div class="container center display-container col-md-offset-4 col-md-4">
+        <div class="row">
+            <h1 class="headings col-xs-10 left">Contests(<%= @referee.contests.count %>)</h1>
+            <% if current_user && current_user.contest_creator? %> 
+                <div class="col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Contest">
+                    <%= link_to(new_contest_path, method: :get) do %>
+                        <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
+                    <% end %>
+                </div>
+            <% end %>            
+        </div>
+        <div class="row">
+            <% @referee.contests.each do |contest| %>
+                <div class="info-container">
+                    <%= link_to contest.name, contest %>
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>
