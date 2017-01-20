@@ -30,13 +30,6 @@
                 <li><%= button_to 'Log In', login_path, method: :get, class: 'btn btn-info navbar-btn' unless current_page?(login_path) %></li>
                 <li><%= button_to 'Sign Up', signup_path, method: :get, class: 'btn btn-warning navbar-btn' unless current_page?(signup_path) %></li>
             <% end %>
-	    <li>
-		<% if @daemon_status then %>
-			<span class="glyphicon glyphicon-ok" aria-hidden="true" title="Match Handler is Running"></span>
-		<% else %>
-			<span class="glyphicon glyphicon-remove" aria-hidden="true" title="Match Handler is Offline"></span>
-		<% end %>
-	    </li>
         </ul>
     </div>
 </nav>
