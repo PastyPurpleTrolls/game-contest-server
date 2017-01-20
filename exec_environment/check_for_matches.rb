@@ -6,7 +6,7 @@
 #
 # TODO Queueing all available matches instead of just spawning one each time. Maybe using Delayed Job?
 
-match = Match.where("earliest_start < ? and status = ?", Time.now.utc, "waiting").first
+match = Match.where("earliest_start < ? and status = ?", Time.now.utc, "waiting").last
 if not match.nil? then
     match.status = "started"
     begin
