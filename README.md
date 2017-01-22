@@ -97,18 +97,24 @@ We have made significant changes to the User Interface (UI). However, these chan
 	* as a passing remark, the 2016 team recommends doing test-driven development in such a way that new development is known to be adequately tested before being merged into master. The idea is to keep the master branch in a "known good state".
 * While there may be more User Interface enhancements that can be made, once these two steps are taken care of, the uiBranch is then ready to merge into master. We recommend doing so sooner, rather than later.
 
+###Jerm 2017 group's note to the next iteration of the project
+The UI branch has become deprecated from last year's group as one of our team members rebranded the UI from the master branch. The CSS for the design changes are located in the "app/assets/stylesheets/post_bootstrap.css.scss.
+Like the previous group, we strongly recommend keeping the master branch clear of failing tests so that all team members can develop easily without having to fix someone else's code. 
+We believe that the next steps of the project include getting the display of specific tournaments working. There are partials that are tucked into the tournament show page that would make adding the display easy. Right now the tournament results display in order from most wins to least wins, but it would be nice to have specific views of the results depending on what kind of tournament was played such a bracket for single elimination. There is an issue in GitHub's Issue Tracker for it. 
+We also think getting the multiplayer game functionality fully working would be great! 
+Going to the Issue Tracker and fixing some/all of the issues there would be a great thing to accomplish too.
+Good luck!
+
 ###Test-Driven Development
-Both the 2015 and the 2016 Jterm teams recommend strongly that you stick with test-driven development. The long-term benefits outweigh the short-term struggles. 
+The 2015, 2016, and 2017 Jterm teams recommend strongly that you stick with test-driven development. The long-term benefits outweigh the short-term struggles. 
 
 ###Tracking Issues with GitHub
-The 2016 Jterm team recommends using GitHub's [Issues](https://github.com/PastyPurpleTrolls/game-contest-server/issues) tracker. There, we have listed issues that are not described in pending tests.
+The 2016 and 2017 Jterm team recommend using GitHub's [Issues](https://github.com/PastyPurpleTrolls/game-contest-server/issues) tracker. There, we have listed issues that are not described in pending tests.
 Here are necessary definitions of some of the labels on Github Issues:
 * the following 3 labels are defined so that an issue can have no more than one of these labels
 	* enhancement- it would be nice to close the issue, but it is not strictly required that it become closed
 	* futurework- a shortcoming of the application that must inevitably be resolved for basic functionality of the site
 	* bug- a technical mistake that must inevitably be resolved for basic functionality of the site
-* uiBranch or master- the issue would be best resolved in one of these two branches. Only use one of these labels with a given issue.
-	* when uiBranch and master finally merge (which should be as soon as possible), if the issue has been addressed in one of the branches, then the merge will hopefully resolve it in both branches (if the issue was in both branches; it is possible that the issue was only in one branch) 
 
 ##Referees
 
