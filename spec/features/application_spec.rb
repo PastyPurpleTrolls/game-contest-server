@@ -1,16 +1,19 @@
 require 'rails_helper'
 
 feature "HomePage" do
-  before { visit root_path }
 
   subject { page }
 
+
   describe "the navigation bar" do
-    it { should have_selector('.navbar') }
-    
     let (:admin) { FactoryBot.create(:admin) }
     let (:creator) { FactoryBot.create(:contest_creator) }
     let (:user) { FactoryBot.create(:user) }    
+
+    before { visit root_path }
+    
+    it { should have_selector("h2", "Home") }             
+    it { should have_selector('.navbar') }
     
     describe "as anonymous" do
       it "has the proper links" do
@@ -62,6 +65,49 @@ feature "HomePage" do
           should have_content('Account')                    
         end
       end
+    end
+  end
+  describe "the home page" do
+    
+    describe "as anonymous" do
+      before { visit root_path }
+      
+      it { should have_content("Welcome to Taylor University's Game Contest Server!") }
+
+      it { should_not have_content("Add Player") }      
+      it { should_not have_link('', href: new_contest_player_path("not-specified")) }
+      it { should_not have_content("Add Contest") }            
+      it { should_not have_link('', href: new_contest_path) }
+      it { should_not have_content("Add Tournament") }            
+      it { should_not have_link('', href: new_contest_tournament_path('not-specified')) }
+      it { should_not have_content("Challenge Players") }            
+      it { should_not have_link('', href: new_contest_match_path("not-specified")) }
+      it { should_not have_content("View Contests") }            
+      it { should_not have_content("View My Players") }            
+    end
+
+    describe "as creator" do 
+      let (:creator) { FactoryBot.create(:contest_creator) }    
+      
+      before do
+        login creator
+        visit root_path
+      end
+      
+      it { should_not have_content("Welcome to Taylor University's Game Contest Server!") }
+
+      it { should have_content("Add Player") }      
+      it { should have_link('', href: new_contest_player_path("not-specified")) }
+      it { should have_content("Add Contest") }            
+      it { should have_link('', href: new_contest_path) }
+      it { should have_content("Add Tournament") }            
+      it { should have_link('', href: new_contest_tournament_path('not-specified')) }
+      it { should have_content("Challenge Players") }            
+      it { should have_link('', href: new_contest_match_path("not-specified")) }
+      it { should have_content("View Contests") }            
+      it { should have_link('', href: contests_path) }
+      it { should have_content("View My Players") }            
+      it { should have_link('', href: user_path(creator)) }
     end
   end
 end

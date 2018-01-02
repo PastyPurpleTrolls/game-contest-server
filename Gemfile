@@ -12,6 +12,8 @@ group :test do
   gem 'rails-controller-testing'
   gem 'libnotify'
   gem 'timecop'
+  gem 'selenium-webdriver', '~> 3.8.0'
+  gem 'database_cleaner'
 
   gem 'simplecov', :require => false
 end

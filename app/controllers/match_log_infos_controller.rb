@@ -12,11 +12,17 @@ class MatchLogInfosController < ApplicationController
 
       def std_out
         @log_info = MatchLogInfo.find(params[:id])
-        send_file @log_info.log_stdout
+        unless File.exist? @log_info.log_stdout
+          file_does_not_exist
+	end
+        send_file @log_info.log_stdout if File.exist? @log_info.log_stdout
       end
 
       def std_err
         @log_info = MatchLogInfo.find(params[:id])
-        send_file @log_info.log_stderr
+        unless File.exist? @log_info.log_stderr
+          file_does_not_exist
+	end
+	send_file @log_info.log_stderr if File.exist? @log_info.log_stderr
       end
 end

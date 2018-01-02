@@ -19,6 +19,8 @@ describe "ContestsPages" do
       visit new_contest_path
     end
 
+    it { should have_selector("h2", "Add Contest") }                 
+
     describe "invalid information" do
       describe "missing information" do
         it "should not create a contest" do
@@ -54,7 +56,7 @@ describe "ContestsPages" do
         fill_in 'Name', with: name
         select referee.name, from: 'Referee'
       end
-
+      
       it "should create a contest" do
         expect { click_button submit }.to change(Contest, :count).by(1)
       end
@@ -79,7 +81,7 @@ describe "ContestsPages" do
         specify { expect(contest.user).to eq(creator) }
 
         it { should have_alert(:success, text: 'Contest created') }
-        it { should have_content(/about 1 hour/) }
+        it { should have_content(/About 1 Hour/) }
         it { should have_content(description) }
         it { should have_content(name) }
         it { should have_content(contest.referee.name) }
@@ -99,6 +101,7 @@ describe "ContestsPages" do
       visit edit_contest_path(contest)
     end
 
+    it { should have_selector("h2", "Edit Contest") }                 
     it { expect_datetime_select(contest.deadline, 'Deadline') }
     it { should have_field('Description', with: contest.description) }
     it { should have_field('Name', with: contest.name) }
@@ -291,31 +294,63 @@ describe "ContestsPages" do
    end
 
   describe "show" do
-    let (:contest) { FactoryBot.create(:contest) }
+    let (:contest) { FactoryBot.create(:contest, user: creator) }
 
-    before { visit contest_path(contest) }
+    describe "as any user" do
+      before { visit contest_path(contest) }
 
-    it { should have_content(contest.name) }
-    it { should have_content(contest.description) }
-    it { should have_content(distance_of_time_in_words_to_now(contest.deadline)) }
-    it { should have_content(contest.user.username) }
-    it { should have_link(contest.user.username, user_path(contest.user)) }
-    it { should have_content(contest.referee.name) }
-    it { should have_link(contest.referee.name, referee_path(contest.referee)) }
+      it { should have_selector("h2", "Contest") }      
+      it { should have_content(contest.name) }
+      it { should have_content(contest.description) }
+      it { should have_content(distance_of_time_in_words_to_now(contest.deadline).split.map { |i| i.capitalize }.join(' ')) }
+      it { should have_content(contest.user.username) }
+      it { should have_link(contest.user.username, user_path(contest.user)) }
+      it { should have_content(contest.referee.name) }
+      it { should have_link(contest.referee.name, referee_path(contest.referee)) }
 
-    it "lists all the players in the contest" do
-      Player.where(contest: contest).each do |player|
-        should have_selector('li', text: player.name)
-        should have_link(t.name, player_path(player))
+      it "lists all the players in the contest" do
+        Player.where(contest: contest).each do |player|
+          should have_selector('li', text: player.name)
+          should have_link(t.name, player_path(player))
+        end
       end
+
+      it { should_not have_link('',
+        href: new_contest_player_path(contest)) }
+
+      it { should have_link('',
+        href: new_contest_match_path(contest)) }
     end
 
-    it { should have_link('',
-      href: new_contest_player_path(contest)) }
+    describe "as contest_creator" do
+      before do 
+        login creator
+        visit contest_path(contest)
+      end
 
-    it { should have_link('',
-      href: new_contest_match_path(contest)) }
+      it { should have_selector("h2", "Contest") }      
+      it { should have_content(contest.name) }
+      it { should have_content(contest.description) }
+      it { should have_content(distance_of_time_in_words_to_now(contest.deadline).split.map { |i| i.capitalize }.join(' ')) }
+      it { should have_content(contest.user.username) }
+      it { should have_link(contest.user.username, user_path(contest.user)) }
+      it { should have_content(contest.referee.name) }
+      it { should have_link(contest.referee.name, referee_path(contest.referee)) }
 
+      it "lists all the players in the contest" do
+        Player.where(contest: contest).each do |player|
+          should have_selector('li', text: player.name)
+          should have_link(t.name, player_path(player))
+        end
+      end
+
+      it { should have_link('',
+        href: new_contest_player_path(contest)) }
+
+      it { should have_link('',
+        href: new_contest_match_path(contest)) }
+    end
+  
   end
 
   describe "show all as any user" do
@@ -328,6 +363,8 @@ describe "ContestsPages" do
     it "does not have adding option" do
       should_not have_link('', href: new_contest_path)
     end
+
+    it { should have_selector("h2", "Contest") }               
 
     it "lists all the contests in the system" do
       Contest.all.each do |c|
@@ -346,5 +383,7 @@ describe "ContestsPages" do
     it "has adding option" do
       should have_link('', href: new_contest_path)
     end
+
+    it { should have_selector("h2", "Contest") }               
   end
 end

@@ -21,6 +21,8 @@ describe "PlayersPages" do
 attach_file('Player File', file_location)
     end
 
+    it { should have_selector("h2", "Add Player") }                 
+
     describe "invalid information" do
       describe "missing information" do
         it "should not create a player" do
@@ -96,6 +98,7 @@ attach_file('Player File', file_location)
 attach_file('Player File', file_location)
     end
 
+    it { should have_selector("h2", "Edit Player") }                 
     it { should have_field('Name', with: player.name) }
     it { should have_field('Description', with: player.description) }
     it { should have_unchecked_field('download') }
@@ -225,6 +228,7 @@ attach_file('Player File', file_location)
 
     before { visit player_path(player) }
 
+    it { should have_selector("h2", "Player") }                 
     it { should have_content(player.name) }
     it { should have_content(player.description) }
     it { should have_content('This player can be challenged') }
@@ -398,6 +402,7 @@ attach_file('Player File', file_location)
       visit contest_players_path(contest)
     end
 
+    it { should have_selector("h2", "Player") }                 
     it "lists all the players for a contest in the system" do
       Player.where(contest: contest).each do |p|
         should have_selector('li', text: p.name)

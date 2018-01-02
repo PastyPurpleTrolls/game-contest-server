@@ -18,6 +18,8 @@ describe "RoundsPages" do
 			visit match_path(tournament_match)
 		end
 
+    it { should have_selector("h2", "Round") }             
+
 		it "lists all the rounds for the match" do
 			Round.where(match: tournament_match).each do |r|
 			should have_selector('div', text: /Round #{r.id}$/)	
@@ -52,6 +54,8 @@ describe "RoundsPages" do
 			login challenge_match.players.first.user
 			visit match_path(challenge_match)
 		end
+
+    it { should have_selector("h2", "Round") }             
 
 		it "lists all the rounds for the match" do
 				Round.where(match: challenge_match).each do |r|

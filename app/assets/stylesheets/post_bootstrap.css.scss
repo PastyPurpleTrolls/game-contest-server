@@ -84,6 +84,19 @@ body {
     color: white;
 }
 
+.system-status {
+    padding-right: 10px;
+    color: white;    
+}
+
+.system-check {
+    color: limegreen;
+}
+
+.system-x {
+    color: red;
+}
+
 .small-box {
     width: 45px;
     height: 20px;
@@ -152,15 +165,26 @@ a.active:hover {
     font-family: "Courier New", Courier, monospace;
 }
 
-label{
+label {
     font-weight: normal;
 }
 
-.outer-home-container{
+.outer-home-container {
     padding: 10px;
 }
 
-.info-link a{
+.player-results-container {
+    background-color: white;
+    padding-top: 20px;
+    padding-bottom: 1px;
+    font-size: 16px;
+}
+
+.my-player {
+    font-weight: 700;
+}
+
+.info-link a {
     text-decoration: underline;
 }
 
@@ -179,6 +203,10 @@ label{
 
 .left-padding {
     padding-left: 10px;
+}
+
+.top-padding {
+    padding-top: 10px;
 }
 
 .jumbotron {
@@ -209,7 +237,7 @@ label{
     padding-top: 20px;
 }
 
-.info-container a {
+.info-container a, .player-results-container, .player-results-container a {
     color: #4999B4;  
     text-decoration: underline;  
 }

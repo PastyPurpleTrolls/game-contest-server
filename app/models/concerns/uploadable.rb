@@ -13,11 +13,17 @@ module Uploadable
         unless self.name.blank?
             random_hex = SecureRandom.hex
             self.file_location = '' if self.file_location.nil?
-            delete_code(self.file_location)
+	    old_location = self.file_location
             location_data = store_file(uploaded_io, self.class.to_s.downcase.pluralize, random_hex)
 	    self.file_location = location_data[:file]
 	    FileUtils.mkdir_p "#{File.dirname(self.file_location)}/logs"
             uncompress(self.contest.referee.compressed_file_location, File.dirname(self.file_location)) if self.class == Player 
+	    if File.exist?(File.dirname(old_location)+"/logs/") then
+              cp_call = Process.spawn("cp #{File.dirname(old_location)}/logs/* #{File.dirname(self.file_location)}/logs/", :out=>"/dev/null", :err=>"/dev/null")
+	      Process.wait cp_call
+	      self.update_log_locations self.file_location
+	      delete_code(old_location)
+	    end
         end
     end
 
