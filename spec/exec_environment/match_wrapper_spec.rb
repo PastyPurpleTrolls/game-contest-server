@@ -4,11 +4,11 @@ require 'rails_helper'
 describe "RoundWrapper" do
   before :each do
     pending("Is really broken")
-    @user = FactoryGirl.create(:user)
-    @contest = FactoryGirl.create(:contest)
-    @player1 = FactoryGirl.create(:player, user: @user, contest: @contest, name: 'dumb_player', file_location: Rails.root.join('examples', 'test_player.py').to_s )
-    @player2 = FactoryGirl.create(:player, user: @user, contest: @contest, name: 'stupid_player', file_location: Rails.root.join('examples', 'test_player.py').to_s )
-    @referee = FactoryGirl.create(:referee, name: "referee", file_location: Rails.root.join('examples', 'test_referee.py').to_s )
+    @user = FactoryBot.create(:user)
+    @contest = FactoryBot.create(:contest)
+    @player1 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'dumb_player', file_location: Rails.root.join('examples', 'test_player.py').to_s )
+    @player2 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'stupid_player', file_location: Rails.root.join('examples', 'test_player.py').to_s )
+    @referee = FactoryBot.create(:referee, name: "referee", file_location: Rails.root.join('examples', 'test_referee.py').to_s )
     @match_wrapper = RoundWrapper.new(@referee , 2, 5, [@player1, @player2], 1)
   end
 
@@ -31,11 +31,11 @@ end
 describe "RoundWrapper" do
   before :each do
     pending("Is really broken")
-    @user = FactoryGirl.create(:user)
-    @contest = FactoryGirl.create(:contest)
-    @player1 = FactoryGirl.create(:player, user: @user, contest: @contest, name: 'dumb_player', file_location: Rails.root.join('examples', 'test_player.py').to_s )
-    @player2 = FactoryGirl.create(:player, user: @user, contest: @contest, name: 'stupid_player', file_location: Rails.root.join('examples', 'test_player.py').to_s )
-    @referee = FactoryGirl.create(:referee, name: "referee", file_location: Rails.root.join('spec', 'files', 'dumb_referee.py').to_s )
+    @user = FactoryBot.create(:user)
+    @contest = FactoryBot.create(:contest)
+    @player1 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'dumb_player', file_location: Rails.root.join('examples', 'test_player.py').to_s )
+    @player2 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'stupid_player', file_location: Rails.root.join('examples', 'test_player.py').to_s )
+    @referee = FactoryBot.create(:referee, name: "referee", file_location: Rails.root.join('spec', 'files', 'dumb_referee.py').to_s )
     @match_wrapper = RoundWrapper.new(@referee , 2, 5, [@player1, @player2], 1)
   end
 
@@ -51,11 +51,11 @@ end
 describe "RoundWrapper" do
   before :each do
     pending("Is really broken")
-    @user = FactoryGirl.create(:user)
-    @contest = FactoryGirl.create(:contest)
-    @player1 = FactoryGirl.create(:player, user: @user, contest: @contest, name: 'dumb_player', file_location: Rails.root.join('spec', 'files', 'dumb_player.py').to_s )
-    @player2 = FactoryGirl.create(:player, user: @user, contest: @contest, name: 'stupid_player', file_location: Rails.root.join('spec', 'files', 'dumb_player.py').to_s )
-    @referee = FactoryGirl.create(:referee, name: "referee", file_location: Rails.root.join('examples', 'test_referee.py').to_s )
+    @user = FactoryBot.create(:user)
+    @contest = FactoryBot.create(:contest)
+    @player1 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'dumb_player', file_location: Rails.root.join('spec', 'files', 'dumb_player.py').to_s )
+    @player2 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'stupid_player', file_location: Rails.root.join('spec', 'files', 'dumb_player.py').to_s )
+    @referee = FactoryBot.create(:referee, name: "referee", file_location: Rails.root.join('examples', 'test_referee.py').to_s )
     @match_wrapper = RoundWrapper.new(@referee , 2, 5, [@player1, @player2], 1)
   end
 	after :each do

@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 describe PlayerRound do
-	let! (:round) { FactoryGirl.create(:challenge_round) }
-  let (:player_round) { FactoryGirl.create(:player_round, result: "Win") }
+	let! (:round) { FactoryBot.create(:challenge_round) }
+  let (:player_round) { FactoryBot.create(:player_round, result: "Win") }
   subject { player_round } 
 
   # Tables

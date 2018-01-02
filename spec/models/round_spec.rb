@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Round do
-  let (:round) { FactoryGirl.create(:challenge_round) }
+  let (:round) { FactoryBot.create(:challenge_round) }
   subject { round }
 
   # Tables
@@ -17,8 +17,8 @@ describe Round do
 	describe "does not have the same players as the match" do
 		before do
 			round.match.players.destroy(round.match.players.first)
-			player1 = FactoryGirl.create(:player)
-			player_match1 = FactoryGirl.create(:player_match, player: player1, match: round.match)
+			player1 = FactoryBot.create(:player)
+			player_match1 = FactoryBot.create(:player_match, player: player1, match: round.match)
 			player1.save	
 			player_match1.save
 			round.match.reload
@@ -28,32 +28,32 @@ describe Round do
 =begin
 	describe "does not have the same players as the match" do
 		before do
-			match = FactoryGirl.create(:tournament_match)
+			match = FactoryBot.create(:tournament_match)
       match.players.clear
-			player1 = FactoryGirl.create(:player)
-			player2 = FactoryGirl.create(:player)
-			player3 = FactoryGirl.create(:player)
-			player_match1 = FactoryGirl.create(:player_match, match: match, player: player1)
-			player_match2 = FactoryGirl.create(:player_match, match: match, player: player2)
-			player_round1 = FactoryGirl.create(:player_round, match: match, player: player1)
-			player_round3 = FactoryGirl.create(:player_round, match: match, player: player3)
+			player1 = FactoryBot.create(:player)
+			player2 = FactoryBot.create(:player)
+			player3 = FactoryBot.create(:player)
+			player_match1 = FactoryBot.create(:player_match, match: match, player: player1)
+			player_match2 = FactoryBot.create(:player_match, match: match, player: player2)
+			player_round1 = FactoryBot.create(:player_round, match: match, player: player1)
+			player_round3 = FactoryBot.create(:player_round, match: match, player: player3)
 end
 			# set up the match to have players p1 and p2
 =begin			
-			match = FactoryGirl.create(:tournament_match)
-      ref = FactoryGirl.create(:referee, players_per_game: 2)
-      contest = FactoryGirl.create(:contest, referee: ref)
-      tournament = FactoryGirl.create(:tournament, contest: contest)
-      p1 = FactoryGirl.create(:player, contest: contest)
+			match = FactoryBot.create(:tournament_match)
+      ref = FactoryBot.create(:referee, players_per_game: 2)
+      contest = FactoryBot.create(:contest, referee: ref)
+      tournament = FactoryBot.create(:tournament, contest: contest)
+      p1 = FactoryBot.create(:player, contest: contest)
       p1.tournaments << tournament
-      p2 = FactoryGirl.create(:player, contest: contest)
+      p2 = FactoryBot.create(:player, contest: contest)
       p2.tournaments << tournament
       match.manager = tournament
       match.players.clear
       match.players << p1 << p2
 
 			# set up the round to have players p1 and p3
-      p3 = FactoryGirl.create(:player, contest: contest)
+      p3 = FactoryBot.create(:player, contest: contest)
       p3.tournaments << tournament
 			round.match = match
 			round.players.clear
@@ -66,8 +66,8 @@ end
 	describe "is created if there are already num_round rounds for that match" do
 
 		before do
-			match = FactoryGirl.create(:tournament_match, num_rounds: 5)
-			FactoryGirl.create_list(:challenge_round, 5, match: match)
+			match = FactoryBot.create(:tournament_match, num_rounds: 5)
+			FactoryBot.create_list(:challenge_round, 5, match: match)
 			match.rounds << round
 		end
 

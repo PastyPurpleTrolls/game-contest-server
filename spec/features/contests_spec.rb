@@ -3,8 +3,8 @@ require 'rails_helper'
 include ActionView::Helpers::DateHelper
 
 describe "ContestsPages" do
-  let (:creator) { FactoryGirl.create(:contest_creator) }
-  let!(:referee) { FactoryGirl.create(:referee) }
+  let (:creator) { FactoryBot.create(:contest_creator) }
+  let!(:referee) { FactoryBot.create(:referee) }
   let (:now) { mins_multiple_of_5(1.hour.from_now) }
   let (:name) { 'Test Contest' }
   let (:description) { 'Contest description' }
@@ -62,10 +62,10 @@ describe "ContestsPages" do
       describe "redirects properly", type: :request do
         before do
           login creator, avoid_capybara: true
-          post contests_path, contest: { deadline: now.strftime("%F %T"),
+          post contests_path, params: { contest: { deadline: now.strftime("%F %T"),
             description: description,
             name: name,
-            referee_id: referee.id }
+            referee_id: referee.id } }
         end
 
         specify { expect(response).to redirect_to(contest_path(assigns(:contest))) }
@@ -90,7 +90,7 @@ describe "ContestsPages" do
   end
 
   describe "edit" do
-    let (:contest) { FactoryGirl.create(:contest, user: creator, deadline: now) }
+    let (:contest) { FactoryBot.create(:contest, user: creator, deadline: now) }
     let!(:orig_name) { contest.name }
     let (:submit) { 'Update Contest' }
 
@@ -148,10 +148,10 @@ describe "ContestsPages" do
       describe "redirects properly", type: :request do
         before do
           login creator, avoid_capybara: true
-          patch contest_path(contest), contest: { deadline: now.strftime("%F %T"),
+          patch contest_path(contest), params: { contest: { deadline: now.strftime("%F %T"),
             description: description,
             name: name,
-            referee_id: referee.id }
+            referee_id: referee.id } }
         end
 
         specify { expect(response).to redirect_to(contest_path(contest)) }
@@ -164,7 +164,7 @@ describe "ContestsPages" do
   end
 
   describe "destroy", type: :request do
-    let!(:contest) { FactoryGirl.create(:contest, user: creator) }
+    let!(:contest) { FactoryBot.create(:contest, user: creator) }
 
     before do
       login creator, avoid_capybara: true
@@ -188,9 +188,9 @@ describe "ContestsPages" do
   end
 
   describe "pagination" do
-    let (:contest) { FactoryGirl.create(:contest) }
+    let (:contest) { FactoryBot.create(:contest) }
     before do
-    30.times { FactoryGirl.create(:contest) }
+    30.times { FactoryBot.create(:contest) }
 
     visit contests_path
     end
@@ -204,8 +204,8 @@ describe "ContestsPages" do
   describe 'search_error'do
     let(:submit) {"Search"}
     before do
-      FactoryGirl.create(:contest, name: "searchtest1")
-      FactoryGirl.create(:contest, name: "peter1")
+      FactoryBot.create(:contest, name: "searchtest1")
+      FactoryBot.create(:contest, name: "peter1")
 
       visit contests_path
       fill_in 'search', with:':'
@@ -222,22 +222,22 @@ describe "ContestsPages" do
    describe 'search_partial' do
     let(:submit) {"Search"}
     before do
-      FactoryGirl.create(:contest, name: "searchtest1")
-      FactoryGirl.create(:contest, name: "peter1")
-      FactoryGirl.create(:contest, name: "searchtest2")
-      FactoryGirl.create(:contest, name: "peter2")
-      FactoryGirl.create(:contest, name: "searchtest9")
-      FactoryGirl.create(:contest, name: "peter9")
-      FactoryGirl.create(:contest, name: "searchtest4")
-      FactoryGirl.create(:contest, name: "peter4")
-      FactoryGirl.create(:contest, name: "searchtest5")
-      FactoryGirl.create(:contest, name: "peter5")
-      FactoryGirl.create(:contest, name: "searchtest6")
-      FactoryGirl.create(:contest, name: "peter6")
-      FactoryGirl.create(:contest, name: "searchtest7")
-      FactoryGirl.create(:contest, name: "peter7")
-      FactoryGirl.create(:contest, name: "searchtest8")
-      FactoryGirl.create(:contest, name: "peter8")
+      FactoryBot.create(:contest, name: "searchtest1")
+      FactoryBot.create(:contest, name: "peter1")
+      FactoryBot.create(:contest, name: "searchtest2")
+      FactoryBot.create(:contest, name: "peter2")
+      FactoryBot.create(:contest, name: "searchtest9")
+      FactoryBot.create(:contest, name: "peter9")
+      FactoryBot.create(:contest, name: "searchtest4")
+      FactoryBot.create(:contest, name: "peter4")
+      FactoryBot.create(:contest, name: "searchtest5")
+      FactoryBot.create(:contest, name: "peter5")
+      FactoryBot.create(:contest, name: "searchtest6")
+      FactoryBot.create(:contest, name: "peter6")
+      FactoryBot.create(:contest, name: "searchtest7")
+      FactoryBot.create(:contest, name: "peter7")
+      FactoryBot.create(:contest, name: "searchtest8")
+      FactoryBot.create(:contest, name: "peter8")
       visit contests_path
       fill_in 'search', with:'te'
       click_button submit
@@ -252,18 +252,18 @@ describe "ContestsPages" do
   describe 'search_pagination' do
     let(:submit) {"Search"}
     before do
-       FactoryGirl.create(:contest, name: "searchtest1")
-      FactoryGirl.create(:contest, name: "peter1")
-      FactoryGirl.create(:contest, name: "searchtest2")
-      FactoryGirl.create(:contest, name: "peter2")
-      FactoryGirl.create(:contest, name: "searchtest3")
-      FactoryGirl.create(:contest, name: "peter3")
-      FactoryGirl.create(:contest, name: "searchtest4")
-      FactoryGirl.create(:contest, name: "peter4")
-      FactoryGirl.create(:contest, name: "searchtest5")
-      FactoryGirl.create(:contest, name: "peter5")
-      FactoryGirl.create(:contest, name: "searchtest6")
-      FactoryGirl.create(:contest, name: "peter6")
+      FactoryBot.create(:contest, name: "searchtest1")
+      FactoryBot.create(:contest, name: "peter1")
+      FactoryBot.create(:contest, name: "searchtest2")
+      FactoryBot.create(:contest, name: "peter2")
+      FactoryBot.create(:contest, name: "searchtest3")
+      FactoryBot.create(:contest, name: "peter3")
+      FactoryBot.create(:contest, name: "searchtest4")
+      FactoryBot.create(:contest, name: "peter4")
+      FactoryBot.create(:contest, name: "searchtest5")
+      FactoryBot.create(:contest, name: "peter5")
+      FactoryBot.create(:contest, name: "searchtest6")
+      FactoryBot.create(:contest, name: "peter6")
       visit contests_path
       fill_in 'search', with:'searchtest4'
       click_button submit
@@ -277,7 +277,7 @@ describe "ContestsPages" do
     let(:submit) {"Search"}
 
     before do
-      FactoryGirl.create(:contest, name: "searchtest")
+      FactoryBot.create(:contest, name: "searchtest")
       visit contests_path
       fill_in 'search', with:'searchtest'
       click_button submit
@@ -291,7 +291,7 @@ describe "ContestsPages" do
    end
 
   describe "show" do
-    let (:contest) { FactoryGirl.create(:contest) }
+    let (:contest) { FactoryBot.create(:contest) }
 
     before { visit contest_path(contest) }
 
@@ -320,7 +320,7 @@ describe "ContestsPages" do
 
   describe "show all as any user" do
     before do
-      5.times { FactoryGirl.create(:contest) }
+      5.times { FactoryBot.create(:contest) }
 
       visit contests_path
     end

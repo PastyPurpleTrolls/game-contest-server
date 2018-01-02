@@ -20,7 +20,7 @@ describe "AuthenticationPages" do
     end
 
     describe "with valid account" do
-      let(:user) { FactoryGirl.create(:user) }
+      let(:user) { FactoryBot.create(:user) }
 
       before do
         fill_in 'Username', with: user.username
@@ -58,7 +58,7 @@ end
 describe "AuthorizationPages" do
   subject { page }
 
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
 
   describe "non-authenticated users" do
     describe "for Users controller" do
@@ -72,7 +72,7 @@ describe "AuthorizationPages" do
 
       describe "delete action" do
         it_behaves_like "redirects to a login", skip_browser: true do
-          let (:user) { FactoryGirl.create(:user) }
+          let (:user) { FactoryBot.create(:user) }
           let (:method) { :delete }
           let (:http_path) { user_path(user) }
         end
@@ -90,7 +90,7 @@ describe "AuthorizationPages" do
 
       describe "edit action" do
         it_behaves_like "redirects to a login" do
-          let (:referee) { FactoryGirl.create(:referee) }
+          let (:referee) { FactoryBot.create(:referee) }
           let (:path) { edit_referee_path(referee) }
           let (:method) { :patch }
           let (:http_path) { referee_path(referee) }
@@ -99,7 +99,7 @@ describe "AuthorizationPages" do
 
       describe "delete action" do
         it_behaves_like "redirects to a login", skip_browser: true do
-          let (:referee) { FactoryGirl.create(:referee) }
+          let (:referee) { FactoryBot.create(:referee) }
           let (:method) { :delete }
           let (:http_path) { referee_path(referee) }
         end
@@ -117,7 +117,7 @@ describe "AuthorizationPages" do
 
       describe "edit action" do
         it_behaves_like "redirects to a login" do
-          let (:contest) { FactoryGirl.create(:contest) }
+          let (:contest) { FactoryBot.create(:contest) }
           let (:path) { edit_contest_path(contest) }
           let (:method) { :patch }
           let (:http_path) { contest_path(contest) }
@@ -126,7 +126,7 @@ describe "AuthorizationPages" do
 
       describe "delete action" do
         it_behaves_like "redirects to a login", skip_browser: true do
-          let (:contest) { FactoryGirl.create(:contest) }
+          let (:contest) { FactoryBot.create(:contest) }
           let (:method) { :delete }
           let (:http_path) { contest_path(contest) }
         end
@@ -136,7 +136,7 @@ describe "AuthorizationPages" do
     describe "for Players controller" do
       describe "new action" do
         it_behaves_like "redirects to a login" do
-          let (:contest) { FactoryGirl.create(:contest) }
+          let (:contest) { FactoryBot.create(:contest) }
           let (:path) { new_contest_player_path(contest) }
           let (:method) { :post }
           let (:http_path) { contest_players_path(contest) }
@@ -145,7 +145,7 @@ describe "AuthorizationPages" do
 
       describe "edit action" do
         it_behaves_like "redirects to a login" do
-          let (:player) { FactoryGirl.create(:player) }
+          let (:player) { FactoryBot.create(:player) }
           let (:path) { edit_player_path(player) }
           let (:method) { :patch }
           let (:http_path) { player_path(player) }
@@ -154,7 +154,7 @@ describe "AuthorizationPages" do
 
       describe "delete action" do
         it_behaves_like "redirects to a login", skip_browser: true do
-          let (:player) { FactoryGirl.create(:player) }
+          let (:player) { FactoryBot.create(:player) }
           let (:method) { :delete }
           let (:http_path) { player_path(player) }
         end
@@ -164,14 +164,14 @@ describe "AuthorizationPages" do
 		describe "for Matches controller" do
 			describe "index action (with path 'contest_matches')" do
         it_behaves_like "redirects to a login" , browser_only: true do
-          let (:contest) { FactoryGirl.create(:contest) }
+          let (:contest) { FactoryBot.create(:contest) }
           let (:path) { contest_matches_path(contest) }
 				end
 			end
 
 			describe "show action (with a challenge match)" do
         it_behaves_like "redirects to a login" , browser_only: true do
-          let (:challenge_match) { FactoryGirl.create(:challenge_match) }
+          let (:challenge_match) { FactoryBot.create(:challenge_match) }
           let (:path) { match_path(challenge_match) }
 				end
 			end
@@ -180,14 +180,14 @@ describe "AuthorizationPages" do
 		describe "for Rounds controller show action" do # written with an educated guess of what the path will be for rounds (but that route has not been generated yet)
 			describe "(Rounds are of a challange match)" do 
         it_behaves_like "redirects to a login" , browser_only: true do
-					let (:challenge_round) { FactoryGirl.create(:challenge_round) }
+					let (:challenge_round) { FactoryBot.create(:challenge_round) }
           let (:path) { round_path(challenge_round) } 
 				end
 			end
 
 			describe "(Rounds are of a tournament match)" do 
         it_behaves_like "redirects to a login" , browser_only: true do
-					let (:tournament_round) { FactoryGirl.create(:tournament_round) }
+					let (:tournament_round) { FactoryBot.create(:tournament_round) }
           let (:path) { round_path(tournament_round) }
 				end
 			end
@@ -219,7 +219,7 @@ describe "AuthorizationPages" do
   describe "authenticated, but wrong user" do
     describe "for Users controller" do
       it_behaves_like "redirects to root" do
-        let (:other_user) { FactoryGirl.create(:user) }
+        let (:other_user) { FactoryBot.create(:user) }
         let (:login_user) { user }
         let (:path) { edit_user_path(other_user) }
         let (:signature) { 'Edit user' }
@@ -240,7 +240,7 @@ describe "AuthorizationPages" do
       end
 
       it_behaves_like "redirects to root" do
-        let (:referee) { FactoryGirl.create(:referee) }
+        let (:referee) { FactoryBot.create(:referee) }
         let (:login_user) { user }
         let (:path) { edit_referee_path(referee) }
         let (:signature) { 'Edit Referee' }
@@ -250,7 +250,7 @@ describe "AuthorizationPages" do
       end
 
       it_behaves_like "redirects to root", skip_browser: true do
-        let (:referee) { FactoryGirl.create(:referee) }
+        let (:referee) { FactoryBot.create(:referee) }
         let (:login_user) { user }
         let (:error_type) { :danger }
         let (:method) { :delete }
@@ -269,7 +269,7 @@ describe "AuthorizationPages" do
       end
 
       it_behaves_like "redirects to root" do
-        let (:contest) { FactoryGirl.create(:contest) }
+        let (:contest) { FactoryBot.create(:contest) }
         let (:login_user) { user }
         let (:path) { edit_contest_path(contest) }
         let (:signature) { 'Edit Contest' }
@@ -279,7 +279,7 @@ describe "AuthorizationPages" do
       end
 
       it_behaves_like "redirects to root", skip_browser: true do
-        let (:contest) { FactoryGirl.create(:contest) }
+        let (:contest) { FactoryBot.create(:contest) }
         let (:login_user) { user }
         let (:error_type) { :danger }
         let (:method) { :delete }
@@ -289,7 +289,7 @@ describe "AuthorizationPages" do
 
     describe "for Players controller" do
       it_behaves_like "redirects to root" do
-        let (:player) { FactoryGirl.create(:player) }
+        let (:player) { FactoryBot.create(:player) }
         let (:login_user) { user }
         let (:path) { edit_player_path(player) }
         let (:signature) { 'Edit Player' }
@@ -299,7 +299,7 @@ describe "AuthorizationPages" do
       end
 
       it_behaves_like "redirects to root", skip_browser: true do
-        let (:player) { FactoryGirl.create(:player) }
+        let (:player) { FactoryBot.create(:player) }
         let (:login_user) { user }
         let (:error_type) { :danger }
         let (:method) { :delete }
@@ -308,8 +308,8 @@ describe "AuthorizationPages" do
     end
 
 		describe "for Matches controller" do
-			let (:challenge_match) { FactoryGirl.create(:challenge_match) }
-      let (:other_user) { FactoryGirl.create(:user) }
+			let (:challenge_match) { FactoryBot.create(:challenge_match) }
+      let (:other_user) { FactoryBot.create(:user) }
       let (:login_user) { other_user }
 			describe "index action (with a challenge match)" do
         it_behaves_like "redirects to root" , browser_only: true do
@@ -329,21 +329,21 @@ describe "AuthorizationPages" do
 		end
 
 		describe "for Rounds controller show action" do # written with an educated guess of what the path will be for rounds (but that route has not been generated yet)
-      let! (:other_user) { FactoryGirl.create(:user) }
+      let! (:other_user) { FactoryBot.create(:user) }
       let (:login_user) { other_user }
       let (:signature) { 'Round Information' }
       let (:error_type) { :danger }
 
 			describe "(Rounds are of a challange match)" do 
         it_behaves_like "redirects to root" , browser_only: true do
-					let (:challenge_round) { FactoryGirl.create(:challenge_round) }
+					let (:challenge_round) { FactoryBot.create(:challenge_round) }
           let (:path) { round_path(challenge_round) }
 				end
 			end
 
 			describe "(Rounds are of a tournament match)" do 
         it_behaves_like "redirects to root" , browser_only: true do
-					let (:tournament_round) { FactoryGirl.create(:tournament_round) }
+					let (:tournament_round) { FactoryBot.create(:tournament_round) }
           let (:path) { round_path(tournament_round) }
 				end
 			end
@@ -354,7 +354,7 @@ describe "AuthorizationPages" do
   describe "authenticated, but non-admin user" do
     describe "for Users controller" do
       it_behaves_like "redirects to root", skip_browser: true do
-        let (:other_user) { FactoryGirl.create(:user) }
+        let (:other_user) { FactoryBot.create(:user) }
         let (:login_user) { user }
         let (:error_type) { :danger }
         let (:method) { :delete }
@@ -364,7 +364,7 @@ describe "AuthorizationPages" do
   end
 
   describe "authenticated admin user" do
-    let(:admin) { FactoryGirl.create(:admin) }
+    let(:admin) { FactoryBot.create(:admin) }
 
     describe "delete action (self)" do
       it_behaves_like "redirects to root", skip_browser: true do

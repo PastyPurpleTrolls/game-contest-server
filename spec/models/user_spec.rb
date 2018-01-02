@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe User do
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryBot.create(:user) }
   subject { user }
 
   # Tables
@@ -133,13 +133,13 @@ describe User do
   end
 
   describe "admin capabilities" do
-    let(:admin) { FactoryGirl.create(:admin) }
+    let(:admin) { FactoryBot.create(:admin) }
 
     specify { expect(admin).to be_admin }
   end
 
   describe "contest creator capabilities" do
-    let(:contest_creator) { FactoryGirl.create(:contest_creator) }
+    let(:contest_creator) { FactoryBot.create(:contest_creator) }
 
     specify { expect(contest_creator).to be_contest_creator }
   end

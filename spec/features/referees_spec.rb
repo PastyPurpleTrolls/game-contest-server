@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe "RefereePages" do
-  let (:creator) { FactoryGirl.create(:contest_creator) }
+  let (:creator) { FactoryBot.create(:contest_creator) }
   let (:name) { 'Test Referee' }
   let (:rules) { 'http://example.com/path/to/rules' }
   let (:num_players) { '2' }
@@ -23,6 +23,11 @@ describe "RefereePages" do
     before do
       login creator
       visit new_referee_path
+# hack to get submit to work with empty files!
+attach_file('Referee File', file_location)
+attach_file('Player-Include Files', file_location)
+attach_file('Replay Plugin', file_location)          
+attach_file('Test Player', file_location)          
     end
 
     describe "invalid information" do
@@ -110,14 +115,14 @@ describe "RefereePages" do
       describe "redirects properly", type: :request do
         before do
           login creator, avoid_capybara: true
-          post referees_path, referee: { name: name,
+          post referees_path, params: { referee: { name: name,
                                          rules_url: rules,
                                          round_limit: round_limit,
 					 players_per_game: num_players,
 					 time_per_game: time_per_game,
 #					 referee_rounds_capable: true,
 					 rounds_capable: true,
-                                         upload: fixture_file_upload(file_location) }
+                                         upload: fixture_file_upload(file_location) } }
         end
 
         specify { expect(response).to redirect_to(referee_path(assigns(:referee))) }
@@ -146,13 +151,18 @@ describe "RefereePages" do
   end
 
   describe "edit" do
-    let (:referee) { FactoryGirl.create(:referee, user: creator) }
+    let (:referee) { FactoryBot.create(:referee, user: creator) }
     let!(:orig_name) { referee.name }
     let (:submit) { 'Update Referee' }
 
     before do
       login creator
       visit edit_referee_path(referee)
+# hack to get submit to work with empty files!
+attach_file('Referee File', file_location)
+attach_file('Player-Include Files', file_location)
+attach_file('Replay Plugin', file_location)          
+attach_file('Test Player', file_location)          
     end
 
     it { should have_field('Name', with: referee.name) }
@@ -196,7 +206,7 @@ describe "RefereePages" do
       let (:bad_path) { '/path/to/file' }
       before do
         login creator, avoid_capybara: true
-        patch referee_path(referee), referee: { file_location: bad_path }
+        patch referee_path(referee), params: { referee: { file_location: bad_path } }
       end
 
       specify { expect(referee.reload.file_location).not_to eq(bad_path) }
@@ -234,13 +244,13 @@ describe "RefereePages" do
       describe "redirects properly", type: :request do
         before do
           login creator, avoid_capybara: true
-          patch referee_path(referee), referee: { name: name,
+          patch referee_path(referee), params: { referee: { name: name,
                                                   rules_url: "#{rules}/updated",
 						  round_limit: round_limit,
                                                   players_per_game: num_players,
 						  time_per_game: time_per_game,
 					 	  referee_rounds_capable: true,
-						  upload: fixture_file_upload(file_location) }
+						  upload: fixture_file_upload(file_location) } }
         end
 
         specify { expect(response).to redirect_to(referee_path(referee)) }
@@ -259,7 +269,7 @@ describe "RefereePages" do
   end
 
   describe "destroy", type: :request do
-    let!(:referee) { FactoryGirl.create(:referee, user: creator) }
+    let!(:referee) { FactoryBot.create(:referee, user: creator) }
 
     before do
       login creator, avoid_capybara: true
@@ -292,7 +302,7 @@ describe "RefereePages" do
 
   describe "pagination" do
     before do
-      30.times { FactoryGirl.create(:referee) }
+      30.times { FactoryBot.create(:referee) }
 
       visit referees_path
     end
@@ -306,9 +316,9 @@ describe "RefereePages" do
   describe 'search_error'do
     let(:submit) {"Search"}
     before do
-      FactoryGirl.create(:referee, name: "searchtest1")
-      FactoryGirl.create(:referee, name: "peter1")
-      FactoryGirl.create(:referee, name: "searchtest2")
+      FactoryBot.create(:referee, name: "searchtest1")
+      FactoryBot.create(:referee, name: "peter1")
+      FactoryBot.create(:referee, name: "searchtest2")
 
       visit referees_path
       fill_in 'search', with:':'
@@ -326,22 +336,22 @@ describe "RefereePages" do
   describe 'search_partial' do
     let(:submit) {"Search"}
     before do
-      FactoryGirl.create(:referee, name: "searchtest1")
-      FactoryGirl.create(:referee, name: "peter1")
-      FactoryGirl.create(:referee, name: "searchtest2")
-      FactoryGirl.create(:referee, name: "peter2")
-      FactoryGirl.create(:referee, name: "searchtest9")
-      FactoryGirl.create(:referee, name: "peter9")
-      FactoryGirl.create(:referee, name: "searchtest4")
-      FactoryGirl.create(:referee, name: "peter4")
-      FactoryGirl.create(:referee, name: "searchtest5")
-      FactoryGirl.create(:referee, name: "peter5")
-      FactoryGirl.create(:referee, name: "searchtest6")
-      FactoryGirl.create(:referee, name: "peter6")
-      FactoryGirl.create(:referee, name: "searchtest7")
-      FactoryGirl.create(:referee, name: "peter7")
-      FactoryGirl.create(:referee, name: "searchtest8")
-      FactoryGirl.create(:referee, name: "peter8")
+      FactoryBot.create(:referee, name: "searchtest1")
+      FactoryBot.create(:referee, name: "peter1")
+      FactoryBot.create(:referee, name: "searchtest2")
+      FactoryBot.create(:referee, name: "peter2")
+      FactoryBot.create(:referee, name: "searchtest9")
+      FactoryBot.create(:referee, name: "peter9")
+      FactoryBot.create(:referee, name: "searchtest4")
+      FactoryBot.create(:referee, name: "peter4")
+      FactoryBot.create(:referee, name: "searchtest5")
+      FactoryBot.create(:referee, name: "peter5")
+      FactoryBot.create(:referee, name: "searchtest6")
+      FactoryBot.create(:referee, name: "peter6")
+      FactoryBot.create(:referee, name: "searchtest7")
+      FactoryBot.create(:referee, name: "peter7")
+      FactoryBot.create(:referee, name: "searchtest8")
+      FactoryBot.create(:referee, name: "peter8")
       visit referees_path
       fill_in 'search', with:'te'
       click_button submit
@@ -357,18 +367,18 @@ describe "RefereePages" do
   describe 'search_pagination' do
     let(:submit) {"Search"}
     before do
-      FactoryGirl.create(:referee, name: "searchtest1")
-      FactoryGirl.create(:referee, name: "peter1")
-      FactoryGirl.create(:referee, name: "searchtest2")
-      FactoryGirl.create(:referee, name: "peter2")
-      FactoryGirl.create(:referee, name: "searchtest3")
-      FactoryGirl.create(:referee, name: "peter3")
-      FactoryGirl.create(:referee, name: "searchtest4")
-      FactoryGirl.create(:referee, name: "peter4")
-      FactoryGirl.create(:referee, name: "searchtest5")
-      FactoryGirl.create(:referee, name: "peter5")
-      FactoryGirl.create(:referee, name: "searchtest6")
-      FactoryGirl.create(:referee, name: "peter6")
+      FactoryBot.create(:referee, name: "searchtest1")
+      FactoryBot.create(:referee, name: "peter1")
+      FactoryBot.create(:referee, name: "searchtest2")
+      FactoryBot.create(:referee, name: "peter2")
+      FactoryBot.create(:referee, name: "searchtest3")
+      FactoryBot.create(:referee, name: "peter3")
+      FactoryBot.create(:referee, name: "searchtest4")
+      FactoryBot.create(:referee, name: "peter4")
+      FactoryBot.create(:referee, name: "searchtest5")
+      FactoryBot.create(:referee, name: "peter5")
+      FactoryBot.create(:referee, name: "searchtest6")
+      FactoryBot.create(:referee, name: "peter6")
       visit referees_path
       fill_in 'search', with:'searchtest4'
       click_button submit
@@ -382,7 +392,7 @@ describe "RefereePages" do
     let(:submit) {"Search"}
 
     before do
-      FactoryGirl.create(:referee, name: "searchtest")
+      FactoryBot.create(:referee, name: "searchtest")
       visit referees_path
       fill_in 'search', with:'searchtest'
       click_button submit
@@ -396,10 +406,10 @@ describe "RefereePages" do
    end
 
   describe "show" do
-    let (:referee) { FactoryGirl.create(:referee) }
+    let (:referee) { FactoryBot.create(:referee) }
 
     before do
-      5.times { FactoryGirl.create(:contest, referee: referee) }
+      5.times { FactoryBot.create(:contest, referee: referee) }
 
       visit referee_path(referee)
     end
@@ -421,7 +431,7 @@ describe "RefereePages" do
 
   describe "show all as any user" do
     before do
-      5.times { FactoryGirl.create(:referee) }
+      5.times { FactoryBot.create(:referee) }
 
       visit referees_path
     end

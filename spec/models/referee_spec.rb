@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Referee do
-  let (:referee) { FactoryGirl.create(:referee) }
+  let (:referee) { FactoryBot.create(:referee) }
   subject { referee }
 
   # Tables
@@ -40,7 +40,7 @@ describe Referee do
   end
 
   describe "duplicate name" do
-    let (:other_referee) { FactoryGirl.create(:referee) }
+    let (:other_referee) { FactoryBot.create(:referee) }
 
     before { referee.name = other_referee.name }
 

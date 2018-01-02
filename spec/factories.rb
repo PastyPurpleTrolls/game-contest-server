@@ -1,6 +1,6 @@
 require 'fileutils'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :user do
     sequence(:username) { |i| "User #{i}" }
     email    "john.doe@example.com"
@@ -28,7 +28,7 @@ FactoryGirl.define do
                                  'test',
                                  SecureRandom.hex)
       FileUtils.mkdir_p(location.to_s)
-      finalLocation = location.join("FactoryGirl-fake-code-#{i}").to_s
+      finalLocation = location.join("FactoryBot-fake-code-#{i}").to_s
       FileUtils.touch(finalLocation)
       finalLocation
     end
@@ -38,7 +38,7 @@ FactoryGirl.define do
                                  'test',
                                  SecureRandom.hex)
       FileUtils.mkdir_p(location.to_s)
-      finalLocation = location.join("FactoryGirl-fake-code-#{i}").to_s
+      finalLocation = location.join("FactoryBot-fake-code-#{i}").to_s
       FileUtils.touch(finalLocation)
       finalLocation
     end
@@ -84,7 +84,7 @@ FactoryGirl.define do
     #
     to_create {|instance| instance.save(validate: false) }
 
-    ignore { player nil }
+    transient { player nil }
 
     status "waiting"
     completion Time.current
@@ -189,7 +189,7 @@ FactoryGirl.define do
                                  'test',
                                  SecureRandom.hex)
       FileUtils.mkdir_p(location.to_s)
-      finalLocation = location.join("FactoryGirl-fake-code-#{i}").to_s
+      finalLocation = location.join("FactoryBot-fake-code-#{i}").to_s
       FileUtils.touch(finalLocation)
       finalLocation
     end

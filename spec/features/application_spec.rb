@@ -8,9 +8,9 @@ feature "HomePage" do
   describe "the navigation bar" do
     it { should have_selector('.navbar') }
     
-    let (:admin) { FactoryGirl.create(:admin) }
-    let (:creator) { FactoryGirl.create(:contest_creator) }
-    let (:user) { FactoryGirl.create(:user) }    
+    let (:admin) { FactoryBot.create(:admin) }
+    let (:creator) { FactoryBot.create(:contest_creator) }
+    let (:user) { FactoryBot.create(:user) }    
     
     describe "as anonymous" do
       it "has the proper links" do

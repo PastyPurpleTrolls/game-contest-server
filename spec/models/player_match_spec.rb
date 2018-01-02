@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 describe PlayerMatch do
-	let! (:match) { FactoryGirl.create(:challenge_match) }
-  let (:player_match) { FactoryGirl.create(:player_match) }
+	let! (:match) { FactoryBot.create(:challenge_match) }
+  let (:player_match) { FactoryBot.create(:player_match) }
   subject { player_match }
 
   # Tables

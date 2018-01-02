@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Match do
-  let (:match) { FactoryGirl.create(:tournament_match) }
+  let (:match) { FactoryBot.create(:tournament_match) }
   subject { match }
 
   # Tables
@@ -158,7 +158,7 @@ describe Match do
           match.status = status
           match.players.clear
           (match.manager.referee.players_per_game - 1).times do
-            player = FactoryGirl.create(:player, contest: match.manager.contest)
+            player = FactoryBot.create(:player, contest: match.manager.contest)
             player.tournaments << match.manager
             match.players << player
           end
@@ -172,7 +172,7 @@ describe Match do
         match.status = 'unassigned'
         match.players.clear
         (match.manager.referee.players_per_game - 1).times do
-          player = FactoryGirl.create(:player, contest: match.manager.contest)
+          player = FactoryBot.create(:player, contest: match.manager.contest)
           player.tournaments << match.manager
           match.players << player
         end
@@ -185,7 +185,7 @@ describe Match do
     before do
       match.players.clear
       match.manager.referee.players_per_game.times do
-        player = FactoryGirl.create(:player, contest: match.manager.contest)
+        player = FactoryBot.create(:player, contest: match.manager.contest)
         player.tournaments << match.manager
         match.players << player
       end
@@ -198,7 +198,7 @@ describe Match do
     before do
       match.players.clear
       (match.manager.referee.players_per_game + 1).times do
-        player = FactoryGirl.create(:player, contest: match.manager.contest)
+        player = FactoryBot.create(:player, contest: match.manager.contest)
         player.tournaments << match.manager
         match.players << player
       end
@@ -210,13 +210,13 @@ describe Match do
   # Players should be allowed to play each other
   describe "match players set up properly" do
     before do
-      ref = FactoryGirl.create(:referee, players_per_game: 2)
-      contest = FactoryGirl.create(:contest, referee: ref)
-      tournament = FactoryGirl.create(:tournament, contest: contest)
+      ref = FactoryBot.create(:referee, players_per_game: 2)
+      contest = FactoryBot.create(:contest, referee: ref)
+      tournament = FactoryBot.create(:tournament, contest: contest)
       match.manager = tournament
       match.player.clear
       match.manager.referee.players_per_game do
-        player = FactoryGirl.create(:player, contest: contest)
+        player = FactoryBot.create(:player, contest: contest)
         player.tournaments << tournament
         match.players << player
       end
@@ -230,10 +230,10 @@ describe Match do
   describe "players are in the same contest, but are not in same tournament" do
     before do
       match.players.clear
-      contest = FactoryGirl.create(:contest)
+      contest = FactoryBot.create(:contest)
       match.manager.referee.players_per_game.times do
-        player = FactoryGirl.create(:player, contest: contest)
-        player.tournaments = FactoryGirl.create_list(:tournament, 1, contest: contest)
+        player = FactoryBot.create(:player, contest: contest)
+        player.tournaments = FactoryBot.create_list(:tournament, 1, contest: contest)
         # The proof is in the puts
         # puts "player.name        " + player.name
         # puts "player.contest_id  " + player.contest_id.to_s
@@ -252,8 +252,8 @@ describe Match do
     before do
       match.players.clear
       match.manager.referee.players_per_game.times do
-        player = FactoryGirl.create(:player)
-        player.tournaments = FactoryGirl.create_list(:tournament, 1, contest: player.contest)
+        player = FactoryBot.create(:player)
+        player.tournaments = FactoryBot.create_list(:tournament, 1, contest: player.contest)
         # The proof is in the puts
         # puts "player.name        " + player.name
         # puts "player.contest_id  " + player.contest_id.to_s
@@ -267,13 +267,13 @@ describe Match do
 
   describe "players are in same contest and tournament, but the match is in a tournament they do not share" do
     before do
-      ref = FactoryGirl.create(:referee, players_per_game: 2)
-      contest = FactoryGirl.create(:contest, referee: ref)
-      shared_tournament = FactoryGirl.create(:tournament, contest: contest)
-      not_shared_tournament = FactoryGirl.create(:tournament, contest: contest)
-      p1 = FactoryGirl.create(:player, contest: contest)
+      ref = FactoryBot.create(:referee, players_per_game: 2)
+      contest = FactoryBot.create(:contest, referee: ref)
+      shared_tournament = FactoryBot.create(:tournament, contest: contest)
+      not_shared_tournament = FactoryBot.create(:tournament, contest: contest)
+      p1 = FactoryBot.create(:player, contest: contest)
       p1.tournaments << shared_tournament << not_shared_tournament
-      p2 = FactoryGirl.create(:player, contest: contest)
+      p2 = FactoryBot.create(:player, contest: contest)
       p2.tournaments << shared_tournament
       match.manager = not_shared_tournament
       match.players.clear

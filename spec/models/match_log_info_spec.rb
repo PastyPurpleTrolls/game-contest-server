@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe MatchLogInfo do
-  let (:match_log_info_player) {FactoryGirl.create(:match_log_info_player) }
+  let (:match_log_info_player) {FactoryBot.create(:match_log_info_player) }
   subject { match_log_info_player }
   
   describe "validation" do 
@@ -12,7 +12,7 @@ describe MatchLogInfo do
 end
 
 describe MatchLogInfo do
-  let (:match_log_info_referee) {FactoryGirl.create(:match_log_info_referee) }
+  let (:match_log_info_referee) {FactoryBot.create(:match_log_info_referee) }
   subject { match_log_info_referee }
   
   describe "validation" do 

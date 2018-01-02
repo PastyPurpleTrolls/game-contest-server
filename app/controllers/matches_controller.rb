@@ -19,7 +19,7 @@ class MatchesController < ApplicationController
     @contest = Contest.friendly.find(params[:contest_id])
     contest = Contest.friendly.find(params[:contest_id])
     round_limit = params[:match][:num_rounds]
-    if params[:match][:player_ids] && params[:match][:player_ids].any? { |player_id, use| Player.find(player_id).user_id == current_user.id}
+    if params[:match][:player_ids] && params[:match][:player_ids].to_unsafe_hash.any? { |player_id, player_in_use| Player.find(player_id).user_id == current_user.id}
         @match = @contest.matches.build(acceptable_params)
         @match.status = "waiting"
         if @match.save

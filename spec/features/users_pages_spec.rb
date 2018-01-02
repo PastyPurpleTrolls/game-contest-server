@@ -40,10 +40,10 @@ describe "UsersPages" do
 
       describe "redirects properly", type: :request do
         before do
-          post users_path, user: { username: 'User Name',
+          post users_path, params: { user: { username: 'User Name',
                                    email: 'user@example.com',
                                    password: 'password',
-                                   password_confirmation: 'password' }
+                                   password_confirmation: 'password' } }
         end
 
         specify { expect(response).to redirect_to(root_path) }
@@ -65,10 +65,10 @@ describe "UsersPages" do
 
   describe "Display Users" do
     describe "individually" do
-      let(:user) { FactoryGirl.create(:user) }
+      let(:user) { FactoryBot.create(:user) }
 
       before do
-        5.times { FactoryGirl.create(:player, user: user) }
+        5.times { FactoryBot.create(:player, user: user) }
 
         visit user_path(user)
       end
@@ -93,10 +93,10 @@ describe "UsersPages" do
     end
 
     describe "individually (contest creator)" do
-      let(:user) { FactoryGirl.create(:contest_creator) }
+      let(:user) { FactoryBot.create(:contest_creator) }
 
       before do
-        5.times { FactoryGirl.create(:referee, user: user) }
+        5.times { FactoryBot.create(:referee, user: user) }
 
         visit user_path(user)
       end
@@ -115,7 +115,7 @@ describe "UsersPages" do
     end
 
     describe "all" do
-      before(:all) { 10.times { FactoryGirl.create(:user) } }
+      before(:all) { 10.times { FactoryBot.create(:user) } }
       after(:all) { User.all.each { |user| user.destroy } }
 
       before(:each) { visit users_path }
@@ -131,7 +131,7 @@ describe "UsersPages" do
   end
 
   describe "pagination" do
-    before(:all) { 30.times { FactoryGirl.create(:user) } }
+    before(:all) { 30.times { FactoryBot.create(:user) } }
     after(:all)  { User.delete_all }
 
     before(:each) { visit users_path }
@@ -148,7 +148,7 @@ describe "UsersPages" do
     let(:submit) {"Search"}
 
     before do
-      FactoryGirl.create(:user, username: "searchtest")
+      FactoryBot.create(:user, username: "searchtest")
       visit users_path
       fill_in 'search', with:';'
       click_button submit
@@ -164,9 +164,9 @@ describe "UsersPages" do
   describe 'search_error'do
     let(:submit) {"Search"}
     before do
-      FactoryGirl.create(:user, username: "searchtest1")
-      FactoryGirl.create(:user, username: "peter1")
-      FactoryGirl.create(:user, username: "searchtest0")
+      FactoryBot.create(:user, username: "searchtest1")
+      FactoryBot.create(:user, username: "peter1")
+      FactoryBot.create(:user, username: "searchtest0")
 
       visit users_path
       fill_in 'search', with:':'
@@ -184,22 +184,22 @@ describe "UsersPages" do
   describe 'search_partial' do
     let(:submit) {"Search"}
     before do
-      FactoryGirl.create(:user, username: "searchtest1")
-      FactoryGirl.create(:user, username: "peter1")
-      FactoryGirl.create(:user, username: "searchtest0")
-      FactoryGirl.create(:user, username: "peter0")
-      FactoryGirl.create(:user, username: "searchtest9")
-      FactoryGirl.create(:user, username: "peter9")
-      FactoryGirl.create(:user, username: "searchtest4")
-      FactoryGirl.create(:user, username: "peter4")
-      FactoryGirl.create(:user, username: "searchtest5")
-      FactoryGirl.create(:user, username: "peter5")
-      FactoryGirl.create(:user, username: "searchtest6")
-      FactoryGirl.create(:user, username: "peter6")
-      FactoryGirl.create(:user, username: "searchtest7")
-      FactoryGirl.create(:user, username: "peter7")
-      FactoryGirl.create(:user, username: "searchtest8")
-      FactoryGirl.create(:user, username: "peter8")
+      FactoryBot.create(:user, username: "searchtest1")
+      FactoryBot.create(:user, username: "peter1")
+      FactoryBot.create(:user, username: "searchtest0")
+      FactoryBot.create(:user, username: "peter0")
+      FactoryBot.create(:user, username: "searchtest9")
+      FactoryBot.create(:user, username: "peter9")
+      FactoryBot.create(:user, username: "searchtest4")
+      FactoryBot.create(:user, username: "peter4")
+      FactoryBot.create(:user, username: "searchtest5")
+      FactoryBot.create(:user, username: "peter5")
+      FactoryBot.create(:user, username: "searchtest6")
+      FactoryBot.create(:user, username: "peter6")
+      FactoryBot.create(:user, username: "searchtest7")
+      FactoryBot.create(:user, username: "peter7")
+      FactoryBot.create(:user, username: "searchtest8")
+      FactoryBot.create(:user, username: "peter8")
       visit users_path
       fill_in 'search', with:'te'
       click_button submit
@@ -215,18 +215,18 @@ describe "UsersPages" do
   describe 'search_pagination' do
     let(:submit) {"Search"}
     before do
-      FactoryGirl.create(:user, username: "searchtest1")
-      FactoryGirl.create(:user, username: "peter1")
-      FactoryGirl.create(:user, username: "searchtest9")
-      FactoryGirl.create(:user, username: "peter9")
-      FactoryGirl.create(:user, username: "searchtest3")
-      FactoryGirl.create(:user, username: "peter3")
-      FactoryGirl.create(:user, username: "searchtest4")
-      FactoryGirl.create(:user, username: "peter4")
-      FactoryGirl.create(:user, username: "searchtest5")
-      FactoryGirl.create(:user, username: "peter5")
-      FactoryGirl.create(:user, username: "searchtest6")
-      FactoryGirl.create(:user, username: "peter6")
+      FactoryBot.create(:user, username: "searchtest1")
+      FactoryBot.create(:user, username: "peter1")
+      FactoryBot.create(:user, username: "searchtest9")
+      FactoryBot.create(:user, username: "peter9")
+      FactoryBot.create(:user, username: "searchtest3")
+      FactoryBot.create(:user, username: "peter3")
+      FactoryBot.create(:user, username: "searchtest4")
+      FactoryBot.create(:user, username: "peter4")
+      FactoryBot.create(:user, username: "searchtest5")
+      FactoryBot.create(:user, username: "peter5")
+      FactoryBot.create(:user, username: "searchtest6")
+      FactoryBot.create(:user, username: "peter6")
       visit users_path
       fill_in 'search', with:'searchtest4'
       click_button submit
@@ -240,7 +240,7 @@ describe "UsersPages" do
     let(:submit) {"Search"}
 
     before do
-      FactoryGirl.create(:user, username: "searchtest")
+      FactoryBot.create(:user, username: "searchtest")
       visit users_path
       fill_in 'search', with:'searchtest'
       click_button submit
@@ -255,7 +255,7 @@ describe "UsersPages" do
 
   describe "Edit users" do
     describe "as User" do
-      let (:user) { FactoryGirl.create(:user) }
+      let (:user) { FactoryBot.create(:user) }
       let!(:orig_username) { user.username }
       let (:submit) { 'Update Account' }
 
@@ -297,9 +297,9 @@ describe "UsersPages" do
         describe 'admin' do
           before do
             login user, avoid_capybara: true
-            patch user_path(user), user: { admin: true,
+            patch user_path(user), params: { user: { admin: true,
                                            password: user.password,
-                                           password_confirmation: user.password }
+                                           password_confirmation: user.password } }
           end
 
           specify { expect(user.reload).not_to be_admin }
@@ -308,9 +308,9 @@ describe "UsersPages" do
         describe 'contest_creator' do
           before do
             login user, avoid_capybara: true
-            patch user_path(user), user: { contest_creator: true,
+            patch user_path(user), params: { user: { contest_creator: true,
                                            password: user.password,
-                                           password_confirmation: user.password }
+                                           password_confirmation: user.password } }
           end
 
           specify { expect(user.reload).not_to be_contest_creator }
@@ -335,10 +335,10 @@ describe "UsersPages" do
         describe "redirects properly", type: :request do
           before do
             login user, avoid_capybara: true
-            patch user_path(user), user: { username: 'Changed name',
+            patch user_path(user), params: { user: { username: 'Changed name',
                                            email: user.email,
                                            password: user.password,
-                                           password_confirmation: user.password }
+                                           password_confirmation: user.password } }
         end
 
           specify { expect(response).to redirect_to(user_path(user)) }
@@ -356,8 +356,8 @@ describe "UsersPages" do
     end
     
     describe "as admin" do     
-      let (:admin) { FactoryGirl.create(:admin) }
-      let (:user) { FactoryGirl.create(:user) }
+      let (:admin) { FactoryBot.create(:admin) }
+      let (:user) { FactoryBot.create(:user) }
       let!(:orig_username) { user.username }
       let (:submit) { 'Update Account' }   
 
@@ -399,7 +399,7 @@ describe "UsersPages" do
       describe 'admin' do
         before do
           login admin, avoid_capybara: true
-          patch user_path(user), user: { admin: true }
+          patch user_path(user), params: { user: { admin: true } }
         end
 
         specify { expect(user.reload).to be_admin }
@@ -408,7 +408,7 @@ describe "UsersPages" do
       describe 'contest_creator' do
         before do
           login admin, avoid_capybara: true
-          patch user_path(user), user: { contest_creator: true }
+          patch user_path(user), params: { user: { contest_creator: true } }
         end
 
         specify { expect(user.reload).to be_contest_creator }
@@ -426,10 +426,10 @@ describe "UsersPages" do
       describe "redirects properly", type: :request do
         before do
           login admin, avoid_capybara: true
-          patch user_path(user), user: { username: 'Changed name',
+          patch user_path(user), params: { user: { username: 'Changed name',
                                          email: user.email,
                                          password: user.password,
-                                         password_confirmation: user.password }
+                                         password_confirmation: user.password } }
         end
 
         specify { expect(response).to redirect_to(user_path(user)) }
@@ -448,7 +448,7 @@ describe "UsersPages" do
 
   describe "Delete users" do
     describe "as anonymous" do
-      let!(:user) { FactoryGirl.create(:user) }
+      let!(:user) { FactoryBot.create(:user) }
 
       before { visit user_path(user) }      
 
@@ -456,7 +456,7 @@ describe "UsersPages" do
     end
 
     describe "as a user" do
-      let (:user) { FactoryGirl.create(:user) }
+      let (:user) { FactoryBot.create(:user) }
 
       before do
         login user
@@ -467,8 +467,8 @@ describe "UsersPages" do
     end
 
     describe "as admin" do
-      let (:admin) { FactoryGirl.create(:admin) }
-      let!(:user) { FactoryGirl.create(:user) }
+      let (:admin) { FactoryBot.create(:admin) }
+      let!(:user) { FactoryBot.create(:user) }
 
       before do
         login admin
@@ -497,8 +497,8 @@ describe "UsersPages" do
     end
 
     describe "as another admin" do 
-      let! (:admin1) { FactoryGirl.create(:admin) }
-      let! (:admin2) { FactoryGirl.create(:admin) }
+      let! (:admin1) { FactoryBot.create(:admin) }
+      let! (:admin2) { FactoryBot.create(:admin) }
       
       before do 
         login admin2
@@ -517,7 +517,7 @@ describe "UsersPages" do
       end
     end
     describe "as admin deleting yourself" do 
-      let! (:admin) { FactoryGirl.create(:admin) }
+      let! (:admin) { FactoryBot.create(:admin) }
 
       before do
         login admin

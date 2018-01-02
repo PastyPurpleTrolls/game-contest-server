@@ -9,7 +9,8 @@ class Contest < ActiveRecord::Base
   validates :referee,       presence: true
   validates :user,          presence: true
 
-  validates :deadline,      timeliness: { type: :datetime, allow_nil: false, on_or_after: :now }
+  #validates :deadline,      timeliness: { type: :datetime, allow_nil: false, on_or_after: :now }
+  validates :deadline, presence: true
   validates :description,   presence: true
   validates :name,          presence: true, uniqueness: true
 

@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 describe "PlayersPages" do
-  let (:user) { FactoryGirl.create(:user) }
-  let (:contest) { FactoryGirl.create(:contest) }
-  let (:player) { FactoryGirl.create(:player, user: user, contest: contest) }
+  let (:user) { FactoryBot.create(:user) }
+  let (:contest) { FactoryBot.create(:contest) }
+  let (:player) { FactoryBot.create(:player, user: user, contest: contest) }
   let (:description) { 'Test Player Description' }
   let (:name) { 'Test Player' }
   let (:file_location) { Rails.root.join('spec', 'files', 'player.test') }
@@ -17,6 +17,8 @@ describe "PlayersPages" do
     before do
       login user
       visit new_contest_player_path(contest)
+# hack to get submit working!
+attach_file('Player File', file_location)
     end
 
     describe "invalid information" do
@@ -50,11 +52,11 @@ describe "PlayersPages" do
         before do
           login user, avoid_capybara: true
           post contest_players_path(contest),
-            player: { name: name,
+            params: { player: { name: name,
               description: description,
               downloadable: false,
               playable: true,
-              upload: fixture_file_upload(file_location) }
+              upload: fixture_file_upload(file_location) } }
         end
 
         specify { expect(response).to redirect_to(player_path(assigns(:player))) }
@@ -83,13 +85,15 @@ describe "PlayersPages" do
   end
 
   describe "edit" do
-    let (:player) { FactoryGirl.create(:player, user: user) }
+    let (:player) { FactoryBot.create(:player, user: user) }
     let!(:orig_name) { player.name }
     let (:submit) { 'Update Player' }
 
     before do
       login user
       visit edit_player_path(player)
+# hack to get submit working!
+attach_file('Player File', file_location)
     end
 
     it { should have_field('Name', with: player.name) }
@@ -128,7 +132,7 @@ describe "PlayersPages" do
                                         'test').to_s }
       before do
         login user, avoid_capybara: true
-        patch player_path(player), player: { file_location: bad_path }
+        patch player_path(player), params: { player: { file_location: bad_path } }
       end
 
       specify { expect(player.reload.file_location).not_to eq(bad_path) }
@@ -156,11 +160,11 @@ describe "PlayersPages" do
       describe "redirects properly", type: :request do
         before do
           login user, avoid_capybara: true
-          patch player_path(player), player: { name: name,
+          patch player_path(player), params: { player: { name: name,
             description: description,
             playable: true,
             downloadable: false,
-            upload: fixture_file_upload(file_location) }
+            upload: fixture_file_upload(file_location) } }
         end
 
         specify { expect(response).to redirect_to(player_path(player)) }
@@ -173,10 +177,10 @@ describe "PlayersPages" do
   end
 
   describe "destroy", type: :request do
-    let!(:player) { FactoryGirl.create(:player, user: user) }
-		let!(:player2) { FactoryGirl.create(:player, user: user) }
-		let!(:match) { FactoryGirl.create(:match) }
-		let!(:player_match) { FactoryGirl.create(:player_match, player: player2, match: match) }
+    let!(:player) { FactoryBot.create(:player, user: user) }
+		let!(:player2) { FactoryBot.create(:player, user: user) }
+		let!(:match) { FactoryBot.create(:match) }
+		let!(:player_match) { FactoryBot.create(:player_match, player: player2, match: match) }
 
     before do
       login user, avoid_capybara: true
@@ -217,7 +221,7 @@ describe "PlayersPages" do
   end
 
   describe "show" do
-    let (:player) { FactoryGirl.create(:player) }
+    let (:player) { FactoryBot.create(:player) }
 
     before { visit player_path(player) }
 
@@ -232,7 +236,7 @@ describe "PlayersPages" do
 
     describe "show match" do
       let!(:player_match) do
-	match = FactoryGirl.create(:tournament_match, player: player)
+	match = FactoryBot.create(:tournament_match, player: player)
 	PlayerMatch.where(match: match, player: player).first
       end
 
@@ -246,8 +250,8 @@ describe "PlayersPages" do
 
     describe "more complete match history" do
       before do
-        7.times { FactoryGirl.create(:winning_match, player: player) }
-        4.times { FactoryGirl.create(:losing_match, player: player) }
+        7.times { FactoryBot.create(:winning_match, player: player) }
+        4.times { FactoryBot.create(:losing_match, player: player) }
 
         visit player_path(player)
       end
@@ -261,7 +265,7 @@ describe "PlayersPages" do
 
     describe "undefeated history" do
       before do
-        5.times { FactoryGirl.create(:winning_match, player: player) }
+        5.times { FactoryBot.create(:winning_match, player: player) }
 
         visit player_path(player)
       end
@@ -273,7 +277,7 @@ describe "PlayersPages" do
 
     describe "win-less history" do
       before do
-        8.times { FactoryGirl.create(:losing_match, player: player) }
+        8.times { FactoryBot.create(:losing_match, player: player) }
 
         visit player_path(player)
       end
@@ -288,7 +292,7 @@ describe "PlayersPages" do
     let (:slug) { contest.slug }
 
     before do
-      30.times { FactoryGirl.create(:player, contest: contest) }
+      30.times { FactoryBot.create(:player, contest: contest) }
 
       visit contest_players_path(contest)
     end
@@ -304,8 +308,8 @@ describe "PlayersPages" do
     let(:submit) {"Search"}
 
     before do
-      FactoryGirl.create(:player, name: "searchtest1", contest: contest)
-      FactoryGirl.create(:player, name: "peter1", contest: contest)
+      FactoryBot.create(:player, name: "searchtest1", contest: contest)
+      FactoryBot.create(:player, name: "peter1", contest: contest)
 
       visit "/contests/1/players"
       fill_in 'search', with:';'
@@ -319,22 +323,22 @@ describe "PlayersPages" do
   describe 'search_partial' do
     let(:submit) {"Search"}
     before do
-      FactoryGirl.create(:player, name: "searchtest1")
-      FactoryGirl.create(:player, name: "peter1")
-      FactoryGirl.create(:player, name: "searchtest2")
-      FactoryGirl.create(:player, name: "peter2")
-      FactoryGirl.create(:player, name: "searchtest9")
-      FactoryGirl.create(:player, name: "peter9")
-      FactoryGirl.create(:player, name: "searchtest4")
-      FactoryGirl.create(:player, name: "peter4")
-      FactoryGirl.create(:player, name: "searchtest5")
-      FactoryGirl.create(:player, name: "peter5")
-      FactoryGirl.create(:player, name: "searchtest6")
-      FactoryGirl.create(:player, name: "peter6")
-      FactoryGirl.create(:player, name: "searchtest7")
-      FactoryGirl.create(:player, name: "peter7")
-      FactoryGirl.create(:player, name: "searchtest8")
-      FactoryGirl.create(:player, name: "peter8")
+      FactoryBot.create(:player, name: "searchtest1")
+      FactoryBot.create(:player, name: "peter1")
+      FactoryBot.create(:player, name: "searchtest2")
+      FactoryBot.create(:player, name: "peter2")
+      FactoryBot.create(:player, name: "searchtest9")
+      FactoryBot.create(:player, name: "peter9")
+      FactoryBot.create(:player, name: "searchtest4")
+      FactoryBot.create(:player, name: "peter4")
+      FactoryBot.create(:player, name: "searchtest5")
+      FactoryBot.create(:player, name: "peter5")
+      FactoryBot.create(:player, name: "searchtest6")
+      FactoryBot.create(:player, name: "peter6")
+      FactoryBot.create(:player, name: "searchtest7")
+      FactoryBot.create(:player, name: "peter7")
+      FactoryBot.create(:player, name: "searchtest8")
+      FactoryBot.create(:player, name: "peter8")
       visit "/contests/1/players"
       fill_in 'search', with:'te'
       click_button submit
@@ -350,18 +354,18 @@ describe "PlayersPages" do
   describe 'search_pagination' do
     let(:submit) {"Search"}
     before do
-      FactoryGirl.create(:player, name: "searchtest1")
-      FactoryGirl.create(:player, name: "peter1")
-      FactoryGirl.create(:player, name: "searchtest2")
-      FactoryGirl.create(:player, name: "peter2")
-      FactoryGirl.create(:player, name: "searchtest9")
-      FactoryGirl.create(:player, name: "peter9")
-      FactoryGirl.create(:player, name: "searchtest4")
-      FactoryGirl.create(:player, name: "peter4")
-      FactoryGirl.create(:player, name: "searchtest5")
-      FactoryGirl.create(:player, name: "peter5")
-      FactoryGirl.create(:player, name: "searchtest6")
-      FactoryGirl.create(:player, name: "peter6")
+      FactoryBot.create(:player, name: "searchtest1")
+      FactoryBot.create(:player, name: "peter1")
+      FactoryBot.create(:player, name: "searchtest2")
+      FactoryBot.create(:player, name: "peter2")
+      FactoryBot.create(:player, name: "searchtest9")
+      FactoryBot.create(:player, name: "peter9")
+      FactoryBot.create(:player, name: "searchtest4")
+      FactoryBot.create(:player, name: "peter4")
+      FactoryBot.create(:player, name: "searchtest5")
+      FactoryBot.create(:player, name: "peter5")
+      FactoryBot.create(:player, name: "searchtest6")
+      FactoryBot.create(:player, name: "peter6")
       visit "/contests/1/players"
       fill_in 'search', with:'searchtest4'
       click_button submit
@@ -375,7 +379,7 @@ describe "PlayersPages" do
     let(:submit) { "Search" }
 
     before do
-      FactoryGirl.create(:player, name: "searchtest")
+      FactoryBot.create(:player, name: "searchtest")
       visit "/contests/1/players"
       fill_in 'search', with:'searchtest'
       click_button submit
@@ -389,7 +393,7 @@ describe "PlayersPages" do
 
   describe "show all" do
     before do
-      5.times { FactoryGirl.create(:player, contest: contest) }
+      5.times { FactoryBot.create(:player, contest: contest) }
 
       visit contest_players_path(contest)
     end

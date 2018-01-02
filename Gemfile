@@ -1,14 +1,15 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.5'
+gem 'rails', '5.1.4'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 
 group :test do
-  gem 'capybara', '~> 2.4.4'
-  gem 'factory_girl_rails', '~> 4.4.1'
+  gem 'capybara', '~> 2.8.0'
+  gem 'factory_bot_rails', '~> 4.8.2'
+  gem 'rails-controller-testing'
   gem 'libnotify'
   gem 'timecop'
 
@@ -19,8 +20,8 @@ gem 'redcarpet', '~> 3.3', '>= 3.3.4'
 gem 'pygmentize'
 
 group :development, :test do
-  gem 'rspec-rails', '~> 3.1.0'
-  gem 'guard-rspec', '~> 4.5.0'
+  gem 'rspec-rails', '~> 3.6.0'
+  gem 'guard-rspec', '~> 4.7.0'
 
 #  gem 'spork-rails'
 #  gem 'guard-spork'
@@ -36,11 +37,12 @@ end
 gem 'bcrypt', '~> 3.1.7'
 gem 'active_link_to'
 #gem 'validates_timeliness', github: 'geisler/validates_timeliness', branch: 'support_for_rails4'
-gem 'validates_timeliness', '~> 4.0.0'
+# not valid for Rails 5+
+#gem 'validates_timeliness', '~> 4.0.0'
 gem 'friendly_id', '~> 5.1.0'
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.3'
+gem 'sass-rails', '~> 5.0.7'
 gem 'bootstrap-sass', '~> 3.3.1'
 #gem 'bootstrap-sass', github: 'thomas-mcdonald/bootstrap-sass'
 
@@ -51,7 +53,7 @@ gem "font-awesome-rails"
 gem 'uglifier', '>= 1.3.0'
 
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails', '~> 4.2.2'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -63,7 +65,7 @@ gem 'jquery-rails'
 gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 1.2'
+gem 'jbuilder', '~> 2.6.0'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -71,7 +73,7 @@ group :doc do
 end
 
 gem 'faker', '1.1.2'
-gem 'will_paginate', '3.0.4'
+gem 'will_paginate', '~> 3.1.0'
 #gem 'bootstrap-will_paginate', '0.0.9'
 gem 'kaminari'
 

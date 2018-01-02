@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Player do
-  let (:player) { FactoryGirl.create(:player) }
+  let (:player) { FactoryBot.create(:player) }
   subject { player }
 
   # Tables
@@ -71,7 +71,7 @@ describe Player do
 
   describe "duplicate name" do
     describe "different contests" do
-      let (:other_player) { FactoryGirl.create(:player) }
+      let (:other_player) { FactoryBot.create(:player) }
 
       before { player.name = other_player.name }
 
@@ -79,7 +79,7 @@ describe Player do
     end
 
     describe "same contest" do
-      let (:other_player) { FactoryGirl.create(:player, contest: player.contest) }
+      let (:other_player) { FactoryBot.create(:player, contest: player.contest) }
 
       before { player.name = other_player.name }
 

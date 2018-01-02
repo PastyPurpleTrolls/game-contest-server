@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Tournament do
-  let (:tournament) { FactoryGirl.create(:tournament) }
+  let (:tournament) { FactoryBot.create(:tournament) }
   subject { tournament }
 
   # Tables
@@ -27,13 +27,13 @@ describe Tournament do
 
   describe "duplicate name" do
     describe "same contest" do
-      let (:other_tournament) { FactoryGirl.create(:tournament, contest: tournament.contest) }
+      let (:other_tournament) { FactoryBot.create(:tournament, contest: tournament.contest) }
       before { tournament.name = other_tournament.name }
       it { should_not be_valid }
     end
 
     describe "different contests" do
-      let (:other_tournament) { FactoryGirl.create(:tournament) }
+      let (:other_tournament) { FactoryBot.create(:tournament) }
       before { tournament.name = other_tournament.name }
       it { should be_valid }
     end

@@ -43,7 +43,7 @@ body {
 
 // Allows for styling of datetime selectors
 .date-time {
-    @extend .form-control;
+    @extend .form-input;
     display: inline;
     width: auto;
 }

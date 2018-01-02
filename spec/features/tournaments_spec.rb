@@ -3,11 +3,11 @@ require 'rails_helper'
 include ActionView::Helpers::DateHelper
 
 describe 'TournamentsPages' do
-  let (:creator) { FactoryGirl.create(:contest_creator) }
-  let!(:referee) { FactoryGirl.create(:referee) }
-  let (:contest) { FactoryGirl.create(:contest, user: creator) }
-  let!(:player1) { FactoryGirl.create(:player, contest: contest) }
-  let!(:player2) { FactoryGirl.create(:player, contest: contest) }
+  let (:creator) { FactoryBot.create(:contest_creator) }
+  let!(:referee) { FactoryBot.create(:referee) }
+  let (:contest) { FactoryBot.create(:contest, user: creator) }
+  let!(:player1) { FactoryBot.create(:player, contest: contest) }
+  let!(:player2) { FactoryBot.create(:player, contest: contest) }
 
   let (:name) { 'Test Tournament' }
   let (:now) { mins_multiple_of_5(1.hour.from_now) }
@@ -74,12 +74,12 @@ describe 'TournamentsPages' do
         before do
           login creator, avoid_capybara: true
           post contest_tournaments_path(contest),
-            tournament: { name: name,
+            params: { tournament: { name: name,
               start: now.strftime("%F %T"),
               tournament_type: tournament_type.downcase,
               players: [player1],
 	      rounds_per_match: 1
-          }
+          } }
         end
 
         specify { expect(response).to redirect_to(tournament_path(assigns(:tournament))) }
@@ -109,8 +109,8 @@ describe 'TournamentsPages' do
   end # create
 
   describe "edit" do
-    #let (:tournament) { FactoryGirl.create(:tournament, contest: contest, tournament_type: tournament_type.downcase) }
-    let (:tournament) { FactoryGirl.create(:tournament, contest: contest, start: now) }
+    #let (:tournament) { FactoryBot.create(:tournament, contest: contest, tournament_type: tournament_type.downcase) }
+    let (:tournament) { FactoryBot.create(:tournament, contest: contest, start: now) }
     let!(:orig_name) { tournament.name }
     let (:submit) { 'Update Tournament' }
 
@@ -168,7 +168,7 @@ describe 'TournamentsPages' do
             tournament.status = 'started'
             tournament.save
             login creator, avoid_capybara: true
-            patch tournament_path(tournament), tournament: { status: new_status  }
+            patch tournament_path(tournament), params: { tournament: { status: new_status  } }
           end
 
           specify { expect(tournament.reload.status).not_to eq(new_status) }
@@ -204,10 +204,10 @@ describe 'TournamentsPages' do
       describe "redirects properly", type: :request do
         before do
           login creator, avoid_capybara: true
-          patch tournament_path(tournament), tournament: { start: now.strftime("%F %T"),
+          patch tournament_path(tournament), params: { tournament: { start: now.strftime("%F %T"),
             name: edit_name,
             tournament_type: edit_tournament_type.downcase
-          }
+          } }
         end
 
         specify { expect(response).to redirect_to(tournament_path(tournament)) }
@@ -221,7 +221,7 @@ describe 'TournamentsPages' do
   end # edit
 
   describe "destroy", type: :request do
-    let!(:tournament) { FactoryGirl.create(:tournament, contest: contest) }
+    let!(:tournament) { FactoryBot.create(:tournament, contest: contest) }
 
     before do
       login creator, avoid_capybara: true
@@ -245,7 +245,7 @@ describe 'TournamentsPages' do
   end # destroy
 
   describe 'show' do
-    let!(:tournament) { FactoryGirl.create(:tournament) }
+    let!(:tournament) { FactoryBot.create(:tournament) }
 
     before { visit tournament_path(tournament) }
 
@@ -280,7 +280,7 @@ describe 'TournamentsPages' do
 
   describe "show all" do
     before do
-      5.times { FactoryGirl.create(:tournament, contest: contest) }
+      5.times { FactoryBot.create(:tournament, contest: contest) }
 
       visit contest_tournaments_path(contest)
     end

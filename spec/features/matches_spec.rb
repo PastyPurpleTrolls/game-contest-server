@@ -5,14 +5,14 @@ include ActionView::Helpers::DateHelper
 describe "MatchesPages" do
   subject { page }
 
-  let (:user) { FactoryGirl.create(:user) }
-  let (:creator) { FactoryGirl.create(:contest_creator) }
-  let (:contest) { FactoryGirl.create(:contest, user: creator) }
-  let! (:player1) { FactoryGirl.create(:player, contest: contest, user: creator) }
-  let! (:player2) { FactoryGirl.create(:player, contest: contest) }
-  let! (:player3) { FactoryGirl.create(:player, contest: contest) }
-  let! (:player4) { FactoryGirl.create(:player, contest: contest) }
-  let! (:player5) { FactoryGirl.create(:player, contest: contest) }
+  let (:user) { FactoryBot.create(:user) }
+  let (:creator) { FactoryBot.create(:contest_creator) }
+  let (:contest) { FactoryBot.create(:contest, user: creator) }
+  let! (:player1) { FactoryBot.create(:player, contest: contest, user: creator) }
+  let! (:player2) { FactoryBot.create(:player, contest: contest) }
+  let! (:player3) { FactoryBot.create(:player, contest: contest) }
+  let! (:player4) { FactoryBot.create(:player, contest: contest) }
+  let! (:player5) { FactoryBot.create(:player, contest: contest) }
 
   let (:now) { 1.hour.from_now }
   let (:submit) { 'Challenge!' }
@@ -144,9 +144,9 @@ describe "MatchesPages" do
         before do
           login creator, avoid_capybara: true
           post contest_matches_path(contest),
-            match: { earliest_start: now.strftime("%F %T"),
+            params: { match: { earliest_start: now.strftime("%F %T"),
             player_ids: {player1.id => "1", player2.id => "1", player3.id => "1", player4.id => "1"},
-	          num_rounds: 3 }
+	          num_rounds: 3 } }
         end
 
         specify { expect(response).to redirect_to(match_path( contest.matches.first.slug )) }
@@ -199,8 +199,8 @@ describe "MatchesPages" do
 
 # DESTROY MATCHES
   describe "destroy", type: :request do
-    let!(:challenge_match) { FactoryGirl.create(:challenge_match) }
-    let!(:tournament_match) { FactoryGirl.create(:tournament_match) }
+    let!(:challenge_match) { FactoryBot.create(:challenge_match) }
+    let!(:tournament_match) { FactoryBot.create(:tournament_match) }
 
     describe "logged in as normal user" do
       before do
@@ -268,7 +268,7 @@ describe "MatchesPages" do
 
 #SHOW A TOURNAMENT MATCH
   describe "show (tournament match)" do
-    let (:match) { FactoryGirl.create(:tournament_match) }
+    let (:match) { FactoryBot.create(:tournament_match) }
 
     before { visit match_path(match) }
 
@@ -327,7 +327,7 @@ describe "MatchesPages" do
 
 #SHOW A CHALLENGE MATCH
   describe "show (challenge match)" do
-    let (:match) { FactoryGirl.create(:challenge_match) }
+    let (:match) { FactoryBot.create(:challenge_match) }
     let (:user ) { match.players.first.user }
     before do
        user.password = "password"
@@ -344,12 +344,12 @@ describe "MatchesPages" do
 
 # SHOW ALL TOURNAMENT MATCHES
   describe "show all tournament matches" do
-    let (:tournament) { FactoryGirl.create(:tournament) }
-		let! (:t2) { FactoryGirl.create(:tournament) } 
+    let (:tournament) { FactoryBot.create(:tournament) }
+		let! (:t2) { FactoryBot.create(:tournament) } 
 
     before do
-      5.times { FactoryGirl.create(:tournament_match, manager: tournament) }
-      5.times { FactoryGirl.create(:tournament_match, manager: t2) }
+      5.times { FactoryBot.create(:tournament_match, manager: tournament) }
+      5.times { FactoryBot.create(:tournament_match, manager: t2) }
 
       visit tournament_matches_path(tournament)
     end
@@ -372,12 +372,12 @@ describe "MatchesPages" do
 # SHOW ALL CONTEST MATCHES
   describe "show all contest matches" do
 =begin
-    let (:contest) { FactoryGirl.create(:contest) }
-    let (:user) { FactoryGirl.create(:user) }
-    let (:player) { FactoryGirl.create(:player, user: user, contest: contest) }
+    let (:contest) { FactoryBot.create(:contest) }
+    let (:user) { FactoryBot.create(:user) }
+    let (:player) { FactoryBot.create(:player, user: user, contest: contest) }
     before do
       login user 
-      FactoryGirl.create_list(:challenge_match, 5, manager: contest, player: player) 
+      FactoryBot.create_list(:challenge_match, 5, manager: contest, player: player) 
       visit contest_matches_path(contest)
     end
 
@@ -389,8 +389,8 @@ describe "MatchesPages" do
 		end
 =end
 		# 'let!' is necessary because, without it, the Match's index page is visited before the challenge matches are created
-		let! (:challenge_matches_player1_is_in) { FactoryGirl.create_list(:challenge_match, 5, manager: contest, player: player1) }
-    let! (:challenge_matches_player1_is_not_in) { FactoryGirl.create_list(:challenge_match, 5, manager: contest, player: player2) }
+		let! (:challenge_matches_player1_is_in) { FactoryBot.create_list(:challenge_match, 5, manager: contest, player: player1) }
+    let! (:challenge_matches_player1_is_not_in) { FactoryBot.create_list(:challenge_match, 5, manager: contest, player: player2) }
     before do
       login creator
       visit contest_matches_path(contest)

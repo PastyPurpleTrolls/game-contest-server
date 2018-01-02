@@ -36,4 +36,6 @@ GameContestServer::Application.configure do
 
   # Speed up tests by lowering bcrypt's cost function.
   ActiveModel::SecurePassword.min_cost = true
+
+  Capybara.server = :puma
 end

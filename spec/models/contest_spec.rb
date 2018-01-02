@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe Contest do
-  let (:contest) { FactoryGirl.create(:contest) }
+  let (:contest) { FactoryBot.create(:contest) }
   subject { contest }
 
   # Tables
@@ -58,7 +58,7 @@ describe Contest do
   end
 
   describe "duplicate description" do
-    let (:other_contest) { FactoryGirl.create(:contest) }
+    let (:other_contest) { FactoryBot.create(:contest) }
 
     before { contest.description = other_contest.description }
 
@@ -77,7 +77,7 @@ describe Contest do
   end
 
   describe "duplicate name" do
-    let (:other_contest) { FactoryGirl.create(:contest) }
+    let (:other_contest) { FactoryBot.create(:contest) }
 
     before { contest.name = other_contest.name }
 

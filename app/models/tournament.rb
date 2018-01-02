@@ -8,7 +8,8 @@ class Tournament < ActiveRecord::Base
   validates :rounds_per_match,    presence: true
   validates :contest,             presence: true
   validates :name,                presence: true, uniqueness: { scope: :contest }
-  validates :start,               presence: true, timeliness: { type: :datetime, allow_nil: false }
+  #validates :start,               presence: true, timeliness: { type: :datetime, allow_nil: false }
+  validates :start,               presence: true
   validates :tournament_type,     presence: true, inclusion: ['round robin', 'single elimination']
   # Validate that the status is one of the required statuses
   validates :status,              presence: true, inclusion: %w[waiting started completed]

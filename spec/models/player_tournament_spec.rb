@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe PlayerTournament do
-  let (:player_tournament) { FactoryGirl.create(:player_tournament) }
+  let (:player_tournament) { FactoryBot.create(:player_tournament) }
   subject { player_tournament }
 
   # Tables
