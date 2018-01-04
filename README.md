@@ -1,17 +1,17 @@
-#Game Contest Server
+# Game Contest Server
 
 Interactive, web based manager for automated turn-based game contests.
 
-##Requirements
+## Requirements
 
 * Ruby on Rails
 * [RubyGems](https://rubygems.org)
 
-##User Documentation
+## User Documentation
 
 The user documentation can be found in [documentation](/documentation)
 
-##Setup
+## Setup
 
 Clone the repo: `git clone https://github.com/PastyPurpleTrolls/game-contest-server.git`
 
@@ -21,7 +21,7 @@ $ bundle install
 $ rake db:schema:load
 ```
 
-##Running (dev)
+## Running (dev)
 
 Start the server
 
@@ -47,7 +47,7 @@ View the logs from the daemon (from the root of the game server directory:
 tail -f tmp/clockworkd.clock.output
 ```
 
-###Manage Users
+### Manage Users
 
 Create user in web interface (host:port)
 
@@ -60,7 +60,7 @@ $ rails c
 > u.save
 ```
 
-###Tests
+### Tests
 
 Run tests: `rspec`
 
@@ -70,7 +70,7 @@ rspec  --tag ~js
 ```
 which will ignore the tests that need javascript and run the rest. But you must use a xwindows program to run the javascript tests.
 
-###Migrations
+### Migrations
 
 See the folder db/migrate. If there are new migrations, then perform the following at the command line:
 ```bash
@@ -85,11 +85,11 @@ $ rake db:reset
 
 However, make sure that you understand the ramifications of this command- the database's existing data is deleted. See [seeds.rb](/db/seeds/development.rb) for what the default values of the db after the db is reset.
 
-##Development
+## Development
 
 Frontend user interface files are located in `app/assets`. Views are in `app/views`
 
-###JTerm 2016 group's description of mandatory future work
+### JTerm 2016 group's description of mandatory future work
 We have made significant changes to the User Interface (UI). However, these changes are not merged in master. It should be merged with master as soon as possible. We regret that we did not do so. However, there are two steps for merging. They are not insignificant steps, but they are straightforward. 
 * One, take care of any issues tracked with the label 'uiBranch' in GitHub's [Issues](https://github.com/PastyPurpleTrolls/game-contest-server/issues) tracker. (see the "Tracking Issues with GitHub" section below).
 * Two, there are 0 failing tests in this branch. However, we wrote a number of tests with descriptions, but no bodies; we have marked them as pending. Please make sure that these tests correctly fail, then correctly pass.
@@ -97,7 +97,7 @@ We have made significant changes to the User Interface (UI). However, these chan
 	* as a passing remark, the 2016 team recommends doing test-driven development in such a way that new development is known to be adequately tested before being merged into master. The idea is to keep the master branch in a "known good state".
 * While there may be more User Interface enhancements that can be made, once these two steps are taken care of, the uiBranch is then ready to merge into master. We recommend doing so sooner, rather than later.
 
-###Jerm 2017 group's note to the next iteration of the project
+### Jerm 2017 group's note to the next iteration of the project
 The UI branch has become deprecated from last year's group as one of our team members rebranded the UI from the master branch. The CSS for the design changes are located in the "app/assets/stylesheets/post_bootstrap.css.scss.
 Like the previous group, we strongly recommend keeping the master branch clear of failing tests so that all team members can develop easily without having to fix someone else's code. 
 We believe that the next steps of the project include getting the display of specific tournaments working. There are partials that are tucked into the tournament show page that would make adding the display easy. Right now the tournament results display in order from most wins to least wins, but it would be nice to have specific views of the results depending on what kind of tournament was played such a bracket for single elimination. There is an issue in GitHub's Issue Tracker for it. 
@@ -105,10 +105,10 @@ We also think getting the multiplayer game functionality fully working would be 
 Going to the Issue Tracker and fixing some/all of the issues there would be a great thing to accomplish too.
 Good luck!
 
-###Test-Driven Development
+### Test-Driven Development
 The 2015, 2016, and 2017 Jterm teams recommend strongly that you stick with test-driven development. The long-term benefits outweigh the short-term struggles. 
 
-###Tracking Issues with GitHub
+### Tracking Issues with GitHub
 The 2016 and 2017 Jterm team recommend using GitHub's [Issues](https://github.com/PastyPurpleTrolls/game-contest-server/issues) tracker. There, we have listed issues that are not described in pending tests.
 Here are necessary definitions of some of the labels on Github Issues:
 * the following 3 labels are defined so that an issue can have no more than one of these labels
@@ -116,7 +116,7 @@ Here are necessary definitions of some of the labels on Github Issues:
 	* futurework- a shortcoming of the application that must inevitably be resolved for basic functionality of the site
 	* bug- a technical mistake that must inevitably be resolved for basic functionality of the site
 
-##Referees
+## Referees
 
 Referees are executable files that are uploaded by instructors to enforce the rules in a competition match. The Game Contest Server does not have any concept of what a "game" is, rather the referee is in charge of defining what that means (chess, checkers, risk, etc...) 
 
@@ -124,17 +124,17 @@ For security and practical purposes, players and referees are started as seperat
 
 Example referees are located in [examples](examples). Python referees should take advantage of [ref_helper.py](examples/ref_helper.py) which implements several useful classes and methods for managing communication with the game manager.
 
-###Replay Plugin
+### Replay Plugin
 
 Every referee should be uploaded with a replay plugin. This piece of code handles calculating and rendering replays of games in the web browser. The Game Contest Server automatically creates log files from data sent via the protocol during each round. These log files are parsed and made available to replay plugins. 
 
 Please refer to the [replay plugin documentation](documentation/creator/referee.md#replay-plugin) for more information.
 
-##Design
+## Design
 
 The Game Contest Server employs two different services: a web server and a background daemon that runs tournaments and matches. The web server allows users to upload players and referees, manage tournaments, and view replays of rounds that have been played on the system. The background daemon continuously checks for new tournaments and matches, runs matches, and adds the results to the database.
 
-###Executable Environment
+### Executable Environment
 
 User players and referees inherently need to be executed. To faciliate this, several helper files are located in `exec_environment/`.
 
@@ -148,7 +148,7 @@ Matches are executed and saved by `match_runner.rb`. This executable is in charg
 
 Each round is executed by `round_wrapper.rb`. The referee is started and told to listen on a specific port for a set number of players. Then the players are started and told the port where they can find the referee. Referees are in charge of handling communication with the players, but they must check in with `round_wrapper.rb` or the match runner will assume the game has failed and will stop the match. 
 
-###ERD
+### ERD
 ![Image of ERD document](/documentation/GameContestServerERD.png)
 
 Many to many relationships are represented with a colored connection. This represents an additional associative entity (such as player_rounds) that connects the two entities. 
