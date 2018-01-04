@@ -10,7 +10,7 @@ describe "UsersPages" do
 
     before { visit signup_path }
 
-    it { should have_selector("h2", "Sign Up") }             
+    it { should have_selector("h2", text: "Sign Up") }             
 
     describe "passwords are not visible when typing" do
       it { should have_field 'user_password', type: 'password' }
@@ -75,7 +75,7 @@ describe "UsersPages" do
         visit user_path(user)
       end
 
-      it { should have_selector("h2", "User") }             
+      it { should have_selector("h2", text: "User") }             
 
       it { should have_content(user.username) }
       it { should have_content(user.email) }
@@ -86,7 +86,7 @@ describe "UsersPages" do
       it "lists all the players for the user" do
         Player.all.each do |player|
           should have_selector('div', text: player.name)
-          should have_link(player.name, player_path(player))
+          should have_link(player.name, href: player_path(player))
         end
       end
       it { should have_link('', href: new_contest_player_path('not-specified')) }
@@ -268,7 +268,7 @@ describe "UsersPages" do
         visit edit_user_path(user)
       end
 
-      it { should have_selector("h2", "Edit User") }             
+      it { should have_selector("h2", text: "Edit User") }             
       it { should have_field('Username', with: user.username) }
       it { should have_field('Email', with: user.email) }
       it { should_not have_field('Password', with: user.password) }

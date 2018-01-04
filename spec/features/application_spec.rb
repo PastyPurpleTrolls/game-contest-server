@@ -12,7 +12,7 @@ feature "HomePage" do
 
     before { visit root_path }
     
-    it { should have_selector("h2", "Home") }             
+    it { should have_selector("h2", text: "Home") }             
     it { should have_selector('.navbar') }
     
     describe "as anonymous" do

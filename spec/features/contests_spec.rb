@@ -19,7 +19,7 @@ describe "ContestsPages" do
       visit new_contest_path
     end
 
-    it { should have_selector("h2", "Add Contest") }                 
+    it { should have_selector("h2", text: "Add Contest") }                 
 
     describe "invalid information" do
       describe "missing information" do
@@ -101,7 +101,7 @@ describe "ContestsPages" do
       visit edit_contest_path(contest)
     end
 
-    it { should have_selector("h2", "Edit Contest") }                 
+    it { should have_selector("h2", text: "Edit Contest") }                 
     it { expect_datetime_select(contest.deadline, 'Deadline') }
     it { should have_field('Description', with: contest.description) }
     it { should have_field('Name', with: contest.name) }
@@ -299,7 +299,7 @@ describe "ContestsPages" do
     describe "as any user" do
       before { visit contest_path(contest) }
 
-      it { should have_selector("h2", "Contest") }      
+      it { should have_selector("h2", text: "Contest") }      
       it { should have_content(contest.name) }
       it { should have_content(contest.description) }
       it { should have_content(distance_of_time_in_words_to_now(contest.deadline).split.map { |i| i.capitalize }.join(' ')) }
@@ -328,7 +328,7 @@ describe "ContestsPages" do
         visit contest_path(contest)
       end
 
-      it { should have_selector("h2", "Contest") }      
+      it { should have_selector("h2", text: "Contest") }      
       it { should have_content(contest.name) }
       it { should have_content(contest.description) }
       it { should have_content(distance_of_time_in_words_to_now(contest.deadline).split.map { |i| i.capitalize }.join(' ')) }
@@ -364,7 +364,7 @@ describe "ContestsPages" do
       should_not have_link('', href: new_contest_path)
     end
 
-    it { should have_selector("h2", "Contest") }               
+    it { should have_selector("h2", text: "Contest") }               
 
     it "lists all the contests in the system" do
       Contest.all.each do |c|
@@ -384,6 +384,6 @@ describe "ContestsPages" do
       should have_link('', href: new_contest_path)
     end
 
-    it { should have_selector("h2", "Contest") }               
+    it { should have_selector("h2", text: "Contest") }               
   end
 end

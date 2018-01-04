@@ -27,7 +27,7 @@ describe 'TournamentsPages' do
       visit new_contest_tournament_path(contest)
     end
 
-    it { should have_selector("h2", "Add Tournament") }             
+    it { should have_selector("h2", text: "Add Tournament") }             
 
     describe 'invalid information' do
       describe 'missing information' do
@@ -131,7 +131,7 @@ describe 'TournamentsPages' do
       visit edit_tournament_path(tournament)
     end
 
-    it { should have_selector("h2", "Edit Tournament") }
+    it { should have_selector("h2", text: "Edit Tournament") }
     it { should have_field("Name", with: tournament.name) }    
     it { expect_datetime_select(tournament.start, 'Start') }
     it { should have_select('Tournament Type',
@@ -267,7 +267,7 @@ describe 'TournamentsPages' do
     before { visit tournament_path(tournament) }
 
     # Tournament attributes
-    it { should have_selector("h2", "Tournament") }                       
+    it { should have_selector("h2", text: "Tournament") }                       
     it { should have_content(tournament.name) }
     it { should have_content(tournament.status.capitalize) }
     it { should have_content(distance_of_time_in_words_to_now(tournament.start).split.map { |i| i.capitalize }.join(' ')) }
@@ -303,7 +303,7 @@ describe 'TournamentsPages' do
       visit contest_tournaments_path(contest)
     end
 
-    it { should have_selector("h2", "Tournament") }                       
+    it { should have_selector("h2", text: "Tournament") }                       
 
     it "lists all the tournaments for a contest in the system" do
       Tournament.where(contest: contest).each do |tournament|

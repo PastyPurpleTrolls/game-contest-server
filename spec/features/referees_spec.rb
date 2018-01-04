@@ -30,7 +30,7 @@ attach_file('Replay Plugin', file_location)
 attach_file('Test Player', file_location)          
     end
 
-    it { should have_selector("h2", "Add Referee") }             
+    it { should have_selector("h2", text: "Add Referee") }             
 
     describe "invalid information" do
       describe "missing information" do
@@ -167,7 +167,7 @@ attach_file('Replay Plugin', file_location)
 attach_file('Test Player', file_location)          
     end
 
-    it { should have_selector("h2", "Edit Referee") }             
+    it { should have_selector("h2", text: "Edit Referee") }             
     it { should have_field('Name', with: referee.name) }
     it { should have_field('Rules', with: referee.rules_url) }
 
@@ -417,7 +417,7 @@ attach_file('Test Player', file_location)
       visit referee_path(referee)
     end
 
-    it { should have_selector("h2", "Referee") }             
+    it { should have_selector("h2", text: "Referee") }             
     it { should have_content(referee.name) }
     it { should have_link(referee.rules_url) }
     it { should have_content(referee.round_limit) }
@@ -440,7 +440,7 @@ attach_file('Test Player', file_location)
       visit referees_path
     end
 
-    it { should have_selector("h2", "Referee") }             
+    it { should have_selector("h2", text: "Referee") }             
 
     it "does not have adding option" do
       should_not have_link('', href: new_referee_path)
@@ -461,7 +461,7 @@ attach_file('Test Player', file_location)
       visit referees_path
     end
 
-    it { should have_selector("h2", "Referee") }             
+    it { should have_selector("h2", text: "Referee") }             
 
     it "has adding option" do
       should have_link('', href: new_referee_path)

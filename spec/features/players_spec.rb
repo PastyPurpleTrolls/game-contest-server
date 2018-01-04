@@ -21,7 +21,7 @@ describe "PlayersPages" do
 attach_file('Player File', file_location)
     end
 
-    it { should have_selector("h2", "Add Player") }                 
+    it { should have_selector("h2", text: "Add Player") }                 
 
     describe "invalid information" do
       describe "missing information" do
@@ -98,7 +98,7 @@ attach_file('Player File', file_location)
 attach_file('Player File', file_location)
     end
 
-    it { should have_selector("h2", "Edit Player") }                 
+    it { should have_selector("h2", text: "Edit Player") }                 
     it { should have_field('Name', with: player.name) }
     it { should have_field('Description', with: player.description) }
     it { should have_unchecked_field('download') }
@@ -228,7 +228,7 @@ attach_file('Player File', file_location)
 
     before { visit player_path(player) }
 
-    it { should have_selector("h2", "Player") }                 
+    it { should have_selector("h2", text: "Player") }                 
     it { should have_content(player.name) }
     it { should have_content(player.description) }
     it { should have_content('This player can be challenged') }
@@ -248,7 +248,7 @@ attach_file('Player File', file_location)
 
       it { should have_header(text: 'Match') }
       it { should have_content(player_match.result) }
-      it { should have_link(player_match.match_id, match_path(player_match.match)) }
+      it { should have_link(player_match.match_id, href: match_path(player_match.match)) }
 
     end
 
@@ -402,11 +402,11 @@ attach_file('Player File', file_location)
       visit contest_players_path(contest)
     end
 
-    it { should have_selector("h2", "Player") }                 
+    it { should have_selector("h2", text: "Player") }                 
     it "lists all the players for a contest in the system" do
       Player.where(contest: contest).each do |p|
         should have_selector('li', text: p.name)
-        should have_link(p.name, player_path(p))
+        should have_link(p.name, href: player_path(p))
       end
     end
   end

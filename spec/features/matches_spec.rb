@@ -27,7 +27,7 @@ describe "MatchesPages" do
       visit new_contest_match_path(contest)
     end
 
-    it { should have_selector("h2", "Challenge Match") }                       
+    it { should have_selector("h2", text: "Challenge Match") }                       
 
     describe "invalid information" do
       describe "missing information" do
@@ -290,7 +290,7 @@ describe "MatchesPages" do
 
     before { visit match_path(match) }
 
-    it { should have_selector("h2", "Match") }                       
+    it { should have_selector("h2", text: "Match") }                       
     it { should have_content(match.status.capitalize) }
     it { should have_content(distance_of_time_in_words_to_now(match.earliest_start).split.map { |i| i.capitalize }.join(' ')) }
     it { should have_content(match.manager.name) }
@@ -354,7 +354,7 @@ describe "MatchesPages" do
        visit match_path(match) 
        end
        
-    it { should have_selector("h2", "Match") }                       
+    it { should have_selector("h2", text: "Match") }                       
     it { should have_content(match.status.capitalize) }
     it { should have_content(distance_of_time_in_words_to_now(match.earliest_start).split.map { |i| i.capitalize }.join(' ')) }
     it { should have_content(match.manager.name) }
@@ -373,7 +373,7 @@ describe "MatchesPages" do
       visit tournament_matches_path(tournament)
     end
     
-    it { should have_selector("h2", "Match") }                       
+    it { should have_selector("h2", text: "Match") }                       
     
     it "lists all the tournament matches for a single tournament in the system" do
       Match.where(manager: tournament).each do |m|
@@ -417,7 +417,7 @@ describe "MatchesPages" do
       visit contest_matches_path(contest)
     end
 
-    it { should have_selector("h2", "Match") }                       
+    it { should have_selector("h2", text: "Match") }                       
     
     it "should list all the challenge matches for a contest in which the user has a player participating" do
       challenge_matches_player1_is_in.each do |m|
