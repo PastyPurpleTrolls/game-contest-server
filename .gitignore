@@ -43,3 +43,5 @@
 !.gitkeep
 
 coverage
+.vscode
+runserver.sh
