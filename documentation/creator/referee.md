@@ -1,15 +1,15 @@
-#Help - Referees
+# Help - Referees
 
 Referees are the central system for controlling games between players.
 These pieces of software connect with players via sockets, report game
 results, and enforce rules.
 
-##Design
+## Design
 
 Referees may be uploaded as is, or in a `.zip` file that contains the
 referee and a makefile.
 
-###Makefile option
+### Makefile option
 
 The makefile should implement two actions: run, and contest. For example,
 a Python referee might have a makefile like this:
@@ -61,7 +61,7 @@ player.
 Further examples can be found on 
 [GitHub](https://github.com/PastyPurpleTrolls/test/tree/master/examples).
 
-###Standalone referees
+### Standalone referees
 
 Referees should be implemented to support four flags from the game manager.
 
@@ -76,7 +76,7 @@ of this flag.
 - `-t`: (int) Maximum amount of time allowed per match, in seconds. The game
 manager will enforce this time.
 
-##Protocol
+## Protocol
 
 Referees must communicate with the game manager via a TCP socket. Three main
 pieces of information are expected: a player TCP port number, results of
@@ -115,7 +115,7 @@ only be `Win`, `Loss`, and `Tie`.
 - `matchresult`: Sent directly after `match:end`. Pipe separated tuple with
 player name, result, and rounds won. 
 
-###Example communication
+### Example communication
 
 ```
 port:2222
@@ -131,7 +131,7 @@ matchresult:playername|result|roundswon
 matchresult:playername|result|roundswon
 ```
 
-##Replay Plugin
+## Replay Plugin
 
 Every referee should be uploaded along with a replay plugin. Replays are an
 important piece of the learning experience and allow students to figure out
@@ -142,7 +142,7 @@ and any other assets required by the plugin. Allowed compressed file formats
 are `.tar` and `.zip`. The compressed file must be a flat directory structure,
 any folders uploaded will not be available for use.
 
-###Logs
+### Logs
 
 Log files are generated from data sent by the referee over the course of a
 round. This log is loaded and made available to the Replay plugin on load.
@@ -154,7 +154,7 @@ information as to what the game looked like after the move was completed. If
 provided, `gamestate` will be listed as an additional key:value pair in
 the move object.
 
-####Example
+#### Example
 
 ```javascript
 {
@@ -176,7 +176,7 @@ the move object.
 }
 ```
 
-###Example Plugin
+### Example Plugin
 
 The GitHub repository contains an 
 [example referee](https://github.com/PastyPurpleTrolls/game-contest-server/tree/master/examples/guess-w/test_referee.py),
@@ -184,7 +184,7 @@ The GitHub repository contains an
 and an example 
 [Replay plugin](https://github.com/PastyPurpleTrolls/game-contest-server/tree/master/examples/guess-w/test-assets/script.js).
 
-###API
+### API
 
 Every plugin must define `script.js`. This script defines the logic for
 generating gamestates and rendering the game to the screen.
@@ -196,7 +196,7 @@ Please refer the commented source for any questions on exact functionality.
 Please refer to its [documentation](https://pixijs.github.io/docs/index.html)
 when writing rendering code.
 
-####Replay API
+#### Replay API
 
 The Replay API is available through the global Replay object. Plugins should
 modify the prototype (`Replay.prototype`) to define functionality and
