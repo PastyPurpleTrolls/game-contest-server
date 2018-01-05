@@ -16,7 +16,7 @@
     <div class="col-xs-5 first-player-select right">
         <p class="center player-label">Available Players:</p>
         <select id="leftValues" class="player-select" size="5" multiple>
-            <% @contest.players.each do |p| %>
+            <% @contest.players.playable.each do |p| %>
                 <option value=<%= p.id %>><%= p.name %> (<%= p.user.username %>)</option>
             <%end%>  
         </select>
