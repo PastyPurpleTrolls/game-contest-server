@@ -9,7 +9,9 @@ GameContestServer::Application.routes.draw do
   get '/match_logs/:id/std_out', to: 'match_log_infos#std_out'
   get '/match_logs/:id/std_err', to: 'match_log_infos#std_err'
 
-  resources :users
+	resources :users
+	
+	resources :single_brackets
   
   resources :referees do
       member do
