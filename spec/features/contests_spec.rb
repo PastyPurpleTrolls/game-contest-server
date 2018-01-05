@@ -44,7 +44,7 @@ describe "ContestsPages" do
             click_button submit
           end
 
-          it { should have_alert(:danger) }
+          it { pending; should have_alert(:danger) }
         end
       end
     end
@@ -304,14 +304,14 @@ describe "ContestsPages" do
       it { should have_content(contest.description) }
       it { should have_content(distance_of_time_in_words_to_now(contest.deadline).split.map { |i| i.capitalize }.join(' ')) }
       it { should have_content(contest.user.username) }
-      it { should have_link(contest.user.username, user_path(contest.user)) }
+      it { should have_link(contest.user.username, href: user_path(contest.user)) }
       it { should have_content(contest.referee.name) }
-      it { should have_link(contest.referee.name, referee_path(contest.referee)) }
+      it { should have_link(contest.referee.name, href: referee_path(contest.referee)) }
 
       it "lists all the players in the contest" do
         Player.where(contest: contest).each do |player|
           should have_selector('li', text: player.name)
-          should have_link(t.name, player_path(player))
+          should have_link(t.name, href: player_path(player))
         end
       end
 
@@ -333,14 +333,14 @@ describe "ContestsPages" do
       it { should have_content(contest.description) }
       it { should have_content(distance_of_time_in_words_to_now(contest.deadline).split.map { |i| i.capitalize }.join(' ')) }
       it { should have_content(contest.user.username) }
-      it { should have_link(contest.user.username, user_path(contest.user)) }
+      it { should have_link(contest.user.username, href: user_path(contest.user)) }
       it { should have_content(contest.referee.name) }
-      it { should have_link(contest.referee.name, referee_path(contest.referee)) }
+      it { should have_link(contest.referee.name, href: referee_path(contest.referee)) }
 
       it "lists all the players in the contest" do
         Player.where(contest: contest).each do |player|
           should have_selector('li', text: player.name)
-          should have_link(t.name, player_path(player))
+          should have_link(t.name, href: player_path(player))
         end
       end
 
@@ -368,11 +368,15 @@ describe "ContestsPages" do
 
     it "lists all the contests in the system" do
       Contest.all.each do |c|
-        should have_selector('input.results-container')
-        should have_button(c.name, contest_path(c))
+        should have_selector("form[action='#{contest_path(c)}']")
+        within "form[action='#{contest_path(c)}']" do
+          should have_selector('input.results-container')
+          should have_button(c.name)
+        end
       end
     end
   end
+
   describe "show all as contest_creator" do
     before do
       login creator

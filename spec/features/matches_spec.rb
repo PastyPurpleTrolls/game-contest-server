@@ -322,7 +322,7 @@ describe "MatchesPages" do
 
      it "should link to all players" do
         match.players.each_with_index do |p, i|
-          should have_link(p.name, player_path(p))
+          should have_link(p.name, href: player_path(p))
         end
       end
     end
@@ -338,7 +338,7 @@ describe "MatchesPages" do
 
      it "should link to all players" do
         match.players.each_with_index do |p, i|
-          should have_link(p.name, player_path(p))
+          should have_link(p.name, href: player_path(p))
         end
       end
     end
@@ -373,19 +373,19 @@ describe "MatchesPages" do
       visit tournament_matches_path(tournament)
     end
     
-    it { should have_selector("h2", text: "Match") }                       
+    it { should have_selector("h2", text: "Tournament") }                       
     
     it "lists all the tournament matches for a single tournament in the system" do
       Match.where(manager: tournament).each do |m|
         should have_selector('li', text: m.id)
-        should have_link(m.id, match_path(m))
+        should have_link(m.id, href: match_path(m))
       end
     end
 
 		it "should not list matches of other tournaments" do 
       Match.where(manager: t2).each do |m|
         should_not have_selector('li', text: m.id)
-        should_not have_link(m.id, match_path(m))
+        should_not have_link(m.id, href: match_path(m))
       end
 		end
   end
@@ -417,19 +417,19 @@ describe "MatchesPages" do
       visit contest_matches_path(contest)
     end
 
-    it { should have_selector("h2", text: "Match") }                       
+    it { should have_selector("h2", text: "Tournament") }                       
     
     it "should list all the challenge matches for a contest in which the user has a player participating" do
       challenge_matches_player1_is_in.each do |m|
         should have_selector('li', text: m.id)
-        should have_link(m.id, match_path(m))
+        should have_link(m.id, href: match_path(m))
       end
     end
 
 		it "should not list challenge matches (within the same contest) in which the user doesn\'t have a player participating" do
       challenge_matches_player1_is_not_in.each do |m|
         should_not have_selector('li', text: m.id)
-        should_not have_link(m.id, match_path(m))
+        should_not have_link(m.id, href: match_path(m))
       end
 
 		end

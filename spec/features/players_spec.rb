@@ -248,8 +248,7 @@ attach_file('Player File', file_location)
 
       it { should have_header(text: 'Match') }
       it { should have_content(player_match.result) }
-      it { should have_link(player_match.match_id, href: match_path(player_match.match)) }
-
+      it { should have_selector("form[action='#{match_path(player_match.match)}']") }
     end
 
     describe "more complete match history" do
@@ -399,13 +398,12 @@ attach_file('Player File', file_location)
     before do
       5.times { FactoryBot.create(:player, contest: contest) }
 
-      visit contest_players_path(contest)
+      visit contest_path(contest)
     end
 
-    it { should have_selector("h2", text: "Player") }                 
+    it { should have_selector("h2", text: "Contest") }                 
     it "lists all the players for a contest in the system" do
       Player.where(contest: contest).each do |p|
-        should have_selector('li', text: p.name)
         should have_link(p.name, href: player_path(p))
       end
     end

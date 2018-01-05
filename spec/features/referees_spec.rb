@@ -449,7 +449,11 @@ attach_file('Test Player', file_location)
     it "lists all the referees in the system" do
       Referee.all.each do |ref|
         should have_selector('input.results-container')
-        should have_button(ref.name, referee_path(ref))
+        should have_selector("form[action='#{referee_path(ref)}']")
+
+        within "form[action='#{referee_path(ref)}']" do
+          should have_button(ref.name)
+        end
       end
     end
   end

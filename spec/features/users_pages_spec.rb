@@ -268,7 +268,7 @@ describe "UsersPages" do
         visit edit_user_path(user)
       end
 
-      it { should have_selector("h2", text: "Edit User") }             
+      it { should have_selector("h2", text: "Edit Account") }             
       it { should have_field('Username', with: user.username) }
       it { should have_field('Email', with: user.email) }
       it { should_not have_field('Password', with: user.password) }
