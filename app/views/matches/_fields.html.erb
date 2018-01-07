@@ -18,7 +18,10 @@
         <select id="leftValues" class="player-select" size="5" multiple>
             <% @contest.players.playable.each do |p| %>
                 <option value=<%= p.id %>><%= p.name %> (<%= p.user.username %>)</option>
-            <%end%>  
+            <%end%>
+            <% current_user.players.not_playable.each do |p| %>
+                <option value=<%= p.id %>><%= p.name %> (<%= p.user.username %>)</option>
+            <%end%>
         </select>
     </div>
     <div class="player-selectors">

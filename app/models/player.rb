@@ -31,6 +31,10 @@ class Player < ActiveRecord::Base
     where(playable: true)
   end
 
+  def self.not_playable
+    where(playable: false)
+  end
+
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
   def slug_candidates
