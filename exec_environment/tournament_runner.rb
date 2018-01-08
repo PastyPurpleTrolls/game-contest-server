@@ -86,8 +86,7 @@ class TournamentRunner
     count = players.count
     #puts " This many players: "+count.to_s
     if count == 2
-      create_match([players[0], players[1]], @tournament.rounds_per_match)
-      return
+      return create_match([players[0], players[1]], @tournament.rounds_per_match)
     elsif count == 3
       child = create_raw_match(1, "unassigned")
       create_player_matches(child, [players[0]])
@@ -143,7 +142,7 @@ class TournamentRunner
       child_match: child,
       result: result,
     )
-    # puts "   Added path (on " + result + ") from match #" + parent.id.to_s + " to match #" + child.id.to_s
+    puts "   Added path (on " + result + ") from match #" + parent.id.to_s + " to match #" + child.id.to_s
   end
 end
 
