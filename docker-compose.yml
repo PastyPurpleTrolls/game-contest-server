@@ -1,0 +1,9 @@
+version: '2'
+services:
+  web:
+    build: .
+    command: rails s -b 0.0.0.0 -p 8000
+    volumes:
+      - .:/myapp
+    ports:
+      - "8000:8000"
