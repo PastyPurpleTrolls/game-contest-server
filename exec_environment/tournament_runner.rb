@@ -143,7 +143,7 @@ class TournamentRunner
       child_match: child,
       result: result,
     )
-    puts "   Added path (on " + result + ") from match #" + parent.id.to_s + " to match #" + child.id.to_s
+    # puts "   Added path (on " + result + ") from match #" + parent.id.to_s + " to match #" + child.id.to_s
   end
 end
 
