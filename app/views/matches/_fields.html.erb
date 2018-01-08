@@ -12,27 +12,26 @@
     <%= f.select :num_rounds, 1..@contest.referee.round_limit.to_i, {}, class: 'form-input' %>
 </div>
 
-<div class="row multiselector">
-    <div class="col-xs-5 first-player-select right">
-        <p class="center player-label">Available Players:</p>
-        <select id="leftValues" class="player-select" size="5" multiple>
-            <% @contest.players.playable.each do |p| %>
-                <option value=<%= p.id %>><%= p.name %> (<%= p.user.username %>)</option>
-            <%end%>
-            <% current_user.players.not_playable.each do |p| %>
-                <option value=<%= p.id %>><%= p.name %> (<%= p.user.username %>)</option>
-            <%end%>
-        </select>
+<% if @contest.playable_players_by(current_user).count > 0 %>
+    <div class="row multiselector">
+        <div class="col-xs-5 first-player-select right">
+            <p class="center player-label">Available Players:</p>
+            <select id="leftValues" class="player-select" size="5" multiple>
+                <%= render partial: "playable_player", collection: @contest.playable_players_by(current_user) %>
+            </select>
+        </div>
+        <div class="player-selectors">
+            <br>
+            <br>
+            <input type="button" id="btnRight" onclick="addPlayer()" value="&gt;&gt;" />
+            <input type="button" id="btnLeft" onclick="removePlayer()" value="&lt;&lt;" />
+        </div>
+        <div>
+            <p class="player-label">Selected Players:</p>    
+            <select name="match[player_ids][]" id="rightValues" class="player-select" size="5" multiple>
+            </select>
+        </div>
     </div>
-    <div class="player-selectors">
-        <br>
-        <br>
-        <input type="button" id="btnRight" onclick="addPlayer()" value="&gt;&gt;" />
-        <input type="button" id="btnLeft" onclick="removePlayer()" value="&lt;&lt;" />
-    </div>
-    <div>
-        <p class="player-label">Selected Players:</p>    
-        <select name="match[player_ids][]" id="rightValues" class="player-select" size="5" multiple>
-        </select>
-    </div>
-</div>
+<% else %>
+    <p>No challenge-able players yet.</p><br>
+<% end %>
