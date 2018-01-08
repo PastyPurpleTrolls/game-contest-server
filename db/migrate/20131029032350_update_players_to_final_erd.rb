@@ -1,4 +1,4 @@
-class UpdatePlayersToFinalErd < ActiveRecord::Migration
+class UpdatePlayersToFinalErd < ActiveRecord::Migration[5.1]
   def change
     rename_column :players, :code_path, :file_location
     add_column :players, :description, :text

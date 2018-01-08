@@ -1,4 +1,4 @@
-class CreateContests < ActiveRecord::Migration
+class CreateContests < ActiveRecord::Migration[5.1]
   def change
     create_table :contests do |t|
       t.references :user, index: true
