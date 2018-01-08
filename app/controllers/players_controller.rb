@@ -8,8 +8,8 @@ class PlayersController < ApplicationController
   def new
     @contests = Contest.all
     if params[:contest_id] != 'not-specified'
-      contest = Contest.friendly.find(params[:contest_id])
-      @player = contest.players.build
+      @contest = Contest.friendly.find(params[:contest_id])
+      @player = @contest.players.build
     end
   end
 
