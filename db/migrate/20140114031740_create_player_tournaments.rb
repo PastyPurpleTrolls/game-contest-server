@@ -1,4 +1,4 @@
-class CreatePlayerTournaments < ActiveRecord::Migration
+class CreatePlayerTournaments < ActiveRecord::Migration[5.1]
   def change
     create_table :player_tournaments do |t|
       t.references :tournament
