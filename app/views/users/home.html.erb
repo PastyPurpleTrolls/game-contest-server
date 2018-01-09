@@ -1,10 +1,10 @@
 <% setTitle("Home") %>
-<br>
-<ol class="breadcrumb">
-    <li class="active">Home</li>
-</ol>
-<br>
 <% if current_user %>
+    <br>
+        <ol class="breadcrumb">
+            <li class="active">Home</li>
+        </ol>
+    <br>
     <% if current_user.contest_creator? %> 
         <div class="row">
             <%= link_to(new_contest_player_path('not-specified'), method: :get, class: 'col-md-4 col-sm-6 col-xs-12 navbar-brand navbar-default-link-color center outer-home-container') do %>
