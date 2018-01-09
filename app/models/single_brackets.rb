@@ -1,3 +1,0 @@
-class SingleBrackets < ApplicationRecord
-	
-end

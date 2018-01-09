@@ -8,17 +8,16 @@ GameContestServer::Application.routes.draw do
   get '/help/:category/(:page)', to: 'help#show'
   get '/match_logs/:id/std_out', to: 'match_log_infos#std_out'
   get '/match_logs/:id/std_err', to: 'match_log_infos#std_err'
-
-	resources :users
-	
-	resources :single_brackets
+  
+  resources :users
+  resources :brackets, only: [:show]
   
   resources :referees do
-      member do
-          get 'assets/:asset', to: 'referees#show', :constraints => { :asset => /.*/ }, as: 'assets'
-      end
+    member do
+      get 'assets/:asset', to: 'referees#show', :constraints => { :asset => /.*/ }, as: 'assets'
+    end
   end
-
+  
   resources :contests, shallow: true do
     resources :matches, except: [:edit, :update]
     resources :players
@@ -29,11 +28,11 @@ GameContestServer::Application.routes.draw do
       end
     end
   end
-
-
-
+  
+  
+  
   resources :sessions, only: [:new, :create, :destroy]
-
+  
   get 'signup', to: 'users#new', as: :signup
   get 'login', to: 'sessions#new', as: :login
   delete 'logout', to: 'sessions#destroy', as: :logout
