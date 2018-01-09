@@ -72,4 +72,4 @@ RSpec.configure do |config|
   config.include Rails.application.routes.url_helpers
 end
 
-Capybara.default_wait_time = 10
+Capybara.default_max_wait_time = 10
