@@ -262,12 +262,12 @@ attach_file('Test Player', file_location)
       it "does not add a new referee to the system" do
         expect { click_button submit }.not_to change(Referee, :count)
       end
-    end
 
-    it "should modify an existing referee" do
-      expect do
-        click_button submit
-      end.not_to change{ Dir.entries(server_location).size }
+      it "should modify an existing referee" do
+        expect do
+          click_button submit
+        end.not_to change{ Dir.entries(server_location).size }
+      end
     end
   end
 

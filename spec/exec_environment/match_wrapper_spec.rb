@@ -58,9 +58,9 @@ describe "RoundWrapper" do
     @referee = FactoryBot.create(:referee, name: "referee", file_location: Rails.root.join('examples', 'guess-w', 'test_referee.py').to_s )
     @match_wrapper = RoundWrapper.new(@referee , 2, 5, [@player1, @player2], 1)
   end
-	after :each do
-		system("killall python3")
-	end
+	# after :each do
+	# 	system("killall python3")
+	# end
 
   it "bad game, results should be inconclusive - game exceeded allowed time" do
     pending("Isn't really working.  Needs total overhaul")
