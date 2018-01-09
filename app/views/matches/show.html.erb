@@ -2,6 +2,13 @@
     <% content_for :refresh_rate do %>8<% end %>
 <% end %>
 <% setTitle("Match") %>
+<br>
+<ol class="breadcrumb">
+    <li><a href="<%= root_path %>">Home</a></li>
+    <li><a href="<%= contests_path %>">Contests</a></li>
+    <li><a href="<%= contest_path(@match.manager.contest) %>"><%= @match.manager.contest.name %></a></li>
+    <li class="active"><%= @match.manager.name %></li>
+</ol>
 <div class="row">
     <div class="container center display-container col-md-offset-1 col-md-10">
         <div class="row">

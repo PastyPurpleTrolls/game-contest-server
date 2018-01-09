@@ -6,8 +6,7 @@ class MatchesController < ApplicationController
 	 @contests = Contest.all
     if params[:contest_id] != 'not-specified'
    		@contest = Contest.friendly.find(params[:contest_id])
-      contest = Contest.friendly.find(params[:contest_id])
-			@match = contest.matches.build
+			@match = @contest.matches.build
 			@match.manager.players.each do |f|
 				@match.player_matches.build(player: f )
 			end
