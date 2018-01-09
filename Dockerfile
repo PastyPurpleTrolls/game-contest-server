@@ -9,7 +9,7 @@ COPY . /myapp/
 
 RUN bundle install
 RUN bin/rails db:environment:set RAILS_ENV=development
-RUN bin/rails db:migrate RAILS_ENV=development
+RUN bin/rails db:migrate RAILS_ENV=development --trace
 
 # RUN rake db:schema:load RAILS_ENV=development --trace
 # RUN rake db:schema:load --trace
