@@ -296,11 +296,57 @@ describe 'TournamentsPages' do
 
   end # show
 
+  describe 'search with pagination' do
+    let(:submit) { 'Search' }
+
+    before do
+      20.times { FactoryBot.create(:tournament, contest: contest) }
+      visit contest_path(contest)
+      fill_in 'search', with: 'Tournament'
+      click_button submit
+    end
+
+    it { should have_content("Tournaments (1-10 of #{Tournament.count})") }
+    it { should have_link('2') }
+    it { should_not have_link('3') }
+  end
+
+  describe 'search without pagination' do
+    let(:submit) { 'Search' }
+    let!(:tournament2) { FactoryBot.create(:tournament, contest: contest) }
+
+    before do
+      visit contest_path(contest)
+      fill_in 'tournament_search', with: 'Player'
+      click_button submit
+    end
+
+    it 'should return results' do
+      should have_content("Tournaments (1-2 of #{Tournament.count})")
+      should have_link(tournament.name, href: tournament_path(tournament))
+      should have_link(tournament2.name, href: tournament_path(tournament2))
+    end
+  end
+
+  describe 'search_error'do
+    let(:submit) { 'Search' }
+
+    before do
+      visit contest_path(contest)
+      fill_in 'search', with: 'junk input'
+      click_button submit
+    end
+
+    it { should have_content("Tournaments (0 of #{Tournament.count})") }
+    it { should_not have_link('2') }
+    it { should have_content('No players found') }
+  end
+
   describe "show all" do
     before do
       5.times { FactoryBot.create(:tournament, contest: contest) }
 
-      visit contest_tournaments_path(contest)
+      visit contest_path(contest)
     end
 
     it { should have_selector("h2", text: "Tournament") }                       

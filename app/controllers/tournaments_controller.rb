@@ -1,6 +1,6 @@
 class TournamentsController < ApplicationController
-  before_action :ensure_user_logged_in, except: [:index, :show]
-  before_action :ensure_contest_creator, except: [:index, :show]
+  before_action :ensure_user_logged_in, except: :show
+  before_action :ensure_contest_creator, except: :show
   before_action :ensure_contest_owner, only: [:new ,:edit, :update , :destroy]
 
   def new
@@ -31,14 +31,6 @@ class TournamentsController < ApplicationController
       @contests = Contest.all
       flash.now[:danger] = 'Tournament not saved'
       render 'new'
-    end
-  end
-
-  def index
-    @contest = Contest.friendly.find(params[:contest_id])
-    @tournaments = Tournament.search(params[:search]).paginate(:per_page => 10, :page => params[:page])
-    if @tournaments.length == 0
-      flash.now[:info] = "There were no tournaments that matched your search. Please try again!"
     end
   end
 
