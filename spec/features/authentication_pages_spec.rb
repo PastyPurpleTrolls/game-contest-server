@@ -37,8 +37,6 @@ describe "AuthenticationPages" do
       it { should_not have_link('Sign Up', href: signup_path) }
       it { should_not have_button('Sign Up') }
 
-      it { should have_alert(:success) }
-
       describe "followed by logout" do
         before { click_link 'Log Out' }
 

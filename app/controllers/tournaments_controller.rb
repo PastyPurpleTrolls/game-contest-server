@@ -68,6 +68,7 @@ class TournamentsController < ApplicationController
     @tournament.player_tournaments.each{|m|m.destroy}
     @tournament.matches.each{|m|m.destroy}
     @tournament.destroy
+    flash[:success] = 'Tournament deleted'
     redirect_to contest_path(@tournament.contest)
   end
 

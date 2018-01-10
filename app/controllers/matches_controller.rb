@@ -127,6 +127,7 @@ class MatchesController < ApplicationController
     @match.parent_matches.each{ |m|m.destroy}
     @match.child_matches.each{ |m|m.destroy}
     @match.destroy
+    flash[:success] = 'Match deleted'
     redirect_to @match.manager
   end
 
