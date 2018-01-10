@@ -27,8 +27,8 @@
                     </ul>
                 </li>
             <% else %>
-                <li><%= button_to 'Log In', login_path, method: :get, class: 'btn btn-info navbar-btn' unless current_page?(login_path) %></li>
-                <li><%= button_to 'Sign Up', signup_path, method: :get, class: 'btn btn-warning navbar-btn' unless current_page?(signup_path) %></li>
+                <li><%= button_to 'Log In', login_path, method: :get, class: 'btn btn-primary navbar-btn' unless current_page?(login_path) %></li>
+                <li><%= button_to 'Sign Up', signup_path, method: :get, class: 'btn btn-danger navbar-btn' unless current_page?(signup_path) %></li>
             <% end %>
         </ul>
     </div>
