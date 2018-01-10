@@ -62,9 +62,9 @@ $btn-warning-bg:       darken($brand-warning, 10%);
 $btn-warning-color:    #FFFFFF;//lighten($brand-warning, 35%);
 
 // Danger (red)
-$state-danger-bg:      lighten($brand-danger, 10%);
-$state-danger-text:    darken($brand-danger, 30%);
-$state-danger-border: darken($state-danger-bg, 25%);
+$state-danger-bg:      #C10000;
+$state-danger-text:    #FFFFFF;
+$state-danger-border:  #C10000;
 $btn-danger-bg:        darken($brand-danger, 10%);
 $btn-danger-color:     #FFFFFF;//lighten($brand-danger, 35%);
 
