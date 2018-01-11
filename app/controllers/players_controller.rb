@@ -1,18 +1,9 @@
 class PlayersController < ApplicationController
   include ApplicationHelper
-  before_action :ensure_user_logged_in, except: [:index, :show]
+  before_action :ensure_user_logged_in, except: :show
   before_action :ensure_player_owner, only: [:edit, :update, :destroy]
 
-
   require 'will_paginate/array'
-
-  def index
-    @contest = Contest.friendly.find(params[:contest_id])
-    @players = Player.search(params[:search]).paginate(:per_page => 10, :page => params[:page])
-    if @players.length ==0
-      flash.now[:info] = "There were no players that matched your search. Please try again!"
-    end
-  end
 
   def new
     @contests = Contest.all

@@ -2,7 +2,6 @@ require 'rails_helper'
 
 describe Tournament do
   describe "available routes" do
-    specify { expect(get(contest_tournaments_path(1))).to be_routable }
     specify { expect(post(contest_tournaments_path(1))).to be_routable }
     specify { expect(get(new_contest_tournament_path(1))).to be_routable }
     specify { expect(get(edit_tournament_path(1))).to be_routable }

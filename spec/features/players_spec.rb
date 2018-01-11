@@ -278,7 +278,7 @@ attach_file('Player File', file_location)
       it { should have_content('Record: 5-0') }
     end
 
-    describe "win-less history" do
+    describe "win-loss history" do
       before do
         8.times { FactoryBot.create(:losing_match, player: player) }
 
@@ -291,106 +291,53 @@ attach_file('Player File', file_location)
     end
   end
 
-  describe "pagination" do
-    let (:slug) { contest.slug }
+  describe 'search with pagination' do
+    let(:submit) { 'Search' }
 
     before do
-      30.times { FactoryBot.create(:player, contest: contest) }
-
-      visit contest_players_path(contest)
-    end
-
-    it { should have_content('10 Players') }
-    it { should have_selector('div.pagination') }
-    it { should have_link('2', href: "/contests/#{slug}/players?page=2") }
-    it { should have_link('3', href: "/contests/#{slug}/players?page=3") }
-    it { should_not have_link('4', href: "/contests/#{slug}/players?page=4") }
-  end
-
-  describe 'search_error'do
-    let(:submit) {"Search"}
-
-    before do
-      FactoryBot.create(:player, name: "searchtest1", contest: contest)
-      FactoryBot.create(:player, name: "peter1", contest: contest)
-
-      visit "/contests/1/players"
-      fill_in 'search', with:';'
+      20.times { FactoryBot.create(:player, contest: contest) }
+      visit contest_path(contest)
+      fill_in 'search', with: 'Player'
       click_button submit
     end
-    after(:all)  { User.delete_all }
-    it { should have_content("0 Players") }
-    it { should_not have_link('2') }#, href: "/contests?utf8=✓&direction=&sort=&search=searchtest4&commit=Search" ) }
-    it {should have_alert(:info) }
-  end
-  describe 'search_partial' do
-    let(:submit) {"Search"}
-    before do
-      FactoryBot.create(:player, name: "searchtest1")
-      FactoryBot.create(:player, name: "peter1")
-      FactoryBot.create(:player, name: "searchtest2")
-      FactoryBot.create(:player, name: "peter2")
-      FactoryBot.create(:player, name: "searchtest9")
-      FactoryBot.create(:player, name: "peter9")
-      FactoryBot.create(:player, name: "searchtest4")
-      FactoryBot.create(:player, name: "peter4")
-      FactoryBot.create(:player, name: "searchtest5")
-      FactoryBot.create(:player, name: "peter5")
-      FactoryBot.create(:player, name: "searchtest6")
-      FactoryBot.create(:player, name: "peter6")
-      FactoryBot.create(:player, name: "searchtest7")
-      FactoryBot.create(:player, name: "peter7")
-      FactoryBot.create(:player, name: "searchtest8")
-      FactoryBot.create(:player, name: "peter8")
-      visit "/contests/1/players"
-      fill_in 'search', with:'te'
-      click_button submit
+
+    it 'displays correct amount of players and paginates correctly' do
+      should have_content("Players (1-10 of #{Player.count})")
+      should have_link('2')
+      should_not have_link('3')
     end
-    after(:all)  { User.delete_all }
-    it { should have_content("10 Players") }
-    it { should have_link('2') }
-    it { should_not have_link('3') }
-    # it { should_not have_link('3', href: "/contests?utf8=✓&direction=&sort=&search=te&commit=Search") }
   end
 
-  # Ummm. What is this? TODO
-  describe 'search_pagination' do
-    let(:submit) {"Search"}
-    before do
-      FactoryBot.create(:player, name: "searchtest1")
-      FactoryBot.create(:player, name: "peter1")
-      FactoryBot.create(:player, name: "searchtest2")
-      FactoryBot.create(:player, name: "peter2")
-      FactoryBot.create(:player, name: "searchtest9")
-      FactoryBot.create(:player, name: "peter9")
-      FactoryBot.create(:player, name: "searchtest4")
-      FactoryBot.create(:player, name: "peter4")
-      FactoryBot.create(:player, name: "searchtest5")
-      FactoryBot.create(:player, name: "peter5")
-      FactoryBot.create(:player, name: "searchtest6")
-      FactoryBot.create(:player, name: "peter6")
-      visit "/contests/1/players"
-      fill_in 'search', with:'searchtest4'
-      click_button submit
-    end
-    after(:all)  { User.delete_all }
-    it { should have_content("1 Player") }
-    it { should_not have_link('2') }#, href: "/contests?utf8=✓&direction=&sort=&search=searchtest4&commit=Search" ) }
-  end
-
-  describe 'search' do
-    let(:submit) { "Search" }
+  describe 'search without pagination' do
+    let(:submit) { 'Search' }
+    let!(:player2) { FactoryBot.create(:player, contest: contest) }
 
     before do
-      FactoryBot.create(:player, name: "searchtest")
-      visit "/contests/1/players"
-      fill_in 'search', with:'searchtest'
+      visit contest_path(contest)
+      fill_in 'player_search', with: 'Player'
       click_button submit
     end
 
     it 'should return results' do
-      should have_content('searchtest')
-      should have_content('1 Player')
+      should have_content("Players (1-2 of #{Player.count})")
+      should have_link(player.name, href: player_path(player))
+      should have_link(player2.name, href: player_path(player2))
+    end
+  end
+
+  describe 'search_error'do
+    let(:submit) { 'Search' }
+
+    before do
+      visit contest_path(contest)
+      fill_in 'search', with: 'junk input'
+      click_button submit
+    end
+
+    it 'does not display any players' do
+      should have_content("Players (0 of #{Player.count})")
+      should_not have_link('2')
+      should have_content('No players found')
     end
   end
 
