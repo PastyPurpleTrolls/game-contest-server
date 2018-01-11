@@ -349,11 +349,10 @@ describe 'TournamentsPages' do
       visit contest_path(contest)
     end
 
-    it { should have_selector("h2", text: "Tournament") }                       
+    it { should have_selector("h2", text: "Contest") }
 
     it "lists all the tournaments for a contest in the system" do
       Tournament.where(contest: contest).each do |tournament|
-        should have_selector('li', text: tournament.name)
         should have_link(tournament.name, href: tournament_path(tournament))
       end
     end
