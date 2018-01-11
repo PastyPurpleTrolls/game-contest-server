@@ -13,11 +13,11 @@
             </div>
             <% if @match.completed? %>
                 <div class="col-md-6">
-                    <p class="info-container">Completed: <%= distance_of_time_in_words_to_now(@match.completion).split.map { |i| i.capitalize }.join(' ') %> Ago</p>
+                    <p class="info-container">Completed: <%= timeRelativeToNow(@match.completion) %></p>
                 </div>
             <% else %>                
                 <div class="col-md-6">
-                    <p class="info-container">Earliest Start Time: <%= distance_of_time_in_words_to_now(@match.earliest_start).split.map { |i| i.capitalize }.join(' ') %> Left</p>
+                    <p class="info-container">Earliest Start Time: <%= timeRelativeToNow(@match.earliest_start) %></p>
                 </div>
             <% end %>
             <% if current_user==@match.manager.referee.user && @match.match_log_info %>
