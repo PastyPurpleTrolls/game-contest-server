@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require 'rails_helper'
 
 describe "UsersPages" do
@@ -121,7 +119,7 @@ describe "UsersPages" do
         visit users_path
       end
 
-      it {should have_header('Users')}
+      it {should have_header(text: 'Users')}
       it {should have_content('10 Users')}
 
       User.all.each do |user|
@@ -145,7 +143,6 @@ describe "UsersPages" do
       should_not have_link('4', href: "/?page=4")
     end
   end
-
 
   describe 'search error' do
     let(:submit) {"Search"}
@@ -464,6 +461,7 @@ describe "UsersPages" do
           specify {expect(response).to redirect_to(users_path)}
         end
       end
+
       describe "as admin deleting yourself" do
         let! (:admin) {FactoryBot.create(:admin)}
 

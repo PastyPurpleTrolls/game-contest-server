@@ -255,41 +255,48 @@ describe "PlayersPages" do
 
     describe "more complete match history" do
       before do
-        7.times {FactoryBot.create(:winning_match, player: player)}
-        4.times {FactoryBot.create(:losing_match, player: player)}
+        FactoryBot.create_list(:winning_match, 7, player: player)
+        FactoryBot.create_list(:losing_match, 4, player: player)
 
         visit player_path(player)
       end
 
       it {should have_header(text: 'Matches')}
-      it {should have_content('Win', count: 7)}
-      #Should only have 3 losses displayed because the 4th is on the next page.
-      it {should have_content('Loss', count: 3)}
-      it {should have_content('Record: 7-4')}
+
+      it "shows all match information" do
+        should have_content('Win', count: 7)
+        #Should only have 3 losses displayed because the 4th is on the next page.
+        should have_content('Loss', count: 3)
+        should have_content('Record: 7-4')
+      end
     end
 
     describe "undefeated history" do
       before do
-        5.times {FactoryBot.create(:winning_match, player: player)}
+        FactoryBot.create_list(:winning_match, 5, player: player)
 
         visit player_path(player)
       end
 
-      it {should have_content('Win', count: 5)}
-      it {should_not have_content('Loss')}
-      it {should have_content('Record: 5-0')}
+      it "shows all match information" do
+        should have_content('Win', count: 5)
+        should_not have_content('Loss')
+        should have_content('Record: 5-0')
+      end
     end
 
     describe "win-loss history" do
       before do
-        8.times {FactoryBot.create(:losing_match, player: player)}
+        FactoryBot.create_list(:losing_match, 8, player: player)
 
         visit player_path(player)
       end
 
-      it {should_not have_content('Win')}
-      it {should have_content('Loss', count: 8)}
-      it {should have_content('Record: 0-8')}
+      it "shows all match information" do
+        should_not have_content('Win')
+        should have_content('Loss', count: 8)
+        should have_content('Record: 0-8')
+      end
     end
   end
 
@@ -297,7 +304,7 @@ describe "PlayersPages" do
     let(:submit) {'Search'}
 
     before do
-      20.times {FactoryBot.create(:player, contest: contest)}
+      FactoryBot.create_list(:player, 20, contest: contest)
       visit contest_path(contest)
       fill_in 'search', with: 'Player'
       click_button submit
@@ -327,7 +334,7 @@ describe "PlayersPages" do
     end
   end
 
-  describe 'search_error' do
+  describe 'search error' do
     let(:submit) {'Search'}
 
     before do
@@ -345,7 +352,7 @@ describe "PlayersPages" do
 
   describe "show all" do
     before do
-      5.times {FactoryBot.create(:player, contest: contest)}
+      FactoryBot.create_list(:player, 5, contest: contest)
 
       visit contest_path(contest)
     end
