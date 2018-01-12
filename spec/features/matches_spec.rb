@@ -71,6 +71,18 @@ describe "MatchesPages" do
       end
     end
 
+    describe "match with unplayable players via POST", type: :request do
+      before do
+        login creator, avoid_capybara: true
+        post contest_matches_path(contest),
+             params: {match: {earliest_start: now.strftime("%F %T"),
+                              player_ids: [player8.id, player9.id, player10.id, player11.id],
+                              num_rounds: 3}}
+      end
+
+      specify {expect(Match.count).to eq(0)}
+    end
+
     describe "invalid information" do
       describe "missing information" do
         it "should not create a match" do
