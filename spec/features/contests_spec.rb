@@ -205,11 +205,11 @@ describe "ContestsPages" do
       should have_selector('div.pagination')
       should have_link('2', href: "/contests?page=2")
       should have_link('3', href: "/contests?page=3")
-      should_not have_link('4', href: "/contests?page=4")
+      should_not have_link('4')
     end
   end
 
-  describe 'search_error' do
+  describe 'search error' do
     let(:submit) {"Search"}
 
     before do
@@ -219,10 +219,10 @@ describe "ContestsPages" do
     end
 
     it {should have_content("No contests found")}
-    it {should_not have_link('2', href: "/contests?page=2")}
+    it {should_not have_link('2')}
   end
 
-  describe 'search_partial' do
+  describe 'search partial' do
     let(:submit) {"Search"}
 
     before do
@@ -252,7 +252,7 @@ describe "ContestsPages" do
 
     it 'should return results' do
       should have_button('searchtest')
-      should have_content('1 Contest')
+      should have_content('1 found')
     end
   end
 
