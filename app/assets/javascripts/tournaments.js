@@ -9,7 +9,7 @@ $(function () {
     console.log(data);
     $('.bracket').bracket({
       init: data,
-      teamWidth: 100,
+      teamWidth: 75,
       skipConsolationRound: true
     })
   });

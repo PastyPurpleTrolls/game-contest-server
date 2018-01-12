@@ -1,13 +1,12 @@
 class BracketsController < ApplicationController
-  # incorrect scoring
-  # scoring when more than 1 match
+  # 32 155~170 34~18
+  # 33 171~188 34~16
   # handle ties referee has to decide winner
   def show
     tourney = Tournament.friendly.find(params[:id])
     match_ids = get_match_ids(tourney.id)
     player_ids = get_player_ids(tourney.id)
-    names = get_names(player_ids)
-    bracket = create_json_bracket(player_ids, match_ids, names)
+    bracket = generate_bracket(player_ids, match_ids, get_names(player_ids))
     render json: bracket
   end
 
@@ -32,31 +31,64 @@ class BracketsController < ApplicationController
 
   def get_names(player_ids)
     names = []
-    res = Player.where(id: player_ids).reorder(id: :asc)
+    res = Player.select(:id, :name).where(id: player_ids).reorder(id: :asc)
     res.each do |row|
       names.insert(0, row.name)
     end
     return names
   end
 
-  def get_match_results(matches)
-    results = []
-    matches.each do |row|
-      x = row.result
-      if (row.result.eql? 'Win')
-        results.push(1)
-      else
-        results.push(0)
-      end
-    end
-    return results
+  def number_of_matches(round_depth)
+    return 2 ** (round_depth - 1)
   end
 
-  def create_json_bracket(player_ids, match_ids, names)
-    if (names.length == 0)
-      raise 'No players were found'
+  def extra_players?(names)
+    team_size_diff = names.length - (2 ** Math.log2(names.length).floor)
+    if(team_size_diff == 0)
+      return 0
+    else
+      return team_size_diff
     end
-    return build_tournament_bracket(names, player_ids, match_ids).to_json
+  end
+
+  def generate_bracket(player_ids, match_ids, names)
+    i = 0
+    players = []
+    extra_players = []
+    depth = Math.log2(names.length).floor
+    team_matchups = number_of_matches(depth) * 2
+    extra_names = extra_players?(names)
+    bracket = {:teams => [], :results =>  []}
+
+    if(extra_names != 0)
+      extra_players = names.pop(extra_names)
+    end
+
+    while i < (team_matchups / 2)
+      players[i] = [names.shift, names.shift]
+      i += 1
+    end
+    
+    bracket[:teams] = players
+    bracket[:results] = generate_results(Math.log2(team_matchups).to_i)
+    return bracket
+  end
+
+  def generate_results(depth)
+    results = Array.new(depth, [])
+    matches_per_round = number_of_matches(depth)
+
+    (0..(depth - 1)).step(1) do |i|
+      matches_per_round = number_of_matches(depth)
+      results[i] = Array.new(matches_per_round, [nil, nil])
+      depth -= 1
+    end
+
+    return results
+  end
+    
+  def populate_bracket()
+    return nil
   end
 
   def build_results(results, match_results, number_of_matches, bracket, depth)
@@ -84,32 +116,5 @@ class BracketsController < ApplicationController
       depth += 1
       build_results(results, match_results, number_of_matches, bracket, depth)
     end
-  end
-
-  def build_tournament_bracket(names, player_ids, match_ids)
-    i = 0
-    count = names.length
-    round_depth = Math.log2(count).ceil
-    teams_size = 2 ** (round_depth - 1)
-
-    results = []
-    bracket = {:teams => [], :results =>  []}
-    matches = PlayerMatch.where(match_id: match_ids).reorder(id: :asc)
-    match_results = get_match_results(matches)
-
-    while i < (teams_size)
-      if (!names.any?)
-        results[i] = ( [nil, nil] )
-      elsif (names.length == 1)
-        results[i] = [names.pop, nil]
-      else
-        results[i] = names.pop(2)
-      end
-      i += 1
-    end 
-
-    bracket[:teams] = results.reverse
-    bracket[:results] = build_results(nil, match_results, count, bracket, 0)
-    return bracket
   end
 end
