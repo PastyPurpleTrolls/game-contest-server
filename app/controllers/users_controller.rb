@@ -1,9 +1,10 @@
 class UsersController < ApplicationController
+  include ApplicationHelper
+
   before_action :ensure_user_logged_out, only: [:new, :create]
   before_action :ensure_user_logged_in, only: [:edit, :update, :destroy]
   before_action :ensure_correct_user, only: [:edit, :update]
   before_action :ensure_admin, only: [:destroy]
-
 
   def new
     @user = User.new
@@ -21,10 +22,8 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.search(params[:search]).paginate(:per_page => 10, :page => params[:page])
-    if @users.length == 0
-      flash.now[:info] = "There were no users that matched your search. Please try again!"
-    end
+    @per_page = 10
+    @users = User.search(params[:search]).paginate(per_page: @per_page, :page => params[:page])
   end
 
 

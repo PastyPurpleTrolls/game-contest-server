@@ -320,7 +320,7 @@ describe 'TournamentsPages' do
     end
   end
 
-  describe 'search_error' do
+  describe 'search error' do
     let(:submit) {'Search'}
 
     before do
@@ -331,7 +331,7 @@ describe 'TournamentsPages' do
 
     it {should have_content("Tournaments (0 of #{Tournament.count})")}
     it {should_not have_link('2')}
-    it {should have_content('No players found')}
+    it {should have_content('No tournaments found')}
   end
 
   describe "show all" do

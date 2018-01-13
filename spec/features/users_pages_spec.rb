@@ -120,7 +120,6 @@ describe "UsersPages" do
       end
 
       it {should have_header(text: 'Users')}
-      it {should have_content('10 Users')}
 
       User.all.each do |user|
         it {should have_selector('li', text: user.username)}
@@ -130,17 +129,38 @@ describe "UsersPages" do
 
   describe "pagination" do
     before do
-      FactoryBot.create_list(:user, 30)
+      FactoryBot.create_list(:user, 25)
       visit users_path
     end
 
-    it {should have_content('10 Users')}
+    it {should have_content("#{User.count} found (displaying 1-10)")}
 
     it 'displays properly' do
       should have_selector('div.pagination')
+      should_not have_link('← Previous')
+      should_not have_link('1')
       should have_link('2', href: "/users?page=2")
       should have_link('3', href: "/users?page=3")
-      should_not have_link('4', href: "/?page=4")
+      should_not have_link('4')
+      should have_link('Next →', href: "/users?page=2")
+    end
+
+    describe "last page" do
+      before { click_link('3', href: "/users?page=3") }
+
+      it 'displays properly' do
+        should have_selector('div.pagination')
+        should have_link('← Previous', href: "/users?page=2")
+        should have_link('1', href: "/users?page=1")
+        should have_link('2', href: "/users?page=2")
+        should_not have_link('3')
+        should_not have_link('4')
+        should_not have_link('Next →')
+      end
+
+      it 'properly shows records displaying' do
+        should have_content("#{User.count} found (displaying 21-25)")
+      end
     end
   end
 
@@ -171,7 +191,6 @@ describe "UsersPages" do
     it {should have_content("#{User.count} found (displaying 1-10)")}
 
     it 'paginates properly' do
-      should have_link('Next →')
       should have_link('2')
       should_not have_link('3')
     end

@@ -192,20 +192,39 @@ describe "ContestsPages" do
   end
 
   describe "pagination" do
-    let (:contest) {FactoryBot.create(:contest)}
-
     before do
-      FactoryBot.create_list(:contest, 30)
+      FactoryBot.create_list(:contest, 25)
       visit contests_path
     end
 
     it {should have_content("#{Contest.count} found (displaying 1-10)")}
 
-    it 'paginates properly' do
+    it 'displays properly' do
       should have_selector('div.pagination')
+      should_not have_link('← Previous')
+      should_not have_link('1')
       should have_link('2', href: "/contests?page=2")
       should have_link('3', href: "/contests?page=3")
       should_not have_link('4')
+      should have_link('Next →', href: "/contests?page=2")
+    end
+
+    describe "last page" do
+      before { click_link('3', href: "/contests?page=3") }
+
+      it 'displays properly' do
+        should have_selector('div.pagination')
+        should have_link('← Previous', href: "/contests?page=2")
+        should have_link('1', href: "/contests?page=1")
+        should have_link('2', href: "/contests?page=2")
+        should_not have_link('3')
+        should_not have_link('4')
+        should_not have_link('Next →')
+      end
+
+      it 'properly shows records displaying' do
+        should have_content("#{Contest.count} found (displaying 21-25)")
+      end
     end
   end
 
