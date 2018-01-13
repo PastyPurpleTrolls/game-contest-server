@@ -285,6 +285,43 @@ describe 'TournamentsPages' do
     end
   end
 
+  describe "pagination" do
+    before do
+      FactoryBot.create_list(:tournament, 25, contest: contest)
+      visit contest_path(contest)
+    end
+
+    it {should have_content("#{contest.tournaments.count} found (displaying 1-10)")}
+
+    it 'displays properly' do
+      should have_selector('div.pagination')
+      should_not have_link('← Previous')
+      should_not have_link('1')
+      should have_link('2', href: "/contests/#{contest.slug}?page=2")
+      should have_link('3', href: "/contests/#{contest.slug}?page=3")
+      should_not have_link('4', href: "/contests/#{contest.slug}?page=4")
+      should have_link('Next →', href: "/contests/#{contest.slug}?page=2")
+    end
+
+    describe "last page" do
+      before { click_link('3', href: "/contests/#{contest.slug}?page=3") }
+
+      it 'displays properly' do
+        should have_selector('div.pagination')
+        should have_link('← Previous', href: "/contests/#{contest.slug}?page=2")
+        should have_link('1', href: "/contests/#{contest.slug}?page=1")
+        should have_link('2', href: "/contests/#{contest.slug}?page=2")
+        should_not have_link('3', href: "/contests/#{contest.slug}?page=3")
+        should_not have_link('4', href: "/contests/#{contest.slug}?page=4")
+        should_not have_link('Next →')
+      end
+
+      it 'properly shows records displaying' do
+        should have_content("#{contest.tournaments.count} found (displaying 21-25)")
+      end
+    end
+  end
+
   describe 'search with pagination' do
     let(:submit) {'Search'}
 
@@ -295,28 +332,29 @@ describe 'TournamentsPages' do
       click_button submit
     end
 
-    it {should have_content("Tournaments (1-10 of #{Tournament.count})")}
+    it {should have_content("#{contest.tournaments.count} found (displaying 1-10)")}
 
     it "paginates properly" do
-      should have_link('2')
-      should_not have_link('3')
+      should have_link('2', href: "/contests/#{contest.slug}?page=2")
+      should_not have_link('3', href: "/contests/#{contest.slug}?page=3")
     end
   end
 
   describe 'search without pagination' do
     let(:submit) {'Search'}
-    let!(:tournament2) {FactoryBot.create(:tournament, contest: contest)}
 
     before do
+      FactoryBot.create(:tournament, contest: contest, name: "searchtest")
       visit contest_path(contest)
-      fill_in 'tournament_search', with: 'Player'
+      fill_in 'tournament_search', with: 'searchtest'
       click_button submit
     end
 
     it 'should return results' do
-      should have_content("Tournaments (1-2 of #{Tournament.count})")
-      should have_link(tournament.name, href: tournament_path(tournament))
-      should have_link(tournament2.name, href: tournament_path(tournament2))
+      should have_button('searchtest')
+      should have_content('1 found')
+      should_not have_content('displaying')
+      should_not have_link('2', href: "/contests/#{contest.slug}?page=2")
     end
   end
 
@@ -330,7 +368,7 @@ describe 'TournamentsPages' do
     end
 
     it {should have_content("Tournaments (0 of #{Tournament.count})")}
-    it {should_not have_link('2')}
+    it {should_not have_link('2', href: "/contests/#{contest.slug}?page=2")}
     it {should have_content('No tournaments found')}
   end
 

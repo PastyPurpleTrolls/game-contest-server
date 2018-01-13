@@ -372,7 +372,7 @@ describe "RefereePages" do
     it {should have_content("#{Referee.count} found (displaying 1-10)")}
 
     it "paginates properly" do
-      should have_link('2')
+      should have_link('2', href: "/referees?page=2")
       should_not have_link('3')
     end
   end
@@ -390,6 +390,8 @@ describe "RefereePages" do
     it 'should return results' do
       should have_button('searchtest')
       should have_content('1 found')
+      should_not have_content('displaying')
+      should_not have_link('2')
     end
   end
 

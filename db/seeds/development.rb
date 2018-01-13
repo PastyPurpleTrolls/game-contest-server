@@ -155,7 +155,7 @@ player7 = Player.create!(
 )
 (8..11).each do |player_num|
   Player.create!(
-    user: creator,
+    user: student,
     contest: contest,
     description: "test",
     name: "Player #{player_num}",

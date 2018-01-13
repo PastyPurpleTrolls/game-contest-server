@@ -178,7 +178,7 @@ describe "UsersPages" do
     it {should_not have_link('2')}
   end
 
-  describe 'search partial' do
+  describe 'search with pagination' do
     let(:submit) {"Search"}
 
     before do
@@ -191,12 +191,12 @@ describe "UsersPages" do
     it {should have_content("#{User.count} found (displaying 1-10)")}
 
     it 'paginates properly' do
-      should have_link('2')
+      should have_link('2', href: "/users?page=2")
       should_not have_link('3')
     end
   end
 
-  describe 'search' do
+  describe 'search without pagination' do
     let(:submit) {"Search"}
 
     before do
@@ -209,6 +209,8 @@ describe "UsersPages" do
     it 'should return results' do
       should have_button('searchtest')
       should have_content('1 found')
+      should_not have_content('displaying')
+      should_not have_link('2')
     end
   end
 
