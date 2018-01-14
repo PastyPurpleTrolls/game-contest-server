@@ -7,7 +7,9 @@ class ContestsController < ApplicationController
 
   def index
     @per_page = 10
-    @contests = Contest.search(params[:search]).paginate(per_page: @per_page, page: params[:page])
+    @contests = Contest
+                    .search(params[:search])
+                    .paginate(per_page: @per_page, page: params[:page])
   end
 
   def new
@@ -30,7 +32,6 @@ class ContestsController < ApplicationController
   end
 
   def update
-
     if @contest.update(acceptable_params)
       flash[:success] = 'Contest updated.'
       redirect_to @contest
@@ -40,9 +41,14 @@ class ContestsController < ApplicationController
   end
 
   def show
+    @per_page = 10
     @contest = Contest.friendly.find(params[:id])
-    @tournaments = @contest.tournaments.paginate(per_page: 10, page: params[:page])
-    @players = @contest.players.paginate(per_page: 10, page: params[:page])
+    @tournaments = @contest.tournaments
+                       .search(params[:tournament_search])
+                       .paginate(per_page: @per_page, page: params[:tournament_page])
+    @players = @contest.players
+                   .search(params[:player_search])
+                   .paginate(per_page: @per_page, page: params[:player_page])
   end
 
   def destroy

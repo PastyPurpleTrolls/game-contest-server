@@ -191,8 +191,10 @@ describe "UsersPages" do
     it {should have_content("#{User.count} found (displaying 1-10)")}
 
     it 'paginates properly' do
-      should have_link('2', href: "/users?page=2")
-      should_not have_link('3')
+      within '#user_pagination' do
+        should have_link('2')
+        should_not have_link('3')
+      end
     end
   end
 

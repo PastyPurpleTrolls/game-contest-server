@@ -3,7 +3,7 @@
     <div class="container center display-container col-md-offset-1 col-md-10">
         <div class="row">
             <div class="col-xs-9">
-                <h3 class="headings left"><%= @contest.name %></h3>
+                <h1 class="headings left"><%= @contest.name %></h1>
             </div>
             <% if current_user == @contest.user and current_user.contest_creator %>
                 <div class="col-xs-3 right form-dropdown">
@@ -41,9 +41,9 @@
 <div class="row">
     <div class="container outer-home-container col-md-5 col-md-offset-1">
         <div class="row">
-            <div class="display-container center">
+            <div class="display-container no-margin-top center">
                 <div class="row">
-                    <h3 class="headings info-text col-xs-10 left">Tournaments (<%= @contest.tournaments.count %>)</h3>
+                    <h1 class="headings col-xs-10 left">Tournaments</h1>
                     <% if current_user == @contest.user and current_user.contest_creator %>
                         <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Tournament to Contest">
                             <%= link_to(new_contest_tournament_path(@contest), method: :get) do %>
@@ -53,8 +53,23 @@
                     <% end %>
                 </div>
                 <div class="row">
+                    <%= form_tag contest_path(@contest), method: 'get', id: 'tournament_form', class: 'form-inline' do %>
+                        <%= text_field_tag :tournament_search, params[:tournament_search], class: 'form-control' %>
+                        <%= submit_tag "Search", description: nil, class: 'btn btn-default' %>
+                    <% end %>
+                </div>
+                <% if @tournaments.count > 0 %>
+                    <% if @tournaments.count > @per_page %>
+                        <p class="left"><%= "#{@tournaments.count} found (displaying #{getRangeFromPage(params[:tournament_page], @tournaments.length)})" %></p>
+                    <% else %>
+                        <p class="left"><%= "#{@tournaments.count} found" %></p>
+                    <% end %>
+                <% else %>
+                    <p>No tournaments found</p>
+                <% end %>
+                <div class="row">
                     <%= render partial: 'contest_tournament', collection: @tournaments, as: :tournament %>
-                    <%= will_paginate @tournaments %>
+                    <%= will_paginate @tournaments, param_name: 'tournament_page', id: 'tournament_pagination' %>
                 </div>
             </div>
         </div>
@@ -68,9 +83,9 @@
         </div>
     </div>
     <div class="container outer-home-container col-md-5">
-        <div class="display-container center">
+        <div class="display-container no-margin-top center">
             <div class="row">
-                <h3 class="headings info-text col-xs-10 left">Players (<%= @contest.players.count %>)</h3>
+                <h1 class="headings col-xs-10 left">Players</h1>
                 <% if current_user == @contest.user and current_user.contest_creator %>
                     <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Player to Contest">
                         <%= link_to(new_contest_player_path(@contest), method: :get) do %>
@@ -80,8 +95,23 @@
                 <% end %>
             </div>
             <div class="row">
+                <%= form_tag contest_path(@contest), method: 'get', id: 'player_form', class: 'form-inline' do %>
+                    <%= text_field_tag :player_search, params[:player_search], class: 'form-control' %>
+                    <%= submit_tag "Search", description: nil, class: 'btn btn-default' %>
+                <% end %>
+            </div>
+            <% if @players.count > 0 %>
+                <% if @players.count > @per_page %>
+                    <p class="left"><%= "#{@players.count} found (displaying #{getRangeFromPage(params[:player_page], @players.length)})" %></p>
+                <% else %>
+                    <p class="left"><%= "#{@players.count} found" %></p>
+                <% end %>
+            <% else %>
+                <p>No players found</p>
+            <% end %>
+            <div class="row">
                 <%= render partial: 'contest_player', collection: @players, as: :player %>
-                <%= will_paginate @players %>
+                <%= will_paginate @players, param_name: 'player_page', id: 'player_pagination' %>
             </div>
         </div>
     </div>

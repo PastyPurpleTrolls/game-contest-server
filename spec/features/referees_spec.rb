@@ -372,8 +372,10 @@ describe "RefereePages" do
     it {should have_content("#{Referee.count} found (displaying 1-10)")}
 
     it "paginates properly" do
-      should have_link('2', href: "/referees?page=2")
-      should_not have_link('3')
+      within '#referee_pagination' do
+        should have_link('2')
+        should_not have_link('3')
+      end
     end
   end
 

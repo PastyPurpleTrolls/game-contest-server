@@ -295,29 +295,48 @@ describe 'TournamentsPages' do
 
     it 'displays properly' do
       should have_selector('div.pagination')
-      should_not have_link('← Previous')
-      should_not have_link('1')
-      should have_link('2', href: "/contests/#{contest.slug}?page=2")
-      should have_link('3', href: "/contests/#{contest.slug}?page=3")
-      should_not have_link('4', href: "/contests/#{contest.slug}?page=4")
-      should have_link('Next →', href: "/contests/#{contest.slug}?page=2")
+      within '#tournament_pagination' do
+        should_not have_link('← Previous')
+        should_not have_link('1')
+        should have_link('2')
+        should have_link('3')
+        should_not have_link('4')
+        should have_link('Next →')
+      end
     end
 
     describe "last page" do
-      before { click_link('3', href: "/contests/#{contest.slug}?page=3") }
+      before {click_link('3', href: "/contests/#{contest.slug}?tournament_page=3")}
 
       it 'displays properly' do
         should have_selector('div.pagination')
-        should have_link('← Previous', href: "/contests/#{contest.slug}?page=2")
-        should have_link('1', href: "/contests/#{contest.slug}?page=1")
-        should have_link('2', href: "/contests/#{contest.slug}?page=2")
-        should_not have_link('3', href: "/contests/#{contest.slug}?page=3")
-        should_not have_link('4', href: "/contests/#{contest.slug}?page=4")
-        should_not have_link('Next →')
+        within '#tournament_pagination' do
+          should have_link('← Previous')
+          should have_link('1')
+          should have_link('2')
+          should_not have_link('3')
+          should_not have_link('4')
+          should_not have_link('Next →')
+        end
       end
 
       it 'properly shows records displaying' do
         should have_content("#{contest.tournaments.count} found (displaying 21-25)")
+      end
+    end
+
+    describe "changing pages" do
+      before do
+        FactoryBot.create_list(:player, 11, contest: contest)
+        within '#tournament_pagination' do
+          click_link('2')
+        end
+      end
+
+      it "does not change players page" do
+        within '#player_pagination' do
+          should have_link('2')
+        end
       end
     end
   end
@@ -328,15 +347,19 @@ describe 'TournamentsPages' do
     before do
       FactoryBot.create_list(:tournament, 20, contest: contest)
       visit contest_path(contest)
-      fill_in 'search', with: 'Tournament'
-      click_button submit
+      fill_in 'tournament_search', with: 'Tournament'
+      within '#tournament_form' do
+        click_button submit
+      end
     end
 
     it {should have_content("#{contest.tournaments.count} found (displaying 1-10)")}
 
     it "paginates properly" do
-      should have_link('2', href: "/contests/#{contest.slug}?page=2")
-      should_not have_link('3', href: "/contests/#{contest.slug}?page=3")
+      within '#tournament_pagination' do
+        should have_link('2')
+        should_not have_link('3')
+      end
     end
   end
 
@@ -347,14 +370,16 @@ describe 'TournamentsPages' do
       FactoryBot.create(:tournament, contest: contest, name: "searchtest")
       visit contest_path(contest)
       fill_in 'tournament_search', with: 'searchtest'
-      click_button submit
+      within '#tournament_form' do
+        click_button submit
+      end
     end
 
     it 'should return results' do
-      should have_button('searchtest')
+      should have_link('searchtest')
       should have_content('1 found')
       should_not have_content('displaying')
-      should_not have_link('2', href: "/contests/#{contest.slug}?page=2")
+      should_not have_css('#tournament_pagination')
     end
   end
 
@@ -363,12 +388,16 @@ describe 'TournamentsPages' do
 
     before do
       visit contest_path(contest)
-      fill_in 'search', with: 'junk input'
-      click_button submit
+      fill_in 'tournament_search', with: 'junk input'
+      within '#tournament_form' do
+        click_button submit
+      end
     end
 
-    it {should have_content("Tournaments (0 of #{Tournament.count})")}
-    it {should_not have_link('2', href: "/contests/#{contest.slug}?page=2")}
+    it "paginates properly" do
+      should_not have_css('#tournament_pagination')
+    end
+
     it {should have_content('No tournaments found')}
   end
 

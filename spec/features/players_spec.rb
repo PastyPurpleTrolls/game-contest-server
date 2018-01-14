@@ -300,37 +300,101 @@ describe "PlayersPages" do
     end
   end
 
+  describe "pagination" do
+    before do
+      FactoryBot.create_list(:player, 25, contest: contest)
+      visit contest_path(contest)
+    end
+
+    it {should have_content("#{contest.players.count} found (displaying 1-10)")}
+
+    it 'displays properly' do
+      should have_selector('div.pagination')
+      within '#player_pagination' do
+        should_not have_link('← Previous')
+        should_not have_link('1')
+        should have_link('2')
+        should have_link('3')
+        should_not have_link('4')
+        should have_link('Next →')
+      end
+    end
+
+    describe "last page" do
+      before { click_link('3') }
+
+      it 'displays properly' do
+        should have_selector('div.pagination')
+        within '#player_pagination' do
+          should have_link('← Previous')
+          should have_link('1')
+          should have_link('2')
+          should_not have_link('3')
+          should_not have_link('4')
+          should_not have_link('Next →')
+        end
+      end
+
+      it 'properly shows records displaying' do
+        should have_content("#{contest.players.count} found (displaying 21-25)")
+      end
+    end
+
+    describe "changing pages" do
+      before do
+        FactoryBot.create_list(:tournament, 11, contest: contest)
+        within '#player_pagination' do
+          click_link('2')
+        end
+      end
+
+      it "does not change tournaments page" do
+        within '#tournament_pagination' do
+          should have_link('2')
+        end
+      end
+    end
+  end
+
   describe 'search with pagination' do
     let(:submit) {'Search'}
 
     before do
       FactoryBot.create_list(:player, 20, contest: contest)
       visit contest_path(contest)
-      fill_in 'search', with: 'Player'
-      click_button submit
+      fill_in 'player_search', with: 'Player'
+      within '#player_form' do
+        click_button submit
+      end
     end
 
-    it 'displays correct amount of players and paginates correctly' do
-      should have_content("Players (1-10 of #{Player.count})")
-      should have_link('2')
-      should_not have_link('3')
+    it {should have_content("#{contest.players.count} found (displaying 1-10)")}
+
+    it "paginates properly" do
+      within '#player_pagination' do
+        should have_link('2')
+        should_not have_link('3')
+      end
     end
   end
 
   describe 'search without pagination' do
     let(:submit) {'Search'}
-    let!(:player2) {FactoryBot.create(:player, contest: contest)}
 
     before do
+      FactoryBot.create(:player, contest: contest, name: "searchtest")
       visit contest_path(contest)
-      fill_in 'player_search', with: 'Player'
-      click_button submit
+      fill_in 'player_search', with: 'searchtest'
+      within '#player_form' do
+        click_button submit
+      end
     end
 
     it 'should return results' do
-      should have_content("Players (1-2 of #{Player.count})")
-      should have_link(player.name, href: player_path(player))
-      should have_link(player2.name, href: player_path(player2))
+      should have_link('searchtest')
+      should have_content('1 found')
+      should_not have_content('displaying')
+      should_not have_css('#player_pagination')
     end
   end
 
@@ -339,15 +403,17 @@ describe "PlayersPages" do
 
     before do
       visit contest_path(contest)
-      fill_in 'search', with: 'junk input'
-      click_button submit
+      fill_in 'player_search', with: 'junk input'
+      within '#player_form' do
+        click_button submit
+      end
     end
 
-    it 'does not display any players' do
-      should have_content("Players (0 of #{Player.count})")
-      should_not have_link('2')
-      should have_content('No players found')
+    it "paginates properly" do
+      should_not have_css('#player_pagination')
     end
+
+    it {should have_content('No players found')}
   end
 
   describe "show all" do

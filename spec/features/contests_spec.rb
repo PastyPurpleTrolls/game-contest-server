@@ -254,8 +254,10 @@ describe "ContestsPages" do
     it {should have_content("#{Contest.count} found (displaying 1-10)")}
 
     it 'paginates properly' do
-      should have_link('2', href: "/contests?page=2")
-      should_not have_link('3')
+      within '#contest_pagination' do
+        should have_link('2')
+        should_not have_link('3')
+      end
     end
   end
 

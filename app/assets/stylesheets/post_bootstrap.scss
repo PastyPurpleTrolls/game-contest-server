@@ -80,6 +80,10 @@ body {
     margin-top: 50px;
 }
 
+.display-container.no-margin-top {
+    margin-top: 0;
+}
+
 .display-container a, .player-label, .warning-label {
     color: white;
 }
