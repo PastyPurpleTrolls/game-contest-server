@@ -64,7 +64,7 @@ describe "UsersPages" do
   end
 
   describe "Display Users" do
-    describe "individually" do
+    describe "individually (not contest creator)" do
       let(:user) {FactoryBot.create(:user)}
 
       before do
@@ -81,7 +81,7 @@ describe "UsersPages" do
         should_not have_content(user.password_digest)
       end
 
-      it {should have_header(text: 'My Players (5)')}
+      it {should have_header(text: 'My Players')}
 
       it "lists all the players for the user" do
         Player.all.each do |player|
@@ -90,25 +90,51 @@ describe "UsersPages" do
         end
       end
 
-      it {should have_link('', href: new_contest_player_path('not-specified'))}
-
-      it {should_not have_subheader(text: 'My Referees')}
-      it {should_not have_link('New Referee', href: new_referee_path)}
+      it {should_not have_header(text: 'My Referees')}
+      it {should_not have_header(text: 'My Contests')}
     end
 
     describe "individually (contest creator)" do
       let(:user) {FactoryBot.create(:contest_creator)}
 
       before do
+        FactoryBot.create_list(:player, 5, user: user)
         FactoryBot.create_list(:referee, 5, user: user)
+        FactoryBot.create_list(:contest, 5, user: user)
         visit user_path(user)
       end
 
-      it {should have_header(text: 'My Referees (5)')}
+      it {should have_selector("h2", text: "User")}
+
+      it "displays all user information" do
+        should have_content(user.username)
+        should have_content(user.email)
+        should_not have_content(user.password)
+        should_not have_content(user.password_digest)
+      end
+
+      it {should have_header(text: 'My Players')}
+
+      it "lists all the players for the user" do
+        user.players.each do |player|
+          should have_selector('div', text: player.name)
+          should have_link(player.name, href: player_path(player))
+        end
+      end
+
+      it {should have_header(text: 'My Referees')}
 
       it "lists all the referees for the user" do
-        Referee.all.each do |ref|
+        user.referees.each do |ref|
           should have_selector('div', text: ref.name)
+        end
+      end
+
+      it {should have_header(text: 'My Contests')}
+
+      it "lists all the contests for the user" do
+        user.contests.each do |contest|
+          should have_selector('div', text: contest.name)
         end
       end
     end

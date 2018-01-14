@@ -27,4 +27,8 @@ module ApplicationHelper
     last_record = (page-1) * 10 + num_on_page
     "#{first_record}-#{last_record}"
   end
+
+  def yesno(bool)
+    bool ? 'Yes' : 'No'
+  end
 end
