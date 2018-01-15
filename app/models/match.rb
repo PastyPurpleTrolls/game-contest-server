@@ -77,18 +77,6 @@ class Match < ActiveRecord::Base
     self.manager_type == "Tournament"
   end
 
-  # Makes sure each player is either playable or owned by the current user
-  def all_players_playable_to(user)
-    self.players.each do |p|
-      unless p.playable
-        if p.user != user
-          return false
-        end
-      end
-    end
-    true
-  end
-
   # Makes sure players are in the tournament the match is in
   def players_allowed_to_play
     return if self.manager.nil? || self.players.nil?

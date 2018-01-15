@@ -1,4 +1,6 @@
 class MatchesController < ApplicationController
+  include MatchesHelper
+
   before_action :ensure_user_logged_in, except: [:index, :show]
   before_action :ensure_contest_creator, only: [:edit, :update, :destroy]
 
@@ -16,28 +18,26 @@ class MatchesController < ApplicationController
 
   def create
     @contest = Contest.friendly.find(params[:contest_id])
-    @match = @contest.matches.build(acceptable_params)
-    unless @match.all_players_playable_to(current_user)
-      flash.now[:danger] = 'Not all players are playable'
-      redirect_to root_path
-    end
-
-    if params[:match][:player_ids] && params[:match][:player_ids].any? {|player_id, player_in_use| Player.find(player_id).user_id == current_user.id}
-      if params[:match][:player_ids].uniq {|p| Player.find(p).contest_id}.length > 1
+    player_ids = params[:match][:player_ids]
+    if selected_own_players(params[:match][:player_ids])
+      if players_unplayable(player_ids, current_user)
+        flash.now[:danger] = 'Not all players are playable'
+        redirect_to root_path
+      elsif players_from_multiple_contests(player_ids)
         flash.now[:danger] = 'Players from multiple contests'
         render 'new'
-        return
-      end
-      @match.status = "waiting"
-      if @match.save
-        flash[:success] = 'Match created.'
       else
-        @contests = Contest.all
-        flash.now[:danger] = 'Match not saved'
-        render 'new'
-        return
+        @match = @contest.matches.build(acceptable_params)
+        @match.status = "waiting"
+        if @match.save
+          flash[:success] = 'Match created.'
+          redirect_to @match
+        else
+          @contests = Contest.all
+          flash.now[:danger] = 'Match not saved'
+          render 'new'
+        end
       end
-      redirect_to @match
     else
       @match = @contest.matches.build(acceptable_params)
       @contests = Contest.all
