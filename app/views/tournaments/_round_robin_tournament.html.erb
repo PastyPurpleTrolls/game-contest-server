@@ -1,0 +1,15 @@
+<div id="fixed-table-container-1" class="fixed-table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>-</th>
+                <th>Rank</th>
+                <th>Wins</th>
+                <%= render @tournament.players %>
+            </tr>
+        </thead>
+        <tbody>
+            <%= render partial: 'player_row', collection: @tournament.players, as: :player %>
+        </tbody>
+    </table>
+</div>

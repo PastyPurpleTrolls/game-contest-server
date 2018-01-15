@@ -43,22 +43,9 @@
     </div>
 </div>
 <div class="row">
-    <div class="container center display-container col-md-10 col-md-offset-1">
-        <h1 class="headings row left">Player Information</h1>
-        <div class="row">
-            <div class="col-xs-3">Place</div>        
-            <div class="col-xs-3">Name</div>
-            <div class="col-xs-3">Creator</div>
-            <div class="col-xs-3">Wins</div>
-        </div>
-        <div class="player-results-container">
-            <%= render @tournament.players.sort_by{|p| p.wins(@tournament)}.reverse %>
-        </div>
-    </div>
+    <% if @tournament.tournament_type == "round robin" %>
+        <%= render "round_robin_tournament" %>
+    <% else %>
+        <%= render "single_elimination_tournament" %>
+    <% end %>
 </div>
-
-<% if @tournament.tournament_type == "round robin" %>
-    <%= render "round_robin_tournament" %>
-<% else %>
-    <%= render "single_elimination_tournament" %>
-<% end %>
