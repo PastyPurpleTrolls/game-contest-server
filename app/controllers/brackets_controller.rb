@@ -1,14 +1,12 @@
 class BracketsController < ApplicationController
-  # 32 155~170 34~18
-  # 33 171~188 34~16
-  # handle ties referee has to decide winner
   def show
     tourney = Tournament.friendly.find(params[:id])
     match_ids = get_match_ids(tourney.id)
     player_ids = get_player_ids(tourney.id)
     stage1 = gen_match_paths(match_ids, player_ids)
-    stage2 = gen_scores(match_ids, stage1, player_ids)
-    render json: stage2.to_json
+    stage2 = gen_scores(stage1, match_ids, player_ids)
+    stage3 = gen_names(stage1, stage2, match_ids, player_ids)
+    render json: stage3.to_json
   end
 
   private
@@ -42,8 +40,7 @@ class BracketsController < ApplicationController
   def gen_match_paths(matches, players)
     i = 1
     matches_per_round = 2
-    names = get_names(players)
-    round_depth = Math.log2(names.length).ceil
+    round_depth = Math.log2(players.length).ceil
     res = MatchPath.select(:parent_match_id, :child_match_id, :result)
     .where(parent_match_id: matches).reorder(parent_match_id: :asc)
     
@@ -74,11 +71,10 @@ class BracketsController < ApplicationController
     return match_paths
   end
 
-  def gen_scores(matches, stage1, players)
+  def gen_scores(stage1, matches, players)
     i = 0
     matches_per_round = 1
-    names = get_names(players)
-    round_depth = Math.log2(names.length).ceil
+    round_depth = Math.log2(players.length).ceil
     res = PlayerMatch.select(:player_id, :match_id, :result)
     .where(match_id: matches).reorder(match_id: :asc)
     scores = Array.new(round_depth, [])
@@ -107,5 +103,33 @@ class BracketsController < ApplicationController
       matches_per_round *= 2
     end
     return scores
+  end
+
+  def gen_names(stage1, stage2, matches, players)
+    i = 0
+    j = 0
+    extra_players = []
+    names = get_names(players)
+    first_round_size = 2 ** (Math.log2(names.length).ceil - 1)
+    player_names = Array.new(first_round_size, [])
+    extra_matchups = stage1.reverse[0].compact()
+    res = PlayerMatch.select(:player_id, :match_id, :result)
+    .where(match_id: extra_matchups).reorder(match_id: :asc)
+    res.each do |row|
+      extra_players.push(get_names(row.player_id)[0])
+    end
+
+    while (names.length != 0)
+      if (extra_players.include? names.first)
+        player_names[i] = [extra_players[j], extra_players[j + 1]]
+        names.delete(extra_players[j])
+        names.delete(extra_players[j + 1])
+        j += 2
+      else
+        player_names[i] = [names.shift(), nil]
+      end
+      i += 1
+    end
+    return player_names
   end
 end
