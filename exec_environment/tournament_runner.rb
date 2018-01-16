@@ -65,6 +65,9 @@ class TournamentRunner
                     single_elimination(@tournament_players)
                 end
                 return
+            when "multiplayer game"
+                multiplayer_game(@tournament_players, @number_of_players)
+                return
             else
                 puts " ERROR: Tournament type is not recognized"
                 return
@@ -76,14 +79,14 @@ class TournamentRunner
     #Runs a round robin tournament with each player playing every other player twice.
     #Currently only works with 2 player games 
     def round_robin(players)
-	players.each do |p|
-	    players.each do |q|
-		    if p != q
-		        match_players = [p, q]
-			    create_match(match_players, @tournament.rounds_per_match)
-		    end
+	    players.each do |p|
+    	    players.each do |q|
+		        if p != q
+		            match_players = [p, q]
+			        create_match(match_players, @tournament.rounds_per_match)
+		        end
+	        end
 	    end
-	end
     end
     
     #Runs a single elimination tournament (two players per match)
@@ -106,6 +109,17 @@ class TournamentRunner
             return child
         end
     end
+
+    #Runs multiplayer game tournament (three or more players per match)
+    def multiplayer_game(players, numPlayers)
+        #rounds = MatchRunner.num_rounds
+        1.times do
+            #selected_players = players.sample(@tournament.contest.referee.players_per_game)
+            selected_players = players.sample(numPlayers)
+            create_match(selected_players, @tournament.rounds_per_match)
+       end
+    end
+
     #Creates a match and the associated player_matches
     def create_match(match_participants, num_rounds)
         match = create_raw_match(num_rounds, "unassigned")
@@ -121,7 +135,7 @@ class TournamentRunner
             status: status,
             earliest_start: Time.now, 
             completion: Date.new,
-	    num_rounds: num_rounds,
+	        num_rounds: num_rounds,
         )
         puts " Tournament runner created match #"+match.id.to_s
         return match

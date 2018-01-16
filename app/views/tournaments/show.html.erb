@@ -25,9 +25,9 @@
             </div>
             <div class="col-md-6">
                 <% if @tournament.status == "completed" %>
-                    <p class="info-container">Finished: <%= distance_of_time_in_words_to_now(@tournament.start).split.map { |i| i.capitalize }.join(' ') %> Ago</p>
+                    <p class="info-container">Finished: <%= timeRelativeToNow(@tournament.start) %></p>
                 <% else %>
-                    <p class="info-container">Start: In <%= distance_of_time_in_words_to_now(@tournament.start).split.map { |i| i.capitalize }.join(' ')%></p>
+                    <p class="info-container">Start: <%= timeRelativeToNow(@tournament.start) %></p>
                 <% end %>
             </div>
             <div class="col-md-6">
@@ -59,6 +59,10 @@
 
 <% if @tournament.tournament_type == "round robin" %>
     <%= render "round_robin_tournament" %>
-<% else %>
+<% elsif @tournament.tournament_type == "single emlimination" %>
     <%= render "single_elimination_tournament" %>
+<% elsif @tournament.tournament_type == "multiplayer game" %>
+    <%= render "multiplayer_game_tournament" %>
+<% else %>
+    <%= renter "king_of_the_hill" %>
 <% end %>

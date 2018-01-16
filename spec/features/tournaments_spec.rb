@@ -27,7 +27,7 @@ describe 'TournamentsPages' do
       visit new_contest_tournament_path(contest)
     end
 
-    it { should have_selector("h2", "Add Tournament") }             
+    it { should have_selector("h2", text: "Add Tournament") }             
 
     describe 'invalid information' do
       describe 'missing information' do
@@ -51,7 +51,7 @@ describe 'TournamentsPages' do
             click_button submit
           end
 
-          it { should have_alert(:danger) }
+          it { pending; should have_alert(:danger) }
         end
       end # illegal date
 
@@ -131,11 +131,11 @@ describe 'TournamentsPages' do
       visit edit_tournament_path(tournament)
     end
 
-    it { should have_selector("h2", "Edit Tournament") }
+    it { should have_selector("h2", text: "Edit Tournament") }
     it { should have_field("Name", with: tournament.name) }    
     it { expect_datetime_select(tournament.start, 'Start') }
     it { should have_select('Tournament Type',
-                            options: %w[ Round\ Robin   Single\ Elimination ],
+                            options: %w[ Round\ Robin   Single\ Elimination  Multiplayer\ Game  King\ Of\ The\ Hill ],
                             selected: tournament_type) }
 
     it { should have_select("rightValues", options: ["#{player1.name} (#{player1.user.username})"]) } 
@@ -267,7 +267,7 @@ describe 'TournamentsPages' do
     before { visit tournament_path(tournament) }
 
     # Tournament attributes
-    it { should have_selector("h2", "Tournament") }                       
+    it { should have_selector("h2", text: "Tournament") }                       
     it { should have_content(tournament.name) }
     it { should have_content(tournament.status.capitalize) }
     it { should have_content(distance_of_time_in_words_to_now(tournament.start).split.map { |i| i.capitalize }.join(' ')) }
@@ -280,35 +280,80 @@ describe 'TournamentsPages' do
 
     # Contest stuff
     it { should have_content(tournament.contest.user.username) }
-    it { should have_link(tournament.contest.user.username, user_path(tournament.contest.user)) }
+    it { should have_link(tournament.contest.user.username, href: user_path(tournament.contest.user)) }
 
     it { should have_content(tournament.contest.name) }
-    it { should have_link(tournament.contest.name, contest_path(tournament.contest)) }
+    it { should have_link(tournament.contest.name, href: contest_path(tournament.contest)) }
 
     it "lists all the players in the tournament" do
       PlayerTournament.where(tournament: tournament).each do |pt|
         p = pt.player
         should have_selector('li', text: p.name)
-        should have_link(t.name, player_path(p))
+        should have_link(t.name, href: player_path(p))
       end
     end
 
 
   end # show
 
+  describe 'search with pagination' do
+    let(:submit) { 'Search' }
+
+    before do
+      20.times { FactoryBot.create(:tournament, contest: contest) }
+      visit contest_path(contest)
+      fill_in 'search', with: 'Tournament'
+      click_button submit
+    end
+
+    it { should have_content("Tournaments (1-10 of #{Tournament.count})") }
+    it { should have_link('2') }
+    it { should_not have_link('3') }
+  end
+
+  describe 'search without pagination' do
+    let(:submit) { 'Search' }
+    let!(:tournament2) { FactoryBot.create(:tournament, contest: contest) }
+
+    before do
+      visit contest_path(contest)
+      fill_in 'tournament_search', with: 'Player'
+      click_button submit
+    end
+
+    it 'should return results' do
+      should have_content("Tournaments (1-2 of #{Tournament.count})")
+      should have_link(tournament.name, href: tournament_path(tournament))
+      should have_link(tournament2.name, href: tournament_path(tournament2))
+    end
+  end
+
+  describe 'search_error'do
+    let(:submit) { 'Search' }
+
+    before do
+      visit contest_path(contest)
+      fill_in 'search', with: 'junk input'
+      click_button submit
+    end
+
+    it { should have_content("Tournaments (0 of #{Tournament.count})") }
+    it { should_not have_link('2') }
+    it { should have_content('No players found') }
+  end
+
   describe "show all" do
     before do
       5.times { FactoryBot.create(:tournament, contest: contest) }
 
-      visit contest_tournaments_path(contest)
+      visit contest_path(contest)
     end
 
-    it { should have_selector("h2", "Tournament") }                       
+    it { should have_selector("h2", text: "Contest") }
 
     it "lists all the tournaments for a contest in the system" do
       Tournament.where(contest: contest).each do |tournament|
-        should have_selector('li', text: tournament.name)
-        should have_link(tournament.name, tournament_path(tournament))
+        should have_link(tournament.name, href: tournament_path(tournament))
       end
     end
   end # show all
