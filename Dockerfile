@@ -1,15 +1,16 @@
 FROM ruby:2.4.1
 
 RUN apt-get update
-RUN apt-get install nodejs -y
+RUN apt-get install -y nodejs build-essential python3 gcc
+
+COPY Gemfile* /tmp/
+WORKDIR /tmp
+RUN gem install bundler && bundle install
 
 RUN mkdir /myapp
 WORKDIR /myapp
 COPY . /myapp/
 
-RUN bundle install
-RUN bin/rails db:environment:set RAILS_ENV=development
-RUN bin/rails db:migrate RAILS_ENV=development --trace
+ENV RAILS_ENV development
 
-# RUN rake db:schema:load RAILS_ENV=development --trace
-# RUN rake db:schema:load --trace
+CMD ["bash", "-c", "clockworkd -d . start ./clock.rb --log;bin/rails db:migrate; bin/rake db:seed; bin/rails s -b 0.0.0.0"]
