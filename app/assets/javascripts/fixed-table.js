@@ -134,7 +134,7 @@ function fixTable(container) {
 
 $(function() {
 
-    $("table").delegate('td','mouseover mouseleave', function(e) {
+    $("table").delegate('td:not(:first-child)','mouseover mouseleave', function(e) {
         $(this).siblings().addBack()
             .add($(this).parent().siblings()
                 .children(':nth-child(' + ($(this).index() + 1) + ')'))
