@@ -73,6 +73,7 @@ class BracketsController < ApplicationController
 
   def gen_scores(stage1, matches, players)
     i = 0
+    x = 0
     matches_per_round = 1
     round_depth = Math.log2(players.length).ceil
     res = PlayerMatch.select(:player_id, :match_id, :result)
@@ -108,10 +109,10 @@ class BracketsController < ApplicationController
   def gen_names(stage1, stage2, matches, players)
     i = 0
     j = 0
-    extra_players = []
     names = get_names(players)
     first_round_size = 2 ** (Math.log2(names.length).ceil - 1)
     player_names = Array.new(first_round_size, [])
+    extra_players = []
     extra_matchups = stage1.reverse[0].compact()
     res = PlayerMatch.select(:player_id, :match_id, :result)
     .where(match_id: extra_matchups).reorder(match_id: :asc)
@@ -130,6 +131,30 @@ class BracketsController < ApplicationController
       end
       i += 1
     end
-    return player_names
+
+    original_scores = stage2.reverse[0]
+    temp_scores = []
+    x = 0
+    while (original_scores.length != 0)
+      if ( (original_scores[x].to_s.include? "nil") )
+        original_scores.shift
+      else
+        temp_scores.push(original_scores.shift)
+      end
+    end
+
+    scores = Array.new(first_round_size, [])
+    x = 0
+    while (x < first_round_size)
+      if (player_names[x].to_s.include? "nil")
+        scores[x] = [nil, nil]
+      else
+        scores[x] = (temp_scores.shift)
+      end
+      x += 1
+    end
+    stage2[4] = scores
+    bracket = {:teams => player_names, :results => stage2.reverse}
+    return bracket
   end
 end
