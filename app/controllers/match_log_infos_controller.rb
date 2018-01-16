@@ -1,6 +1,6 @@
 class MatchLogInfosController < ApplicationController
   before_action :ensure_user_logged_in, only: [:show]
-  before_filter :require_permission
+  before_action :require_permission
 
       def require_permission
         log_info = MatchLogInfo.find(params[:id])
