@@ -65,6 +65,10 @@ tail -f tmp/clockworkd.clock.output
 ```
 
 ## Running (production)
+The **Dockerfile** needs to be updated to have the project run in production. 
+```bash
+ENV RAILS_ENV production.
+```
 When a development build is ready to be uploaded to the docker repository you'll need to build the image. 
 ```bash
 docker build -t aires .
