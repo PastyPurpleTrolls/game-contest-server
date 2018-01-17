@@ -24,6 +24,20 @@
     </div>
     <%= f.select :rounds_per_match, 1..@contest.referee.round_limit.to_i, {}, class: 'form-input form-element' %>
 </div>
+<div class="form-group row left">
+    <div class="col-xs-4">
+        <%= f.label :expected_disparity, 'How often do you expect the best player to beat the worst' %> 
+    </div>
+    <%= f.select :expected_disparity, [['55% of the time'], ['65% of the time'], ['75% of the time'], ['85% of the time'], ['95% of the time'],['99% of the time']], {}, class: 'form-input form-element' %>
+</div>
+<div class="form-group row left">
+    <div class="col-xs-4">
+        <%= f.label :total_matches, 'Total Matches:' %>
+    </div>
+    <%= f.select :total_matches, [['N/A'],[@tournament.expected_disparity]], {}, class: 'form-input form-element' %>
+</div>
+
+
 
 <div class="row multiselector">
     <div class="col-xs-5 first-player-select right">
