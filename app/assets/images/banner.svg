@@ -139,29 +139,29 @@
 <style>
 @keyframes boat_shake1 {
   0%,100% {transform: rotate(0deg)}
-  50% {transform: rotate(5deg)}
+  50% {transform: rotate(.5deg)}
 }
 @keyframes boat_shake2 {
-  0%,100% {transform: rotate(5deg)}
+  0%,100% {transform: rotate(.5deg)}
   50% {transform: rotate(0deg)}
 }
 @keyframes boat_shake3 {
-  0%,100% {transform: rotate(2.5deg)}
-  50% {transform: rotate(-2.5deg)}
+  0%,100% {transform: rotate(.25deg)}
+  50% {transform: rotate(-0.25deg)}
 }
 @keyframes boat_shake4 {
-  0%,100% {transform: rotate(-1deg)}
-  50% {transform: rotate(4deg)}
+  0%,100% {transform: rotate(-.25deg)}
+  50% {transform: rotate(.25deg)}
 }
 @keyframes boat_shake5 {
-  0%,100% {transform: rotate(-3deg)}
-  50% {transform: rotate(2deg)}
+  0%,100% {transform: rotate(-.5deg)}
+  50% {transform: rotate(0deg)}
 }
-#boat1 {transform-origin: bottom}
-#boat2 {transform-origin: bottom}
-#boat3 {transform-origin: bottom}
-#boat4 {transform-origin: bottom}
-#boat5 {transform-origin: bottom}
+#boat1 {transform-origin: center}
+#boat2 {transform-origin: center}
+#boat3 {transform-origin: center}
+#boat4 {transform-origin: center}
+#boat5 {transform-origin: center}
 #boat1 {animation: boat_shake1 11s infinite}
 #boat2 {animation: boat_shake2 9s infinite}
 #boat3 {animation: boat_shake3 4s infinite}
@@ -185,15 +185,15 @@
 
 @keyframes pan1 {
   0%, 100% {transform: translate(0px,0px)}
-  50% {transform: translate(15px,4px)}
+  50% {transform: translate(20px,5px)}
 }
 @keyframes pan2 {
-  0%, 100% {transform: translate(-5px,0px)}
+  0%, 100% {transform: translate(-7px,0px)}
   50% {transform: translate(0px,0px)}
 }
 @keyframes pan3 {
   0%, 100% {transform: translate(0px,0px)}
-  50% {transform: translate(10px,2px)}
+  50% {transform: translate(12px,3px)}
 }
 #front{animation: pan1 20s infinite}
 #boats{animation: pan3 20s infinite}
