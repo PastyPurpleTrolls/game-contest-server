@@ -5,6 +5,7 @@
         <%= favicon_link_tag       "favicon.ico" %>
         <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
         <%= stylesheet_link_tag 'application', 'https://fonts.googleapis.com/css?family=Merriweather'%>
+        <%= stylesheet_link_tag 'application', 'https://fonts.googleapis.com/css?family=PT+Serif:400,700'%>
         <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
         <%= yield :javascript_includes %>
         <%= csrf_meta_tags %>
@@ -25,7 +26,7 @@
         -->
 
         <% flash.each do |level, message| %>
-            <div class="alert alert-<%= level %>"><%= message %></div>
+            
         <% end %>
 
         <div class="container">

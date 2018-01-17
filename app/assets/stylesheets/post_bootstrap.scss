@@ -74,11 +74,11 @@ body {
 }
 
 .navbar-nav {
-	margin: 10px -15px;
+  margin: 0;
 }
 
 .navbar-brand {
-  padding-right: 50px;
+  padding: 0 30px 0 0;
 }
 
 .display-container, .home-container {
@@ -157,7 +157,7 @@ a.active:hover {
 }
 
 .form-input{
-    color: #4999B4;
+    color: #4f4032;
 }
 
 .gly-plus, .home-gly {
@@ -185,14 +185,21 @@ label {
 }
 
 .player-results-container {
-    background-color: white;
-    padding-top: 20px;
+    background-color: #f3f2ef;
+    padding-top: 5px;
     padding-bottom: 1px;
     font-size: 16px;
 }
 
+div:not(.my-player) > .col-xs-3 {
+  font-size: 1.5em;
+  font-weight: 700;
+  font-family: 'PT Serif', serif;
+}
+
 .my-player {
-    font-weight: 700;
+    font-weight: 600;
+    font-family: 'PT Serif', serif;
 }
 
 .info-link a {
@@ -307,7 +314,7 @@ label {
 }
 
 .row {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     margin-left: 0px !important;
     margin-right: 0px !important;
 }
@@ -349,4 +356,8 @@ label {
 
 input[type=submit] {
   color: #433622;
+}
+
+.btn {
+  background-color: #d9d7cb;
 }
