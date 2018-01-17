@@ -20,7 +20,7 @@ Install `docker` and `docker.io`
 $ sudo apt-get install docker && docker.io
 ```
 
-Install `docker-compose`. At the time of writing, `docker-compose` on `apt-get` was outdated (v. 1.18), so it needed to be installed from GitHub. It may be up to date in the future.
+Install `docker-compose`. At the time of writing, `docker-compose` on `apt-get` was outdated, so it needed to be installed from GitHub. It may be up to date in the future. The up-to-date version as of this writing is v. 1.18.
 ```bash
 curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
