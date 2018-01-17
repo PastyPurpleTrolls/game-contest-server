@@ -31,18 +31,6 @@
         </ul>
     </div>
 </nav>
-<div class="jumbotron">
-  <div class="container banner-container">
-    <h2 class="center header-title headings"><%= @title || yield(:title) %></h2>
-        <% if current_user&.admin %>
-		    <div class="right system-status">
-                System Status: 
-                <% if @daemon_status then %>
-                    <span class="glyphicon glyphicon-ok system-check" aria-hidden="true"></span>
-                <% else %>
-                    <span class="glyphicon glyphicon-remove system-x" aria-hidden="true"></span>
-                <% end %>
-            </div>
-        <% end %>
-  </div>
+<div class="container banner-container">
+  <h2 class="center header-title headings"><%= @title || yield(:title) %></h2>
 </div>

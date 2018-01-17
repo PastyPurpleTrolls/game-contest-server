@@ -4,6 +4,7 @@
         <title>Aires | Taylor University Game Contest Server</title>
         <%= favicon_link_tag       "favicon.ico" %>
         <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+        <%= stylesheet_link_tag 'application', 'https://fonts.googleapis.com/css?family=Merriweather'%>
         <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
         <%= yield :javascript_includes %>
         <%= csrf_meta_tags %>
@@ -32,4 +33,16 @@
         </div>
 
     </body>
+    <footer>
+    <% if current_user&.admin %>
+      <div class="right system-status">
+            System Status: 
+            <% if @daemon_status then %>
+                <span class="glyphicon glyphicon-ok system-check" aria-hidden="true"></span>
+            <% else %>
+                <span class="glyphicon glyphicon-remove system-x" aria-hidden="true"></span>
+            <% end %>
+        </div>
+    <% end %>
+    </footer>
 </html>

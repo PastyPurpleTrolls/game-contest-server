@@ -17,11 +17,16 @@ loaded, so the classes are not overridden.
     text-align: center;
 }
 
+html {
+  background-color: #f3f2ef;
+}
+
 body {
 // Keeps the bottom of the page separate from the
 // edge of the browser.
     padding-bottom: 20px;
     font-family: Verdana, Geneva, sans-serif;
+    background-color: transparent;
 }
 
 .center {
@@ -69,9 +74,17 @@ body {
     }
 }
 
+.navbar-nav {
+	margin: 10px -15px;
+}
+
+.navbar-brand {
+  padding-right: 50px; 
+}
+
 .display-container, .home-container {
-    background-color: #4ea3b8;
-    color: white;
+    background-color: #d9d7cb;
+    color: #625346;
     vertical-align:middle;
     padding: 30px;
 }
@@ -86,7 +99,7 @@ body {
 
 .system-status {
     padding-right: 10px;
-    color: white;    
+    color: #433622;    
 }
 
 .system-check {
@@ -157,12 +170,11 @@ a.active:hover {
 }
 
 .header-title {
-    color: white;
-    padding-top: 160px;
+    color: #4f4032;
 }
 
 .headings {
-    font-family: "Courier New", Courier, monospace;
+  font-family: 'Merriweather', serif;
 }
 
 label {
@@ -210,12 +222,11 @@ label {
 }
 
 .jumbotron {
-    background-image: url('./battleship.jpg');    
-    background-size: 1140px 100%;
+    background-image: url('./banner.png');    
+    background-size: 970px 100%;
     background-repeat: no-repeat;
     background-position: center;
-    background-color: #C10000;
-    height: 300px;
+    background-color: #FFF;
     margin-bottom: 0px;
 }
 
@@ -266,7 +277,7 @@ label {
 }
 
 .results-container a, .multiselector, .home-container:hover {
-    color: #4999B4;
+    color: #433622;
 }
 
 .profile-container {
@@ -310,4 +321,9 @@ label {
 
 .first-player-select {
     margin-left: 15px;
+}
+
+footer {
+  margin-top: 50px;
+  width: 970px;
 }
