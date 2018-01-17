@@ -6,7 +6,7 @@ $(function () {
   var id = url.substring(url.lastIndexOf('/') + 1);
   var data = $.getJSON("/brackets/" + id + ".json", function () {
   }).done(function (data) {
-    console.log(data);
+    // console.log(data);
     $('.bracket').bracket({
       init: data,
       teamWidth: 75,
