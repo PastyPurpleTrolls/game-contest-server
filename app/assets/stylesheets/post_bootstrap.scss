@@ -50,7 +50,6 @@ body {
 .date-time {
     @extend .form-input;
     display: inline;
-    width: auto;
 }
 
 .form-group {
@@ -79,7 +78,7 @@ body {
 }
 
 .navbar-brand {
-  padding-right: 50px; 
+  padding-right: 50px;
 }
 
 .display-container, .home-container {
@@ -99,7 +98,7 @@ body {
 
 .system-status {
     padding-right: 10px;
-    color: #433622;    
+    color: #433622;
 }
 
 .system-check {
@@ -166,7 +165,7 @@ a.active:hover {
 }
 
 .gly-plus:hover {
-    color: #D6FFFF;    
+    color: #D6FFFF;
 }
 
 .header-title {
@@ -202,7 +201,7 @@ label {
 
 .info-text, .info-link {
     padding-left: 0px;
-    padding-right: 0px;    
+    padding-right: 0px;
 }
 
 .no-left-padding {
@@ -210,7 +209,7 @@ label {
 }
 
 .no-right-padding {
-    padding-right: 0px;        
+    padding-right: 0px;
 }
 
 .left-padding {
@@ -222,11 +221,11 @@ label {
 }
 
 .jumbotron {
-    background-image: url('./banner.png');    
-    background-size: 970px 100%;
+    // background-image: url('./banner.svg');
+    background-size: 695px 251px 50%;
     background-repeat: no-repeat;
     background-position: center;
-    background-color: #FFF;
+    background-color: transparent;
     margin-bottom: 0px;
 }
 
@@ -249,8 +248,8 @@ label {
 }
 
 .info-container a, .player-results-container, .player-results-container a {
-    color: #4999B4;  
-    text-decoration: underline;  
+    color: #4999B4;
+    text-decoration: underline;
 }
 
 .results-container, .info-container {
@@ -296,7 +295,7 @@ label {
 .row {
     margin-bottom: 30px;
     margin-left: 0px !important;
-    margin-right: 0px !important;    
+    margin-right: 0px !important;
 }
 
 .search-container {
@@ -323,7 +322,13 @@ label {
     margin-left: 15px;
 }
 
-footer {
-  margin-top: 50px;
-  width: 970px;
+.home-banner {
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	margin-top: 25px;
+}
+
+.banner-wrap {
+  width: 950px;
 }

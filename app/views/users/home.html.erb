@@ -1,4 +1,4 @@
-<% setTitle("Home") %>
+<%# <% setTitle("Home") %>
 <% if current_user %>
     <% if current_user.contest_creator? %> 
         <div class="row">
@@ -69,6 +69,11 @@
     <% end %>           
 <% else %>    
     <div class="row">
+    <div class="home-banner">
+      <div class="banner-wrap">
+        <%= image_tag "banner.svg"%>
+      </div>
+    </div>
         <div class="container display-container col-md-offset-1 col-md-10">
             <h3 class="headings">Welcome to Taylor University's Game Contest Server!</h3>
             <br>
