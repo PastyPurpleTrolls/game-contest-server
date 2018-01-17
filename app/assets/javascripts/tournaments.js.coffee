@@ -10,7 +10,7 @@ bDisparityCoefficient = .186474
 bDisparityExponent = .086981
 bNumerator = 3.3364
 bNumPlayersExponent = .778261
-bNumPlayersPerGame = .077255
+bNumPlayersPerGameExponent = .077255
 
 
 
@@ -32,13 +32,23 @@ setupForMultiplayerElements = () -> (
 )
 
 getDisparityDiv = () -> (
+   disparityInput = getDisparityInput()
+   if disparityInput != null
+    disparityInputFather = disparityInput.parentNode
+)
+
+getDisparityInput = () -> (
    disparityInput = document.getElementById("tournament_expected_disparity")
-   disparityInputFather = disparityInput.parentNode
 )
 
 getTotalMatchesDiv = () -> (
+   totalMatchesInput = getTotalMatchesInput()
+   if totalMatchesInput != null
+    totalMatchesFather = totalMatchesInput.parentNode
+)
+
+getTotalMatchesInput = () -> (
    totalMatchesInput = document.getElementById("tournament_total_matches")
-   totalMatchesFather = totalMatchesInput.parentNode
 )
 
 getMatchTypeSelector = () -> (
@@ -47,19 +57,70 @@ getMatchTypeSelector = () -> (
 
 getNumberOfPlayers = () -> (
    playerNumberHolder =  document.getElementById('rightValues')
-   playerNumberHolder.length
+   #playerNumberHolder.length 
+   return 100
 )
 
-numberOfPlayersChange = () -> (
-  console.log(calculateNumberOfMatchesToPlay())
+RMSEConditionChange = () -> (
+  getDisparity()
+  getNumberOfPlayers()
+  totalMatchesChange() 
 )
+
+totalMatchesChange = () -> (
+  totalMatchesRaw = getTotalMatchesInput().value
+  totalMatches = computeTotalMatchesFromRawInput(totalMatchesRaw)
+  console.log(totalMatches)  
+  RMSE = calculateRMSE(totalMatches)
+  console.log(RMSE)
+)
+
+computeTotalMatchesFromRawInput = (rawMatches) -> (
+  preppedMatches = setupTotalMatchesForLog(rawMatches)
+  totalMatches = Math.pow(preppedMatches, 10)
+)
+
+setupTotalMatchesForLog = (rawMatches) -> (
+  preppedMatches = rawMatches/100
+  return preppedMatches
+)
+  
 
 getNumberOfPlayersPerGame = () -> (
-  4
+  numPlayersPerGame = 4
+  numPlayers = getNumberOfPlayers()
+  if numPlayersPerGame >= numPlayers
+    numPlayersPerGame = numPlayers
+  return numPlayers
+  
 )
 
-getDisparity = () -> (
-  1000
+getDisparity = () -> ( 
+  #WARNING: disparity is currently being calculated as if players were evenly distributed amongst a range of skills, while the formula to calculate RMSE assumes normal distribution
+  #values generated using an ELO calculator                  
+  numPlayers = getNumberOfPlayers()
+  disparityInput = getDisparityInput()
+  disparityString = disparityInput.value
+  if disparityString == "52% of the time"
+    eloDifferenceBetweenConsecutivePlayers = 14
+  else if disparityString == "55% of the time"
+    eloDifferenceBetweenConsecutivePlayers = 35
+  else if disparityString == "65% of the time"
+    eloDifferenceBetweenConsecutivePlayers = 108
+  else if disparityString == "75% of the time"
+    eloDifferenceBetweenConsecutivePlayers = 191 
+  else if disparityString == "85% of the time"
+    eloDifferenceBetweenConsecutivePlayers = 301
+  else if disparityString == "95% of the time"
+    eloDifferenceBetweenConsecutivePlayers = 512
+  else if disparityString == "99% of the time"
+    eloDifferenceBetweenConsecutivePlayers = 798
+  else
+    eloDifferenceBetweenConsecutivePlayers = 0
+  disparityRange = eloDifferenceBetweenConsecutivePlayers*(numPlayers-1)
+  if disparityRange <= 0
+    disparityRange = 0
+  return disparityRange
 )
 
 calculateNumberOfMatchesToPlay = (RMSE) -> ( 
@@ -68,17 +129,40 @@ calculateNumberOfMatchesToPlay = (RMSE) -> (
   numberOfPlayers = getNumberOfPlayers()
   numberOfPlayersPerGame = getNumberOfPlayersPerGame()
   firstPartOfTheTerm = bDisparityCoefficient*Math.pow(disparity, bDisparityExponent)
+  secondPartOfTheTerm = bNumerator/(Math.pow(numberOfPlayers, bNumPlayersExponent)*Math.pow(numberOfPlayersPerGame, bNumPlayersPerGameExponent))
+  b = -(firstPartOfTheTerm*(1-secondPartOfTheTerm))
+  c = cConstant + cNumPlayersCoefficient*(Math.pow(numberOfPlayers, cNumPlayersExponent))
+  numMatchesToPlay = Math.pow((RMSE/c),1/b)
+  if numMachesToPlay <= 0
+    return 0
+  numMatchesToPlay
+)
 
-  secondPartOfTheTerm = bNumerator/(Math.pow(numberOfPlayers, bNumPlayersExponent)*Math.pow(numberOfPlayersPerGame, bNumPlayersPerGame))
-  b = 1/(firstPartOfTheTerm*(1-secondPartOfTheTerm))
-  b
+calculateRMSE = (numMatchesToPlay) -> (
+  disparity = getDisparity()
+  if disparity == 0 
+    return 0  
+  numberOfPlayers = getNumberOfPlayers()
+  numberOfPlayersPerGame = getNumberOfPlayersPerGame()
+  firstPartOfTheTerm = bDisparityCoefficient*Math.pow(disparity, bDisparityExponent)
+  secondPartOfTheTerm = bNumerator/(Math.pow(numberOfPlayers, bNumPlayersExponent)*Math.pow(numberOfPlayersPerGame, bNumPlayersPerGameExponent))
+  b = -1*(firstPartOfTheTerm*(1-secondPartOfTheTerm))
+  c = cConstant + cNumPlayersCoefficient*(Math.pow(numberOfPlayers, cNumPlayersExponent))
+  RMSE = c*Math.pow(numMatchesToPlay, b)
+  if RMSE <= 0
+    return 0
+  return RMSE
 )
 
 attachListeners = () -> (
    matchType = getMatchTypeSelector()
-   matchType.addEventListener("click", setupForMultiplayerElements)
+   matchType.addEventListener('click', setupForMultiplayerElements)
+   totalMatchesInput = getTotalMatchesInput()
+   totalMatchesInput.addEventListener('click', totalMatchesChange)
+   disparityInput = getDisparityInput()
+   disparityInput.addEventListener('click', RMSEConditionChange)
    rightButton = document.getElementById('btnRight')
    leftButton  = document.getElementById('btnLeft')
-   rightButton.addEventListener('click', numberOfPlayersChange)
-   leftButton.addEventListener('click', numberOfPlayersChange)
+   rightButton.addEventListener('click', RMSEConditionChange)
+   leftButton.addEventListener('click', RMSEConditionChange)
 )
