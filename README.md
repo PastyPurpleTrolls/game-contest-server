@@ -15,18 +15,18 @@ The user documentation can be found in [documentation](/documentation)
 
 Clone the repo: `git clone https://github.com/PastyPurpleTrolls/game-contest-server.git`
 
-Install Docker and Docker.io
+Install `docker` and `docker.io`
 ```bash
 $ sudo apt-get install docker && docker.io
 ```
 
-Install Docker-compose. At the time docker was implemted into the project the version of docker-compose on apt-get was out of date so it needed to be installed from github. It may be up to date in the future. The version was 1.18.
+Install `docker-compose`. At the time of writing, `docker-compose` on `apt-get` was outdated (v. 1.18), so it needed to be installed from GitHub. It may be up to date in the future.
 ```bash
 curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 ```
 
-In order to run certain docker commands  without sudo users need to be added to the docker group. If the docker group hasn't been created go ahead and make it. After that add any users you need to the group. The**$USER** is replaced with their username. The user will need to log out and back in for the changes to take affect.
+In order to run certain Docker commands without `sudo`, users need to be added to the `docker` group. If the `docker` group hasn't been created, go ahead and make it. After that, add any users you need to the group. The**$USER** is replaced with their username. The user will need to log out and back in for the changes to take effect.
 
 ```bash
 sudo groupadd docker
@@ -35,13 +35,13 @@ sudo gpasswd -a $USER docker
 
 ## Running (dev)
 
-When developing the software you will need to go into the **docker-compose.yml** and uncomment these two lines. These two lines make it so the docker container the host machine share files with one another allowing your change to be reflected inside the container.
+When developing the software, you will need to go into the **docker-compose.yml** and uncomment these two lines. These two lines make it so the Docker container and the host machine share files with one another, allowing your changes to be reflected inside the container.
 
 ```bash
     volumes:
       - .:/myapp
 ```
-The first time you run the project or whenever you make changes to the **Dockerfile** you will need to build a new image.
+The first time you run the project, or whenever you make changes to the **Dockerfile**, you will need to build a new image.
 ```bash
 $ docker-compose build
 ```
