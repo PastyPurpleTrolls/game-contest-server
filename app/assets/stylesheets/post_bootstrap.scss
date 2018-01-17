@@ -25,7 +25,7 @@ body {
 // Keeps the bottom of the page separate from the
 // edge of the browser.
     padding-bottom: 20px;
-    font-family: Verdana, Geneva, sans-serif;
+    font-family: 'Merriweather', serif;
     background-color: transparent;
 }
 
@@ -84,16 +84,16 @@ body {
 .display-container, .home-container {
     background-color: #d9d7cb;
     color: #625346;
-    vertical-align:middle;
+    vertical-align: middle;
     padding: 30px;
 }
 
 .display-container {
-    margin-top: 50px;
+    margin-top: 10px;
 }
 
 .display-container a, .player-label, .warning-label {
-    color: white;
+    color: #625346;
 }
 
 .system-status {
@@ -165,7 +165,7 @@ a.active:hover {
 }
 
 .gly-plus:hover {
-    color: #D6FFFF;
+    color: #433622;
 }
 
 .header-title {
@@ -239,7 +239,7 @@ label {
     text-align: left;
 }
 
-.new-heading{
+.new-heading {
     margin-bottom: 40px;
 }
 
@@ -248,15 +248,24 @@ label {
 }
 
 .info-container a, .player-results-container, .player-results-container a {
-    color: #4999B4;
+    color: #625346;
     text-decoration: underline;
 }
 
+.info-container a:hover, .info-container a:active,
+.player-results-container:hover, .player-results-container:active,
+.player-results-container a:hover, .player-results-container a:active {
+  color: #433622;
+}
+
 .results-container, .info-container {
-    background-color: white;
-    border-radius: 25px;
-    color: #4999B4;
-    margin: 10px 0px;
+    background-color: #f3f2ef;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),
+    0 3px 1px -2px rgba(0,0,0,.2),
+    0 1px 5px 0 rgba(0,0,0,.12);
+    border-radius: 5px;
+    color: #4f4032;
+    margin: 8px 0px;
     padding: 5px;
     list-style-type: none;
     font-size: 16px;
@@ -269,6 +278,11 @@ label {
 .xs-font {
     font-size: 12px;
 }
+
+.results-container {
+  border: none;
+}
+
 
 .results-container, .ref-contest-container {
     width: 80%;
@@ -285,7 +299,7 @@ label {
 
 }
 .results-container:hover, .home-container:hover {
-    background-color: #D6FFFF;
+    background-color: #b9b59f;
 }
 
 .right {
@@ -293,7 +307,7 @@ label {
 }
 
 .row {
-    margin-bottom: 30px;
+    margin-bottom: 5px;
     margin-left: 0px !important;
     margin-right: 0px !important;
 }
@@ -331,4 +345,8 @@ label {
 
 .banner-wrap {
   width: 950px;
+}
+
+input[type=submit] {
+  color: #433622;
 }
