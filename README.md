@@ -26,7 +26,7 @@ curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compos
 chmod +x /usr/local/bin/docker-compose
 ```
 
-In order to run certain Docker commands without `sudo`, users need to be added to the `docker` group. If the `docker` group hasn't been created, go ahead and make it. After that, add any users you need to the group. The**$USER** is replaced with their username. The user will need to log out and back in for the changes to take effect.
+In order to run certain Docker commands without `sudo`, users need to be added to the `docker` group. If the `docker` group hasn't been created, go ahead and make it. After that, add any users you need to the group. `$USER` is replaced with their username. The user will need to log out and back in for the changes to take effect.
 
 ```bash
 sudo groupadd docker
