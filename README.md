@@ -26,7 +26,7 @@ curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compos
 chmod +x /usr/local/bin/docker-compose
 ```
 
-In order to run certain docker commands  without sudo users need to be added to the docker group. If the docker group hasn't been created go ahead and make it. After that add any users you need to the group. The**$USER** is replaced with their username. The user will need to log out and back in for the changes to take affect.
+In order to run certain docker commands  without sudo, users need to be added to the docker group. If the docker group hasn't been created go ahead and make it. After that add any users you need to the group. The**$USER** is replaced with their username. The user will need to log out and back in for the changes to take affect.
 
 ```bash
 sudo groupadd docker
@@ -35,7 +35,7 @@ sudo gpasswd -a $USER docker
 
 ## Running (dev)
 
-When developing the software you will need to go into the **docker-compose.yml** and uncomment these two lines. These two lines make it so the docker container the host machine share files with one another allowing your change to be reflected inside the container.
+When developing the software you will need to go into the **docker-compose.yml** and uncomment these two lines. These two lines make it so the docker container and the host machine share files with one another allowing your change to be reflected inside the container.
 
 ```bash
     volumes:
@@ -50,29 +50,37 @@ Start the server
 $ docker-compose up
 ```
 
-
-
-
-
-
-
-Start the daemon (checks for new tournaments and matches)
-
+If you need access to the rails console for debugging you'll need to run this to get inside of the container.
 ```bash
-$ /usr/local/rvm/gems/ruby-2.2.0/bin/clockworkd -d . start ./clock.rb --log
+docker exec -it gamecontestserver_web_1 bash
 ```
-
-Stop the dameon
-
+To start and stop the clockwork daemon from inside conatiner.
 ```bash
-$ /usr/local/rvm/gems/ruby-2.2.0/bin/clockworkd stop ./clock.rb --log
+clockworkd -d . start ./clock.rb --log
+clockworkd -d . stop ./clock.rb --log
 ```
-
-View the logs from the daemon (from the root of the game server directory: 
-
+To view the logs of the clockwork daemon run this from inside the container.
 ```bash 
 tail -f tmp/clockworkd.clock.output
 ```
+
+## Running (production)
+When a development build is ready to be uploaded to the docker repository you'll need to build the image. 
+```bash
+docker build -t aires .
+```
+Dr. Geisler will be the one that uploads the images. The image needs to be tagged and then pushed.
+```bash
+docker tag aires $DOCKER_ID_USER/aires
+docker push $DOCKER_ID_USER/aires
+```
+
+Running the website with the production image is slightly different.
+
+```bash
+docker run -d -p 3000:3000 aires
+```
+
 
 ### Manage Users
 
