@@ -50,29 +50,41 @@ Start the server
 $ docker-compose up
 ```
 
-
-
-
-
-
-
-Start the daemon (checks for new tournaments and matches)
-
+If you need access to the rails console for debugging you'll need to run this to get inside of the container.
 ```bash
-$ /usr/local/rvm/gems/ruby-2.2.0/bin/clockworkd -d . start ./clock.rb --log
+docker exec -it gamecontestserver_web_1 bash
 ```
-
-Stop the dameon
-
+To start and stop the clockwork daemon from inside conatiner.
 ```bash
-$ /usr/local/rvm/gems/ruby-2.2.0/bin/clockworkd stop ./clock.rb --log
+clockworkd -d . start ./clock.rb --log
+clockworkd -d . stop ./clock.rb --log
 ```
-
-View the logs from the daemon (from the root of the game server directory: 
-
+To view the logs of the clockwork daemon run this from inside the container.
 ```bash 
 tail -f tmp/clockworkd.clock.output
 ```
+
+## Running (production)
+The **Dockerfile** needs to be updated to have the project run in production. 
+```bash
+ENV RAILS_ENV production.
+```
+When a development build is ready to be uploaded to the docker repository you'll need to build the image. 
+```bash
+docker build -t aires .
+```
+Dr. Geisler will be the one that uploads the images. The image needs to be tagged and then pushed.
+```bash
+docker tag aires $DOCKER_ID_USER/aires
+docker push $DOCKER_ID_USER/aires
+```
+
+Running the website with the production image is slightly different.
+
+```bash
+docker run -d -p 3000:3000 aires
+```
+
 
 ### Manage Users
 

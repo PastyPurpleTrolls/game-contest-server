@@ -11,6 +11,7 @@
 from optparse import OptionParser
 import socket
 from random import choice
+import datetime
 
 # Parsing command line arguments
 # Usage: client.py --name [name] -p [port]"
@@ -35,11 +36,13 @@ s.send(message.encode())
 while True:
     reply = s.recv(4096).decode()
     if "move" in reply:
+        # currentTime = datetime.datetime.now()
         guesses = ['a', 'b', 'c', 'w']
-        blah = choice(guesses) + "\n"
-        s.send(blah.encode())
+        playerMove = choice(guesses) + "\n"
+        s.send(playerMove.encode())
+        # print("{:%H:%M} - Guess:{}".format(currentTime, playerMove))
     elif "wins" in reply:
-        #print(NAME + ': ' + reply.strip())
+        print(NAME + ': 1' + reply.strip())
         break
 
 s.close()
