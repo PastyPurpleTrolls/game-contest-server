@@ -3,13 +3,9 @@ def login(user, options = {})
     post sessions_path, params: { username: user.username, password: user.password }
     get response.location if response.redirect?
   else
-    puts 10
     visit login_path
-    puts 11
     fill_in 'Username', with: user.username
-    puts 12
     fill_in 'Password', with: user.password
-    puts 13
     click_button 'Log In'
     page.find('a', text: 'Log Out')
   end
