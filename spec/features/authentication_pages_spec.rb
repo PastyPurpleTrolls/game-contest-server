@@ -48,8 +48,6 @@ describe "AuthenticationPages" do
           should_not have_link('Settings')
           should_not have_link('Profile')
         end
-
-        it {should have_alert(:info)}
       end
     end
   end
