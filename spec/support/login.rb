@@ -1,12 +1,13 @@
 def login(user, options = {})
   if options[:avoid_capybara]
     post sessions_path, params: { username: user.username, password: user.password }
+    get response.location if response.redirect?
   else
     visit login_path
     fill_in 'Username', with: user.username
     fill_in 'Password', with: user.password
     click_button 'Log In'
-    page.find('.alert')
+    page.find('a', text: 'Log Out')
   end
 end
 

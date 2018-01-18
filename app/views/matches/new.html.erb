@@ -12,7 +12,7 @@
             <%= form_for [@match.manager, @match] do |f| %>
                 <%= render 'shared/error_messages', object: @match %>
                 <%= render 'fields', f: f %>
-                <%= f.submit 'Challenge!', class: 'btn btn-warning' %>
+                <%= f.submit 'Challenge!', class: 'btn btn-danger' %>
             <% end %>
         <% end %>
     </div>

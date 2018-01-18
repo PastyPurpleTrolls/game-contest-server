@@ -17,11 +17,16 @@ loaded, so the classes are not overridden.
     text-align: center;
 }
 
+html {
+  background-color: #f3f2ef;
+}
+
 body {
 // Keeps the bottom of the page separate from the
 // edge of the browser.
     padding-bottom: 20px;
-    font-family: Verdana, Geneva, sans-serif;
+    font-family: 'Merriweather', serif;
+    background-color: transparent;
 }
 
 .center {
@@ -45,7 +50,6 @@ body {
 .date-time {
     @extend .form-input;
     display: inline;
-    width: auto;
 }
 
 .form-group {
@@ -69,24 +73,32 @@ body {
     }
 }
 
+.navbar-nav {
+  margin: 0;
+}
+
+.navbar-brand {
+  padding: 0 30px 0 0;
+}
+
 .display-container, .home-container {
-    background-color: #4ea3b8;
-    color: white;
-    vertical-align:middle;
+    background-color: #d9d7cb;
+    color: #625346;
+    vertical-align: middle;
     padding: 30px;
 }
 
 .display-container {
-    margin-top: 50px;
+    margin-top: 10px;
 }
 
 .display-container a, .player-label, .warning-label {
-    color: white;
+    color: #625346;
 }
 
 .system-status {
     padding-right: 10px;
-    color: white;    
+    color: #433622;
 }
 
 .system-check {
@@ -127,6 +139,10 @@ form textarea {
     height: 15px;
 }
 
+.small-box {
+  height: auto;
+}
+
 .form-dropdown {
     margin-top: 15px;
 }
@@ -144,8 +160,12 @@ a.active:hover {
     cursor: pointer;
 }
 
-.form-input{
-    color: #4999B4;
+.form-input {
+    color: #4f4032;
+}
+
+.form-control {
+  width: 40%;
 }
 
 .gly-plus, .home-gly {
@@ -153,19 +173,32 @@ a.active:hover {
 }
 
 .gly-plus:hover {
-    color: #D6FFFF;    
+    color: #433622;
 }
 
 .header-title {
-    color: white;
-    padding-top: 160px;
+    color: #4f4032;
 }
 
 .headings {
-    font-family: "Courier New", Courier, monospace;
+  font-family: 'Merriweather', serif;
+}
+
+p.col-xs-4 {
+  margin: 5px 0 5px 0;
+}
+
+#btnRight, #btnLeft {
+  font-family: FontAwesome;
+  margin-bottom: 5px;
+}
+
+.col-xs-4 {
+  padding-right: 0px;
 }
 
 label {
+    margin-top: 5px;
     font-weight: normal;
 }
 
@@ -174,14 +207,21 @@ label {
 }
 
 .player-results-container {
-    background-color: white;
-    padding-top: 20px;
+    background-color: #f3f2ef;
+    padding-top: 5px;
     padding-bottom: 1px;
     font-size: 16px;
 }
 
+div:not(.my-player) > .col-xs-3 {
+  font-size: 1.5em;
+  font-weight: 700;
+  font-family: 'PT Serif', serif;
+}
+
 .my-player {
-    font-weight: 700;
+    font-weight: 600;
+    font-family: 'PT Serif', serif;
 }
 
 .info-link a {
@@ -190,7 +230,7 @@ label {
 
 .info-text, .info-link {
     padding-left: 0px;
-    padding-right: 0px;    
+    padding-right: 0px;
 }
 
 .no-left-padding {
@@ -198,7 +238,7 @@ label {
 }
 
 .no-right-padding {
-    padding-right: 0px;        
+    padding-right: 0px;
 }
 
 .left-padding {
@@ -210,12 +250,11 @@ label {
 }
 
 .jumbotron {
-    background-image: url('./battleship.jpg');    
-    background-size: 1140px 100%;
+    // background-image: url('./banner.svg');
+    background-size: 695px 251px 50%;
     background-repeat: no-repeat;
     background-position: center;
-    background-color: #C10000;
-    height: 300px;
+    background-color: transparent;
     margin-bottom: 0px;
 }
 
@@ -229,7 +268,7 @@ label {
     text-align: left;
 }
 
-.new-heading{
+.new-heading {
     margin-bottom: 40px;
 }
 
@@ -238,15 +277,24 @@ label {
 }
 
 .info-container a, .player-results-container, .player-results-container a {
-    color: #4999B4;  
-    text-decoration: underline;  
+    color: #625346;
+    text-decoration: underline;
+}
+
+.info-container a:hover, .info-container a:active,
+.player-results-container:hover, .player-results-container:active,
+.player-results-container a:hover, .player-results-container a:active {
+  color: #433622;
 }
 
 .results-container, .info-container {
-    background-color: white;
-    border-radius: 25px;
-    color: #4999B4;
-    margin: 10px 0px;
+    background-color: #f3f2ef;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),
+    0 3px 1px -2px rgba(0,0,0,.2),
+    0 1px 5px 0 rgba(0,0,0,.12);
+    border-radius: 5px;
+    color: #4f4032;
+    margin: 8px 0px;
     padding: 5px;
     list-style-type: none;
     font-size: 16px;
@@ -260,13 +308,24 @@ label {
     font-size: 12px;
 }
 
+.results-container {
+  border: none;
+}
+
+
 .results-container, .ref-contest-container {
     width: 80%;
     margin: 5px;
 }
 
+.multiselector {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .results-container a, .multiselector, .home-container:hover {
-    color: #4999B4;
+    color: #433622;
 }
 
 .profile-container {
@@ -275,7 +334,7 @@ label {
 
 }
 .results-container:hover, .home-container:hover {
-    background-color: #D6FFFF;
+    background-color: #b9b59f;
 }
 
 .right {
@@ -283,9 +342,9 @@ label {
 }
 
 .row {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     margin-left: 0px !important;
-    margin-right: 0px !important;    
+    margin-right: 0px !important;
 }
 
 .search-container {
@@ -304,10 +363,29 @@ label {
     padding: 4px;
 }
 
-.player-selectors {
-    width: 50px;
-}
-
 .first-player-select {
     margin-left: 15px;
+}
+
+.home-banner {
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	margin-top: 25px;
+}
+
+.banner-wrap {
+  width: 950px;
+}
+
+input[type=submit] {
+  color: #433622;
+}
+
+.btn {
+  background-color: #d9d7cb;
+}
+
+.container.center.display-container.col-md-offset-3.col-md-6 {
+	width: 55%;
 }

@@ -2,7 +2,7 @@
 // Blues
 $b1: #D6FFFF;
 $b2: #92c6d3;
-$b3: #4ea3b8;
+$b3: #433622;
 $b4: #4999B4;
 $b5: #24505b;
 
@@ -16,7 +16,7 @@ $g5: #026109;
 // Reds
 $r1: #FFCCCC;
 $r2: #FF6666;
-$r3: #FF0000;
+$r3: #625346;
 $r4: #C10000;
 $r5: #800000;
 
@@ -28,22 +28,22 @@ $brand-danger:  $r3;
 
 
 // Navbar
-$navbar-default-bg:                 white;
+$navbar-default-bg:                 #d9d7cb;
 $navbar-default-link-color:         $r3;
 $navbar-default-link-hover-color:   $b3;
 $navbar-default-brand-color:        $r3;
 $navbar-height: 60;
 
 // Primary (blue)
-$btn-primary-bg:       $brand-primary;
-$btn-primary-color:    #FFFFFF;
+$btn-primary-bg:       #b9b59f;
+$btn-primary-color:    #433622;
 
 // Sucess (green)
 $state-success-bg:     lighten($brand-success, 10%);
 $state-success-text:   darken($brand-success, 30%);
 $state-success-border: darken($state-success-bg, 25%);
 $btn-success-bg:       darken($brand-success, 20%);
-$btn-success-color:    #FFFFFF;//lighten($brand-success, 35%);
+$btn-success-color:    #625346;//lighten($brand-success, 35%);
 //$btn-success-border:   darken($brand-success, 10%);
 
 // Info (light blue)
@@ -51,7 +51,7 @@ $state-info-bg:        lighten($brand-info, 10%);
 $state-info-text:      darken($brand-info, 30%);
 $state-info-border:    darken($state-info-bg, 25%);
 $btn-info-bg:          $brand-info;//darken($brand-info, 20%);
-$btn-info-color:       #FFFFFF;//lighten($brand-info, 35%);
+$btn-info-color:       #625346;//lighten($brand-info, 35%);
 //$btn-info-border:      darken($brand-info, 50%);
 
 // Warning (light red)
@@ -59,14 +59,14 @@ $state-warning-bg:     lighten($brand-warning, 10%);
 $state-warning-text:   darken($brand-warning, 30%);
 $state-warning-border: darken($state-warning-bg, 25%);
 $btn-warning-bg:       darken($brand-warning, 10%);
-$btn-warning-color:    #FFFFFF;//lighten($brand-warning, 35%);
+$btn-warning-color:    #625346;//lighten($brand-warning, 35%);
 
 // Danger (red)
-$state-danger-bg:      lighten($brand-danger, 10%);
-$state-danger-text:    darken($brand-danger, 30%);
-$state-danger-border: darken($state-danger-bg, 25%);
-$btn-danger-bg:        darken($brand-danger, 10%);
-$btn-danger-color:     #FFFFFF;//lighten($brand-danger, 35%);
+$state-danger-bg:      #C10000;
+$state-danger-text:    #FFFFFF;
+$state-danger-border:  #C10000;
+$btn-danger-bg:        #b9b59f;
+$btn-danger-color:     #625346;//lighten($brand-danger, 35%);
 
 
 @import "bootstrap-sprockets";

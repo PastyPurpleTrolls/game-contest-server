@@ -20,17 +20,15 @@ GameContestServer::Application.routes.draw do
   
   resources :contests, shallow: true do
     resources :matches, except: [:edit, :update]
-    resources :players
-    resources :tournaments, shallow: true do
+    resources :players, except: :index
+    resources :tournaments, except: :index, shallow: true do
       resources :players
       resources :matches, only: [:index] do
 	      resources :rounds, only: [:show]
       end
     end
   end
-  
-  
-  
+
   resources :sessions, only: [:new, :create, :destroy]
   
   get 'signup', to: 'users#new', as: :signup

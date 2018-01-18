@@ -12,7 +12,7 @@
             <%= form_for [@player.contest, @player] do |f| %>
                 <%= render 'shared/error_messages', object: @player %>
                 <%= render 'fields', f: f %>
-                <%= f.submit 'Create Player', class: 'btn btn-warning' %>
+                <%= f.submit 'Create Player', class: 'btn btn-danger' %>
             <% end %>
         <% end %>
     </div>
