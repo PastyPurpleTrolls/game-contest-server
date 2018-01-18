@@ -2,7 +2,7 @@
 <br>
 <ol class="breadcrumb">
     <li><a href="<%= root_path %>">Home</a></li>
-    <% if params[:contest_id] == "not-specified" %>
+    <% if params[:contest_id] != "not-specified" %>
         <li><a href="<%= contests_path %>">Contests</a></li>
         <li><a href="<%= contest_path(@contest) %>"><%= @contest.name %></a></li>
     <% end %>

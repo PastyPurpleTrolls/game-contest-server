@@ -6,7 +6,9 @@
 <ol class="breadcrumb">
     <li><a href="<%= root_path %>">Home</a></li>
     <li><a href="<%= contests_path %>">Contests</a></li>
-    <li><a href="<%= contest_path(@match.manager.contest) %>"><%= @match.manager.contest.name %></a></li>
+    <% if @match.manager_type != 'Contest' %>
+        <li><a href="<%= contest_path(@match.manager.contest) %>"><%= @match.manager.contest.name %></a></li>
+    <% end %>
     <li class="active"><%= @match.manager.name %></li>
 </ol>
 <div class="row">

@@ -14,14 +14,14 @@ class PlayersController < ApplicationController
   end
 
   def create
-    contest = Contest.friendly.find(params[:contest_id])
-    @player = contest.players.build(acceptable_create_params)
+    @contest = Contest.friendly.find(params[:contest_id])
+    @player = @contest.players.build(acceptable_create_params)
     @player.upload = params[:player][:upload]
     @player.user = current_user
     if @player.save
       flash[:success] = 'New Player created.'
 
-      startTestMatch(@player.id, contest) #if params[:player][:run_test]
+      startTestMatch(@player.id, @contest) #if params[:player][:run_test]
 
       redirect_to @player
     else
