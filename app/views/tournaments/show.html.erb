@@ -25,7 +25,7 @@
             </div>
             <div class="col-md-6">
                 <% if @tournament.status == "completed" %>
-                    <p class="info-container">Finished: <%= distance_of_time_in_words_to_now(@tournament.start).split.map { |i| i.capitalize }.join(' ')%> Ago</p>
+                    <p class="info-container">Finished: <%= distance_of_time_in_words_to_now(@tournament.start).split.map { |i| i.capitalize }.join(' ') %> Ago</p>
                 <% else %>
                     <p class="info-container">Start: In <%= distance_of_time_in_words_to_now(@tournament.start).split.map { |i| i.capitalize }.join(' ')%></p>
                 <% end %>
@@ -64,5 +64,5 @@
 <% elsif @tournament.tournament_type == "multiplayer game" %>
     <%= render "multiplayer_game_tournament" %>
 <% else %>
-    <%= renter "king_of_the_hill" %>
+    <%= render "king_of_the_hill" %>
 <% end %>
