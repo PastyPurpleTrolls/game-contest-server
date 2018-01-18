@@ -6,8 +6,8 @@ describe "RoundWrapper" do
     pending("Is really broken")
     @user = FactoryBot.create(:user)
     @contest = FactoryBot.create(:contest)
-    @player1 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'dumb_player', file_location: Rails.root.join('examples', 'guess-w', 'sometimes_win_player.py').to_s )
-    @player2 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'stupid_player', file_location: Rails.root.join('examples', 'guess-w', 'sometimes_win_player.py').to_s )
+    @player1 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'dumb_player', file_location: Rails.root.join('examples', 'guess-w', 'test_player.py').to_s )
+    @player2 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'stupid_player', file_location: Rails.root.join('examples', 'guess-w', 'test_player.py').to_s )
     @referee = FactoryBot.create(:referee, name: "referee", file_location: Rails.root.join('examples', 'guess-w', 'test_referee.py').to_s )
     @match_wrapper = RoundWrapper.new(@referee , 2, 5, [@player1, @player2], 1)
   end
@@ -33,8 +33,8 @@ describe "RoundWrapper" do
     pending("Is really broken")
     @user = FactoryBot.create(:user)
     @contest = FactoryBot.create(:contest)
-    @player1 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'dumb_player', file_location: Rails.root.join('examples', 'guess-w', 'sometimes_win_player.py').to_s )
-    @player2 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'stupid_player', file_location: Rails.root.join('examples', 'guess-w', 'sometimes_win_player.py').to_s )
+    @player1 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'dumb_player', file_location: Rails.root.join('examples', 'guess-w', 'test_player.py').to_s )
+    @player2 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'stupid_player', file_location: Rails.root.join('examples', 'guess-w', 'test_player.py').to_s )
     @referee = FactoryBot.create(:referee, name: "referee", file_location: Rails.root.join('spec', 'files', 'dumb_referee.py').to_s )
     @match_wrapper = RoundWrapper.new(@referee , 2, 5, [@player1, @player2], 1)
   end
