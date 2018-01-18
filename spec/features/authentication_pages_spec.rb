@@ -5,7 +5,7 @@ describe "AuthenticationPages" do
   describe "login page" do
     before { visit login_path }
 
-    it { should have_selector("h2", "Login") }                       
+    it { should have_selector("h2", text: "Login") }                       
 
     describe "with invalid account" do
       before { click_button 'Log In' }
@@ -36,8 +36,6 @@ describe "AuthenticationPages" do
       it { should_not have_button('Log In') }
       it { should_not have_link('Sign Up', href: signup_path) }
       it { should_not have_button('Sign Up') }
-
-      it { should have_alert(:success) }
 
       describe "followed by logout" do
         before { click_link 'Log Out' }

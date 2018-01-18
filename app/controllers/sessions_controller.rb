@@ -13,7 +13,6 @@ class SessionsController < ApplicationController
     user = User.find_by(username: params[:username])
     if user && user.authenticate(params[:password])
       login user
-      flash[:success] = 'Logged in.'
       redirect_to root_path
     else
       flash.now[:danger] = 'Invalid username or password'

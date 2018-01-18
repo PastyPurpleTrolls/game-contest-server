@@ -30,7 +30,7 @@ attach_file('Replay Plugin', file_location)
 attach_file('Test Player', file_location)          
     end
 
-    it { should have_selector("h2", "Add Referee") }             
+    it { should have_selector("h2", text: "Add Referee") }             
 
     describe "invalid information" do
       describe "missing information" do
@@ -167,7 +167,7 @@ attach_file('Replay Plugin', file_location)
 attach_file('Test Player', file_location)          
     end
 
-    it { should have_selector("h2", "Edit Referee") }             
+    it { should have_selector("h2", text: "Edit Referee") }             
     it { should have_field('Name', with: referee.name) }
     it { should have_field('Rules', with: referee.rules_url) }
 
@@ -262,12 +262,12 @@ attach_file('Test Player', file_location)
       it "does not add a new referee to the system" do
         expect { click_button submit }.not_to change(Referee, :count)
       end
-    end
 
-    it "should modify an existing referee" do
-      expect do
-        click_button submit
-      end.not_to change{ Dir.entries(server_location).size }
+      it "should modify an existing referee" do
+        expect do
+          click_button submit
+        end.not_to change{ Dir.entries(server_location).size }
+      end
     end
   end
 
@@ -417,7 +417,7 @@ attach_file('Test Player', file_location)
       visit referee_path(referee)
     end
 
-    it { should have_selector("h2", "Referee") }             
+    it { should have_selector("h2", text: "Referee") }             
     it { should have_content(referee.name) }
     it { should have_link(referee.rules_url) }
     it { should have_content(referee.round_limit) }
@@ -440,7 +440,7 @@ attach_file('Test Player', file_location)
       visit referees_path
     end
 
-    it { should have_selector("h2", "Referee") }             
+    it { should have_selector("h2", text: "Referee") }             
 
     it "does not have adding option" do
       should_not have_link('', href: new_referee_path)
@@ -449,7 +449,11 @@ attach_file('Test Player', file_location)
     it "lists all the referees in the system" do
       Referee.all.each do |ref|
         should have_selector('input.results-container')
-        should have_button(ref.name, referee_path(ref))
+        should have_selector("form[action='#{referee_path(ref)}']")
+
+        within "form[action='#{referee_path(ref)}']" do
+          should have_button(ref.name)
+        end
       end
     end
   end
@@ -461,7 +465,7 @@ attach_file('Test Player', file_location)
       visit referees_path
     end
 
-    it { should have_selector("h2", "Referee") }             
+    it { should have_selector("h2", text: "Referee") }             
 
     it "has adding option" do
       should have_link('', href: new_referee_path)

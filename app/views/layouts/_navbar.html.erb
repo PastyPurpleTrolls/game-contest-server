@@ -27,8 +27,8 @@
                     </ul>
                 </li>
             <% else %>
-                <li><%= button_to 'Log In', login_path, method: :get, class: 'btn btn-info navbar-btn' unless current_page?(login_path) %></li>
-                <li><%= button_to 'Sign Up', signup_path, method: :get, class: 'btn btn-warning navbar-btn' unless current_page?(signup_path) %></li>
+                <li><%= button_to 'Log In', login_path, method: :get, class: 'btn btn-primary navbar-btn' unless current_page?(login_path) %></li>
+                <li><%= button_to 'Sign Up', signup_path, method: :get, class: 'btn btn-danger navbar-btn' unless current_page?(signup_path) %></li>
             <% end %>
         </ul>
     </div>
@@ -36,13 +36,15 @@
 <div class="jumbotron">
   <div class="container banner-container">
     <h2 class="center header-title headings"><%= @title || yield(:title) %></h2>
-		<div class="right system-status">
-            System Status: 
-            <% if @daemon_status then %>
-                <span class="glyphicon glyphicon-ok system-check" aria-hidden="true"></span>
-            <% else %>
-                <span class="glyphicon glyphicon-remove system-x" aria-hidden="true"></span>
-            <% end %>
-        </div>
+        <% if current_user&.admin %>
+		    <div class="right system-status">
+                System Status: 
+                <% if @daemon_status then %>
+                    <span class="glyphicon glyphicon-ok system-check" aria-hidden="true"></span>
+                <% else %>
+                    <span class="glyphicon glyphicon-remove system-x" aria-hidden="true"></span>
+                <% end %>
+            </div>
+        <% end %>
   </div>
 </div>

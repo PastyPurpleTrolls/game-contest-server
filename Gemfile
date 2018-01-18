@@ -34,6 +34,7 @@ end
 
 group :development do
   gem 'guard-livereload', require: false
+  gem 'pry-rails'
 end
 
 gem 'bcrypt', '~> 3.1.7'

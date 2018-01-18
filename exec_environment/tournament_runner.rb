@@ -112,10 +112,10 @@ class TournamentRunner
 
     #Runs multiplayer game tournament (three or more players per match)
     def multiplayer_game(players, numPlayers)
-        #rounds = MatchRunner.num_rounds
+        #TODO change to "1" @tournament.total_matches, or whatever it will be called
         1.times do
-            #selected_players = players.sample(@tournament.contest.referee.players_per_game)
             selected_players = players.sample(numPlayers)
+            #TODO change to @tournament.rounds_per_match to @tournament.total_matches, or whatever it will be called
             create_match(selected_players, @tournament.rounds_per_match)
        end
     end
@@ -160,7 +160,6 @@ class TournamentRunner
         )
         puts "   Added path (on "+result+") from match #"+parent.id.to_s+" to match #"+child.id.to_s
     end
-
 end
 
 #What gets run when the daemon starts up a new tournament

@@ -3,7 +3,6 @@ require 'rails_helper'
 describe Player do
     describe "available routes" do
         describe "within contest" do
-            specify { expect(get(contest_players_path(1))).to be_routable }
             specify { expect(post(contest_players_path(1))).to be_routable }
             specify { expect(get(new_contest_player_path(1))).to be_routable }
             # Perhaps later we'll add functionality to be able to leave a tourney
