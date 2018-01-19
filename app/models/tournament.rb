@@ -17,6 +17,9 @@ class Tournament < ActiveRecord::Base
   def referee
     contest.referee
   end
+  
+  def expected_disparity
+  end
 
   def self.search(search)
     if search
