@@ -1,0 +1,35 @@
+<% hill = []
+first_match = @tournament.matches.last
+#First case
+if first_match.player_matches[0].result == "Win"
+    hill[0] = first_match.player_matches[0].player.id
+    hill[1] = first_match.player_matches[1].player.id
+else
+    hill[1] = first_match.player_matches[0].player.id
+    hill[0] = first_match.player_matches[1].player.id
+end
+last_player = hill[1]
+#The rest
+size = @tournament.matches.count
+@tournament.matches.reorder("matches.created_at ASC")[1..(size - 1)].each do |m| 
+    if m.player_matches[1].result == "Win"
+        hill.insert(hill.index(m.player_matches[0].player_id), m.player_matches[1].player_id)
+    elsif m.player_matches[0].player_id == last_player
+        hill << m.player_matches[1].player_id
+        last_player = m.player_matches[1].player_id
+    end
+end %>
+<div class="row">
+    <div class="container center display-container col-md-10 col-md-offset-1">
+        <h1 class="headings row left">Player Information</h1>
+        <div class="row">
+            <div class="col-xs-3">Place</div>        
+            <div class="col-xs-3">Name</div>
+            <div class="col-xs-3">Creator</div>
+            <div class="col-xs-3">Wins</div>
+        </div>
+        <div class="player-results-container">
+            <%= render @tournament.players.sort_by{|p| hill.index(p.id)} %>
+        </div>
+    </div>
+</div>

@@ -42,6 +42,7 @@
         </div>
     </div>
 </div>
+<% unless @tournament.tournament_type == "king of the hill" %>
 <div class="row">
     <div class="container center display-container col-md-10 col-md-offset-1">
         <h1 class="headings row left">Player Information</h1>
@@ -56,9 +57,13 @@
         </div>
     </div>
 </div>
+<% end %>
 
 <% if @tournament.tournament_type == "round robin" %>
     <%= render "round_robin_tournament" %>
-<% else %>
+<% elsif @tournament.tournament_type == "single elimination" %>
     <%= render "single_elimination_tournament" %>
+<% else %>
+    <%= render "king_of_the_hill_tournament" %>
+
 <% end %>

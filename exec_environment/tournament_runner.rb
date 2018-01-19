@@ -65,6 +65,8 @@ class TournamentRunner
                     single_elimination(@tournament_players)
                 end
                 return
+            when "king of the hill"
+                king_of_the_hill(@tournament_players)
             else
                 puts " ERROR: Tournament type is not recognized"
                 return
@@ -76,14 +78,14 @@ class TournamentRunner
     #Runs a round robin tournament with each player playing every other player twice.
     #Currently only works with 2 player games 
     def round_robin(players)
-	players.each do |p|
-	    players.each do |q|
-		    if p != q
-		        match_players = [p, q]
-			    create_match(match_players, @tournament.rounds_per_match)
-		    end
+	    players.each do |p|
+	        players.each do |q|
+		        if p != q
+		            match_players = [p, q]
+			        create_match(match_players, @tournament.rounds_per_match)
+		        end
+	        end
 	    end
-	end
     end
     
     #Runs a single elimination tournament (two players per match)
@@ -106,6 +108,15 @@ class TournamentRunner
             return child
         end
     end
+
+    #Runs a king of the hill tournament
+    #There is a hill. If you win than you are put above the losing player.
+    #If you lose, than you play the next player under the winner.
+    def king_of_the_hill(players)
+        create_match([players[0], players[1]], @tournament.rounds_per_match)
+
+    end
+
     #Creates a match and the associated player_matches
     def create_match(match_participants, num_rounds)
         match = create_raw_match(num_rounds, "unassigned")

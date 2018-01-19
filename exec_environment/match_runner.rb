@@ -47,7 +47,7 @@ class MatchRunner
            @duplicate_players = true
            while @match_participants.length < @number_of_players do
                @match_participants << @match.players.first
-	   end
+	        end
        end
        @max_match_time = @referee.time_per_game
        @tournament = @match.manager
@@ -178,9 +178,96 @@ class MatchRunner
         @match.status = "completed"
         @match.completion = Time.now
         @match.save!
+        if @match.manager.class == Tournament && @match.manager.tournament_type == "king of the hill"
+            hill = []
+            first_match = @match.manager.matches.last
+            #First case
+            if first_match.player_matches[0].result == "Win"
+                hill[0] = first_match.player_matches[0].player.id
+                hill[1] = first_match.player_matches[1].player.id
+            else
+                hill[1] = first_match.player_matches[0].player.id
+                hill[0] = first_match.player_matches[1].player.id
+            end
+            last_player = hill[1]
+            #The rest
+            size = @match.manager.matches.count
+            if size == 1
+                run_next_player(@match, hill)
+            else
+                @match.manager.matches.reorder("matches.created_at ASC")[1..(size - 2)].each do |m| 
+                    if m.player_matches[1].result == "Win"
+                        pp "\\\\\\\\\\\\\\\\\\\\"
+                        pp hill
+                        pp m.player_matches[0].player_id
+                        pp m.player_matches[1].player_id
+                        hill.insert(hill.index(m.player_matches[0].player_id), m.player_matches[1].player_id)
+                    elsif m.player_matches[0].player_id == last_player
+                        hill << m.player_matches[1].player_id
+                        last_player = m.player_matches[1].player_id
+                    end
+                end
+                if @match.player_matches[1].result == "Win"
+                    pp "----------------------"
+                    pp "@match.player_matches[1].player"
+                    pp @match.player_matches[1].player.id
+                    pp @match.player_matches[1].player.name
+                    run_next_player(@match, hill << @match.player_matches[1].player.id)
+                else
+                    pp "+++++++++++++++++++++"
+                    pp "@match.players[0]"
+                    pp @match.players[0].id
+                    pp @match.player_matches[0].player_id
+                    pp @match.players[0].name
+                    pp "@match.players[1]"
+                    pp @match.players[1].id
+                    pp @match.player_matches[1].player_id
+                    pp @match.players[1].name
+                    pp "************"
+                    pp hill
+                    next_player_index = hill.index(@match.players[0].id) + 1
+                    if next_player_index < hill.size
+                        
+                        pp "Player.find(hill[next_player_index])"
+                        pp Player.find(hill[next_player_index])
+                        create_match([@match.players[1], Player.find(hill[next_player_index])], @match.manager.rounds_per_match)
+                        
+                    else
+                        run_next_player(@match, hill << @match.players[1].id)
+                    end
+                end
+            end
+        end
     end
 
-
+    def run_next_player(match, hill)
+        next_player = match.manager.players.where.not(id: hill).first
+            if next_player
+                
+                pp "======================"
+                pp "next_player"
+                pp next_player
+                pp "======================"
+                pp "@match.player_matches"
+                pp @match.player_matches
+                pp "======================"
+                pp "@match.players[0] is "
+                pp @match.players[0].id
+                pp @match.players[0].name
+                pp "======================"
+                pp "@match.players[1] is "
+                pp @match.players[1].id
+                pp @match.players[1].name
+                pp "======================"
+                pp "The hill is -> "
+                pp hill
+                pp "======================"
+                create_match([next_player, Player.find(hill[0])], @match.manager.rounds_per_match)
+            else
+                pp hill
+            end
+    end
+    
     def complete_tournament
         if @match.manager_type.to_s != "Tournament"
             return false
@@ -204,6 +291,38 @@ class MatchRunner
          separator
     end
     
+    #Creates a match and the associated player_matches
+    def create_match(match_participants, num_rounds)
+        match = create_raw_match(num_rounds, "unassigned")
+        create_player_matches(match,match_participants)
+	    match.status = "waiting"
+	    match.save!
+        return match
+    end 
+    #Creates a match
+    def create_raw_match(num_rounds, status = "waiting")
+        match = Match.create!(
+            manager: @tournament, 
+            status: status,
+            earliest_start: Time.now, 
+            completion: Date.new,
+	    num_rounds: num_rounds,
+        )
+        puts " Match runner created match #"+match.id.to_s
+        return match
+    end 
+    #Creates player matches
+    def create_player_matches(match,match_participants)
+        match_participants.each do |player|
+            PlayerMatch.create!(
+                match: match,
+                player: player,
+                result: "Pending",
+            )
+            puts "   Added "+player.name
+        end
+    end
+
     #Creates player_match and updates the match status to waiting if necessary 
     def create_player_match(match,player)
         #Create player_match
@@ -219,7 +338,7 @@ class MatchRunner
         end
         match.save!
     end
-end 
+end
 
 match_runner = MatchRunner.new($options[:MATCH_ID])
 match_runner.run_match

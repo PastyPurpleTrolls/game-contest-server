@@ -10,7 +10,8 @@ class PlayerMatch < ActiveRecord::Base
 
 #	validate :check_ids
 
-  default_scope -> { order("player_matches.result DESC") }
+  #default_scope -> { order("player_matches.result DESC") }
+  default_scope -> { order("player_matches.created_at DESC")}
   scope :wins, -> { where(result: 'Win') }
   scope :losses, -> { where(result: 'Loss') }
 

@@ -8,7 +8,7 @@ class TournamentsController < ApplicationController
     if params[:contest_id] != 'not-specified'
       @tournament = @contest.tournaments.build
       @tournament.contest.players.each do |f|
-        @tournament.player_tournaments.build(player: f )
+      @tournament.player_tournaments.build(player: f )
       end
       @tournament.start = Time.now
     end
@@ -16,7 +16,6 @@ class TournamentsController < ApplicationController
 
   def create
     @contest = Contest.friendly.find(params[:contest_id])
-    contest = Contest.friendly.find(params[:contest_id])
     if params[:tournament][:player_ids] && params[:tournament][:player_ids].uniq{|p| Player.find(p).contest_id}.length > 1
       flash.now[:danger] = 'Players from multiple contests'
       render 'new'					
