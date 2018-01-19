@@ -107,9 +107,7 @@ totalUncertaintyChange = () -> (
   RMSE = convertPhraseToRMSE(totalUncertaintyInput.value)
   totalMatches = calculateNumberOfMatchesToPlay(RMSE)
   totalTime = calculateMaxTimeFromNumMatches(totalMatches)
-  console.log(totalMatches)
   totalMatches = vetOutput(totalMatches)
-  console.log(totalMatches)
   totalTime = vetOutput(totalTime)
   totalTime = convertSecondsToHours(totalTime)
   totalMatchesInput.value = totalMatches
