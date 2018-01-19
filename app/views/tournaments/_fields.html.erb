@@ -24,6 +24,10 @@
     </div>
     <%= f.select :rounds_per_match, 1..@contest.referee.round_limit.to_i, {}, class: 'form-input form-element' %>
 </div>
+<script>
+    var playersPerGame = <%= @contest.referee.players_per_game; %>
+    var maxTimePerMatch = <%= @contest.referee.time_per_game; %>
+</script>
 <div class="form-group row left">
     <div class="col-xs-4">
         <%= f.label :expected_disparity, 'On average how often do you expect a given player to beat the next best player:' %> 

@@ -70,7 +70,8 @@ RMSEConditionChange = () -> (
 totalMatchesChange = () -> (
   totalMatchesRaw = getTotalMatchesInput().value
   totalMatches = computeTotalMatchesFromRawInput(totalMatchesRaw)
-  console.log(totalMatches)  
+  totalTime = calculateMaxTimeFromNumMatches(totalMatches)
+  console.log(totalTime)  
   RMSE = calculateRMSE(totalMatches)
   console.log(RMSE)
 )
@@ -87,12 +88,11 @@ setupTotalMatchesForLog = (rawMatches) -> (
   
 
 getNumberOfPlayersPerGame = () -> (
-  numPlayersPerGame = 4
+  numPlayersPerGame = playersPerGame ##retreived from the associated HTML file
   numPlayers = getNumberOfPlayers()
   if numPlayersPerGame >= numPlayers
     numPlayersPerGame = numPlayers
-  return numPlayers
-  
+  return numPlayersPerGame
 )
 
 getDisparity = () -> ( 
@@ -135,7 +135,12 @@ calculateNumberOfMatchesToPlay = (RMSE) -> (
   numMatchesToPlay = Math.pow((RMSE/c),1/b)
   if numMachesToPlay <= 0
     return 0
-  numMatchesToPlay
+  return numMatchesToPlay
+)
+
+calculateMaxTimeFromNumMatches = (numMatches) -> (
+  predictedTimePerMatch = maxTimePerMatch
+  return numMatches*predictedTimePerMatch
 )
 
 calculateRMSE = (numMatchesToPlay) -> (
