@@ -11,7 +11,7 @@ bDisparityExponent = .086981
 bNumerator = 3.3364
 bNumPlayersExponent = .778261
 bNumPlayersPerGameExponent = .077255
-
+RMSEPhraseList = ["Very sure", "Pretty sure", "Sure", "Unsure", "Pretty unsure", "Very unsure"]
 
 
 window.onload = () -> (   
@@ -21,14 +21,11 @@ window.onload = () -> (
 
 setupForMultiplayerElements = () -> (
    matchTypeSelector = getMatchTypeSelector()
-   totalMatchesDiv = getTotalMatchesDiv()
-   disparityDiv = getDisparityDiv()
+   multiplayerDiv = document.getElementById("multiplayerAssets")
    if matchTypeSelector.value == "multiplayer game"
-    disparityDiv.removeAttribute("hidden")
-    totalMatchesDiv.removeAttribute("hidden")
+     multiplayerDiv.removeAttribute("hidden")
    else
-    disparityDiv.setAttribute("hidden", true) 
-    totalMatchesDiv.setAttribute("hidden", true)
+     multiplayerDiv.setAttribute("hidden", true)
 )
 
 getDisparityDiv = () -> (
@@ -57,8 +54,15 @@ getMatchTypeSelector = () -> (
 
 getNumberOfPlayers = () -> (
    playerNumberHolder =  document.getElementById('rightValues')
-   #playerNumberHolder.length 
-   return 100
+   playerNumberHolder.length 
+)
+
+getTotalTimeInput = () -> (
+  document.getElementById("tournament_total_time") 
+)
+
+getUncertaintyInput = () -> (
+  document.getElementById("tournament_RMSE")
 )
 
 RMSEConditionChange = () -> (
@@ -69,27 +73,105 @@ RMSEConditionChange = () -> (
 
 totalMatchesChange = () -> (
   totalMatchesInput = getTotalMatchesInput()
-  totalMatchesRaw = totalMatchesInput.value
-  totalMatches = computeTotalMatchesFromRawInput(totalMatchesRaw)
+  totalMatches = totalMatchesInput.value
+  totalTimeInput = getTotalTimeInput()
+  totalUncertaintyInput = getUncertaintyInput()
   totalTime = calculateMaxTimeFromNumMatches(totalMatches)
-  console.log(totalTime)  
   RMSE = calculateRMSE(totalMatches)
-  console.log(RMSE)
-  totalMatches = Math.floor(totalMatches)
+  totalTime = vetOutput(totalTime)
+  totalTime = convertSecondsToHours(totalTime)
+  RMSE = vetOutput(RMSE)
+  phrase = convertRMSEToPhrase(RMSE)
+  totalTimeInput.value = totalTime
+  totalUncertaintyInput.value = phrase
+)
+
+totalTimeChange = () -> (
+  totalMatchesInput = getTotalMatchesInput()
+  totalTimeInput = getTotalTimeInput()
+  totalUncertaintyInput = getUncertaintyInput()
+  totalTime = convertHoursToSeconds(totalTimeInput.value)
+  totalMatches = calculateTotalMatchesFromTime(totalTime)
+  RMSE = calculateRMSE(totalMatches)
+  totalMatches = vetOutput(totalMatches)
+  RMSE = vetOutput(RMSE)
   totalMatchesInput.value = totalMatches
-  console.log(totalMatchesInput.value) 
+  phrase = convertRMSEToPhrase(RMSE)
+  totalUncertaintyInput.value = phrase
 )
 
-computeTotalMatchesFromRawInput = (rawMatches) -> (
-  preppedMatches = setupTotalMatchesForLog(rawMatches)
-  totalMatches = Math.pow(preppedMatches, 10)
+totalUncertaintyChange = () -> (
+  totalMatchesInput = getTotalMatchesInput()
+  totalTimeInput = getTotalTimeInput()
+  totalUncertaintyInput = getUncertaintyInput()
+  RMSE = convertPhraseToRMSE(totalUncertaintyInput.value)
+  totalMatches = calculateNumberOfMatchesToPlay(RMSE)
+  totalTime = calculateMaxTimeFromNumMatches(totalMatches)
+  console.log(totalMatches)
+  totalMatches = vetOutput(totalMatches)
+  console.log(totalMatches)
+  totalTime = vetOutput(totalTime)
+  totalTime = convertSecondsToHours(totalTime)
+  totalMatchesInput.value = totalMatches
+  totalTimeInput.value = totalTime
 )
 
-setupTotalMatchesForLog = (rawMatches) -> (
-  preppedMatches = rawMatches/100
-  return preppedMatches
+vetOutput = (output) ->(
+  vettedOutput = Math.floor(output)
+  return vettedOutput
 )
-  
+
+convertSecondsToHours = (seconds) ->(
+  hours = seconds/3600
+  return hours
+)
+
+convertHoursToSeconds = (hours) ->(
+  seconds = hours*3600
+  return seconds
+)
+
+convertRMSEToPhrase = (RMSE) ->(
+  phrase = "???"
+  if RMSE <=1 
+    phrase = RMSEPhraseList[0]
+  else if RMSE <=2
+    phrase = RMSEPhraseList[1]
+  else if RMSE <= 4
+    phrase = RMSEPhraseList[2]
+  else if RMSE <= 8
+    phrase = RMSEPhraseList[3]
+  else if RMSE <= 16
+    phrase = RMSEPhraseList[4]
+  else
+    phrase = RMSEPhraseList[5]
+  return phrase
+)
+
+convertPhraseToRMSE = (phrase) -> (
+  RMSE = 0
+  if phrase == RMSEPhraseList[0]
+    RMSE = 1
+  else if phrase == RMSEPhraseList[1]
+    RMSE = 2
+  else if phrase == RMSEPhraseList[2]
+    RMSE = 4
+  else if phrase == RMSEPhraseList[3]
+    RMSE = 8
+  else if phrase == RMSEPhraseList[4]
+    RMSE = 16
+  else if phrase == RMSEPhraseList[5]
+    RMSE = 100
+  else
+    RMSE = 1000
+  return RMSE
+)
+
+calculateTotalMatchesFromTime = (time) -> (
+  timePerMatch = getMaxTimePerMatch()
+  totalMatches = time/timePerMatch
+  totalMatches = Math.floor(totalMatches)
+)
 
 getNumberOfPlayersPerGame = () -> (
   numPlayersPerGame = playersPerGame ##retreived from the associated HTML file
@@ -137,14 +219,19 @@ calculateNumberOfMatchesToPlay = (RMSE) -> (
   b = -(firstPartOfTheTerm*(1-secondPartOfTheTerm))
   c = cConstant + cNumPlayersCoefficient*(Math.pow(numberOfPlayers, cNumPlayersExponent))
   numMatchesToPlay = Math.pow((RMSE/c),1/b)
-  if numMachesToPlay <= 0
+  if numMatchesToPlay <= 0 or isNaN(numMatchesToPlay)
     return 0
   return numMatchesToPlay
 )
 
 calculateMaxTimeFromNumMatches = (numMatches) -> (
-  predictedTimePerMatch = maxTimePerMatch
+  predictedTimePerMatch = getMaxTimePerMatch()
   return numMatches*predictedTimePerMatch
+)
+
+getMaxTimePerMatch = () -> (
+  timePerMatch = maxTimePerMatch #retreived from HTML
+  return timePerMatch 
 )
 
 calculateRMSE = (numMatchesToPlay) -> (
@@ -167,7 +254,11 @@ attachListeners = () -> (
    matchType = getMatchTypeSelector()
    matchType.addEventListener('click', setupForMultiplayerElements)
    totalMatchesInput = getTotalMatchesInput()
-   totalMatchesInput.addEventListener('click', totalMatchesChange)
+   totalMatchesInput.addEventListener('keyup', totalMatchesChange)
+   totalTimeInput = getTotalTimeInput()
+   totalTimeInput.addEventListener('keyup', totalTimeChange)
+   totalUncertaintyInput = getUncertaintyInput()
+   totalUncertaintyInput.addEventListener('click', totalUncertaintyChange)
    disparityInput = getDisparityInput()
    disparityInput.addEventListener('click', RMSEConditionChange)
    rightButton = document.getElementById('btnRight')

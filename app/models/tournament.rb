@@ -20,6 +20,12 @@ class Tournament < ActiveRecord::Base
   
   def expected_disparity
   end
+  
+  def total_time
+  end
+
+  def RMSE
+  end
 
   def self.search(search)
     if search
