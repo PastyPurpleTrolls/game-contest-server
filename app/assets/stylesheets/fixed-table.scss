@@ -1,68 +1,73 @@
-.hover {
-    background-color: lighten(#4ea3b8, 30%)
-}
-
 .fixed-table-container{
     box-sizing: border-box;
-    border: 1px solid #fff;
+    border: 1px solid #D9D7CB;
     margin-top: 50px;
-    table{
-        border-collapse: collapse;
-        width: 100%;
-    }
-    th{
+    
+    td,th{
         white-space: nowrap !important;
-        border-right: 1px solid #fff;
-        border-bottom: 1px solid #fff;
+        border-right: 1px solid #D9D7CB;
+        border-bottom: 1px solid #D9D7CB;
         padding: 8px;
         text-align: center;
         vertical-align: bottom;
         min-width: 50px;
-        a{
-            color: white;
+        
+	&:last-child{
+	    border-right: 0;
+	}
+    }
+    
+    table{
+	border-collapse: collapse;
+	width: 100%
+    }
+
+    th{
+	color: #433622
+	
+	a{
             text-decoration: underline;
         }
+	// Blank space in upper-left
         &:first-child{
-            color: #fff;
-            background-color: #fff;
+            color: #D9D7CB;
+            background-color: #D9D7CB;
             height: 100%;
         }
+
+	// Table headers
         &:not(:first-child) {
-            background: #4ea3b8;
+            background-color: #B9B59F;
             line-height: 16px;
             padding-top: 10px;
             padding-bottom: 10px;
-            color: white;
-        }
-        &:last-child{
-            border-right: 0;
         }
     }
     td{
-        white-space: nowrap !important;
-        border-right: 1px solid #fff;
-        border-bottom: 1px solid #fff;
-        padding: 8px;
-        text-align: center;
-        vertical-align: bottom;
-        min-width: 50px;
+	color: #433622;
+
         a{
-            color: white;
+            color: #433622;
             text-decoration: underline;
         }
+
+	//Left headers
         &:first-child{
-            background: #4ea3b8;
-            color: white;
+            background-color: #B9B59F;
             font-weight: bold;
         }
-        &:last-child{
-            border-right: 0;
-        }
+	//Table cells
         &:not(:first-child) {
-
+	    // Crosshairs hover
+	    &.hover {
+	    	background-color: #D9D7CB;
+	    }
+	    background-color: #F3F2EF
         }
+
+	//Table cells hover
         &:not(:first-child):hover {
-            background-color: lighten(#4ea3b8, 15%);
+            background-color: #D9D7CB;
         }
     }
 }
