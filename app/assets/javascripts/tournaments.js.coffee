@@ -101,19 +101,19 @@ getDisparity = () -> (
   numPlayers = getNumberOfPlayers()
   disparityInput = getDisparityInput()
   disparityString = disparityInput.value
-  if disparityString == "52% of the time"
+  if disparityString == "Very small"
     eloDifferenceBetweenConsecutivePlayers = 14
-  else if disparityString == "55% of the time"
+  else if disparityString == "Small"
     eloDifferenceBetweenConsecutivePlayers = 35
-  else if disparityString == "65% of the time"
+  else if disparityString == "Medium small"
     eloDifferenceBetweenConsecutivePlayers = 108
-  else if disparityString == "75% of the time"
+  else if disparityString == "Medium"
     eloDifferenceBetweenConsecutivePlayers = 191 
-  else if disparityString == "85% of the time"
+  else if disparityString == "Medium large"
     eloDifferenceBetweenConsecutivePlayers = 301
-  else if disparityString == "95% of the time"
+  else if disparityString == "Large"
     eloDifferenceBetweenConsecutivePlayers = 512
-  else if disparityString == "99% of the time"
+  else if disparityString == "Very large"
     eloDifferenceBetweenConsecutivePlayers = 798
   else
     eloDifferenceBetweenConsecutivePlayers = 0

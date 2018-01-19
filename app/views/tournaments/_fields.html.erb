@@ -30,9 +30,9 @@
 </script>
 <div class="form-group row left">
     <div class="col-xs-4">
-        <%= f.label :expected_disparity, 'On average how often do you expect a given player to beat the next best player:' %> 
+        <%= f.label :expected_disparity, 'Skill range between players:' %> 
     </div>
-    <%= f.select :expected_disparity, [['52% of the time'],['55% of the time'], ['65% of the time'], ['75% of the time'], ['85% of the time'], ['95% of the time'],['99% of the time']], {}, class: 'form-input form-element' %>
+    <%= f.select :expected_disparity, [['Very small'],['Small'], ['Medium small'], ['Medium'], ['Medium large'], ['Large'],['Very large']], {}, class: 'form-input form-element' %>
 </div>
 <div class="form-group row left">
     <div class="col-xs-4">
