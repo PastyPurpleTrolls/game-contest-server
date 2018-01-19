@@ -5,7 +5,7 @@ describe "AuthenticationPages" do
   describe "login page" do
     before {visit login_path}
 
-    it {should have_selector("h2", text: "Login")}
+    it {should have_current_path(login_path)}
 
     describe "with invalid account" do
       before {click_button 'Log In'}
@@ -48,8 +48,6 @@ describe "AuthenticationPages" do
           should_not have_link('Settings')
           should_not have_link('Profile')
         end
-
-        it {should have_alert(:info)}
       end
     end
   end

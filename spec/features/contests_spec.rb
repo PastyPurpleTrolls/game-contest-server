@@ -19,7 +19,7 @@ describe "ContestsPages" do
       visit new_contest_path
     end
 
-    it {should have_selector("h2", text: "Add Contest")}
+    it {should have_current_path(new_contest_path)}
 
     describe "invalid information" do
       describe "missing information" do
@@ -99,8 +99,6 @@ describe "ContestsPages" do
       login creator
       visit edit_contest_path(contest)
     end
-
-    it {should have_selector("h2", text: "Edit Contest")}
 
     it "has the proper fields" do
       should have_content(contest.referee.name)
@@ -286,7 +284,6 @@ describe "ContestsPages" do
       before {visit contest_path(contest)}
 
       it "shows all contest information" do
-        should have_selector("h2", text: "Contest")
         should have_content(contest.name)
         should have_content(contest.description)
         should have_content(distance_of_time_in_words_to_now(contest.deadline)
@@ -315,7 +312,6 @@ describe "ContestsPages" do
       end
 
       it "shows all contest information" do
-        should have_selector("h2", text: "Contest")
         should have_content(contest.name)
         should have_content(contest.description)
         should have_content(distance_of_time_in_words_to_now(contest.deadline)
@@ -349,8 +345,6 @@ describe "ContestsPages" do
       should_not have_link('', href: new_contest_path)
     end
 
-    it {should have_selector("h2", text: "Contest")}
-
     it "lists all the contests in the system" do
       Contest.all.each do |c|
         should have_selector("form[action='#{contest_path(c)}']")
@@ -372,6 +366,6 @@ describe "ContestsPages" do
       should have_link('', href: new_contest_path)
     end
 
-    it {should have_selector("h2", text: "Contest")}
+    it {should have_current_path(contests_path)}
   end
 end

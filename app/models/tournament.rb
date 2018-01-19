@@ -31,7 +31,7 @@ class Tournament < ActiveRecord::Base
       self.player_tournaments.build(player: Player.find(p))
     end
   end
-
+  
 
   extend FriendlyId
   friendly_id :name, use: :slugged
