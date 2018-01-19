@@ -112,11 +112,9 @@ class TournamentRunner
 
     #Runs multiplayer game tournament (three or more players per match)
     def multiplayer_game(players, numPlayers)
-        #TODO change to "1" to @tournament.total_matches, or whatever it will be called
-        1.times do
+        @tournament.total_matches.times do
             selected_players = players.sample(numPlayers)
-            #TODO change @tournament.rounds_per_match to @tournament.total_matches, or whatever it will be called
-            create_match(selected_players, @tournament.rounds_per_match)
+            create_match(selected_players, @tournament.total_matches)
        end
     end
 

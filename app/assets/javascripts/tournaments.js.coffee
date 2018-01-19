@@ -23,7 +23,7 @@ setupForMultiplayerElements = () -> (
    matchTypeSelector = getMatchTypeSelector()
    totalMatchesDiv = getTotalMatchesDiv()
    disparityDiv = getDisparityDiv()
-   if matchTypeSelector.value == "round robin"
+   if matchTypeSelector.value == "multiplayer game"
     disparityDiv.removeAttribute("hidden")
     totalMatchesDiv.removeAttribute("hidden")
    else
@@ -68,12 +68,16 @@ RMSEConditionChange = () -> (
 )
 
 totalMatchesChange = () -> (
-  totalMatchesRaw = getTotalMatchesInput().value
+  totalMatchesInput = getTotalMatchesInput()
+  totalMatchesRaw = totalMatchesInput.value
   totalMatches = computeTotalMatchesFromRawInput(totalMatchesRaw)
   totalTime = calculateMaxTimeFromNumMatches(totalMatches)
   console.log(totalTime)  
   RMSE = calculateRMSE(totalMatches)
   console.log(RMSE)
+  totalMatches = Math.floor(totalMatches)
+  totalMatchesInput.value = totalMatches
+  console.log(totalMatchesInput.value) 
 )
 
 computeTotalMatchesFromRawInput = (rawMatches) -> (
