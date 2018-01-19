@@ -30,7 +30,7 @@ describe "RefereePages" do
       attach_file('Test Player', file_location)
     end
 
-    it {should have_selector("h2", text: "Add Referee")}
+    it {should have_current_path(new_referee_path)}
 
     describe "invalid information" do
       describe "missing information" do
@@ -171,8 +171,6 @@ describe "RefereePages" do
       attach_file('Replay Plugin', file_location)
       attach_file('Test Player', file_location)
     end
-
-    it {should have_selector("h2", text: "Edit Referee")}
 
     it "has the proper fields" do
       should have_field('Name', with: referee.name)
@@ -382,8 +380,6 @@ describe "RefereePages" do
       visit referee_path(referee)
     end
 
-    it {should have_selector("h2", text: "Referee")}
-
     it "shows all referee information" do
       should have_content(referee.name)
       should have_link(referee.rules_url)
@@ -408,7 +404,7 @@ describe "RefereePages" do
       visit referees_path
     end
 
-    it {should have_selector("h2", text: "Referee")}
+    it {should have_current_path(referees_path)}
 
     it "does not have adding option" do
       should_not have_link('', href: new_referee_path)
@@ -432,7 +428,7 @@ describe "RefereePages" do
       visit referees_path
     end
 
-    it {should have_selector("h2", text: "Referee")}
+    it {should have_current_path(referees_path)}
 
     it "has adding option" do
       should have_link('', href: new_referee_path)

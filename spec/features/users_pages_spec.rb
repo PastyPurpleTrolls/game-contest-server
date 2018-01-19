@@ -8,7 +8,7 @@ describe "UsersPages" do
 
     before {visit signup_path}
 
-    it {should have_selector("h2", text: "Sign Up")}
+    it {should have_current_path(signup_path)}
 
     describe "passwords are not visible when typing" do
       it {should have_field 'user_password', type: 'password'}
@@ -71,8 +71,6 @@ describe "UsersPages" do
         FactoryBot.create_list(:player, 5, user: user)
         visit user_path(user)
       end
-
-      it {should have_selector("h2", text: "User")}
 
       it "displays all user information" do
         should have_content(user.username)
@@ -203,8 +201,6 @@ describe "UsersPages" do
         login user
         visit edit_user_path(user)
       end
-
-      it {should have_selector("h2", text: "Edit Account")}
 
       it "has the proper fields" do
         should have_field('Username', with: user.username)

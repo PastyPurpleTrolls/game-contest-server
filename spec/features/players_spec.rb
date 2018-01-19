@@ -20,7 +20,7 @@ describe "PlayersPages" do
       attach_file('Player File', file_location) # hack to get submit working!
     end
 
-    it {should have_selector("h2", text: "Add Player")}
+    it {should have_current_path(new_contest_player_path(contest))}
 
     describe "invalid information" do
       describe "missing information" do
@@ -97,8 +97,6 @@ describe "PlayersPages" do
       visit edit_player_path(player)
       attach_file('Player File', file_location) # hack to get submit working!
     end
-
-    it {should have_selector("h2", text: "Edit Player")}
 
     it "shows all fields" do
       should have_field('Name', with: player.name)
@@ -226,8 +224,6 @@ describe "PlayersPages" do
     let (:player) {FactoryBot.create(:player)}
 
     before {visit player_path(player)}
-
-    it {should have_selector("h2", text: "Player")}
 
     it "shows all player information" do
       should have_content(player.name)
@@ -357,7 +353,6 @@ describe "PlayersPages" do
       visit contest_path(contest)
     end
 
-    it {should have_selector("h2", text: "Contest")}
     it "lists all the players for a contest in the system" do
       Player.where(contest: contest).each do |p|
         should have_link(p.name, href: player_path(p))

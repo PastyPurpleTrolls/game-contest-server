@@ -27,7 +27,7 @@ describe 'TournamentsPages' do
       visit new_contest_tournament_path(contest)
     end
 
-    it {should have_selector("h2", text: "Add Tournament")}
+    it {should have_current_path(new_contest_tournament_path(contest))}
 
     describe 'invalid information' do
       describe 'missing information' do
@@ -127,8 +127,6 @@ describe 'TournamentsPages' do
       login creator
       visit edit_tournament_path(tournament)
     end
-
-    it {should have_selector("h2", text: "Edit Tournament")}
 
     it "shows the proper fields" do
       should have_field("Name", with: tournament.name)
@@ -265,8 +263,6 @@ describe 'TournamentsPages' do
 
     before {visit tournament_path(tournament)}
 
-    it {should have_selector("h2", text: "Tournament")}
-
     it "shows all tournament information" do
       should have_content(tournament.name)
       should have_content(tournament.status.capitalize)
@@ -340,8 +336,6 @@ describe 'TournamentsPages' do
 
       visit contest_path(contest)
     end
-
-    it {should have_selector("h2", text: "Contest")}
 
     it "lists all the tournaments for a contest in the system" do
       Tournament.where(contest: contest).each do |tournament|
