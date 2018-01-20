@@ -60,9 +60,9 @@
                 </div>
                 <% if @tournaments.count > 0 %>
                     <% if @tournaments.count > @per_page %>
-                        <p class="left"><%= "#{@tournaments.count} found (displaying #{getRangeFromPage(params[:tournament_page], @tournaments.length)})" %></p>
+                        <p><%= "#{@tournaments.count} found (displaying #{getRangeFromPage(params[:tournament_page], @tournaments.length)})" %></p>
                     <% else %>
-                        <p class="left"><%= "#{@tournaments.count} found" %></p>
+                        <p><%= "#{@tournaments.count} found" %></p>
                     <% end %>
                 <% else %>
                     <p>No tournaments found</p>
@@ -102,9 +102,9 @@
             </div>
             <% if @players.count > 0 %>
                 <% if @players.count > @per_page %>
-                    <p class="left"><%= "#{@players.count} found (displaying #{getRangeFromPage(params[:player_page], @players.length)})" %></p>
+                    <p><%= "#{@players.count} found (displaying #{getRangeFromPage(params[:player_page], @players.length)})" %></p>
                 <% else %>
-                    <p class="left"><%= "#{@players.count} found" %></p>
+                    <p><%= "#{@players.count} found" %></p>
                 <% end %>
             <% else %>
                 <p>No players found</p>

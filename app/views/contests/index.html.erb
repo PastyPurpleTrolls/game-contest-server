@@ -10,17 +10,6 @@
                     <% end %>
                 </div>
             <% end %>
-            <div class="col-xs-12">
-                <% if @contests.count > 0 %>
-                    <% if @contests.count > @per_page %>
-                        <p class="left"><%= "#{@contests.count} found (displaying #{getRangeFromPage(params[:page], @contests.length)})" %></p>
-                    <% else %>
-                        <p class="left"><%= "#{@contests.count} found" %></p>
-                    <% end %>
-                <% else %>
-                    <p>No contests found</p>
-                <% end %>
-            </div>
         </div>
         <%= form_tag contests_path, method: 'get', id: "contest_search", class: 'form-inline' do %>
             <%= hidden_field_tag :direction, params[:direction] %>
@@ -30,6 +19,17 @@
               <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
             </p>
         <% end %>
+        <div class="col-xs-12">
+            <% if @contests.count > 0 %>
+                <% if @contests.count > @per_page %>
+                    <p><%= "#{@contests.count} found (displaying #{getRangeFromPage(params[:page], @contests.length)})" %></p>
+                <% else %>
+                    <p><%= "#{@contests.count} found" %></p>
+                <% end %>
+            <% else %>
+                <p>No contests found</p>
+            <% end %>
+        </div>
         <div id= "pagination">
             <%= render @contests %>
             <%= will_paginate @contests, id: 'contest_pagination' %>

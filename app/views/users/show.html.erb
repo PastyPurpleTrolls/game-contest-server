@@ -42,9 +42,9 @@
             </div>
             <% if @players.count > 0 %>
                 <% if @players.count > @per_page %>
-                    <p class="left"><%= "#{@players.count} found (displaying #{getRangeFromPage(params[:player_page], @players.length)})" %></p>
+                    <p><%= "#{@players.count} found (displaying #{getRangeFromPage(params[:player_page], @players.length)})" %></p>
                 <% else %>
-                    <p class="left"><%= "#{@players.count} found" %></p>
+                    <p><%= "#{@players.count} found" %></p>
                 <% end %>
             <% else %>
                 <p>No players found</p>
@@ -76,9 +76,9 @@
                 </div>
                 <% if @referees.count > 0 %>
                     <% if @referees.count > @per_page %>
-                        <p class="left"><%= "#{@referees.count} found (displaying #{getRangeFromPage(params[:referee_page], @referees.length)})" %></p>
+                        <p><%= "#{@referees.count} found (displaying #{getRangeFromPage(params[:referee_page], @referees.length)})" %></p>
                     <% else %>
-                        <p class="left"><%= "#{@referees.count} found" %></p>
+                        <p><%= "#{@referees.count} found" %></p>
                     <% end %>
                 <% else %>
                     <p>No referees found</p>
@@ -107,9 +107,9 @@
                 </div>
                 <% if @contests.count > 0 %>
                     <% if @contests.count > @per_page %>
-                        <p class="left"><%= "#{@contests.count} found (displaying #{getRangeFromPage(params[:contest_page], @contests.length)})" %></p>
+                        <p><%= "#{@contests.count} found (displaying #{getRangeFromPage(params[:contest_page], @contests.length)})" %></p>
                     <% else %>
-                        <p class="left"><%= "#{@contests.count} found" %></p>
+                        <p><%= "#{@contests.count} found" %></p>
                     <% end %>
                 <% else %>
                     <p>No contests found</p>
