@@ -18,7 +18,7 @@ shared_examples "redirects to a login" do |options|
     describe "visit browser path" do
       before { visit path }
 
-      it { should have_alert(:warning) }
+      it { should have_alert(:danger) }
       it { should have_content('Login') }
     end
   end
@@ -27,7 +27,7 @@ shared_examples "redirects to a login" do |options|
 		describe "visit HTTP path", type: :request do
  	  	before { send(method, http_path) }
 
- 	   	it { errors_on_redirect(login_path, :warning) }
+ 	   	it { errors_on_redirect(login_path, :danger) }
  	 	end
 	end
 end
