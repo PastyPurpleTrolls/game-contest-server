@@ -247,12 +247,6 @@ describe 'TournamentsPages' do
       specify {expect(response).to redirect_to(contest_path(tournament.contest))}
     end
 
-    it "produces a delete message" do
-      delete tournament_path(tournament)
-      get response.location
-      response.body.should have_alert(:success)
-    end
-
     it "removes a tournament from the system" do
       expect {delete tournament_path(tournament)}.to change(Tournament, :count).by(-1)
     end

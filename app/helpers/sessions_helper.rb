@@ -21,20 +21,20 @@ module SessionsHelper
 
   def deny_access
     store_location
-    flash[:warning] = "Access Denied"
+    flash[:danger] = "Access Denied"
     #redirect_to "/login"
     redirect_back_to_previous
   end
 
   def file_does_not_exist
     store_location
-    flash[:warning] = "File Does Not Exist"
+    flash[:danger] = "File Does Not Exist"
     redirect_back_to_previous
   end
 
   def friendly_redirect_to_previous(message=nil)
     store_location
-    flash[:warning] = message unless message.nil?
+    flash[:danger] = message unless message.nil?
     redirect_back_to_previous
   end
 
@@ -49,14 +49,14 @@ module SessionsHelper
 
   def ensure_user_logged_in
     unless logged_in?
-      flash[:warning] = 'Not logged in.'
+      flash[:danger] = 'Not logged in.'
       redirect_to login_path
     end
   end
 
   def ensure_user_logged_out
-    unless !logged_in?
-      flash[:warning] = 'You are already logged in.'
+    if logged_in?
+      flash[:danger] = 'You are already logged in.'
       redirect_to root_path
     end
   end
@@ -70,7 +70,7 @@ module SessionsHelper
 	
 	def ensure_correct_user_from_list(list_of_users, message)
     if !logged_in?
-      flash[:warning] = 'Not logged in.'
+      flash[:danger] = 'Not logged in.'
       redirect_to login_path
     else
 			unless list_of_users.include?(current_user)

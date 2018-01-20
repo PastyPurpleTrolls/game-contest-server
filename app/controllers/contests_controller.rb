@@ -20,7 +20,6 @@ class ContestsController < ApplicationController
   def create
     @contest = current_user.contests.build(acceptable_params)
     if @contest.save
-      flash[:success] = 'Contest created.'
       redirect_to @contest
     else
       @referees = Referee.all
@@ -33,7 +32,6 @@ class ContestsController < ApplicationController
 
   def update
     if @contest.update(acceptable_params)
-      flash[:success] = 'Contest updated.'
       redirect_to @contest
     else
       render 'edit'
@@ -56,7 +54,6 @@ class ContestsController < ApplicationController
     @contest.matches.each{|m|m.destroy}
     @contest.players.each{|p|p.destroy}
     @contest.destroy
-    flash[:success] = 'Contest deleted.'
     redirect_to contests_path
   end
 

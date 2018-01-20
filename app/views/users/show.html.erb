@@ -27,8 +27,8 @@
     <div class="container outer-home-container col-md-5">
         <div class="display-container">
             <div class="row">
-                <h1 class="headings info-text col-xs-10 left">My Players</h1>
-                <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Player">
+                <h1 class="headings info-text col-xs-10 col-xs-offset-1 left">My Players</h1>
+                <div class="info-text col-xs-1 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Player">
                     <%= link_to(new_contest_player_path('not-specified'), method: :get) do %>
                         <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
                     <% end %>
@@ -42,9 +42,9 @@
             </div>
             <% if @players.count > 0 %>
                 <% if @players.count > @per_page %>
-                    <p class="left"><%= "#{@players.count} found (displaying #{getRangeFromPage(params[:player_page], @players.length)})" %></p>
+                    <p><%= "#{@players.count} found (displaying #{getRangeFromPage(params[:player_page], @players.length)})" %></p>
                 <% else %>
-                    <p class="left"><%= "#{@players.count} found" %></p>
+                    <p><%= "#{@players.count} found" %></p>
                 <% end %>
             <% else %>
                 <p>No players found</p>
@@ -61,8 +61,8 @@
         <div class="container outer-home-container col-md-offset-1 col-md-5">
             <div class="display-container no-margin-top">
                 <div class="row">            
-                    <h1 class="headings info-text col-xs-10 left">My Referees</h1>
-                    <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Referee">
+                    <h1 class="headings info-text col-xs-10 col-xs-offset-1 left">My Referees</h1>
+                    <div class="info-text col-xs-1 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Referee">
                         <%= link_to(new_referee_path, method: :get) do %>
                             <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
                         <% end %>
@@ -76,9 +76,9 @@
                 </div>
                 <% if @referees.count > 0 %>
                     <% if @referees.count > @per_page %>
-                        <p class="left"><%= "#{@referees.count} found (displaying #{getRangeFromPage(params[:referee_page], @referees.length)})" %></p>
+                        <p><%= "#{@referees.count} found (displaying #{getRangeFromPage(params[:referee_page], @referees.length)})" %></p>
                     <% else %>
-                        <p class="left"><%= "#{@referees.count} found" %></p>
+                        <p><%= "#{@referees.count} found" %></p>
                     <% end %>
                 <% else %>
                     <p>No referees found</p>
@@ -92,8 +92,8 @@
         <div class="container outer-home-container col-md-5">
             <div class="display-container no-margin-top">
                 <div class="row">            
-                    <h1 class="headings info-text col-xs-10 left">My Contests</h1>
-                    <div class="info-text col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Contest">
+                    <h1 class="headings info-text col-xs-10 col-xs-offset-1 left">My Contests</h1>
+                    <div class="info-text col-xs-1 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Contest">
                         <%= link_to(new_contest_path, method: :get) do %>
                             <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
                         <% end %>
@@ -107,9 +107,9 @@
                 </div>
                 <% if @contests.count > 0 %>
                     <% if @contests.count > @per_page %>
-                        <p class="left"><%= "#{@contests.count} found (displaying #{getRangeFromPage(params[:contest_page], @contests.length)})" %></p>
+                        <p><%= "#{@contests.count} found (displaying #{getRangeFromPage(params[:contest_page], @contests.length)})" %></p>
                     <% else %>
-                        <p class="left"><%= "#{@contests.count} found" %></p>
+                        <p><%= "#{@contests.count} found" %></p>
                     <% end %>
                 <% else %>
                     <p>No contests found</p>

@@ -2,35 +2,35 @@
 <div class="row">
     <div class="container center display-container col-md-offset-3 col-md-6">
         <div class="row">
-            <h1 class="headings col-xs-10 left">Referees</h1>
+            <h1 class="headings col-xs-10 col-xs-offset-1 left">Referees</h1>
             <% if current_user&.contest_creator? %>
-                <div class="col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Referee">
+                <div class="col-xs-1 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Referee">
                     <%= link_to(new_referee_path, method: :get) do %>
                         <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
                     <% end %>
                 </div>
             <% end %>
-            <div class="col-xs-12">
-                <% if @referees.count > 0 %>
-                    <% if @referees.count > @per_page %>
-                        <p class="left"><%= "#{@referees.count} found (displaying #{getRangeFromPage(params[:page], @referees.length)})" %></p>
-                    <% else %>
-                        <p class="left"><%= "#{@referees.count} found" %></p>
-                    <% end %>
-                <% else %>
-                    <p>No referees found</p>
-                <% end %>
-            </div>
         </div>
-        <%= form_tag referees_path, method: :get, id: :referee_search do %>
+        <%= form_tag referees_path, method: :get, id: :referee_search, class: 'form-inline' do %>
             <%= hidden_field_tag :direction, params[:direction] %>
             <%= hidden_field_tag :sort, params[:sort] %>
-            <p class="search-container">
-                <%= text_field_tag :search, params[:search] %>
-                <%= submit_tag "Search", name: nil %>
+            <p>
+                <%= text_field_tag :search, params[:search], class: 'form-control' %>
+                <%= submit_tag "Search", name: nil, class: 'btn btn-danger' %>
             </p>
         <% end %>
-        <div id= "pagination">
+        <div class="col-xs-12">
+            <% if @referees.count > 0 %>
+                <% if @referees.count > @per_page %>
+                    <p><%= "#{@referees.count} found (displaying #{getRangeFromPage(params[:page], @referees.length)})" %></p>
+                <% else %>
+                    <p><%= "#{@referees.count} found" %></p>
+                <% end %>
+            <% else %>
+                <p>No referees found</p>
+            <% end %>
+        </div>
+        <div id="pagination">
             <%= render partial: 'referee', collection: @referees %>
             <%= will_paginate @referees, id: 'referee_pagination' %>
         </div>

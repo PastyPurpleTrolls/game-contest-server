@@ -198,7 +198,7 @@ describe "AuthorizationPages" do
         let (:login_user) {user}
         let (:path) {new_user_path}
         let (:signature) {'Sign Up'}
-        let (:error_type) {:warning}
+        let (:error_type) {:danger}
         let (:method) {:post}
         let (:http_path) {users_path}
       end
@@ -207,7 +207,7 @@ describe "AuthorizationPages" do
         let (:login_user) {user}
         let (:path) {login_path}
         let (:signature) {'Log In'}
-        let (:error_type) {:warning}
+        let (:error_type) {:danger}
         let (:method) {:post}
         let (:http_path) {users_path}
       end
