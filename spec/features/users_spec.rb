@@ -64,7 +64,7 @@ describe "UsersPages" do
   end
 
   describe "Display Users" do
-    describe "individually" do
+    describe "individually (not contest creator)" do
       let(:user) {FactoryBot.create(:user)}
 
       before do
@@ -79,7 +79,7 @@ describe "UsersPages" do
         should_not have_content(user.password_digest)
       end
 
-      it {should have_header(text: 'My Players (5)')}
+      it {should have_header(text: 'My Players')}
 
       it "lists all the players for the user" do
         Player.all.each do |player|
@@ -88,25 +88,49 @@ describe "UsersPages" do
         end
       end
 
-      it {should have_link('', href: new_contest_player_path('not-specified'))}
-
-      it {should_not have_subheader(text: 'My Referees')}
-      it {should_not have_link('New Referee', href: new_referee_path)}
+      it {should_not have_header(text: 'My Referees')}
+      it {should_not have_header(text: 'My Contests')}
     end
 
     describe "individually (contest creator)" do
       let(:user) {FactoryBot.create(:contest_creator)}
 
       before do
+        FactoryBot.create_list(:player, 5, user: user)
         FactoryBot.create_list(:referee, 5, user: user)
+        FactoryBot.create_list(:contest, 5, user: user)
         visit user_path(user)
       end
 
-      it {should have_header(text: 'My Referees (5)')}
+      it "displays all user information" do
+        should have_content(user.username)
+        should have_content(user.email)
+        should_not have_content(user.password)
+        should_not have_content(user.password_digest)
+      end
+
+      it {should have_header(text: 'My Players')}
+
+      it "lists all the players for the user" do
+        user.players.each do |player|
+          should have_selector('div', text: player.name)
+          should have_link(player.name, href: player_path(player))
+        end
+      end
+
+      it {should have_header(text: 'My Referees')}
 
       it "lists all the referees for the user" do
-        Referee.all.each do |ref|
+        user.referees.each do |ref|
           should have_selector('div', text: ref.name)
+        end
+      end
+
+      it {should have_header(text: 'My Contests')}
+
+      it "lists all the contests for the user" do
+        user.contests.each do |contest|
+          should have_selector('div', text: contest.name)
         end
       end
     end
@@ -118,7 +142,6 @@ describe "UsersPages" do
       end
 
       it {should have_header(text: 'Users')}
-      it {should have_content('10 Users')}
 
       User.all.each do |user|
         it {should have_selector('li', text: user.username)}
@@ -128,17 +151,38 @@ describe "UsersPages" do
 
   describe "pagination" do
     before do
-      FactoryBot.create_list(:user, 30)
+      FactoryBot.create_list(:user, 25)
       visit users_path
     end
 
-    it {should have_content('10 Users')}
+    it {should have_content("#{User.count} found (displaying 1-10)")}
 
     it 'displays properly' do
       should have_selector('div.pagination')
+      should_not have_link('← Previous')
+      should_not have_link('1')
       should have_link('2', href: "/users?page=2")
       should have_link('3', href: "/users?page=3")
-      should_not have_link('4', href: "/?page=4")
+      should_not have_link('4')
+      should have_link('Next →', href: "/users?page=2")
+    end
+
+    describe "last page" do
+      before { click_link('3', href: "/users?page=3") }
+
+      it 'displays properly' do
+        should have_selector('div.pagination')
+        should have_link('← Previous', href: "/users?page=2")
+        should have_link('1', href: "/users?page=1")
+        should have_link('2', href: "/users?page=2")
+        should_not have_link('3')
+        should_not have_link('4')
+        should_not have_link('Next →')
+      end
+
+      it 'properly shows records displaying' do
+        should have_content("#{User.count} found (displaying 21-25)")
+      end
     end
   end
 
@@ -156,7 +200,7 @@ describe "UsersPages" do
     it {should_not have_link('2')}
   end
 
-  describe 'search partial' do
+  describe 'search with pagination' do
     let(:submit) {"Search"}
 
     before do
@@ -169,13 +213,14 @@ describe "UsersPages" do
     it {should have_content("#{User.count} found (displaying 1-10)")}
 
     it 'paginates properly' do
-      should have_link('Next →')
-      should have_link('2')
-      should_not have_link('3')
+      within '#user_pagination' do
+        should have_link('2')
+        should_not have_link('3')
+      end
     end
   end
 
-  describe 'search' do
+  describe 'search without pagination' do
     let(:submit) {"Search"}
 
     before do
@@ -188,6 +233,8 @@ describe "UsersPages" do
     it 'should return results' do
       should have_button('searchtest')
       should have_content('1 found')
+      should_not have_content('displaying')
+      should_not have_link('2')
     end
   end
 

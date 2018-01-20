@@ -22,7 +22,7 @@ GameContestServer::Application.routes.draw do
     resources :matches, except: [:edit, :update]
     resources :players, except: :index
     resources :tournaments, except: :index, shallow: true do
-      resources :players
+      resources :players, except: :index
       resources :matches, only: [:index] do
 	      resources :rounds, only: [:show]
       end

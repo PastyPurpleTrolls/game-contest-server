@@ -1,14 +1,15 @@
 class ContestsController < ApplicationController
+  include ContestsHelper
+
   before_action :ensure_user_logged_in, except: [:index, :show]
   before_action :ensure_contest_creator, except: [:index, :show]
   before_action :ensure_contest_owner, only: [:edit, :update, :destroy]
 
-
   def index
-    @contests = Contest.search(params[:search]).paginate(:per_page => 10, :page => params[:page])
-    if @contests.length == 0
-      flash.now[:info] = "There were no contests that matched your search. Please try again!"
-    end
+    @per_page = 10
+    @contests = Contest
+                    .search(params[:search])
+                    .paginate(per_page: @per_page, page: params[:page])
   end
 
   def new
@@ -31,7 +32,6 @@ class ContestsController < ApplicationController
   end
 
   def update
-
     if @contest.update(acceptable_params)
       flash[:success] = 'Contest updated.'
       redirect_to @contest
@@ -41,7 +41,14 @@ class ContestsController < ApplicationController
   end
 
   def show
+    @per_page = 10
     @contest = Contest.friendly.find(params[:id])
+    @tournaments = @contest.tournaments
+                       .search(params[:tournament_search])
+                       .paginate(per_page: @per_page, page: params[:tournament_page])
+    @players = @contest.players
+                   .search(params[:player_search])
+                   .paginate(per_page: @per_page, page: params[:player_page])
   end
 
   def destroy

@@ -308,17 +308,38 @@ describe "RefereePages" do
 
   describe "pagination" do
     before do
-      FactoryBot.create_list(:referee, 30)
+      FactoryBot.create_list(:referee, 25)
       visit referees_path
     end
 
-    it {should have_content("Referees (1-10 of #{Referee.count})")}
+    it {should have_content("#{Referee.count} found (displaying 1-10)")}
 
-    it "paginates properly" do
+    it 'displays properly' do
       should have_selector('div.pagination')
+      should_not have_link('← Previous')
+      should_not have_link('1')
       should have_link('2', href: "/referees?page=2")
       should have_link('3', href: "/referees?page=3")
-      should_not have_link('4', href: "/referees?page=4")
+      should_not have_link('4')
+      should have_link('Next →', href: "/referees?page=2")
+    end
+
+    describe "last page" do
+      before { click_link('3', href: "/referees?page=3") }
+
+      it 'displays properly' do
+        should have_selector('div.pagination')
+        should have_link('← Previous', href: "/referees?page=2")
+        should have_link('1', href: "/referees?page=1")
+        should have_link('2', href: "/referees?page=2")
+        should_not have_link('3')
+        should_not have_link('4')
+        should_not have_link('Next →')
+      end
+
+      it 'properly shows records displaying' do
+        should have_content("#{Referee.count} found (displaying 21-25)")
+      end
     end
   end
 
@@ -331,7 +352,6 @@ describe "RefereePages" do
       click_button submit
     end
 
-    it {should have_content("Referees (0 of #{Referee.count})")}
     it {should have_content("No referees found")}
     it {should_not have_link('2')}
   end
@@ -347,12 +367,13 @@ describe "RefereePages" do
       click_button submit
     end
 
-    it {should have_content("Referees (1-10 of #{Referee.count})")}
+    it {should have_content("#{Referee.count} found (displaying 1-10)")}
 
     it "paginates properly" do
-      should have_link('Next →')
-      should have_link('2')
-      should_not have_link('3')
+      within '#referee_pagination' do
+        should have_link('2')
+        should_not have_link('3')
+      end
     end
   end
 
@@ -368,7 +389,9 @@ describe "RefereePages" do
 
     it 'should return results' do
       should have_button('searchtest')
-      should have_content('Referees (1 of 1)')
+      should have_content('1 found')
+      should_not have_content('displaying')
+      should_not have_link('2')
     end
   end
 
