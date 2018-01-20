@@ -37,7 +37,7 @@
             <div class="row">
                 <%= form_tag user_path(@user), method: 'get', id: 'player_form', class: 'form-inline' do %>
                     <%= text_field_tag :player_search, params[:player_search], class: 'form-control' %>
-                    <%= submit_tag "Search", description: nil, class: 'btn btn-default' %>
+                    <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
                 <% end %>
             </div>
             <% if @players.count > 0 %>
@@ -71,7 +71,7 @@
                 <div class="row">
                     <%= form_tag user_path(@user), method: 'get', id: 'referee_form', class: 'form-inline' do %>
                         <%= text_field_tag :referee_search, params[:referee_search], class: 'form-control' %>
-                        <%= submit_tag "Search", description: nil, class: 'btn btn-default' %>
+                        <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
                     <% end %>
                 </div>
                 <% if @referees.count > 0 %>
@@ -102,7 +102,7 @@
                 <div class="row">
                     <%= form_tag user_path(@user), method: 'get', id: 'contest_form', class: 'form-inline' do %>
                         <%= text_field_tag :contest_search, params[:contest_search], class: 'form-control' %>
-                        <%= submit_tag "Search", description: nil, class: 'btn btn-default' %>
+                        <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
                     <% end %>
                 </div>
                 <% if @contests.count > 0 %>

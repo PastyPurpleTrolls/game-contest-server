@@ -55,7 +55,7 @@
                 <div class="row">
                     <%= form_tag contest_path(@contest), method: 'get', id: 'tournament_form', class: 'form-inline' do %>
                         <%= text_field_tag :tournament_search, params[:tournament_search], class: 'form-control' %>
-                        <%= submit_tag "Search", description: nil, class: 'btn btn-default' %>
+                        <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
                     <% end %>
                 </div>
                 <% if @tournaments.count > 0 %>
@@ -97,7 +97,7 @@
             <div class="row">
                 <%= form_tag contest_path(@contest), method: 'get', id: 'player_form', class: 'form-inline' do %>
                     <%= text_field_tag :player_search, params[:player_search], class: 'form-control' %>
-                    <%= submit_tag "Search", description: nil, class: 'btn btn-default' %>
+                    <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
                 <% end %>
             </div>
             <% if @players.count > 0 %>
