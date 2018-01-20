@@ -2,7 +2,7 @@ class MatchesController < ApplicationController
   include MatchesHelper
 
   before_action :ensure_user_logged_in, except: [:index, :show]
-  before_action :ensure_contest_creator, only: [:edit, :update, :destroy]
+  before_action :ensure_contest_creator, only: :destroy
 
   def new
     @contests = Contest.all
@@ -74,7 +74,6 @@ class MatchesController < ApplicationController
       # find all the contest's challenge matches in which the user has a player participating in
       @matches = Match.joins(:players).where(players: {user: current_user, contest: @manager})
       return
-
     else
       flash[:danger] = "Unable to find matches"
       redirect_to root_path
@@ -87,7 +86,6 @@ class MatchesController < ApplicationController
     @match.parent_matches.each {|m| m.destroy}
     @match.child_matches.each {|m| m.destroy}
     @match.destroy
-    flash[:success] = 'Match deleted'
     redirect_to @match.manager
   end
 
@@ -96,5 +94,4 @@ class MatchesController < ApplicationController
   def acceptable_params
     params.require(:match).permit(:earliest_start, :num_rounds, player_ids: [])
   end
-
 end

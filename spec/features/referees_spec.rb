@@ -30,7 +30,7 @@ describe "RefereePages" do
       attach_file('Test Player', file_location)
     end
 
-    it {should have_selector("h2", text: "Add Referee")}
+    it {should have_current_path(new_referee_path)}
 
     describe "invalid information" do
       describe "missing information" do
@@ -139,8 +139,6 @@ describe "RefereePages" do
 
         specify {expect(referee.user).to eq(creator)}
 
-        it {should have_alert(:success, text: 'Referee created')}
-
         it "shows all referee information" do
           should have_content(name)
           should have_content(round_limit)
@@ -171,8 +169,6 @@ describe "RefereePages" do
       attach_file('Replay Plugin', file_location)
       attach_file('Test Player', file_location)
     end
-
-    it {should have_selector("h2", text: "Edit Referee")}
 
     it "has the proper fields" do
       should have_field('Name', with: referee.name)
@@ -236,7 +232,6 @@ describe "RefereePages" do
       describe "changes the data" do
         before {click_button submit}
 
-        it {should have_alert(:success)}
         specify {expect(referee.reload.name).to eq(name)}
         specify {expect(referee.reload.rules_url).to eq("#{rules}/updated")}
         specify {expect(referee.reload.round_limit.to_s).to eq(round_limit)}
@@ -297,12 +292,6 @@ describe "RefereePages" do
       specify {expect(response).to redirect_to(referees_path)}
     end
 
-    it "produces a delete message" do
-      delete referee_path(referee)
-      get response.location
-      response.body.should have_alert(:success)
-    end
-
     it "removes a referee from the system" do
       expect {delete referee_path(referee)}.to change(Referee, :count).by(-1)
     end
@@ -310,17 +299,38 @@ describe "RefereePages" do
 
   describe "pagination" do
     before do
-      FactoryBot.create_list(:referee, 30)
+      FactoryBot.create_list(:referee, 25)
       visit referees_path
     end
 
-    it {should have_content("Referees (1-10 of #{Referee.count})")}
+    it {should have_content("#{Referee.count} found (displaying 1-10)")}
 
-    it "paginates properly" do
+    it 'displays properly' do
       should have_selector('div.pagination')
+      should_not have_link('← Previous')
+      should_not have_link('1')
       should have_link('2', href: "/referees?page=2")
       should have_link('3', href: "/referees?page=3")
-      should_not have_link('4', href: "/referees?page=4")
+      should_not have_link('4')
+      should have_link('Next →', href: "/referees?page=2")
+    end
+
+    describe "last page" do
+      before { click_link('3', href: "/referees?page=3") }
+
+      it 'displays properly' do
+        should have_selector('div.pagination')
+        should have_link('← Previous', href: "/referees?page=2")
+        should have_link('1', href: "/referees?page=1")
+        should have_link('2', href: "/referees?page=2")
+        should_not have_link('3')
+        should_not have_link('4')
+        should_not have_link('Next →')
+      end
+
+      it 'properly shows records displaying' do
+        should have_content("#{Referee.count} found (displaying 21-25)")
+      end
     end
   end
 
@@ -333,7 +343,6 @@ describe "RefereePages" do
       click_button submit
     end
 
-    it {should have_content("Referees (0 of #{Referee.count})")}
     it {should have_content("No referees found")}
     it {should_not have_link('2')}
   end
@@ -349,12 +358,13 @@ describe "RefereePages" do
       click_button submit
     end
 
-    it {should have_content("Referees (1-10 of #{Referee.count})")}
+    it {should have_content("#{Referee.count} found (displaying 1-10)")}
 
     it "paginates properly" do
-      should have_link('Next →')
-      should have_link('2')
-      should_not have_link('3')
+      within '#referee_pagination' do
+        should have_link('2')
+        should_not have_link('3')
+      end
     end
   end
 
@@ -370,7 +380,9 @@ describe "RefereePages" do
 
     it 'should return results' do
       should have_button('searchtest')
-      should have_content('Referees (1 of 1)')
+      should have_content('1 found')
+      should_not have_content('displaying')
+      should_not have_link('2')
     end
   end
 
@@ -381,8 +393,6 @@ describe "RefereePages" do
       FactoryBot.create_list(:contest, 5, referee: referee)
       visit referee_path(referee)
     end
-
-    it {should have_selector("h2", text: "Referee")}
 
     it "shows all referee information" do
       should have_content(referee.name)
@@ -408,7 +418,7 @@ describe "RefereePages" do
       visit referees_path
     end
 
-    it {should have_selector("h2", text: "Referee")}
+    it {should have_current_path(referees_path)}
 
     it "does not have adding option" do
       should_not have_link('', href: new_referee_path)
@@ -432,7 +442,7 @@ describe "RefereePages" do
       visit referees_path
     end
 
-    it {should have_selector("h2", text: "Referee")}
+    it {should have_current_path(referees_path)}
 
     it "has adding option" do
       should have_link('', href: new_referee_path)

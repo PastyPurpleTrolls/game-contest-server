@@ -11,11 +11,8 @@ describe Tournament do
   end
 
   describe "unavailable routes" do
-    #specify { expect(get(tournaments_path)).not_to be_routable }
     specify { expect(get('/tournaments')).not_to be_routable }
-    #specify { expect(post(tournaments_path)).not_to be_routable }
     specify { expect(post('/tournaments')).not_to be_routable }
-    #specify { expect(get(new_tournament_path)).not_to be_routable }
     specify { expect(get('/tournaments/new')).not_to route_to(action: 'new') }
   end
 end

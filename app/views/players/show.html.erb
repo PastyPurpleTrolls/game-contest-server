@@ -2,11 +2,11 @@
 <div class="row">
     <div class="container center display-container col-md-offset-1 col-md-10">
         <div class="row">
-            <div class="col-xs-9">
+            <div class="col-xs-8 col-xs-offset-2">
                 <h1 class="headings left"><%= @player.name %></h1>
             </div>
             <% if current_user == @player.user or @player.deletable?(current_user) %>
-                <div class="col-xs-3 right form-dropdown">
+                <div class="col-xs-2 right form-dropdown">
                     <div class="dropdown">
                         <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">Options <span class="caret"/></a>
                         <ul class="dropdown-menu">
@@ -47,12 +47,12 @@
 <div class="row">
     <div class="container center display-container col-md-offset-3 col-md-6">
         <h1 class="headings left row">Matches (<%= @playermatch.count %>)</h1>
-        <%= form_tag player_path(@player), method: :get, id: :players_search do %>
+        <%= form_tag player_path(@player), method: :get, id: :players_search, class: 'form-inline' do %>
             <%= hidden_field_tag :direction, params[:direction] %>
             <%= hidden_field_tag :sort, params[:sort] %>
-            <p class="search-container">
-                <%= text_field_tag :search, params[:search] %>
-                <%= submit_tag "Search" %>
+            <p>
+                <%= text_field_tag :search, params[:search], class: 'form-control' %>
+                <%= submit_tag "Search", class: 'btn btn-danger' %>
             </p>
         <%end%>
         <div id="pagination">	

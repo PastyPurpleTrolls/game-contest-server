@@ -1,9 +1,10 @@
 class UsersController < ApplicationController
+  include ApplicationHelper
+
   before_action :ensure_user_logged_out, only: [:new, :create]
   before_action :ensure_user_logged_in, only: [:edit, :update, :destroy]
   before_action :ensure_correct_user, only: [:edit, :update]
   before_action :ensure_admin, only: [:destroy]
-
 
   def new
     @user = User.new
@@ -12,7 +13,6 @@ class UsersController < ApplicationController
   def create
     @user = User.new(acceptable_params)
     if @user.save
-      flash[:success] = "Welcome to the site: #{@user.username}"
       login @user
       redirect_to root_path
     else
@@ -21,15 +21,24 @@ class UsersController < ApplicationController
   end
 
   def index
-    @users = User.search(params[:search]).paginate(:per_page => 10, :page => params[:page])
-    if @users.length == 0
-      flash.now[:info] = "There were no users that matched your search. Please try again!"
-    end
+    @per_page = 10
+    @users = User.search(params[:search]).paginate(per_page: @per_page, :page => params[:page])
   end
 
-
   def show
+    @per_page = 10
     @user = User.friendly.find(params[:id])
+    @players = @user.players
+                   .search(params[:player_search])
+                   .paginate(per_page: @per_page, page: params[:player_page])
+    if @user.contest_creator
+      @referees = @user.referees
+                      .search(params[:referee_search])
+                      .paginate(per_page: @per_page, page: params[:referee_page])
+      @contests = @user.contests
+                      .search(params[:contest_search])
+                      .paginate(per_page: @per_page, page: params[:contest_page])
+    end
   end
 
   def edit
@@ -49,7 +58,6 @@ class UsersController < ApplicationController
 
   def destroy
     @user.destroy
-    flash[:success] = "#{@user.username} removed from the site"
     redirect_to users_path
   end
 
@@ -66,7 +74,7 @@ class UsersController < ApplicationController
   def ensure_admin
     @user = User.friendly.find(params[:id])
     request_okay = true
-    unless !current_user?(@user)
+    if current_user?(@user)
       flash[:danger] = 'Users may not delete themselves.'
       request_okay = false
     end
