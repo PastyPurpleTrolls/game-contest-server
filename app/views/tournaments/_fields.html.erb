@@ -2,7 +2,7 @@
     <div class="col-xs-4">
         <%= f.label :name %>:
     </div>
-    <%= f.text_field :name, class: 'form-input col-xs-7' %>
+    <%= f.text_field :name, class: 'form-control' %>
 </div>
 <div class="form-group row left">
     <div class="col-xs-4">
@@ -44,7 +44,7 @@
 
 
 <div class="row multiselector">
-    <div class="col-xs-5 first-player-select right">
+    <div>
         <p class="center"><%= f.label :leftValues, "Available Players:", class: "player-label" %></p>
         <select id="leftValues" class="player-select" size="5" multiple>
             <% @tournament.contest.players.select{ |p| !p.tournaments.include?(@tournament)}.each do |p| %>
@@ -55,8 +55,8 @@
     <div class="player-selectors">
         <br>
         <br>
-        <input type="button" id="btnRight" onclick="addPlayer()" value="&gt;&gt;" />
-        <input type="button" id="btnLeft" onclick="removePlayer()" value="&lt;&lt;" />
+        <input type="button" id="btnRight" onclick="addPlayer()" value="&#xf061;" />
+        <input type="button" id="btnLeft" onclick="removePlayer()" value="&#xf060;" >
     </div>
     <div>
         <p class="center"><%= f.label :rightValues, "Selected Players:", class: "player-label" %></p>

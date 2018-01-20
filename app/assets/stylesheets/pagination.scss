@@ -11,17 +11,17 @@ div.pagination {
     padding: 6px 12px;
     line-height: 1.428571429;
     text-decoration: none;
-    color: #337ab7;
-    background-color: #fff;
-    border: 1px solid #ddd;
+    color: #625346;
+    background-color: #f3f2ef;
+    border: 1px solid #d9d7cb;
     margin-left: -1px;
 
     &:hover,
     &:focus {
       z-index: 2;
-      color: darken(#337ab7, 15%);
-      background-color: #EEE;
-      border-color: #ddd;
+      color: darken(#625346, 15%);
+      background-color: #e5e5df;
+      border-color: #d9d7cb;
     }
   }
 
@@ -40,9 +40,9 @@ div.pagination {
     &:hover,
     &:focus {
       z-index: 3;
-      color: white;
-      background-color: #337ab7;
-      border-color: #337ab7;
+      color: #433622;
+      background-color: #b9b59f;
+      border-color: #b9b59f;
       cursor: default;
     }
   }
@@ -51,9 +51,9 @@ div.pagination {
     &,
     &:hover,
     &:focus {
-      color: #777;
-      background-color: #fff;
-      border-color: #ddd;
+      color: #b9b59f;
+      background-color: #f3f2ef;
+      border-color: #d9d7cb;
       cursor: not-allowed;
     }
   }

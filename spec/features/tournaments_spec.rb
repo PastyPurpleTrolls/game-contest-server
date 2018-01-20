@@ -27,7 +27,7 @@ describe 'TournamentsPages' do
       visit new_contest_tournament_path(contest)
     end
 
-    it { should have_selector("h2", text: "Add Tournament") }             
+    it {should have_current_path(new_contest_tournament_path(contest))}
 
     describe 'invalid information' do
       describe 'missing information' do
@@ -51,7 +51,7 @@ describe 'TournamentsPages' do
             click_button submit
           end
 
-          it { pending; should have_alert(:danger) }
+          it {pending; should have_alert(:danger)}
         end
       end
     end
@@ -128,13 +128,11 @@ describe 'TournamentsPages' do
       visit edit_tournament_path(tournament)
     end
 
-    it { should have_selector("h2", text: "Edit Tournament") }
-
     it "shows the proper fields" do
       should have_field("Name", with: tournament.name)
       expect_datetime_select(tournament.start, 'Start')
       should have_select('Tournament Type',
-                         options: %w[ Round\ Robin   Single\ Elimination ],
+                         options: %w[ Round\ Robin Single\ Elimination Multiplayer\ Game King\ of\ the\ Hill ],
                          selected: tournament_type)
 
       should have_select("rightValues", options: ["#{player1.name} (#{player1.user.username})"])
@@ -249,12 +247,6 @@ describe 'TournamentsPages' do
       specify {expect(response).to redirect_to(contest_path(tournament.contest))}
     end
 
-    it "produces a delete message" do
-      delete tournament_path(tournament)
-      get response.location
-      response.body.should have_alert(:success)
-    end
-
     it "removes a tournament from the system" do
       expect {delete tournament_path(tournament)}.to change(Tournament, :count).by(-1)
     end
@@ -263,11 +255,9 @@ describe 'TournamentsPages' do
   describe 'show' do
     let!(:tournament) {FactoryBot.create(:tournament)}
 
-   before {visit tournament_path(tournament)}
+    before {visit tournament_path(tournament)}
 
-    it {should have_selector("h2", text: "Tournament")}
-
-   it "shows all tournament information" do
+    it "shows all tournament information" do
       should have_content(tournament.name)
       should have_content(tournament.status.capitalize)
       should have_content(distance_of_time_in_words_to_now(tournament.start).split.map {|i| i.capitalize}.join(' '))
@@ -285,99 +275,120 @@ describe 'TournamentsPages' do
     end
   end
 
+  describe "pagination" do
+    before do
+      FactoryBot.create_list(:tournament, 25, contest: contest)
+      visit contest_path(contest)
+    end
+
+    it {should have_content("#{contest.tournaments.count} found (displaying 1-10)")}
+
+    it 'displays properly' do
+      should have_selector('div.pagination')
+      within '#tournament_pagination' do
+        should_not have_link('← Previous')
+        should_not have_link('1')
+        should have_link('2')
+        should have_link('3')
+        should_not have_link('4')
+        should have_link('Next →')
+      end
+    end
+
+    describe "last page" do
+      before {click_link('3', href: "/contests/#{contest.slug}?tournament_page=3")}
+
+      it 'displays properly' do
+        should have_selector('div.pagination')
+        within '#tournament_pagination' do
+          should have_link('← Previous')
+          should have_link('1')
+          should have_link('2')
+          should_not have_link('3')
+          should_not have_link('4')
+          should_not have_link('Next →')
+        end
+      end
+
+      it 'properly shows records displaying' do
+        should have_content("#{contest.tournaments.count} found (displaying 21-25)")
+      end
+    end
+
+    describe "changing pages" do
+      before do
+        FactoryBot.create_list(:player, 11, contest: contest)
+        within '#tournament_pagination' do
+          click_link('2')
+        end
+      end
+
+      it "does not change players page" do
+        within '#player_pagination' do
+          should have_link('2')
+        end
+      end
+    end
+  end
+
   describe 'search with pagination' do
     let(:submit) {'Search'}
 
     before do
       FactoryBot.create_list(:tournament, 20, contest: contest)
       visit contest_path(contest)
-      fill_in 'search', with: 'Tournament'
-      click_button submit
+      fill_in 'tournament_search', with: 'Tournament'
+      within '#tournament_form' do
+        click_button submit
+      end
     end
 
-    it {should have_content("Tournaments (1-10 of #{Tournament.count})")}
+    it {should have_content("#{contest.tournaments.count} found (displaying 1-10)")}
 
     it "paginates properly" do
-      should have_link('2')
-      should_not have_link('3')
+      within '#tournament_pagination' do
+        should have_link('2')
+        should_not have_link('3')
+      end
     end
   end
 
   describe 'search without pagination' do
     let(:submit) {'Search'}
-    let!(:tournament2) {FactoryBot.create(:tournament, contest: contest)}
 
     before do
+      FactoryBot.create(:tournament, contest: contest, name: "searchtest")
       visit contest_path(contest)
-      fill_in 'tournament_search', with: 'Player'
-      click_button submit
+      fill_in 'tournament_search', with: 'searchtest'
+      within '#tournament_form' do
+        click_button submit
+      end
     end
 
     it 'should return results' do
-      should have_content("Tournaments (1-2 of #{Tournament.count})")
-      should have_link(tournament.name, href: tournament_path(tournament))
-      should have_link(tournament2.name, href: tournament_path(tournament2))
+      should have_link('searchtest')
+      should have_content('1 found')
+      should_not have_content('displaying')
+      should_not have_css('#tournament_pagination')
     end
   end
 
-  describe 'search_error' do
+  describe 'search error' do
     let(:submit) {'Search'}
 
     before do
       visit contest_path(contest)
-      fill_in 'search', with: 'junk input'
-      click_button submit
+      fill_in 'tournament_search', with: 'junk input'
+      within '#tournament_form' do
+        click_button submit
+      end
     end
 
-    it {should have_content("Tournaments (0 of #{Tournament.count})")}
-    it {should_not have_link('2')}
-    it {should have_content('No players found')}
-  end
-
-  describe 'search with pagination' do
-    let(:submit) { 'Search' }
-
-    before do
-      20.times { FactoryBot.create(:tournament, contest: contest) }
-      visit contest_path(contest)
-      fill_in 'search', with: 'Tournament'
-      click_button submit
+    it "paginates properly" do
+      should_not have_css('#tournament_pagination')
     end
 
-    it { should have_content("Tournaments (1-10 of #{Tournament.count})") }
-    it { should have_link('2') }
-    it { should_not have_link('3') }
-  end
-
-  describe 'search without pagination' do
-    let(:submit) { 'Search' }
-    let!(:tournament2) { FactoryBot.create(:tournament, contest: contest) }
-
-    before do
-      visit contest_path(contest)
-      fill_in 'tournament_search', with: 'Player'
-      click_button submit
-    end
-
-    it 'should return results' do
-      should have_content("Tournaments (1-2 of #{Tournament.count})")
-      should have_link(tournament.name, href: tournament_path(tournament))
-      should have_link(tournament2.name, href: tournament_path(tournament2))
-    end
-  end
-
-  describe 'search_error'do
-    let(:submit) { 'Search' }
-
-    before do
-      visit contest_path(contest)
-      fill_in 'search', with: 'junk input'
-      click_button submit
-    end
-
-    it { should have_content("Tournaments (0 of #{Tournament.count})") }
-    it { should_not have_link('2') }
-    it { should have_content('No players found') }
+    it {should have_content('No tournaments found')}
   end
 
   describe "show all" do
@@ -386,8 +397,6 @@ describe 'TournamentsPages' do
 
       visit contest_path(contest)
     end
-
-    it { should have_selector("h2", text: "Contest") }
 
     it "lists all the tournaments for a contest in the system" do
       Tournament.where(contest: contest).each do |tournament|

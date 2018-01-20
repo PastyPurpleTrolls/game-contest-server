@@ -35,13 +35,13 @@ s.send(message.encode())
 
 #Now receive data
 
- while True:
-   reply = s.recv(4096).decode()
+while True:
+    reply = s.recv(4096).decode()
     if "move" in reply:
         guesses = ['a','b','c','w']
         blah = choice(guesses) + "\n"
         s.send(blah.encode())
-     elif "wins" in reply:
+    elif "wins" in reply:
         #print(NAME + ': ' + reply.strip())
         break
 

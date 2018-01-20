@@ -5,19 +5,18 @@ feature "HomePage" do
   subject {page}
 
   describe "the navigation bar" do
-    let (:admin) { FactoryBot.create(:admin) }
-    let (:creator) { FactoryBot.create(:contest_creator) }
-    let (:user) { FactoryBot.create(:user) }    
+    let (:admin) {FactoryBot.create(:admin)}
+    let (:creator) {FactoryBot.create(:contest_creator)}
+    let (:user) {FactoryBot.create(:user)}
 
-    before { visit root_path }
-    
-    it { should have_selector("h2", text: "Home") }             
-    it { should have_selector('.navbar') }
-    
+    before {visit root_path}
+
+    it {should have_selector('.navbar')}
+
     describe "as anonymous" do
       it "has the proper links" do
         within ".navbar" do
-          should have_link('Game Contest Server', href: root_path)
+          should have_link('', href: root_path)
           should have_link('Contests', href: contests_path)
           should have_button('Log In')
           should have_button('Sign Up')
@@ -30,7 +29,7 @@ feature "HomePage" do
 
       it "has the proper links" do
         within ".navbar" do
-          should have_link('Game Contest Server', href: root_path)
+          should have_link('', href: root_path)
           should have_link('Contests', href: contests_path)
           should have_content('Account')
         end
@@ -42,7 +41,7 @@ feature "HomePage" do
 
       it "has the proper links" do
         within ".navbar" do
-          should have_link('Game Contest Server', href: root_path)
+          should have_link('', href: root_path)
           should have_link('Contests', href: contests_path)
           should have_link('Referees', href: referees_path)
           should have_content('Account')
@@ -55,7 +54,7 @@ feature "HomePage" do
 
       it "has the proper links" do
         within ".navbar" do
-          should have_link('Game Contest Server', href: root_path)
+          should have_link('', href: root_path)
           should have_link('Users', href: users_path)
           should have_link('Contests', href: contests_path)
           should have_content('Account')

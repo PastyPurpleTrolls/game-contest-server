@@ -2,6 +2,15 @@
 
 from optparse import OptionParser
 import socket
+import signal
+import sys
+import os
+
+def set_alarm_response(func):
+    signal.signal(signal.SIGALRM, func)
+
+def stop_alarm():
+    signal.alarm(0)
 
 #Create and listen to a socket
 class SocketServer():
@@ -27,6 +36,8 @@ class Connection():
         while var == "":
             try:
                 var = self.connection.recv(buffersize)
+            except InterruptedError:
+                continue
             except:
                 break
         return var
@@ -76,7 +87,10 @@ parser.add_option("-p","--port",action="store",type="int",dest="port")
 parser.add_option("-n","--num",action="store",type="int",dest="num") #number of players
 parser.add_option("-r", "--rounds", action="store", type="int", dest="rounds") #Number of rounds
 parser.add_option("-t", "--time", action="store", type="int", dest="time") #Max amount of time for the match
+parser.add_option("-m", "--turns", action="store", type="int", dest="turns") #Max number of turns for the match
 (options, args) = parser.parse_args()
+
+signal.alarm(options.time)
 
 #connect to match wrapper
 manager = Manager('localhost', options.port)
