@@ -13,7 +13,6 @@ class UsersController < ApplicationController
   def create
     @user = User.new(acceptable_params)
     if @user.save
-      flash[:success] = "Welcome to the site: #{@user.username}"
       login @user
       redirect_to root_path
     else
@@ -25,7 +24,6 @@ class UsersController < ApplicationController
     @per_page = 10
     @users = User.search(params[:search]).paginate(per_page: @per_page, :page => params[:page])
   end
-
 
   def show
     @per_page = 10
@@ -60,7 +58,6 @@ class UsersController < ApplicationController
 
   def destroy
     @user.destroy
-    flash[:success] = "#{@user.username} removed from the site"
     redirect_to users_path
   end
 
@@ -77,7 +74,7 @@ class UsersController < ApplicationController
   def ensure_admin
     @user = User.friendly.find(params[:id])
     request_okay = true
-    unless !current_user?(@user)
+    if current_user?(@user)
       flash[:danger] = 'Users may not delete themselves.'
       request_okay = false
     end

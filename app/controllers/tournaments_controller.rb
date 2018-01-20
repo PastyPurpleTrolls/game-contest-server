@@ -24,11 +24,9 @@ class TournamentsController < ApplicationController
     @tournament = @contest.tournaments.build(acceptable_params)
     @tournament.status = "waiting"
     if @tournament.save
-      flash[:success] = 'Tournament created.'
       redirect_to @tournament
     else
       @contests = Contest.all
-      flash.now[:danger] = 'Tournament not saved'
       render 'new'
     end
   end
@@ -43,7 +41,6 @@ class TournamentsController < ApplicationController
       player_tournament.destroy
     end
     if @tournament.update(acceptable_params)
-      flash[:success] = "Tournament updated."
       redirect_to @tournament
     else
       render 'edit'
@@ -59,10 +56,8 @@ class TournamentsController < ApplicationController
     @tournament.player_tournaments.each{|m|m.destroy}
     @tournament.matches.each{|m|m.destroy}
     @tournament.destroy
-    flash[:success] = 'Tournament deleted'
     redirect_to contest_path(@tournament.contest)
   end
-
 
   private
 

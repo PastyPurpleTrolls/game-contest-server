@@ -58,7 +58,6 @@ describe "UsersPages" do
 
         it {should have_link('Log Out')}
         it {should_not have_link('Log In')}
-        it {should have_alert(:success, text: 'Welcome')}
       end
     end
   end
@@ -472,11 +471,6 @@ describe "UsersPages" do
           end
 
           specify {expect(response).to redirect_to(users_path)}
-        end
-
-        it "produces a delete message" do
-          click_link('Delete', match: :first)
-          should have_alert(:success)
         end
 
         it "removes a user from the system" do

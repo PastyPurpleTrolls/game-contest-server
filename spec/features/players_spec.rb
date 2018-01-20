@@ -71,8 +71,6 @@ describe "PlayersPages" do
         specify {expect(player.user).to eq(user)}
         specify {expect(player.contest).to eq(contest)}
 
-        it {should have_alert(:success, text: 'Player created')}
-
         it "shows all player information" do
           should have_content(name)
           should have_content(description)
@@ -152,7 +150,6 @@ describe "PlayersPages" do
       describe "changes the data" do
         before {click_button submit}
 
-        it {should have_alert(:success)}
         specify {expect(player.reload.name).to eq(name)}
         specify {expect(player.reload.description).to eq(description)}
 

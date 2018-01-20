@@ -38,11 +38,11 @@ $navbar-height: 60;
 $btn-primary-bg:       #b9b59f;
 $btn-primary-color:    #433622;
 
-// Sucess (green)
-$state-success-bg:     lighten($brand-success, 10%);
-$state-success-text:   darken($brand-success, 30%);
-$state-success-border: darken($state-success-bg, 25%);
-$btn-success-bg:       darken($brand-success, 20%);
+// Success (green)
+$state-success-bg:     #d9d7cb;
+$state-success-text:   #625346;
+$state-success-border: #b9b59f;
+$btn-success-bg:       #d9d7cb;
 $btn-success-color:    #625346;//lighten($brand-success, 35%);
 //$btn-success-border:   darken($brand-success, 10%);
 

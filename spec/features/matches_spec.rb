@@ -171,12 +171,6 @@ describe "MatchesPages" do
         specify {expect(response).to redirect_to(tournament_path(tournament_match.manager))}
       end
 
-      it "produces a delete message" do
-        delete match_path(challenge_match)
-        get response.location
-        response.body.should have_alert(:success)
-      end
-
       it "removes a match from the system (challenge match)" do
         expect {delete match_path(challenge_match)}.to change(Match, :count).by(-1)
       end

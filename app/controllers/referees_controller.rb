@@ -18,8 +18,6 @@ class RefereesController < ApplicationController
   def create
     @referee = current_user.referees.build(acceptable_params)
     if @referee.save
-      flash[:success] = 'Referee created.'
-
       unless params[:referee][:upload4].nil?
         test_contest = current_user.contests.build(deadline: Time.now + 1.day, description: "Test Contest", name: @referee.name + " test contest", referee_id: @referee.id)
         test_contest.save!
@@ -41,7 +39,6 @@ class RefereesController < ApplicationController
 
   def update
     if @referee.update(acceptable_params)
-      flash[:success] = 'Referee updated.'
       redirect_to @referee
     else
       render 'edit'
@@ -65,7 +62,6 @@ class RefereesController < ApplicationController
   def destroy
     if @referee.deletable?(current_user)
       @referee.destroy
-      flash[:success] = 'Referee deleted.'
       if params[:returnto] == 'profile'
         redirect_to user_path(current_user)
       else

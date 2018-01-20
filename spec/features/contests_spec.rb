@@ -77,8 +77,6 @@ describe "ContestsPages" do
 
         specify {expect(contest.user).to eq(creator)}
 
-        it {should have_alert(:success, text: 'Contest created')}
-
         it "shows all contest information" do
           should have_content(/About 1 Hour/)
           should have_content(description)
@@ -141,7 +139,6 @@ describe "ContestsPages" do
       describe "changes the data" do
         before {click_button submit}
 
-        it {should have_alert(:success)}
         specify {expect_same_minute(contest.reload.deadline, now)}
         specify {expect(contest.reload.name).to eq(name)}
         specify {expect(contest.reload.description).to eq(description)}
@@ -176,12 +173,6 @@ describe "ContestsPages" do
     describe "redirects properly" do
       before {delete contest_path(contest)}
       specify {expect(response).to redirect_to(contests_path)}
-    end
-
-    it "produces a delete message" do
-      delete contest_path(contest)
-      get response.location
-      response.body.should have_alert(:success)
     end
 
     it "removes a contest from the system" do

@@ -139,8 +139,6 @@ describe "RefereePages" do
 
         specify {expect(referee.user).to eq(creator)}
 
-        it {should have_alert(:success, text: 'Referee created')}
-
         it "shows all referee information" do
           should have_content(name)
           should have_content(round_limit)
@@ -234,7 +232,6 @@ describe "RefereePages" do
       describe "changes the data" do
         before {click_button submit}
 
-        it {should have_alert(:success)}
         specify {expect(referee.reload.name).to eq(name)}
         specify {expect(referee.reload.rules_url).to eq("#{rules}/updated")}
         specify {expect(referee.reload.round_limit.to_s).to eq(round_limit)}
@@ -293,12 +290,6 @@ describe "RefereePages" do
       before {delete referee_path(referee)}
 
       specify {expect(response).to redirect_to(referees_path)}
-    end
-
-    it "produces a delete message" do
-      delete referee_path(referee)
-      get response.location
-      response.body.should have_alert(:success)
     end
 
     it "removes a referee from the system" do
