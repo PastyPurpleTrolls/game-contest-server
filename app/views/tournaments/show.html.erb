@@ -44,19 +44,10 @@
 </div>
 <% if @tournament.tournament_type == "round robin" %>
     <%= render "round_robin_tournament" %>
-<% else %>
+<% elsif @tournament.tournament_type == "single elimination" %>
     <%= render "single_elimination_tournament" %>
+<% elsif @tournament.tournament_type == "multiplayer game" %>
+    <%= render "multiplayer_game_tournament" %>
+<% else %>
+    <%= render "king_of_the_hill_tournament" %>
 <% end %>
-<div class="row">
-    <div class="container col-md-offset-1 col-md-10 no-left-padding no-right-padding">
-        <% if @tournament.tournament_type == "round robin" %>
-            <%= render "round_robin_tournament" %>
-        <% elsif @tournament.tournament_type == "single_elimination" %>
-            <%= render "single_elimination_tournament" %>
-	<% elsif @tournament.tournament_type == "multiplayer game" %>
-    	    <%= render "multiplayer_game_tournament" %>
-	<% else %>
-    	    <%= render "king_of_the_hill_tournament" %>
-        <% end %>
-    </div>
-</div>

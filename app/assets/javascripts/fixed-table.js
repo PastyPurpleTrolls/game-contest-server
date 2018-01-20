@@ -144,5 +144,8 @@ $(function() {
 });
 
 $( document ).ready(function() {
-    fixTable($('#fixed-table-container-1')[0]);
+    var fixedTable = $('#fixed-table-container-1');
+    if (fixedTable.length > 0) {
+        fixTable(fixedTable[0]);
+    }
 });
