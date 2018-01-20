@@ -69,7 +69,7 @@
                 <% end %>
                 <div class="row">
                     <%= render partial: 'contest_tournament', collection: @tournaments, as: :tournament %>
-                    <%= will_paginate @tournaments, param_name: 'tournament_page', id: 'tournament_pagination' %>
+                    <%= will_paginate @tournaments, param_name: 'tournament_page', id: 'tournament_pagination', inner_window: 2, outer_window: 0 %>
                 </div>
             </div>
         </div>
@@ -111,7 +111,7 @@
             <% end %>
             <div class="row">
                 <%= render partial: 'contest_player', collection: @players, as: :player %>
-                <%= will_paginate @players, param_name: 'player_page', id: 'player_pagination' %>
+                <%= will_paginate @players, param_name: 'player_page', id: 'player_pagination', inner_window: 2, outer_window: 0 %>
             </div>
         </div>
     </div>

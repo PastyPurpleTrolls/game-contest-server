@@ -16,7 +16,7 @@
     <div class="col-xs-4">
         <%= f.label :tournament_type, 'Tournament Type:' %>
     </div>
-    <%= f.select :tournament_type, [['Round Robin','round robin'],['Single Elimination', 'single elimination']], {}, class: 'form-input form-element'  %>
+    <%= f.select :tournament_type, [['Round Robin','round robin'],['Single Elimination', 'single elimination'], ['Multiplayer Game', 'multiplayer game'], ['King of the Hill', 'king of the hill']], {}, class: 'form-input form-element'  %>
 </div>
 <div class="form-group row left">
     <div class="col-xs-4">
@@ -24,6 +24,24 @@
     </div>
     <%= f.select :rounds_per_match, 1..@contest.referee.round_limit.to_i, {}, class: 'form-input form-element' %>
 </div>
+<script>
+    var playersPerGame = <%= @contest.referee.players_per_game; %>
+    var maxTimePerMatch = <%= @contest.referee.time_per_game; %>
+</script>
+<div class="form-group row left">
+    <div class="col-xs-4">
+        <%= f.label :expected_disparity, 'Skill range between players:' %> 
+    </div>
+    <%= f.select :expected_disparity, [['Very small'],['Small'], ['Medium small'], ['Medium'], ['Medium large'], ['Large'],['Very large']], {}, class: 'form-input form-element' %>
+</div>
+<div class="form-group row left">
+    <div class="col-xs-4">
+        <%= f.label :total_matches, 'Total Matches:' %>
+    </div>
+    <%= f.range_field :total_matches, min:"100", max:"1000",class: 'form-input form-element' %>
+</div>
+
+
 
 <div class="row multiselector">
     <div>

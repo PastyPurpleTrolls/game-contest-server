@@ -132,7 +132,7 @@ describe 'TournamentsPages' do
       should have_field("Name", with: tournament.name)
       expect_datetime_select(tournament.start, 'Start')
       should have_select('Tournament Type',
-                         options: %w[ Round\ Robin   Single\ Elimination ],
+                         options: %w[ Round\ Robin Single\ Elimination Multiplayer\ Game King\ of\ the\ Hill ],
                          selected: tournament_type)
 
       should have_select("rightValues", options: ["#{player1.name} (#{player1.user.username})"])

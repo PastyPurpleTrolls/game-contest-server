@@ -51,7 +51,7 @@
             <% end %>
             <div class="row">
                 <%= render partial: 'player', collection: @players %>
-                <%= will_paginate @players, param_name: 'player_page', id: 'player_pagination' %>
+                <%= will_paginate @players, param_name: 'player_page', id: 'player_pagination', inner_window: 2, outer_window: 0 %>
             </div>
         </div>
     </div>
@@ -85,7 +85,7 @@
                 <% end %>
                 <div class="row">
                     <%= render partial: 'referee', collection: @referees %>
-                    <%= will_paginate @referees, param_name: 'referee_page', id: 'referee_pagination' %>
+                    <%= will_paginate @referees, param_name: 'referee_page', id: 'referee_pagination', inner_window: 2, outer_window: 0 %>
                 </div>
             </div>
         </div>
@@ -116,7 +116,7 @@
                 <% end %>
                 <div class="row">
                     <%= render partial: 'contest', collection: @contests %>
-                    <%= will_paginate @contests, param_name: 'contest_page', id: 'contest_pagination' %>
+                    <%= will_paginate @contests, param_name: 'contest_page', id: 'contest_pagination', inner_window: 2, outer_window: 0 %>
                 </div>
             </div>
         </div>

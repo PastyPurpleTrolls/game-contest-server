@@ -48,16 +48,15 @@
     <%= render "single_elimination_tournament" %>
 <% end %>
 <div class="row">
-    <div class="container center display-container col-md-10 col-md-offset-1">
-        <h1 class="headings row left">Player Information</h1>
-        <div class="row">
-            <div class="col-xs-3">Place</div>        
-            <div class="col-xs-3">Name</div>
-            <div class="col-xs-3">Creator</div>
-            <div class="col-xs-3">Wins</div>
-        </div>
-        <div class="player-results-container">
-            <%= render @tournament.players.sort_by{|p| p.wins(@tournament)}.reverse %>
-        </div>
+    <div class="container col-md-offset-1 col-md-10 no-left-padding no-right-padding">
+        <% if @tournament.tournament_type == "round robin" %>
+            <%= render "round_robin_tournament" %>
+        <% elsif @tournament.tournament_type == "single_elimination" %>
+            <%= render "single_elimination_tournament" %>
+	<% elsif @tournament.tournament_type == "multiplayer game" %>
+    	    <%= render "multiplayer_game_tournament" %>
+	<% else %>
+    	    <%= render "king_of_the_hill_tournament" %>
+        <% end %>
     </div>
 </div>

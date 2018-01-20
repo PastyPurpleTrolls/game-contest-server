@@ -59,7 +59,7 @@
                 <%= render partial: 'player_matches/match_links',
                 collection: @matches,
                 as: 'player_match' %>
-            <%= will_paginate @matches %>
+            <%= will_paginate @matches, inner_window: 2, outer_window: 0 %>
         </div>
         <% @win =0 %>
         <% @loss =0 %>

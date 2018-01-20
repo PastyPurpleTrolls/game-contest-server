@@ -32,7 +32,7 @@
         </div>
         <div id= "pagination">
             <%= render @contests %>
-            <%= will_paginate @contests, id: 'contest_pagination' %>
+            <%= will_paginate @contests, id: 'contest_pagination', inner_window: 2, outer_window: 0 %>
         </div>
     </div>
 </div>

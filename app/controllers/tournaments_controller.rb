@@ -3,6 +3,8 @@ class TournamentsController < ApplicationController
   before_action :ensure_contest_creator, except: :show
   before_action :ensure_contest_owner, only: [:new ,:edit, :update , :destroy]
 
+  include TournamentsHelper
+
   def new
     @contests = Contest.all
     if params[:contest_id] != 'not-specified'
@@ -49,6 +51,8 @@ class TournamentsController < ApplicationController
 
   def show
     @tournament = Tournament.friendly.find(params[:id])
+    @results = get_player_results(@tournament)
+    @player_attributes = get_player_attributes(@tournament)
   end
 
   def destroy
@@ -64,7 +68,7 @@ class TournamentsController < ApplicationController
   def acceptable_params
     # Status should not be acceptable.
     # The backend should set it.
-    params.require(:tournament).permit(:name , :start, :tournament_type,:rounds_per_match, player_ids: [])
+    params.require(:tournament).permit(:name , :start, :tournament_type,:rounds_per_match, :total_matches, player_ids: [])
   end
 
   def ensure_contest_owner

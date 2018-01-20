@@ -25,7 +25,7 @@
         </div>
         <div id="pagination">
             <%= render partial: 'user', collection: @users %>
-            <%= will_paginate @users, id: 'user_pagination' %>
+            <%= will_paginate @users, id: 'user_pagination', inner_window: 2, outer_window: 0 %>
         </div>
     </div>
 </div>

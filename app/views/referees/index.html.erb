@@ -32,7 +32,7 @@
         </div>
         <div id="pagination">
             <%= render partial: 'referee', collection: @referees %>
-            <%= will_paginate @referees, id: 'referee_pagination' %>
+            <%= will_paginate @referees, id: 'referee_pagination', inner_window: 2, outer_window: 0 %>
         </div>
     </div>
 </div>

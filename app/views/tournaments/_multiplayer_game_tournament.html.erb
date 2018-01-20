@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="container center display-container col-md-offset-1 col-md-10">
+	<h1 class="headings row left">Multiplayer Results Table</h1>
+	<div id="fixed-table-container-1" class="fixed-table-container">
+	    <table>
+		<thead>
+		    <tr>
+			<th></th>
+			<th>Rank<th>
+			<th>Wins<th>
+			<% render @tournament.players %>
+		    </tr>
+		</thead>
+		<tbody>
+		    <% %>
+		</tbody>
+	    </table>
+	</div>
+    </div
+</div>
