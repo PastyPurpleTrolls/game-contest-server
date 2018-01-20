@@ -160,6 +160,11 @@ ActiveRecord::Schema.define(version: 20180115194902) do
     t.index ["match_id"], name: "index_rounds_on_match_id"
   end
 
+  create_table "testings", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "tournaments", force: :cascade do |t|
     t.string "tournament_type", limit: 255
     t.integer "contest_id"
