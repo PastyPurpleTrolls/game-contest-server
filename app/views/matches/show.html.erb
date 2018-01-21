@@ -6,10 +6,13 @@
 <ol class="breadcrumb">
     <li><a href="<%= root_path %>">Home</a></li>
     <li><a href="<%= contests_path %>">Contests</a></li>
-    <% if @match.manager_type != 'Contest' %>
+    <% if @match.manager_type == 'Contest' %>
+        <li><a href="<%= contest_path(@match.manager) %>"><%= @match.manager.name %></a></li>
+    <% else %>
         <li><a href="<%= contest_path(@match.manager.contest) %>"><%= @match.manager.contest.name %></a></li>
+        <li><a href="<%= tournament_path(@match.manager) %>"><%= @match.manager.name %></a></li>
     <% end %>
-    <li class="active"><%= @match.manager.name %></li>
+    <li class="active">Match <%= @match.id %></li>
 </ol>
 <div class="row">
     <div class="container center display-container col-md-offset-1 col-md-10">

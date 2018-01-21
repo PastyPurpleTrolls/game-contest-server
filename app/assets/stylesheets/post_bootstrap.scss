@@ -428,3 +428,11 @@ blockquote {
 .text-danger * {
   color: white;
 }
+
+.breadcrumb {
+  background-color: #d9d7cb;
+}
+
+.breadcrumb > .active {
+  color: darken(#b9b59f, 20%);
+}
