@@ -97,7 +97,7 @@ player1 = Player.create!(
   name: "Phil",
   downloadable: false,
   playable: false,
-  file_location: Rails.root.join("examples", "guess-w", "test_player.py").to_s
+  file_location: Rails.root.join("examples", "guess-w", "sometimes_win_player.py").to_s
 )
 player2 = Player.create!(
   user: student,
@@ -106,7 +106,7 @@ player2 = Player.create!(
   name: "Justin",
   downloadable: false,
   playable: false,
-  file_location: Rails.root.join("examples", "guess-w", "test_player.py").to_s
+  file_location: Rails.root.join("examples", "guess-w", "sometimes_win_player.py").to_s
 )
 player3 = Player.create!(
   user: student,
@@ -115,7 +115,7 @@ player3 = Player.create!(
   name: "Alex",
   downloadable: false,
   playable: false,
-  file_location: Rails.root.join("examples", "guess-w", "test_player.py").to_s
+  file_location: Rails.root.join("examples", "guess-w", "sometimes_win_player.py").to_s
 )
 player4 = Player.create!(
   user: student,
@@ -124,7 +124,7 @@ player4 = Player.create!(
   name: "Doug",
   downloadable: false,
   playable: false,
-  file_location: Rails.root.join("examples", "guess-w", "test_player.py").to_s
+  file_location: Rails.root.join("examples", "guess-w", "sometimes_win_player.py").to_s
 )
 player5 = Player.create!(
   user: student,
@@ -133,7 +133,7 @@ player5 = Player.create!(
   name: "David",
   downloadable: false,
   playable: false,
-  file_location: Rails.root.join("examples", "guess-w", "test_player.py").to_s
+  file_location: Rails.root.join("examples", "guess-w", "sometimes_win_player.py").to_s
 )
 player6 = Player.create!(
   user: student,
@@ -142,7 +142,7 @@ player6 = Player.create!(
   name: "Nathan",
   downloadable: false,
   playable: false,
-  file_location: Rails.root.join("examples", "guess-w", "test_player.py").to_s
+  file_location: Rails.root.join("examples", "guess-w", "sometimes_win_player.py").to_s
 )
 player7 = Player.create!(
   user: student,
@@ -151,7 +151,7 @@ player7 = Player.create!(
   name: "Juan",
   downloadable: false,
   playable: true,
-  file_location: Rails.root.join("examples", "guess-w", "test_player.py").to_s
+  file_location: Rails.root.join("examples", "guess-w", "sometimes_win_player.py").to_s
 )
 (8..11).each do |player_num|
   Player.create!(
@@ -161,7 +161,7 @@ player7 = Player.create!(
     name: "Player #{player_num}",
     downloadable: false,
     playable: false,
-    file_location: Rails.root.join("examples", "guess-w", "test_player.py").to_s
+    file_location: Rails.root.join("examples", "guess-w", "sometimes_win_player.py").to_s
   )
 end
 
