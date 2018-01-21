@@ -7,27 +7,37 @@
 <div class="row">
     <div class="container center display-container col-md-offset-3 col-md-6">
         <div class="row">
-            <h1 class="headings col-xs-10 left">Contests</h1>
-            <% if current_user && current_user.contest_creator? %> 
-                <div class="col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Contest">
+            <h1 class="headings col-xs-10 col-xs-offset-1 left">Contests</h1>
+            <% if current_user&.contest_creator? %>
+                <div class="col-xs-1 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Contest">
                     <%= link_to(new_contest_path, method: :get) do %>
                         <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
                     <% end %>
                 </div>
-            <% end %>            
+            <% end %>
         </div>
-        <%= form_tag contests_path, :method => 'get', :id => "contest_search" do %>
+        <%= form_tag contests_path, method: 'get', id: "contest_search", class: 'form-inline' do %>
             <%= hidden_field_tag :direction, params[:direction] %>
             <%= hidden_field_tag :sort, params[:sort] %>
-            <p class="search-container">
-              <%= text_field_tag :search, params[:search] %>
-              <%= submit_tag "Search", :description => nil %>
+            <p>
+              <%= text_field_tag :search, params[:search], class: 'form-control' %>
+              <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
             </p>
         <% end %>
+        <div class="col-xs-12">
+            <% if @contests.count > 0 %>
+                <% if @contests.count > @per_page %>
+                    <p><%= "#{@contests.count} found (displaying #{getRangeFromPage(params[:page], @contests.length)})" %></p>
+                <% else %>
+                    <p><%= "#{@contests.count} found" %></p>
+                <% end %>
+            <% else %>
+                <p>No contests found</p>
+            <% end %>
+        </div>
         <div id= "pagination">
             <%= render @contests %>
-            <%= will_paginate %>
+            <%= will_paginate @contests, id: 'contest_pagination', inner_window: 2, outer_window: 0 %>
         </div>
-        <div><%= pluralize(@contests.length, 'Contest') %> Found</div>
     </div>
 </div>

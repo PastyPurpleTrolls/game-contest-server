@@ -19,10 +19,7 @@ class PlayersController < ApplicationController
     @player.upload = params[:player][:upload]
     @player.user = current_user
     if @player.save
-      flash[:success] = 'New Player created.'
-
-      startTestMatch(@player.id, @contest) #if params[:player][:run_test]
-
+      startTestMatch(@player.id, contest)
       redirect_to @player
     else
       @contests = Contest.all
@@ -41,7 +38,6 @@ class PlayersController < ApplicationController
 
   def update
     if @player.update(acceptable_update_params)
-      flash[:success] = 'Player updated.'
       redirect_to @player
     else
       render 'edit'
@@ -50,8 +46,8 @@ class PlayersController < ApplicationController
 
   def destroy
     @player.destroy
-      flash[:success] = 'Player deleted.'
-      redirect_to contest_path(@player.contest)
+    flash[:success] = 'Player deleted.'
+    redirect_to contest_path(@player.contest)
   end
 
   private

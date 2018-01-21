@@ -79,6 +79,7 @@ gem 'faker', '1.1.2'
 gem 'will_paginate', '~> 3.1.0'
 #gem 'bootstrap-will_paginate', '0.0.9'
 gem 'kaminari'
+gem 'json'
 
 #for backend job scheduling
 gem 'daemons'

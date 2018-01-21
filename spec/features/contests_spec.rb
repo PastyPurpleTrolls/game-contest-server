@@ -19,7 +19,7 @@ describe "ContestsPages" do
       visit new_contest_path
     end
 
-    it {should have_selector("h2", text: "Add Contest")}
+    it {should have_current_path(new_contest_path)}
 
     describe "invalid information" do
       describe "missing information" do
@@ -77,8 +77,6 @@ describe "ContestsPages" do
 
         specify {expect(contest.user).to eq(creator)}
 
-        it {should have_alert(:success, text: 'Contest created')}
-
         it "shows all contest information" do
           should have_content(/About 1 Hour/)
           should have_content(description)
@@ -99,8 +97,6 @@ describe "ContestsPages" do
       login creator
       visit edit_contest_path(contest)
     end
-
-    it {should have_selector("h2", text: "Edit Contest")}
 
     it "has the proper fields" do
       should have_content(contest.referee.name)
@@ -143,7 +139,6 @@ describe "ContestsPages" do
       describe "changes the data" do
         before {click_button submit}
 
-        it {should have_alert(:success)}
         specify {expect_same_minute(contest.reload.deadline, now)}
         specify {expect(contest.reload.name).to eq(name)}
         specify {expect(contest.reload.description).to eq(description)}
@@ -180,32 +175,45 @@ describe "ContestsPages" do
       specify {expect(response).to redirect_to(contests_path)}
     end
 
-    it "produces a delete message" do
-      delete contest_path(contest)
-      get response.location
-      response.body.should have_alert(:success)
-    end
-
     it "removes a contest from the system" do
       expect {delete contest_path(contest)}.to change(Contest, :count).by(-1)
     end
   end
 
   describe "pagination" do
-    let (:contest) {FactoryBot.create(:contest)}
-
     before do
-      FactoryBot.create_list(:contest, 30)
+      FactoryBot.create_list(:contest, 25)
       visit contests_path
     end
 
     it {should have_content("#{Contest.count} found (displaying 1-10)")}
 
-    it 'paginates properly' do
+    it 'displays properly' do
       should have_selector('div.pagination')
+      should_not have_link('← Previous')
+      should_not have_link('1')
       should have_link('2', href: "/contests?page=2")
       should have_link('3', href: "/contests?page=3")
       should_not have_link('4')
+      should have_link('Next →', href: "/contests?page=2")
+    end
+
+    describe "last page" do
+      before { click_link('3', href: "/contests?page=3") }
+
+      it 'displays properly' do
+        should have_selector('div.pagination')
+        should have_link('← Previous', href: "/contests?page=2")
+        should have_link('1', href: "/contests?page=1")
+        should have_link('2', href: "/contests?page=2")
+        should_not have_link('3')
+        should_not have_link('4')
+        should_not have_link('Next →')
+      end
+
+      it 'properly shows records displaying' do
+        should have_content("#{Contest.count} found (displaying 21-25)")
+      end
     end
   end
 
@@ -235,12 +243,14 @@ describe "ContestsPages" do
     it {should have_content("#{Contest.count} found (displaying 1-10)")}
 
     it 'paginates properly' do
-      should have_link('2')
-      should_not have_link('3')
+      within '#contest_pagination' do
+        should have_link('2')
+        should_not have_link('3')
+      end
     end
   end
 
-  describe 'search' do
+  describe 'search without pagination' do
     let(:submit) {"Search"}
 
     before do
@@ -253,6 +263,8 @@ describe "ContestsPages" do
     it 'should return results' do
       should have_button('searchtest')
       should have_content('1 found')
+      should_not have_content('displaying')
+      should_not have_link('2')
     end
   end
 
@@ -263,7 +275,6 @@ describe "ContestsPages" do
       before {visit contest_path(contest)}
 
       it "shows all contest information" do
-        should have_selector("h2", text: "Contest")
         should have_content(contest.name)
         should have_content(contest.description)
         should have_content(distance_of_time_in_words_to_now(contest.deadline)
@@ -292,7 +303,6 @@ describe "ContestsPages" do
       end
 
       it "shows all contest information" do
-        should have_selector("h2", text: "Contest")
         should have_content(contest.name)
         should have_content(contest.description)
         should have_content(distance_of_time_in_words_to_now(contest.deadline)
@@ -326,8 +336,6 @@ describe "ContestsPages" do
       should_not have_link('', href: new_contest_path)
     end
 
-    it {should have_selector("h2", text: "Contest")}
-
     it "lists all the contests in the system" do
       Contest.all.each do |c|
         should have_selector("form[action='#{contest_path(c)}']")
@@ -349,6 +357,6 @@ describe "ContestsPages" do
       should have_link('', href: new_contest_path)
     end
 
-    it {should have_selector("h2", text: "Contest")}
+    it {should have_current_path(contests_path)}
   end
 end

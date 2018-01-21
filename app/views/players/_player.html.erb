@@ -1,16 +1,1 @@
-<% index = player_counter + 1 %>
-<% if current_user == player.user %>
-	<div class="row my-player">
-		<div class="col-xs-3"><%= index %></div>        
-		<div class="col-xs-3"><%= link_to player.name, player %></div>
-		<div class="col-xs-3"><%= link_to player.user.username, player %></div>
-		<div class="col-xs-3"><%= player.wins(@tournament) %></div>
-	</div>
-<% else %>
-	<div class="row">
-		<div class="col-xs-3"><%= index %></div>        
-		<div class="col-xs-3"><%= link_to player.name, player %></div>
-		<div class="col-xs-3"><%= link_to player.user.username, player %></div>
-		<div class="col-xs-3"><%= player.wins(@tournament) %></div>
-	</div>
-<% end %>
+<th><%= link_to player.name, player %> (<%= player.user.username %>)</th>

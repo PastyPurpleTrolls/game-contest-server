@@ -61,4 +61,8 @@ class Player < ActiveRecord::Base
       match: Match.where(manager: tournament),
       result: "Win").count
   end
+
+  def num_match_wins(match)
+    self.player_rounds.where(round: match.rounds, result: 'Win').count
+  end
 end
