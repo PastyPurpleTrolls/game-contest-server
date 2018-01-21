@@ -257,9 +257,9 @@ describe "PlayersPages" do
       it {should have_header(text: 'Matches')}
 
       it "shows all match information" do
-        should have_content('Win', count: 7)
+        should have_content('Win', count: 6)
         #Should only have 3 losses displayed because the 4th is on the next page.
-        should have_content('Loss', count: 3)
+        should have_content('Loss', count: 4)
         should have_content('Record: 7-4')
       end
     end
