@@ -22,8 +22,8 @@ module Uploadable
               cp_call = Process.spawn("cp #{File.dirname(old_location)}/logs/* #{File.dirname(self.file_location)}/logs/", :out=>"/dev/null", :err=>"/dev/null")
 	      Process.wait cp_call
 	      self.update_log_locations self.file_location
-	      delete_code(old_location)
 	    end
+            delete_code(old_location)
         end
     end
 

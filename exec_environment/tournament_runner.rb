@@ -67,6 +67,9 @@ class TournamentRunner
         return
       when "king of the hill"
         king_of_the_hill(@tournament_players)
+      when "multiplayer game"
+        multiplayer_game(@tournament_players, @number_of_players)
+        return
       else
         puts " ERROR: Tournament type is not recognized"
         return
@@ -93,12 +96,11 @@ class TournamentRunner
     count = players.count
     #puts " This many players: "+count.to_s
     if count == 2
-      create_match([players[0], players[1]], @tournament.rounds_per_match)
-      return
+      return create_match([players[0], players[1]], @tournament.rounds_per_match)
     elsif count == 3
       child = create_raw_match(1, "unassigned")
       create_player_matches(child, [players[0]])
-      create_match_path("Win", child, create_match([players[1], players[2]], 1))
+      create_match_path("Win", child, create_match([players[1], players[2]], @tournament.rounds_per_match))
       return child
     else
       child = create_raw_match(1, "unassigned")
@@ -114,7 +116,15 @@ class TournamentRunner
   #If you lose, than you play the next player under the winner.
   def king_of_the_hill(players)
     create_match([players[0], players[1]], @tournament.rounds_per_match)
+  end
 
+  #Runs multiplayer game tournament (three or more players per match)
+  def multiplayer_game(players, numPlayers)
+    matches = (@tournament.total_matches).to_i
+    matches.times do
+      selected_players = players.sample(numPlayers)
+      create_match(selected_players, @tournament.rounds_per_match)
+    end
   end
 
   #Creates a match and the associated player_matches

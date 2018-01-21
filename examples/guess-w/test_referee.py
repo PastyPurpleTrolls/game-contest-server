@@ -8,7 +8,7 @@ class Player():
         self.wins = 0
 
         self.connection = Connection(server)
-        self.name = self.connection.listen(1024).decode()
+        self.name = self.connection.listen(1024).decode().rstrip()
 
     def addWin(self):
         self.wins += 1
@@ -16,7 +16,7 @@ class Player():
 
     def move(self):
         self.connection.send('move')
-        move = self.connection.listen(1024).decode()
+        move = self.connection.listen(1024).decode().rstrip()
         return move
 
 class Game():

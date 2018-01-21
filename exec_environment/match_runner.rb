@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-
 require 'active_record'
 require 'active_support/time'
 require 'sqlite3'
@@ -23,7 +22,6 @@ OptionParser.new do |opts|
   # This is to allow specifying a rails environment when using 'rails runner'
   # A command of the form "rails runner -e test match_runner.rb -m 5" will make optionparser complain that it doesn't know what the -e flag is unless we accept it here.
   opts.on('-e', '--useless [USELESS]', '') {|v| $options[:USELESS] = v}
-
 end.parse!
 
 class MatchRunner
@@ -43,9 +41,9 @@ class MatchRunner
 
     @number_of_players = @referee.players_per_game
     @duplicate_players = false
-    if @match_participants.length == 1 then
+    if @match_participants.length == 1
       @duplicate_players = true
-      while @match_participants.length < @number_of_players do
+      while @match_participants.length < @number_of_players
         @match_participants << @match.players.first
       end
     end
@@ -60,7 +58,7 @@ class MatchRunner
   def run_match
     if @number_of_players != @match_participants.count()
       puts "   Match runner skipping match #" + @match_id.to_s +
-               " (" + @match_participants.count().to_s + "/" + @number_of_players.to_s + " in player_matches)"
+           " (" + @match_participants.count().to_s + "/" + @number_of_players.to_s + " in player_matches)"
       return
     end
     #Call round wrapper which runs the executables and generates game hashes
@@ -135,15 +133,15 @@ class MatchRunner
     #Loop through all the rounds and create a new record in the DB
     rounds.each do |round|
       round_obj = Round.create!(
-          match: Match.find(@match_id)
+        match: Match.find(@match_id),
       )
       #Loop through participants and add their results to the DB
       @match_participants.each do |player|
         PlayerRound.create!(
-            round: round_obj,
-            player: player,
-            result: round[:results][player.name][:result],
-            score: round[:results][player.name][:score]
+          round: round_obj,
+          player: player,
+          result: round[:results][player.name][:result],
+          score: round[:results][player.name][:score],
         )
       end
       #Save round data to json file
@@ -178,94 +176,6 @@ class MatchRunner
     @match.status = "completed"
     @match.completion = Time.now
     @match.save!
-    if @match.manager.class == Tournament && @match.manager.tournament_type == "king of the hill"
-      hill = []
-      first_match = @match.manager.matches.last
-      #First case
-      if first_match.player_matches[0].result == "Win"
-        hill[0] = first_match.player_matches[0].player.id
-        hill[1] = first_match.player_matches[1].player.id
-      else
-        hill[1] = first_match.player_matches[0].player.id
-        hill[0] = first_match.player_matches[1].player.id
-      end
-      last_player = hill[1]
-      #The rest
-      size = @match.manager.matches.count
-      if size == 1
-        run_next_player(@match, hill)
-      else
-        @match.manager.matches.reorder("matches.created_at ASC")[1..(size - 2)].each do |m|
-          if m.player_matches[1].result == "Win"
-            pp "\\\\\\\\\\\\\\\\\\\\"
-            pp hill
-            pp m.player_matches[0].player_id
-            pp m.player_matches[1].player_id
-            hill.insert(hill.index(m.player_matches[0].player_id), m.player_matches[1].player_id)
-          elsif m.player_matches[0].player_id == last_player
-            hill << m.player_matches[1].player_id
-            last_player = m.player_matches[1].player_id
-          end
-        end
-        if @match.player_matches[1].result == "Win"
-          pp "----------------------"
-          pp "@match.player_matches[1].player"
-          pp @match.player_matches[1].player.id
-          pp @match.player_matches[1].player.name
-          run_next_player(@match, hill << @match.player_matches[1].player.id)
-        else
-          pp "+++++++++++++++++++++"
-          pp "@match.players[0]"
-          pp @match.players[0].id
-          pp @match.player_matches[0].player_id
-          pp @match.players[0].name
-          pp "@match.players[1]"
-          pp @match.players[1].id
-          pp @match.player_matches[1].player_id
-          pp @match.players[1].name
-          pp "************"
-          pp hill
-          next_player_index = hill.index(@match.players[0].id) + 1
-          if next_player_index < hill.size
-
-            pp "Player.find(hill[next_player_index])"
-            pp Player.find(hill[next_player_index])
-            create_match([@match.players[1], Player.find(hill[next_player_index])], @match.manager.rounds_per_match)
-
-          else
-            run_next_player(@match, hill << @match.players[1].id)
-          end
-        end
-      end
-    end
-  end
-
-  def run_next_player(match, hill)
-    next_player = match.manager.players.where.not(id: hill).first
-    if next_player
-
-      pp "======================"
-      pp "next_player"
-      pp next_player
-      pp "======================"
-      pp "@match.player_matches"
-      pp @match.player_matches
-      pp "======================"
-      pp "@match.players[0] is "
-      pp @match.players[0].id
-      pp @match.players[0].name
-      pp "======================"
-      pp "@match.players[1] is "
-      pp @match.players[1].id
-      pp @match.players[1].name
-      pp "======================"
-      pp "The hill is -> "
-      pp hill
-      pp "======================"
-      create_match([next_player, Player.find(hill[0])], @match.manager.rounds_per_match)
-    else
-      pp hill
-    end
   end
 
   def complete_tournament
