@@ -8,7 +8,7 @@ class TournamentsController < ApplicationController
     if params[:contest_id] != 'not-specified'
       @tournament = @contest.tournaments.build
       @tournament.contest.players.each do |f|
-      @tournament.player_tournaments.build(player: f )
+        @tournament.player_tournaments.build(player: f )
       end
       @tournament.start = Time.now
     end

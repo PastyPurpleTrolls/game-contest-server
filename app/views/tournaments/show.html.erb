@@ -58,12 +58,12 @@
     </div>
 </div>
 <% end %>
-
 <% if @tournament.tournament_type == "round robin" %>
     <%= render "round_robin_tournament" %>
 <% elsif @tournament.tournament_type == "single elimination" %>
     <%= render "single_elimination_tournament" %>
+<% elsif @tournament.tournament_type == "multiplayer game" %>
+    <%= render "multiplayer_game_tournament" %>
 <% else %>
     <%= render "king_of_the_hill_tournament" %>
-
 <% end %>
