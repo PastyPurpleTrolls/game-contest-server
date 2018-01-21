@@ -189,7 +189,6 @@ describe "MatchesPages" do
         end
 
         it {should have_content('Match')}
-        it {should have_alert(:success, text: 'Match created.')}
         it {should have_content(contest.name)}
       end
     end

@@ -1,7 +1,11 @@
 <div class="info-container">
     <div>
         <%= link_to player_match.player.name, player_path(player_match.player) %>
-        <span>(<%= player_match.result %>)</span>
+        <% if player_match.result %>
+            <span>(<%= player_match.result %>)</span>
+        <% else %>
+            <span>(Pending)</span>
+        <% end %>
     </div>
     <div class="top-padding">    
         <% if player_match.match_log_info %>

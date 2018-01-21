@@ -1,4 +1,10 @@
 <% setTitle("Referee") %>
+<br>
+<ol class="breadcrumb">
+    <li><a href="<%= root_path %>">Home</a></li>
+    <li><a href="<%= referees_path %>">Referees</a></li>
+    <li class="active"><%= @referee.name %></li>
+</ol>
 <div class="row">
     <div class="container center display-container col-md-offset-1 col-md-10">
         <div class="row">
@@ -47,10 +53,10 @@
     </div>
 </div>
 <div class="row">
-    <div class="container center display-container col-md-offset-4 col-md-4">
+    <div class="container center display-container col-md-offset-3 col-md-6">
         <div class="row">
-            <h1 class="headings col-xs-10 left">Contests(<%= @referee.contests.count %>)</h1>
-            <% if current_user && current_user.contest_creator? %> 
+            <h1 class="headings col-xs-8 col-xs-offset-2 left">Contests</h1>
+            <% if current_user&.contest_creator? %>
                 <div class="col-xs-2 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Contest">
                     <%= link_to(new_contest_path, method: :get) do %>
                         <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
@@ -58,12 +64,26 @@
                 </div>
             <% end %>            
         </div>
-        <div class="row">
-            <% @referee.contests.each do |contest| %>
-                <div class="info-container">
-                    <%= link_to contest.name, contest %>
-                </div>
+        <div class="col-xs-12">
+            <%= form_tag referee_path(@referee), method: 'get', id: "contest_search", class: 'form-inline' do %>
+                <p>
+                    <%= text_field_tag :search, params[:search], class: 'form-control' %>
+                    <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
+                </p>
             <% end %>
+        </div>
+        <% if @contests.count > 0 %>
+            <% if @contests.count > @per_page %>
+                <p><%= "#{@contests.count} found (displaying #{getRangeFromPage(params[:page], @contests.length)})" %></p>
+            <% else %>
+                <p><%= "#{@contests.count} found" %></p>
+            <% end %>
+        <% else %>
+            <p>No contests found</p>
+        <% end %>
+        <div class="row">
+            <%= render partial: 'referees/referee_contest', collection: @contests, as: :contest %>
+            <%= will_paginate @contests, id: 'referee_pagination', inner_window: 2, outer_window: 0 %>
         </div>
     </div>
 </div>
