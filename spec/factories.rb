@@ -195,6 +195,10 @@ FactoryBot.define do
     end
     description "Player Description Here"
     sequence(:name) { |i| "Player #{i}" }
+
+    factory :unplayable_player do
+      playable false
+    end
   end
 
   factory :player_match do

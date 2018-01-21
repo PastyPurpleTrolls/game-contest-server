@@ -1,77 +1,74 @@
-.fixed-table-container{
-    box-sizing: border-box;
-    border: 1px solid #D9D7CB;
-    margin-top: 50px;
+.fixed-table-container {
+  box-sizing: border-box;
+  border: 1px solid #D9D7CB;
+  margin-top: 50px;
 
-    td,th{
-        white-space: nowrap !important;
-        border-right: 1px solid #D9D7CB;
-        border-bottom: 1px solid #D9D7CB;
-        padding: 8px;
-        text-align: center;
-        vertical-align: bottom;
-        min-width: 50px;
+  td, th {
+    white-space: nowrap !important;
+    border-right: 1px solid #D9D7CB;
+    border-bottom: 1px solid #D9D7CB;
+    padding: 8px;
+    text-align: center;
+    vertical-align: bottom;
+    min-width: 50px;
 
-        &:last-child{
-            border-right: 0;
-        }
+    &:last-child {
+      border-right: 0;
+    }
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%
+  }
+
+  th {
+    color: #433622;
+
+    a {
+      text-decoration: underline;
+    }
+    
+    // Blank space in upper-left
+    &:first-child {
+      color: #D9D7CB;
+      background-color: #D9D7CB;
+      height: 100%;
     }
 
-    table{
-        border-collapse: collapse;
-        width: 100%;
+    // Table headers
+    &:not(:first-child) {
+      background-color: #B9B59F;
+      line-height: 16px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+  }
+  td {
+    color: #433622;
+
+    a {
+      color: #433622;
+      text-decoration: underline;
     }
 
-    th{
-        color: #433622;
-
-        a{
-            text-decoration: underline;
-        }
-
-        // Blank space in upper-left
-        &:first-child{
-            color: #D9D7CB;
-            background-color: #D9D7CB;
-            height: 100%;
-        }
-
-        // Table headers
-        &:not(:first-child) {
-            background-color: #B9B59F;
-            line-height: 16px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-        }
+    //Left headers
+    &:first-child {
+      background-color: #B9B59F;
+      font-weight: bold;
+    }
+    //Table cells
+    &:not(:first-child) {
+      // Crosshairs hover
+      &.hover {
+        background-color: #D9D7CB;
+      }
+      background-color: #F3F2EF
     }
 
-    td{
-        color: #433622;
-
-        a{
-            color: #433622;
-            text-decoration: underline;
-        }
-
-        // Left headers
-        &:first-child{
-            background-color: #B9B59F;
-            font-weight: bold;
-        }
-
-        // Table cells
-        &:not(:first-child) {
-            // Crosshairs hover
-            &.hover {
-                background-color: #D9D7CB;
-            }
-
-            background-color: #F3F2EF;
-        }
-
-        // Table cells hover
-        &:not(:first-child):hover {
-            background-color: #D9D7CB;
-        }
+    //Table cells hover
+    &:not(:first-child):hover {
+      background-color: #D9D7CB;
     }
+  }
 }

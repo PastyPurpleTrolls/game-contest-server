@@ -3,16 +3,25 @@ require 'rails_helper'
 include ActionView::Helpers::DateHelper
 
 describe "MatchesPages" do
+
   subject {page}
 
   let (:user) {FactoryBot.create(:user)}
   let (:creator) {FactoryBot.create(:contest_creator)}
   let (:contest) {FactoryBot.create(:contest, user: creator)}
+  let (:contest2) {FactoryBot.create(:contest, user: creator)}
+  let (:contest3) {FactoryBot.create(:contest, user: creator)}
   let! (:player1) {FactoryBot.create(:player, contest: contest, user: creator)}
   let! (:player2) {FactoryBot.create(:player, contest: contest)}
   let! (:player3) {FactoryBot.create(:player, contest: contest)}
   let! (:player4) {FactoryBot.create(:player, contest: contest)}
   let! (:player5) {FactoryBot.create(:player, contest: contest)}
+  let! (:player6) {FactoryBot.create(:player, contest: contest2, user: creator)}
+  let! (:player7) {FactoryBot.create(:player, contest: contest2)}
+  let! (:player8) {FactoryBot.create(:unplayable_player, contest: contest, user: creator)}
+  let! (:player9) {FactoryBot.create(:unplayable_player, contest: contest)}
+  let! (:player10) {FactoryBot.create(:unplayable_player, contest: contest2, user: creator)}
+  let! (:player11) {FactoryBot.create(:unplayable_player, contest: contest2)}
 
   let (:now) {1.hour.from_now}
   let (:submit) {'Challenge!'}
@@ -20,13 +29,61 @@ describe "MatchesPages" do
   let (:big_num_of_rounds) {100}
 
   describe "create" do
-
     before do
       login creator
       visit new_contest_match_path(contest)
     end
 
-    it {should have_selector("h2", text: "Challenge Match")}
+    it {should have_current_path(new_contest_match_path(contest))}
+
+    describe "list of available players" do
+      it "should list all playable players in contest" do
+        should have_selector("option", text: "#{player1.name} (#{player1.user.username})")
+        should have_selector("option", text: "#{player2.name} (#{player2.user.username})")
+        should have_selector("option", text: "#{player3.name} (#{player3.user.username})")
+        should have_selector("option", text: "#{player4.name} (#{player4.user.username})")
+        should have_selector("option", text: "#{player5.name} (#{player5.user.username})")
+      end
+
+      it "should not list any players in another contest" do
+        should_not have_selector("option", text: "#{player6.name} (#{player6.user.username})")
+        should_not have_selector("option", text: "#{player7.name} (#{player7.user.username})")
+        should_not have_selector("option", text: "#{player10.name} (#{player10.user.username})")
+        should_not have_selector("option", text: "#{player11.name} (#{player11.user.username})")
+      end
+
+      it "should not list other users' unplayable players" do
+        should_not have_selector("option", text: "#{player9.name} (#{player10.user.username})")
+        should_not have_selector("option", text: "#{player11.name} (#{player11.user.username})")
+      end
+
+      it "should list all current user's players in contest" do
+        should have_selector("option", text: "#{player1.name} (#{player1.user.username})")
+        should have_selector("option", text: "#{player8.name} (#{player8.user.username})")
+      end
+
+      describe "should show message if no available players" do
+        before do
+          visit new_contest_match_path(contest3)
+        end
+
+        it {should have_selector("p", text: "No challenge-able players yet.")}
+      end
+    end
+
+    describe "match with unplayable players via POST", type: :request do
+      before do
+        login creator, avoid_capybara: true
+      end
+
+      specify do
+        expect {post contest_matches_path(contest),
+                     params: {match: {earliest_start: now.strftime("%F %T"),
+                                      player_ids: [player8.id, player9.id, player10.id, player11.id],
+                                      num_rounds: 3}}
+        }.not_to change(Match, :count)
+      end
+    end
 
     describe "invalid information" do
       describe "missing information" do
@@ -171,12 +228,6 @@ describe "MatchesPages" do
         specify {expect(response).to redirect_to(tournament_path(tournament_match.manager))}
       end
 
-      it "produces a delete message" do
-        delete match_path(challenge_match)
-        get response.location
-        response.body.should have_alert(:success)
-      end
-
       it "removes a match from the system (challenge match)" do
         expect {delete match_path(challenge_match)}.to change(Match, :count).by(-1)
       end
@@ -208,8 +259,6 @@ describe "MatchesPages" do
     let (:match) {FactoryBot.create(:tournament_match)}
 
     before {visit match_path(match)}
-
-    it {should have_selector("h2", text: "Match")}
 
     it "shows all match information" do
       should have_content(match.status.capitalize)
@@ -274,8 +323,6 @@ describe "MatchesPages" do
       visit match_path(match)
     end
 
-    it {should have_selector("h2", text: "Match")}
-
     it "shows all match information" do
       should have_content(match.status.capitalize)
       should have_content(distance_of_time_in_words_to_now(match.earliest_start).split.map {|i| i.capitalize}.join(' '))
@@ -294,8 +341,6 @@ describe "MatchesPages" do
 
       visit tournament_matches_path(tournament)
     end
-
-    it {should have_selector("h2", text: "Tournament")}
 
     it "lists all the tournament matches for a single tournament in the system" do
       Match.where(manager: tournament).each do |m|
@@ -320,8 +365,6 @@ describe "MatchesPages" do
       login creator
       visit contest_matches_path(contest)
     end
-
-    it {should have_selector("h2", text: "Tournament")}
 
     it "should list all the challenge matches for a contest in which the user has a player participating" do
       challenge_matches_player1_is_in.each do |m|

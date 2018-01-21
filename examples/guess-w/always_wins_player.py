@@ -36,7 +36,7 @@ s.send(message.encode())
 while True:
     reply = s.recv(4096).decode()
     if "move" in reply:
-        guesses = ['a','b','c','w']
+        guesses = ['w']
         blah = choice(guesses) + "\n"
         s.send(blah.encode())
     elif "wins" in reply:
