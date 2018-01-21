@@ -10,12 +10,21 @@ class Tournament < ActiveRecord::Base
   validates :name,                presence: true, uniqueness: { scope: :contest }
   #validates :start,               presence: true, timeliness: { type: :datetime, allow_nil: false }
   validates :start,               presence: true
-  validates :tournament_type,     presence: true, inclusion: ['round robin', 'single elimination']
+  validates :tournament_type,     presence: true, inclusion: ['round robin', 'single elimination', 'multiplayer game', 'king of the hill']
   # Validate that the status is one of the required statuses
   validates :status,              presence: true, inclusion: %w[waiting started completed]
 
   def referee
     contest.referee
+  end
+  
+  def expected_disparity
+  end
+  
+  def total_time
+  end
+
+  def RMSE
   end
 
   def self.search(search)
@@ -31,7 +40,7 @@ class Tournament < ActiveRecord::Base
       self.player_tournaments.build(player: Player.find(p))
     end
   end
-
+  
 
   extend FriendlyId
   friendly_id :name, use: :slugged

@@ -2,24 +2,30 @@
 <div class="row">
     <div class="container center display-container col-md-offset-3 col-md-6">
         <div class="row">
-            <h1 class="headings col-xs-10 left">Users</h1>
+            <h1 class="headings col-xs-12 left">Users</h1>
         </div>
-        <%= form_tag users_path, method: :get, id: :users_search do %>
+        <%= form_tag users_path, method: :get, id: :users_search, class: 'form-inline' do %>
             <%= hidden_field_tag :direction, params[:direction] %>
             <%= hidden_field_tag :sort, params[:sort] %>
-            <p class="search-container">
-                <%= text_field_tag :search, params[:search] %>
-                <%= submit_tag "Search", username: nil %>
+            <p>
+                <%= text_field_tag :search, params[:search], class: 'form-control' %>
+                <%= submit_tag "Search", username: nil, class: 'btn btn-danger' %>
             </p>
         <% end %>
-        <div id= "pagination">
-            <% if !@users.blank? %>
-                <% @users.each do |user| %>
-                    <%= button_to user.username, user, method: :get, class: 'results-container' %>
+        <div class="col-xs-12">
+            <% if @users.count > 0 %>
+                <% if @users.count > @per_page %>
+                    <p><%= "#{@users.count} found (displaying #{getRangeFromPage(params[:page], @users.length)})" %></p>
+                <% else %>
+                    <p><%= "#{@users.count} found" %></p>
                 <% end %>
+            <% else %>
+                <p>No users found</p>
             <% end %>
-            <%= will_paginate %>
         </div>
-        <div><%= pluralize(@users.length, 'User') %> Found</div>
+        <div id="pagination">
+            <%= render partial: 'user', collection: @users %>
+            <%= will_paginate @users, id: 'user_pagination', inner_window: 2, outer_window: 0 %>
+        </div>
     </div>
 </div>

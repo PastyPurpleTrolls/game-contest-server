@@ -307,6 +307,7 @@ DEPENDENCIES
   guard-rspec (~> 4.7.0)
   jbuilder (~> 2.6.0)
   jquery-rails
+  json
   kaminari
   libnotify
   pry-rails
