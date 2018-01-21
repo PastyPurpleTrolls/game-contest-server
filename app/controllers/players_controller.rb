@@ -19,7 +19,7 @@ class PlayersController < ApplicationController
     @player.upload = params[:player][:upload]
     @player.user = current_user
     if @player.save
-      startTestMatch(@player.id, contest)
+      startTestMatch(@player.id, @contest)
       redirect_to @player
     else
       @contests = Contest.all
