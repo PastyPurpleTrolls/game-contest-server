@@ -20,7 +20,7 @@ Install `docker` and `docker.io`
 $ sudo apt-get install docker && docker.io
 ```
 
-Install `docker-compose`. At the time of writing, `docker-compose` on `apt-get` was outdated, so it needed to be installed from GitHub. It may be up to date in the future. The up-to-date version as of this writing is v. 1.18.
+Install `docker-compose`. At the time of writing, the version of `docker-compose` on `apt-get` was outdated, so it needed to be installed from GitHub. It may be up to date in the future. The up-to-date version as of this writing is v. 1.18.
 ```bash
 curl -L https://github.com/docker/compose/releases/download/1.18.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
@@ -32,10 +32,12 @@ In order to run certain Docker commands without `sudo`, users need to be added t
 sudo groupadd docker
 sudo gpasswd -a $USER docker
 ```
+## Docker explanation
+This is only a brief explanation of Docker but should be enough to get you up to speed. Docker runs software inside of containers. These containers are like virtual machines because they are isolated from the host operating system. So all of the packages and dependencies required for the project are inside the container and walled off from the host operating system. This means that you do not actually need Ruby or Rails installed on your host machine to run the project. Docker handles getting that into container for you. 
 
 ## Running (dev)
 
-When developing the software, you will need to go into the **docker-compose.yml** and uncomment these two lines. These two lines make it so the Docker container and the host machine share files with one another, allowing your changes to be reflected inside the container.
+When developing the software, you will need to go into the **docker-compose.yml** and uncomment these two lines. These two lines make it so the Docker container and the host machine share files with one another, allowing your changes to be reflected inside the container as you're developing. This also puts the logs files from webserver on your host machine. Making it eaiser to look at them.
 
 ```bash
     volumes:
@@ -45,35 +47,51 @@ The first time you run the project, or whenever you make changes to the **Docker
 ```bash
 $ docker-compose build
 ```
-Start the server
+Start the server. This is done in your normal terminal outisde of the Docker container. This starts up the Docker container and then the web server inside of that.
 ```bash
 $ docker-compose up
 ```
 
-If you need access to the rails console for debugging you'll need to run this to get inside of the container.
+If you need access to the rails console for debugging or need any terminal commands in the webservers environment you'll need to run this to get inside of the container. This is because the container is seperate virtualized environment from the host machine.
 ```bash
 docker exec -it gamecontestserver_web_1 bash
 ```
-To start and stop the clockwork daemon from inside conatiner.
+To start and stop the clockwork daemon from inside conatiner. Side note: the clockwork daemon starts up when the docker container is started.
 ```bash
 clockworkd -d . start ./clock.rb --log
 clockworkd -d . stop ./clock.rb --log
 ```
-To view the logs of the clockwork daemon run this from inside the container.
+To view the logs of the clockwork daemon run this from inside the container. Or navigate to the */tmp* and open the **cloclworkd.clock.output** file. Some editors support auto updating the log file as it's written to.
 ```bash 
 tail -f tmp/clockworkd.clock.output
 ```
 
+The containers name **gamecontestserver_web_1** could change in the future depending on how things are configured. Game contest server was the projects old name and Docker automatically named the container with that name. If steps are taken in the future to rename everything then the name on the container may (or should) change. 
+To check what containers are running and to see there names just run:
+```bash
+docker ps
+```
+
 ## Running (production)
+ Running the project in production is for when you're testing out a new stable build before bundling the container into a standalone image file. This image is different from a docker container. It already has all the dependencies bundled inside. No development is done with this image. Someone only needs to download the image and run the **Docker Run** command below to get the project running. 
+
+Make sure to comment out these lines before running in production. You don't want files from the container to be share with host machine and vice versa. This can cause weird errors and isn't desired in production.
+
+```bash
+    #volumes:
+    #  - .:/myapp
+```
+
 The **Dockerfile** needs to be updated to have the project run in production. 
 ```bash
 ENV RAILS_ENV production.
 ```
-When a development build is ready to be uploaded to the docker repository you'll need to build the image. 
+
+When a production build is ready to be push out to the docker repository you'll need to build an image. Dr. Geisler will be the one that uploads the images to his offical account but students can still upload images to their own docker hub accounts for testing purposes.
 ```bash
 docker build -t aires .
 ```
-Dr. Geisler will be the one that uploads the images. The image needs to be tagged and then pushed.
+Then the image needs to be tagged and then pushed.
 ```bash
 docker tag aires $DOCKER_ID_USER/aires
 docker push $DOCKER_ID_USER/aires
@@ -84,7 +102,6 @@ Running the website with the production image is slightly different.
 ```bash
 docker run -d -p 3000:3000 aires
 ```
-
 
 ### Manage Users
 
@@ -100,6 +117,7 @@ $ rails c
 ```
 
 ### Tests
+**Disclaimer** The current docker implementation can't run in the test environment (when RAILS_ENV in the **dockerfile** is changed to test). This is likely due to issues with package dependencies. However the tests can still be ran on your local machine or the game server outside of the docker container. This will require you to have Ruby and Rails installed along with the required packages. When the testing works inside the docker container the host machine will no longer need Ruby or Rails installed.
 
 Run tests: `rspec`
 
