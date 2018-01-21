@@ -3,6 +3,8 @@ class TournamentsController < ApplicationController
   before_action :ensure_contest_creator, except: :show
   before_action :ensure_contest_owner, only: [:new ,:edit, :update , :destroy]
 
+  include TournamentsHelper
+
   def new
     @contests = Contest.all
     if params[:contest_id] != 'not-specified'
@@ -16,7 +18,6 @@ class TournamentsController < ApplicationController
 
   def create
     @contest = Contest.friendly.find(params[:contest_id])
-    contest = Contest.friendly.find(params[:contest_id])
     if params[:tournament][:player_ids] && params[:tournament][:player_ids].uniq{|p| Player.find(p).contest_id}.length > 1
       flash.now[:danger] = 'Players from multiple contests'
       render 'new'					
@@ -25,11 +26,9 @@ class TournamentsController < ApplicationController
     @tournament = @contest.tournaments.build(acceptable_params)
     @tournament.status = "waiting"
     if @tournament.save
-      flash[:success] = 'Tournament created.'
       redirect_to @tournament
     else
       @contests = Contest.all
-      flash.now[:danger] = 'Tournament not saved'
       render 'new'
     end
   end
@@ -44,7 +43,6 @@ class TournamentsController < ApplicationController
       player_tournament.destroy
     end
     if @tournament.update(acceptable_params)
-      flash[:success] = "Tournament updated."
       redirect_to @tournament
     else
       render 'edit'
@@ -53,6 +51,8 @@ class TournamentsController < ApplicationController
 
   def show
     @tournament = Tournament.friendly.find(params[:id])
+    @results = get_player_results(@tournament)
+    @player_attributes = get_player_attributes(@tournament)
   end
 
   def destroy
@@ -60,17 +60,15 @@ class TournamentsController < ApplicationController
     @tournament.player_tournaments.each{|m|m.destroy}
     @tournament.matches.each{|m|m.destroy}
     @tournament.destroy
-    flash[:success] = 'Tournament deleted'
     redirect_to contest_path(@tournament.contest)
   end
-
 
   private
 
   def acceptable_params
     # Status should not be acceptable.
     # The backend should set it.
-    params.require(:tournament).permit(:name , :start, :tournament_type,:rounds_per_match, player_ids: [])
+    params.require(:tournament).permit(:name , :start, :tournament_type,:rounds_per_match, :total_matches, player_ids: [])
   end
 
   def ensure_contest_owner

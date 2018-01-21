@@ -10,17 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170109183954) do
+ActiveRecord::Schema.define(version: 20180115194902) do
 
   create_table "contests", force: :cascade do |t|
     t.integer "user_id"
     t.integer "referee_id"
     t.text "description"
-    t.string "slug"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string "slug", limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "deadline"
-    t.string "name"
+    t.string "name", limit: 255
     t.index ["name"], name: "index_contests_on_name", unique: true
     t.index ["referee_id"], name: "index_contests_on_referee_id"
     t.index ["slug"], name: "index_contests_on_slug", unique: true
@@ -28,10 +28,10 @@ ActiveRecord::Schema.define(version: 20170109183954) do
   end
 
   create_table "friendly_id_slugs", force: :cascade do |t|
-    t.string "slug", null: false
+    t.string "slug", limit: 255, null: false
     t.integer "sluggable_id", null: false
     t.string "sluggable_type", limit: 50
-    t.string "scope"
+    t.string "scope", limit: 255
     t.datetime "created_at"
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
@@ -44,17 +44,17 @@ ActiveRecord::Schema.define(version: 20170109183954) do
     t.string "log_stderr"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "match_source_type"
     t.integer "match_source_id"
+    t.string "match_source_type"
     t.index ["match_source_type", "match_source_id"], name: "index_match_log_infos_on_match_source_type_and_match_source_id"
   end
 
   create_table "match_paths", force: :cascade do |t|
     t.integer "parent_match_id"
     t.integer "child_match_id"
-    t.string "result"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string "result", limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["child_match_id"], name: "index_match_paths_on_child_match_id"
     t.index ["parent_match_id"], name: "index_match_paths_on_parent_match_id"
   end
@@ -62,13 +62,14 @@ ActiveRecord::Schema.define(version: 20170109183954) do
   create_table "matches", force: :cascade do |t|
     t.integer "manager_id"
     t.datetime "completion"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string "status", limit: 255
     t.datetime "earliest_start"
-    t.string "manager_type"
+    t.string "manager_type", limit: 255
     t.string "slug"
     t.integer "num_rounds"
+    t.string "match_name"
     t.index ["manager_id", "manager_type"], name: "index_matches_on_manager_id_and_manager_type"
     t.index ["manager_id"], name: "index_matches_on_manager_id"
     t.index ["slug"], name: "index_matches_on_slug", unique: true
@@ -77,9 +78,11 @@ ActiveRecord::Schema.define(version: 20170109183954) do
   create_table "player_matches", force: :cascade do |t|
     t.integer "player_id"
     t.integer "match_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "result"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string "result", limit: 255
+    t.string "log_out"
+    t.string "log_err"
     t.index ["match_id"], name: "index_player_matches_on_match_id"
     t.index ["player_id"], name: "index_player_matches_on_player_id"
   end
@@ -98,22 +101,20 @@ ActiveRecord::Schema.define(version: 20170109183954) do
   create_table "player_tournaments", force: :cascade do |t|
     t.integer "tournament_id"
     t.integer "player_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["player_id"], name: "index_player_tournaments_on_player_id"
-    t.index ["tournament_id"], name: "index_player_tournaments_on_tournament_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "players", force: :cascade do |t|
     t.integer "user_id"
     t.integer "contest_id"
-    t.string "file_location"
+    t.string "file_location", limit: 255
     t.integer "programming_language_id"
-    t.string "slug"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string "slug", limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.text "description"
-    t.string "name"
+    t.string "name", limit: 255
     t.boolean "downloadable", default: false
     t.boolean "playable", default: true
     t.index ["contest_id"], name: "index_players_on_contest_id"
@@ -124,19 +125,19 @@ ActiveRecord::Schema.define(version: 20170109183954) do
   end
 
   create_table "programming_languages", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string "name", limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "referees", force: :cascade do |t|
-    t.string "file_location"
+    t.string "file_location", limit: 255
     t.integer "programming_language_id"
-    t.string "slug"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "name"
-    t.string "rules_url"
+    t.string "slug", limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string "name", limit: 255
+    t.string "rules_url", limit: 255
     t.integer "players_per_game"
     t.integer "user_id"
     t.string "compressed_file_location"
@@ -155,36 +156,42 @@ ActiveRecord::Schema.define(version: 20170109183954) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "slug"
+    t.string "round_name"
     t.index ["match_id"], name: "index_rounds_on_match_id"
   end
 
-  create_table "tournaments", force: :cascade do |t|
-    t.string "tournament_type"
-    t.integer "contest_id"
-    t.datetime "start"
-    t.string "name"
-    t.string "status"
-    t.string "slug"
+  create_table "testings", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "tournaments", force: :cascade do |t|
+    t.string "tournament_type", limit: 255
+    t.integer "contest_id"
+    t.datetime "start"
+    t.string "name", limit: 255
+    t.string "status", limit: 255
+    t.string "slug", limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer "rounds_per_match"
-    t.index ["contest_id"], name: "index_tournaments_on_contest_id"
+    t.integer "total_matches"
     t.index ["slug"], name: "index_tournaments_on_slug", unique: true
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "username"
-    t.string "slug"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "email"
-    t.string "password_digest"
+    t.string "username", limit: 255
+    t.string "slug", limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string "email", limit: 255
+    t.string "password_digest", limit: 255
     t.boolean "admin", default: false
     t.boolean "contest_creator", default: false
     t.boolean "banned", default: false
-    t.string "chat_url"
+    t.string "chat_url", limit: 255
     t.index ["slug"], name: "index_users_on_slug", unique: true
-    t.index ["username"], name: "index_users_on_username"
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
 end
