@@ -1,4 +1,4 @@
-class UpdateRefereesToFinalErd < ActiveRecord::Migration
+class UpdateRefereesToFinalErd < ActiveRecord::Migration[5.1]
   def change
     rename_column :referees, :code_path, :file_location
     add_column :referees, :name, :string
