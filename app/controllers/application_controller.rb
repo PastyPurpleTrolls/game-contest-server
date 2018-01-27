@@ -9,11 +9,15 @@ class ApplicationController < ActionController::Base
 
   def get_daemon_status
     r, w = IO.pipe
-    expr_call = Process.spawn("expr $(date +%s) - $(date +%s -r #{Rails.root}/tmp/clockworkd.clock.output)", :out=>w)
-    Process.wait expr_call
+
+    unless Rails.env == "test"
+      expr_call = Process.spawn("expr $(date +%s) - $(date +%s -r #{Rails.root}/tmp/clockworkd.clock.output)", :out=>w)
+      Process.wait expr_call
+    end
+
     w.close
     access_time = r.read.to_i
-    if access_time > 15 then
+    if access_time > 15
       @daemon_status = false
     else
       @daemon_status = true
