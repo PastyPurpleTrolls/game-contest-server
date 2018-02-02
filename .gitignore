@@ -43,3 +43,8 @@
 !.gitkeep
 
 coverage
+
+# Ignore the JetBrains IDE config files
+/.idea/*
+.vscode
+runserver.sh

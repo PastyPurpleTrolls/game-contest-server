@@ -1,10 +1,10 @@
 <% setTitle("Sign Up") %>
 <div class="row">
     <div class="container center display-container col-md-offset-3 col-md-6">
-        <h2 class="headings new-heading row left">New User Information</h2>
+        <h1 class="headings new-heading row">Sign Up</h1>
         <%= form_for(@user) do |f| %>
             <%= render 'fields', f: f %>
-            <%= f.submit 'Create new account', class: 'btn btn-warning' %>
+            <%= f.submit 'Create new account', class: 'btn btn-danger' %>
         <% end %>
     </div>
 </div>

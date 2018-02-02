@@ -114,6 +114,16 @@ describe Tournament do
       before { tournament.tournament_type = 'single elimination' }
       it { should be_valid }
     end
+
+    describe "multiplayer game" do
+      before { tournament.tournament_type = 'multiplayer game' }
+      it { should be_valid }
+    end
+
+    describe "king of the hill" do
+      before { tournament.tournament_type = 'king of the hill' }
+      it { should be_valid }
+    end
   end
 
   describe "invalid tournament type" do

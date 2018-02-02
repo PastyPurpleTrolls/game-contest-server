@@ -2,14 +2,14 @@
     <div class="col-xs-4">
         <%= f.label :name %>:
     </div>
-    <%= f.text_field :name, class: 'form-input col-xs-7' %>
+    <%= f.text_field :name, class: 'form-control' %>
 </div>
 
 <div class="form-group row left">
     <div class="col-xs-4">
         <%= f.label :rules_url, 'Rules URL:' %>
     </div>
-    <%= f.text_field :rules_url, class: 'form-input col-xs-7' %>
+    <%= f.text_field :rules_url, class: 'form-control' %>
 </div>
 
 <br>
@@ -58,9 +58,6 @@
     <div class="col-xs-2 no-left-padding">        
         <%= f.select :time_per_game, 1..15, {}, class: 'form-input form-element' %>
     </div>
-    <div class="col-xs-6">
-        PUT MOVE LIMIT HERE
-    </div>    
 </div>
 
 <div class="form-group row left">

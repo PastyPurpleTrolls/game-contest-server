@@ -1,12 +1,13 @@
 def login(user, options = {})
   if options[:avoid_capybara]
     post sessions_path, params: { username: user.username, password: user.password }
+    get response.location if response.redirect?
   else
     visit login_path
     fill_in 'Username', with: user.username
     fill_in 'Password', with: user.password
     click_button 'Log In'
-    page.find('.alert')
+    page.find('a', text: 'Log Out')
   end
 end
 
@@ -17,7 +18,7 @@ shared_examples "redirects to a login" do |options|
     describe "visit browser path" do
       before { visit path }
 
-      it { should have_alert(:warning) }
+      it { should have_alert(:danger) }
       it { should have_content('Login') }
     end
   end
@@ -26,7 +27,7 @@ shared_examples "redirects to a login" do |options|
 		describe "visit HTTP path", type: :request do
  	  	before { send(method, http_path) }
 
- 	   	it { errors_on_redirect(login_path, :warning) }
+ 	   	it { errors_on_redirect(login_path, :danger) }
  	 	end
 	end
 end

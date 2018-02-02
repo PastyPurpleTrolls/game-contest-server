@@ -1,4 +1,4 @@
-class CreateMatchPaths < ActiveRecord::Migration 
+class CreateMatchPaths < ActiveRecord::Migration[5.1] 
     def change
       create_table :match_paths do |t|      
           t.references :parent_match, index: true
