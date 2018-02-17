@@ -1,3 +1,8 @@
+<br>
+<ol class="breadcrumb">
+    <li><a href="<%= root_path %>">Home</a></li>
+    <li class="active">Help</li>
+</ol>
 <div class="row center">
     <div class="container center display-container col-md-offset-1 col-md-10">
 		<h1 class="headings row left">User Roles Documentation</h1>		

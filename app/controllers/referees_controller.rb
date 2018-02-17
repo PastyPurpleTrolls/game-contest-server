@@ -46,7 +46,11 @@ class RefereesController < ApplicationController
   end
 
   def show
+    @per_page = 10
     @referee = Referee.friendly.find(params[:id])
+    @contests = @referee.contests
+                    .search(params[:search])
+                    .paginate(per_page: @per_page, page: params[:page])
     #GET param to grab an asset for the referee
     if params[:asset]
       begin

@@ -1,4 +1,4 @@
-class CreateContestManagers < ActiveRecord::Migration
+class CreateContestManagers < ActiveRecord::Migration[5.1]
   def change
     create_table :contest_managers do |t|
       t.string :code_path

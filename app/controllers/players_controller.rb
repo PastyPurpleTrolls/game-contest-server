@@ -8,18 +8,18 @@ class PlayersController < ApplicationController
   def new
     @contests = Contest.all
     if params[:contest_id] != 'not-specified'
-      contest = Contest.friendly.find(params[:contest_id])
-      @player = contest.players.build
+      @contest = Contest.friendly.find(params[:contest_id])
+      @player = @contest.players.build
     end
   end
 
   def create
-    contest = Contest.friendly.find(params[:contest_id])
-    @player = contest.players.build(acceptable_create_params)
+    @contest = Contest.friendly.find(params[:contest_id])
+    @player = @contest.players.build(acceptable_create_params)
     @player.upload = params[:player][:upload]
     @player.user = current_user
     if @player.save
-      startTestMatch(@player.id, contest)
+      startTestMatch(@player.id, @contest)
       redirect_to @player
     else
       @contests = Contest.all

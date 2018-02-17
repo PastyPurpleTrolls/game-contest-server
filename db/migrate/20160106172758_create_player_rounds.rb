@@ -1,4 +1,4 @@
-class CreatePlayerRounds < ActiveRecord::Migration
+class CreatePlayerRounds < ActiveRecord::Migration[5.1]
   def change
     create_table :player_rounds do |t|
       t.references :round, index: true, foreign_key: true

@@ -1,4 +1,10 @@
 <% setTitle("User") %>
+<br>
+<ol class="breadcrumb">
+    <li><a href="<%= root_path %>">Home</a></li>
+    <li><a href="<%= users_path %>">Users</a></li>
+    <li class="active"><%= @user.username %></li>
+</ol>
 <div class="row center">
     <div class="container outer-home-container col-md-offset-1 col-md-5">
         <div class="display-container">
