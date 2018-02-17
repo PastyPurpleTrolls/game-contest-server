@@ -10,10 +10,12 @@ class ApplicationController < ActionController::Base
   def get_daemon_status
     r, w = IO.pipe
 
-    unless Rails.env == "test"
+    if OS.mac?
+      expr_call = Process.spawn("expr $(gdate +%s) - $(gdate +%s -r #{Rails.root}/tmp/clockworkd.clock.output)", :out=>w)
+    else
       expr_call = Process.spawn("expr $(date +%s) - $(date +%s -r #{Rails.root}/tmp/clockworkd.clock.output)", :out=>w)
-      Process.wait expr_call
     end
+    Process.wait expr_call
 
     w.close
     access_time = r.read.to_i
