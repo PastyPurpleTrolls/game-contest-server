@@ -17,11 +17,11 @@ end
 
 #p1 = MockPlayer.new("../examples/test_player.py","first")
 #p2 = MockPlayer.new("../examples/test_player.py", "second")
-#ref = MockPlayer.new("../examples/test_referee.py", "ref")
+#ref = MockPlayer.new("../examples/guess_w_referee.py", "ref")
 
-p1 = MockPlayer.new("../examples/checkers/checkers_player.py", "first")
-p2 = MockPlayer.new("../examples/checkers/smartPlayer.py", "second")
-ref = MockPlayer.new("../examples/checkers/checkers_ref.py", "ref")
+p1 = MockPlayer.new("../examples/checkers/checkers_players/player1.py", "first")
+p2 = MockPlayer.new("../examples/checkers/checkers_players/player2.py", "second")
+ref = MockPlayer.new("../examples/checkers/checkers_referee.py", "ref")
 
 =begin
 p1 = MockPlayer.new("../examples/risk/risk_player.py", "first")

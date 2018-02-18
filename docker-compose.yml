@@ -2,7 +2,7 @@ version: '3.5'
 services:
   web:
     build: .
-    command: bash -c "cp /myapp/examples/guess-w/ref_helper.py /usr/lib/python3.4/;clockworkd -d . start ./clock.rb --log;bin/rails db:migrate; bin/rake db:seed; bin/rails s -b 0.0.0.0 -p 8000"
+    command: bash -c "cp /myapp/examples/guess-w/python/guess_w_helper.py /usr/lib/python3.4/;clockworkd -d . start ./clock.rb --log;bin/rails db:migrate; bin/rake db:seed; bin/rails s -b 0.0.0.0 -p 8000"
     # When running the project in development these two lines need to be uncommented. They make it
     # so the docker container and host machine share files between one another. This makes it so 
     # your changes on the host appear in the docker container. 
