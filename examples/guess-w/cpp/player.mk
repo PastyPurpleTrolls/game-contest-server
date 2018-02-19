@@ -1,1 +1,0 @@
-PLAYER = test_player
