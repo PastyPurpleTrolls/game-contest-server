@@ -10,19 +10,22 @@ class ApplicationController < ActionController::Base
   def get_daemon_status
     r, w = IO.pipe
 
-    if OS.mac?
-      expr_call = Process.spawn("expr $(gdate +%s) - $(gdate +%s -r #{Rails.root}/tmp/clockworkd.clock.output)", :out=>w)
-    else
-      expr_call = Process.spawn("expr $(date +%s) - $(date +%s -r #{Rails.root}/tmp/clockworkd.clock.output)", :out=>w)
+    unless File.exist?("tmp/clockworkd.clock.output")
+      @daemon_status = false
+      return
     end
-    Process.wait expr_call
 
+    Process.wait get_expr_call
     w.close
     access_time = r.read.to_i
-    if access_time > 15
-      @daemon_status = false
+    @daemon_status = access_time <= 15
+  end
+
+  def get_expr_call
+    if OS.mac?
+      Process.spawn("expr $(gdate +%s) - $(gdate +%s -r #{Rails.root}/tmp/clockworkd.clock.output)", :out=>w)
     else
-      @daemon_status = true
+      Process.spawn("expr $(date +%s) - $(date +%s -r #{Rails.root}/tmp/clockworkd.clock.output)", :out=>w)
     end
   end
 end
