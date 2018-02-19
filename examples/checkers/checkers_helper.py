@@ -14,12 +14,11 @@ from optparse import OptionParser
 import socket
 import pickle
 
-
-automatedMove = None
+getMove = None
 
 def init(playerFunction):
-    global automatedMove
-    automatedMove = playerFunction
+    global getMove
+    getMove = playerFunction
 
     ref_hostname = 'localhost'
     ref_port = options.port
@@ -31,8 +30,8 @@ def init(playerFunction):
     ref_socket.send(player_name.encode())
     while True:
         try:
-            CB,player = pickle.loads(ref_socket.recv(4096))
-            ref_socket.send(pickle.dumps(automatedMove(CB,player)))
+            b,playerIndex,playerColors,playerSymbols,opponentSymbols,rowInc = pickle.loads(ref_socket.recv(4096))
+            ref_socket.send(pickle.dumps(getMove(b,playerIndex,playerColors,playerSymbols,opponentSymbols,rowInc)))
         except EOFError:
             break
 
