@@ -15,13 +15,13 @@ class ApplicationController < ActionController::Base
       return
     end
 
-    Process.wait get_expr_call
+    Process.wait get_expr_call(w)
     w.close
     access_time = r.read.to_i
     @daemon_status = access_time <= 15
   end
 
-  def get_expr_call
+  def get_expr_call(w)
     if OS.mac?
       Process.spawn("expr $(gdate +%s) - $(gdate +%s -r #{Rails.root}/tmp/clockworkd.clock.output)", :out=>w)
     else
