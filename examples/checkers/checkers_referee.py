@@ -10,7 +10,7 @@ import time
 import pickle
 import json
 import importlib
-from checkers_helper import *
+from ref_helper import *
 
 EMPTY=0
 INCs=[-1,1]

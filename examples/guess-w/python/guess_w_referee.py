@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 import json
-from guess_w_helper import *
+from ref_helper import *
 
 
 class Player():
@@ -22,7 +22,6 @@ class Player():
 
 
 class Game():
-
     def __init__(self, numPlayers):
         self.players = []
 

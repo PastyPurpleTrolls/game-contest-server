@@ -1,5 +1,7 @@
 #! /usr/bin/env python3
 
+from talk_to_referee import *
+
 '''
 KEY:
     lb = logic board
