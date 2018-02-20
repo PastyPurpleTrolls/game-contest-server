@@ -55,7 +55,7 @@ referee = Referee.create!(
   name: "Guess W!",
   rules_url: "http://www.google.com",
   players_per_game: 2,
-  file_location: Rails.root.join("examples", "guess-w", "test_referee.py").to_s,
+  file_location: Rails.root.join("examples", "guess-w", "python", "guess_w_referee.py").to_s,
   time_per_game: 2,
   round_limit: 100,
 	rounds_capable: false
@@ -66,7 +66,7 @@ referee = Referee.create!(
     name: "Guess W #{referee_num}",
     rules_url: "http://www.google.com",
     players_per_game: 2,
-    file_location: Rails.root.join("examples", "guess-w", "test_referee.py").to_s,
+    file_location: Rails.root.join("examples", "guess-w", "python", "guess_w_referee.py").to_s,
     time_per_game: 2,
     round_limit: 100,
     rounds_capable: false
