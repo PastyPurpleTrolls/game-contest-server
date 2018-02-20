@@ -1,4 +1,4 @@
-class CreateMatchLogInfos < ActiveRecord::Migration
+class CreateMatchLogInfos < ActiveRecord::Migration[5.1]
   def change
     create_table :match_log_infos do |t|
       t.string :log_stdout

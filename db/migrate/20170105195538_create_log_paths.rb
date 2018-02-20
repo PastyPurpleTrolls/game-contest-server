@@ -1,4 +1,4 @@
-class CreateLogPaths < ActiveRecord::Migration
+class CreateLogPaths < ActiveRecord::Migration[5.1]
   def change
     dir_players = "#{Rails.root}/code/players/"
     dir_referees= "#{Rails.root}/code/referees/"

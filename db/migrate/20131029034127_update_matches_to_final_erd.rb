@@ -1,4 +1,4 @@
-class UpdateMatchesToFinalErd < ActiveRecord::Migration
+class UpdateMatchesToFinalErd < ActiveRecord::Migration[5.1]
   def change
     remove_column :matches, :duration
     add_column :matches, :status, :string

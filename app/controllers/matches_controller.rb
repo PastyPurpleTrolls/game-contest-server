@@ -30,7 +30,6 @@ class MatchesController < ApplicationController
         @match = @contest.matches.build(acceptable_params)
         @match.status = "waiting"
         if @match.save
-          flash[:success] = 'Match created.'
           redirect_to @match
         else
           @contests = Contest.all
