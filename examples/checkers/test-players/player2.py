@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 EMPTY=0
 INCs=[-1,1]
 VALID_RANGE=range(8)

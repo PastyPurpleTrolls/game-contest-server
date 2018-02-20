@@ -179,7 +179,7 @@ Referees are executable files that are uploaded by instructors to enforce the ru
 
 For security and practical purposes, players and referees are started as seperate processes on the system. Communication is handled via a TCP socket that the referee creates. The protocol that referees and players use to communicate is entirely dependant upon the game, but the protocol that referees use to report results back to the game manager is carefully defined in the [referee documentation](documentation/creator/referee.md). Please refer to this documentation for any additional information on how to build a referee.
 
-Example referees are located in [examples](examples). Python referees should take advantage of [ref_helper.py](examples/ref_helper.py) which implements several useful classes and methods for managing communication with the game manager.
+Example referees are located in [examples](examples). Python referees should take advantage of a "player-includes" or "helper" file, which implements several useful classes and methods for managing communication with the game manager.
 
 ### Replay Plugin
 

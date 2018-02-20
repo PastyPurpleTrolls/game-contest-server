@@ -1,4 +1,4 @@
-#!/usr/bin/python3.2
+#! /usr/bin/env python3
 
 import cTurtle
 import random
@@ -10,7 +10,7 @@ import time
 import pickle
 import json
 import importlib
-from ref_helper import *
+from checkers_helper import *
 
 EMPTY=0
 INCs=[-1,1]

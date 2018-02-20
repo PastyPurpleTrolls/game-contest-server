@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 #Checkers Player
 #12/12/12
 import time

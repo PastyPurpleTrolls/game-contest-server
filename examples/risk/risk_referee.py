@@ -5,8 +5,8 @@ import cTurtle
 import random
 import pickle
 import json
-from riskStructs import *
-from ref_helper import *
+from risk_structs import *
+from risk_helper import *
 
 import os
 import sys
