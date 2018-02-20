@@ -8,7 +8,7 @@ require 'rails_helper'
 #     @contest = FactoryBot.create(:contest)
 #     @player1 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'dumb_player', file_location: Rails.root.join('examples', 'guess-w', 'test_player.py').to_s )
 #     @player2 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'stupid_player', file_location: Rails.root.join('examples', 'guess-w', 'test_player.py').to_s )
-#     @referee = FactoryBot.create(:referee, name: "referee", file_location: Rails.root.join('examples', 'guess-w', 'test_referee.py').to_s )
+#     @referee = FactoryBot.create(:referee, name: "referee", file_location: Rails.root.join('examples', 'guess-w', 'guess_w_referee.py').to_s )
 #     @match_wrapper = RoundWrapper.new(@referee , 2, 5, [@player1, @player2], 1)
 #   end
 #
@@ -55,7 +55,7 @@ require 'rails_helper'
 #     @contest = FactoryBot.create(:contest)
 #     @player1 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'dumb_player', file_location: Rails.root.join('spec', 'files', 'guess-w', 'dumb_player.py').to_s )
 #     @player2 = FactoryBot.create(:player, user: @user, contest: @contest, name: 'stupid_player', file_location: Rails.root.join('spec', 'files', 'guess-w', 'dumb_player.py').to_s )
-#     @referee = FactoryBot.create(:referee, name: "referee", file_location: Rails.root.join('examples', 'guess-w', 'test_referee.py').to_s )
+#     @referee = FactoryBot.create(:referee, name: "referee", file_location: Rails.root.join('examples', 'guess-w', 'guess_w_referee.py').to_s )
 #     @match_wrapper = RoundWrapper.new(@referee , 2, 5, [@player1, @player2], 1)
 #   end
 # 	# after :each do
