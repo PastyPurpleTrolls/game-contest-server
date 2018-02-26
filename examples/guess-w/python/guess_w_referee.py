@@ -1,4 +1,4 @@
-#! /usr/bin/env python3.4
+#! /usr/bin/env python3
 
 import json
 from ref_helper import *
@@ -22,7 +22,6 @@ class Player():
 
 
 class Game():
-
     def __init__(self, numPlayers):
         self.players = []
 

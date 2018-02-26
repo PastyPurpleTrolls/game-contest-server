@@ -4,6 +4,7 @@ Referee File (all of the following, zipped):
 * `AIContest.h`
 * `BoardV3.cpp`
 * `BoardV3.h`
+* `defines.h`
 * `Makefile`
 * `Message.cpp`
 * `Message.h`
@@ -13,12 +14,13 @@ Referee File (all of the following, zipped):
 * `PlayerV2.h`
 * `referee.cpp`
 * `socketstream.h`
-    
+
 Player-Include Files (all of the following, zipped):
 * `AIContest.cpp`
 * `AIContest.h`
 * `BoardV3.cpp`
 * `BoardV3.h`
+* `defines.h`
 * `Makefile`
 * `Message.cpp`
 * `Message.h`
@@ -27,7 +29,7 @@ Player-Include Files (all of the following, zipped):
 * `PlayerV2.cpp`
 * `PlayerV2.h`
 * `socketstream.h`
-    
+
 Replay Plugin:
 * All files in `replay-plugin` directory (zipped)
     

@@ -32,8 +32,8 @@ class Connection():
         self.connection, self.address = server.socket.accept()
 
     def listen(self, buffersize):
-        var = ""
-        while var == "":
+        var = b""
+        while var == b"":
             try:
                 var = self.connection.recv(buffersize)
             except InterruptedError:
