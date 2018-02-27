@@ -95,7 +95,7 @@ module Uploadable
 
     def uncompress(src, dest)
 	system("tar -xvf #{Shellwords.escape src} -C #{Shellwords.escape dest} > /dev/null 2>&1")
-        system("unzip #{Shellwords.escape src} -d #{Shellwords.escape dest} > /dev/null 2>&1")
+        system("unzip -o #{Shellwords.escape src} -d #{Shellwords.escape dest} > /dev/null 2>&1")
         system("chmod +x #{Shellwords.escape dest}/*")
         system("dos2unix -q #{Shellwords.escape dest}/*")
     end
