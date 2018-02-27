@@ -48,3 +48,5 @@ coverage
 /.idea/*
 .vscode
 runserver.sh
+
+.DS_Store
