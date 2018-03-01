@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   def get_daemon_status
     r, w = IO.pipe
 
-    unless File.exist?("tmp/clockworkd.clock.output")
+    unless File.exist?("#{Rails.root}/tmp/clockworkd.clock.output")
       @daemon_status = false
       return
     end
