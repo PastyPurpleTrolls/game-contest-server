@@ -1,8 +1,16 @@
 #! /usr/bin/env python3
 
+from optparse import OptionParser
 import socket
 
 def init(move):
+    #Parsing command line arguments
+    #Usage: client.py --name [name] -p [port]"
+    parser = OptionParser()
+    parser.add_option("-p", "--port", action="store", type="int", dest="port")
+    parser.add_option("-n", "--name", action="store", type="string", dest="name")
+    (options, args) = parser.parse_args()
+
     HOST = 'localhost'
     PORT = options.port
     NAME = options.name
