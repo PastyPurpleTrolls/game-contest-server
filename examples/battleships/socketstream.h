@@ -46,6 +46,7 @@ is granted under the same conditions.
 '----------------------------------------------------------------*/
 
 extern "C" {
+#include <string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
@@ -185,7 +186,13 @@ public:
 		sin.sin_family = AF_INET;
 		sin.sin_port = htons(port);
 
-		if(connect(sd, reinterpret_cast<sockaddr*>(&sin), sizeof(sin)) < 0) {
+		int result = 0;
+
+        do {
+            result = connect(sd, reinterpret_cast<sockaddr*>(&sin), sizeof(sin));
+        } while (errno == ECONNREFUSED);
+
+		if (result < 0) {
 			stream_type::setstate(std::ios::failbit);
 			return false;
 		}
