@@ -103,6 +103,25 @@ class RoundWrapper
   end
 
   def run_round
+    #Wait for referee in separate thread to fix race condition
+    t = Thread.start(@wrapper_server.accept) { |client|
+      begin
+        Timeout::timeout(5) do
+          #Wait for referee to connect
+          @client_port = nil
+          while @client_port.nil?
+            line = client.gets
+            @client_port = self.find_command("port", line)
+            @ref_client = client
+          end
+        end
+      rescue Timeout::Error
+        @status[:error] = true
+        @status[:message] = "INCONCLUSIVE: Referee failed to provide a port!"
+        reap_children
+        return
+      end
+    }
     #Start referee process, giving it the port to talk to us on
     wrapper_server_port = @wrapper_server.addr[1]
     if Dir.glob("#{File.dirname(@referee.file_location)}/[Mm]akefile").size > 0
@@ -116,20 +135,11 @@ class RoundWrapper
     @match[:ref_logs] = loc
 
     #Wait for referee to tell wrapper_server what port to start players on
-    begin
-      Timeout::timeout(3) do
-        #Wait for referee to connect
-        @ref_client = @wrapper_server.accept
-        @client_port = nil
-        while @client_port.nil?
-          @client_port = self.find_command("port", @ref_client.gets)
-        end
-      end
-    rescue Timeout::Error
-      @status[:error] = true
-      @status[:message] = "INCONCLUSIVE: Referee failed to provide a port!"
-      reap_children
-      return
+    t.join
+    return if @status[:error]
+
+    if @players.uniq.length == 1
+      `make contest`
     end
 
     #Start players
