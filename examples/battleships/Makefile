@@ -33,5 +33,7 @@ manager:
 run: referee
 	./referee $(port) $(num_players) $(num_rounds) $(max_time)
 
-contest: player
+contest: contest_compile
 	./player $(port) '$(name)'
+
+contest_compile: player

@@ -104,7 +104,8 @@ class RoundWrapper
 
   def run_round
     #Wait for referee in separate thread to fix race condition
-    t = Thread.start(@wrapper_server.accept) { |client|
+    t = Thread.start(@wrapper_server) { |server|
+      client = server.accept
       begin
         Timeout::timeout(5) do
           #Wait for referee to connect
@@ -122,6 +123,7 @@ class RoundWrapper
         return
       end
     }
+    sleep 0.1
     #Start referee process, giving it the port to talk to us on
     wrapper_server_port = @wrapper_server.addr[1]
     if Dir.glob("#{File.dirname(@referee.file_location)}/[Mm]akefile").size > 0
@@ -139,7 +141,7 @@ class RoundWrapper
     return if @status[:error]
 
     if @players.uniq.length == 1
-      `make contest`
+      `cd #{Shellwords.escape File.dirname(@players.first.file_location)}; make contest_compile`
     end
 
     #Start players
