@@ -1,11 +1,8 @@
 #include <iostream>
 #include <cstdio>
 #include <stdlib.h>
-#include "conio.h"
 #include "sheep.h"
 #include "defines.h"
-
-using namespace conio;
 
 /**
  * @brief Constructor that initializes any inter-round data structures.

@@ -2,16 +2,13 @@
 #include <cstdio>
 #include <stdexcept>
 
-#include "conio.h"
 #include "Plutonium.h"
 
 #include "PUPredictor.h"
 #include "PUDumbShotPredictor.cpp"
 #include "PUDumbShipPredictor.cpp"
-#include "PUCleanShotPredictor.cpp"
 #include "PURandomShipPredictor.cpp"
 
-using namespace conio;
 using namespace std;
 
 /**
@@ -30,7 +27,6 @@ Plutonium::Plutonium( int boardSize )
     shipPredictors[0] = new RandomShipPredictor();
     
     shotPredictors[0] = new DumbShotPredictor();
-    shotPredictors[1] = new CleanShotPredictor();
 
     numShipPredictors = 1;
     numShotPredictors = 2;

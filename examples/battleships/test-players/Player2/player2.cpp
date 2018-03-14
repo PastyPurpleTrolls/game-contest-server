@@ -6,10 +6,7 @@
 #include <ctime>
 #include <iomanip>
 
-#include "conio.h"
 #include "FergusonHursey.h"
-
-using namespace conio;
 
 // CONSTRUCTOR
 FergusonHursey::FergusonHursey( int boardSize )

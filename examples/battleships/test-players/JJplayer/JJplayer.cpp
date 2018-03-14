@@ -3,10 +3,7 @@
 #include <fstream>
 #include <iomanip>
 
-#include "conio.h"
 #include "JJplayer.h"
-
-using namespace conio;
 
 /**
  * @brief Constructor that initializes any inter-round data structures.

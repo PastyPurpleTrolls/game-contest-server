@@ -5,10 +5,7 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "conio.h"
 #include "Skynet.h"
-
-using namespace conio;
 
 /**
  * @brief Constructor that initializes any inter-round data structures.

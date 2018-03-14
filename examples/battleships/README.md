@@ -24,6 +24,7 @@ Player-Include Files (all of the following, zipped):
 * `Makefile`
 * `Message.cpp`
 * `Message.h`
+* `player.cpp`
 * `PlayerConnection.cpp`
 * `PlayerConnection.h`
 * `PlayerV2.cpp`

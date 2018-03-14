@@ -3,10 +3,7 @@
 //I added
 #include <stdlib.h>
 
-#include "conio.h"
 #include "OurDumbPlayerV2.h"
-
-using namespace conio;
 
 /**
  * @brief Constructor that initializes any inter-round data structures.
