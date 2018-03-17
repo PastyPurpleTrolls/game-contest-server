@@ -41,4 +41,14 @@ module TournamentsHelper
     end
     data
   end
+
+  def get_player_wins(results, player_id)
+    wins = 0
+    results[player_id].each do |match_result|
+      if match_result["Win"] > match_result["Loss"]
+        wins += 1
+      end
+    end
+    wins
+  end
 end

@@ -1,6 +1,6 @@
 <tr>
     <td><%= link_to @player_attributes[player.id]['player_name'] %> (<%= @player_attributes[player.id]['user_name'] %>)</td>
     <td><%= player_counter + 1 %></td>
-    <td>-</td>
+    <td><%= get_player_wins(@results, player.id) %></td>
     <%= render partial: 'result', collection: @results[player.id], as: :result, locals: {player: player} %>
 </tr>
