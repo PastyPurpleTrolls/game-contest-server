@@ -13,7 +13,7 @@
                 </thead>
                 <tbody>
                     <%= render partial: 'tournaments/player_row',
-                               collection: get_player_wins_array,
+                               collection: @player_wins,
                                as: :player %>
                 </tbody>
             </table>

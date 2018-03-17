@@ -84,4 +84,14 @@ module TournamentsHelper
     end
     data
   end
+
+  def get_player_attrs_with_rank(player_wins, player_attributes, rank)
+    players_with_rank = []
+    player_wins.each do |player_win|
+      if @results[player_win[0]][:rank] == rank
+        players_with_rank << player_attributes[player_win[0]]
+      end
+    end
+    players_with_rank
+  end
 end
