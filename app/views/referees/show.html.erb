@@ -30,7 +30,7 @@
                 <p class="info-container">Name: <%= @referee.name %></p>
             </div>
             <div class="col-md-6">
-                <p class="info-container">Rules: <%= link_to @referee.rules_url, @referee %></p>
+                <p class="info-container"><%= link_to 'Rules', @referee.rules_url %></p>
             </div>
             <div class="col-md-6">
                 <p class="info-container">Limit of Rounds (Inclusive): <%= @referee.round_limit %></p>
