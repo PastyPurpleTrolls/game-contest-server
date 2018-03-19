@@ -6,7 +6,7 @@ class Referee < ActiveRecord::Base
     has_many :contests
 
     validates :user,              presence: true
-  	validates :round_limit,       presence: true, numericality: { only_integer: true, greater_than: 0 }
+  	validates :round_limit,       presence: true, numericality: { only_integer: true, greater_than: 1 }
     validates :name,              presence: true, uniqueness: true
     validates :rules_url,		format: { with: /\A((http|https):\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}(:[0-9]{1,5})?(([\/][A-Za-z0-9~$\-_.+!*(),]*)*(([\/][a-z0-9]+([\-]{1}[a-z0-9]+)?)*\.[a-z]{2,6})?)?([\?]([a-z0-9]+[\=][a-z0-9]+[\&]?)*)?\z/ }
 #    validate :valid_url
