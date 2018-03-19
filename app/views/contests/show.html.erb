@@ -39,7 +39,7 @@
                 </p>
             </div>
             <div class="col-md-6">
-                <p class="info-container">Rules: <%= link_to @contest.referee.rules_url, @contest.referee %></p>
+                <p class="info-container"><%= link_to 'Rules', @contest.referee.rules_url, target: '_blank' %></p>
             </div>
         </div>
     </div>
