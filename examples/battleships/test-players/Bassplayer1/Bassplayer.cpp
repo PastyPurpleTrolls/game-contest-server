@@ -2,10 +2,7 @@
 #include <cstdio>
 #include <iomanip>
 
-#include "conio.h"
 #include "Bassplayer.h"
-
-using namespace conio;
 
 /**
  * @brief Constructor that initializes any inter-round data structures.

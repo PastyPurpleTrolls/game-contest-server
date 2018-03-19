@@ -55,9 +55,7 @@
     <div class="col-xs-4">
         <%= f.label :time_per_game, 'Time per Game (s):' %>
     </div>
-    <div class="col-xs-2 no-left-padding">        
-        <%= f.select :time_per_game, 1..15, {}, class: 'form-input form-element' %>
-    </div>
+    <%= f.text_field :time_per_game, class: 'form-control' %>
 </div>
 
 <div class="form-group row left">

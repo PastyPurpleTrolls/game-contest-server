@@ -4,12 +4,7 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "conio.h"
 #include "OurPlayer.h"
-
-using namespace conio;
-
-
 
 /**
  * @brief Constructor that initializes any inter-round data structures.

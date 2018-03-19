@@ -1,13 +1,11 @@
 #include <iostream>
 #include <cstdio>
 
-#include "conio.h"
 #include "Calahart.h"
 #include <cstdlib>
 #include <ctime>
 #include <vector>
 #include <unistd.h>
-using namespace conio;
 
 /**
  * @brief Constructor that initializes any inter-round data structures.
