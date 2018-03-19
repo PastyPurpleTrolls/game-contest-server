@@ -5,7 +5,7 @@ class Tournament < ActiveRecord::Base
   has_many :players, through: :player_tournaments
   has_many :matches, as: :manager #, dependent: :destroy
 
-  validates :rounds_per_match,    presence: true
+  validates :rounds_per_match,    presence: true, numericality: { even: true }
   validates :contest,             presence: true
   validates :name,                presence: true, uniqueness: { scope: :contest }
   #validates :start,               presence: true, timeliness: { type: :datetime, allow_nil: false }
