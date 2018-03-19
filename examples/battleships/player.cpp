@@ -21,7 +21,7 @@ void send_result(const Message& msg, net::socketstream& referee) {
 int main(int argc, char **argv) {
     srand(time(NULL));
 
-    net::socketstream referee("localhost", std::atoi(argv[1]));
+    net::socketstream referee(argv[1]);
 
     referee << argv[2] << std::endl;
 
