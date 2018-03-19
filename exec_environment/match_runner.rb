@@ -64,7 +64,7 @@ class MatchRunner
     #Call round wrapper which runs the executables and generates game hashes
     round_wrapper = RoundWrapper.new(@referee, @match_id, @number_of_players, @max_match_time, @match_participants, @num_rounds, @duplicate_players)
     puts "   Match runner running match #" + @match_id.to_s
-    round_wrapper.run_match
+    round_wrapper.run_match(round_robin=true)
 
     @match_participants = [@match.players.first] if @duplicate_players
 
