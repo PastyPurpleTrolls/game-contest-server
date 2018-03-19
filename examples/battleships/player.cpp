@@ -7,6 +7,9 @@
 #include "Message.h"
 #include PLAYER_H
 
+#include <csignal>
+sig_atomic_t last_wait;
+
 const int boardSize = 10;
 
 void send_result(const Message& msg, net::socketstream& referee) {
