@@ -27,12 +27,12 @@ clean:
 	rm -f contest $(AIContestMain) $(objects)
 
 manager:
-	nc -l -p $(port)
+	nc -lU $(path)
 
 run: referee
-	./referee $(port) $(num_players) $(num_rounds) $(max_time)
+	./referee $(path) $(num_players) $(num_rounds) $(max_time)
 
 contest: contest_compile
-	./player $(port) '$(name)'
+	./player $(path) '$(name)'
 
 contest_compile: player
