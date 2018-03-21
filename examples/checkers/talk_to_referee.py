@@ -10,13 +10,11 @@ import socket
 import pickle
 
 def init(playerFunction):
-    ref_hostname = 'localhost'
-    ref_port = options.port
+    ref_path = options.path
     player_name  = options.name
 
-    ref_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    ref_ip = socket.gethostbyname(ref_hostname)
-    ref_socket.connect((ref_ip,ref_port))
+    ref_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    ref_socket.connect(ref_path)
     ref_socket.send(player_name.encode())
     while True:
         try:
@@ -28,6 +26,6 @@ def init(playerFunction):
 #Parsing command line arguments
 #Usage: client.py --name [name] -p [port]"
 parser = OptionParser()
-parser.add_option("-p","--port",action="store",type="int",dest="port")
+parser.add_option("-p","--path",action="store",type="int",dest="path")
 parser.add_option("-n","--name" ,action="store",type="string",dest="name")
 (options, args) = parser.parse_args()
