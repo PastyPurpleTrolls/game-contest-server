@@ -53,7 +53,7 @@ bool BoardV3::placeShip(int row, int col, int length, Direction dir) {
     }
 }
 
-bool BoardV3::positionOk( int row, int col, int length, bool horiz  ) {
+bool BoardV3::positionOk( int row, int col, int length, bool horiz ) const {
     if( horiz ) {
 	// If starting point off board, of would go off board, instant false.
 	if( row<0 || row>=boardSize || col<0 || col+length-1>=boardSize ) {
@@ -96,7 +96,7 @@ void BoardV3::markShip( int row, int col, int length, bool horiz ) {
     shipMark ++;	// Increment shipMark to next avail value
 }
 
-char BoardV3::getOpponentView(int row, int col) {
+char BoardV3::getOpponentView(int row, int col) const {
     char value = shotBoard[row][col];
     switch (value) {
         case HIT:
@@ -108,14 +108,14 @@ char BoardV3::getOpponentView(int row, int col) {
     }
 }
 
-char BoardV3::getOwnerView(int row, int col) {
+char BoardV3::getOwnerView(int row, int col) const {
     if( shotBoard[row][col] == SHIP )
         return shipBoard[row][col];
     else
         return shotBoard[row][col];
 }
 
-char BoardV3::getShipMark(int row, int col) {
+char BoardV3::getShipMark(int row, int col) const {
     return shipBoard[row][col];
 }
 
@@ -147,7 +147,7 @@ char BoardV3::processShot(int row, int col) {
     return MISS;
 }
 
-bool BoardV3::isSunk(int row, int col) {
+bool BoardV3::isSunk(int row, int col) const {
     char mark = shipBoard[row][col];
     for(int row=0; row<boardSize; row++) {
 	for(int col=0; col<boardSize; col++) {
@@ -171,7 +171,7 @@ void BoardV3::markSunk(int row, int col) {
 }
 
 
-bool BoardV3::hasWon() {
+bool BoardV3::hasWon() const {
     for(int row=0; row<boardSize; row++) {
 	for(int col=0; col<boardSize; col++) {
 	    if(shotBoard[row][col]==SHIP) {
@@ -187,4 +187,3 @@ void BoardV3::initialize(char board[MaxBoardSize][MaxBoardSize]) {
         for(int col=0; col<MaxBoardSize; col++)
             board[row][col] = WATER;
 }
-
