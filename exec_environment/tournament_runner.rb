@@ -79,11 +79,13 @@ class TournamentRunner
   #Runs a round robin tournament with each player playing every other player twice.
   #Currently only works with 2 player games
   def round_robin(players)
-    players.each do |p|
-      players.each do |q|
-        if p != q
-          match_players = [p, q]
-          create_match(match_players, @tournament.rounds_per_match)
+    players.each_with_index do |p, i|
+      players.each_with_index do |q, j|
+        if i < j
+	  half_rounds = @tournament.rounds_per_match / 2
+	  remainder = @tournament.rounds_per_match % 2
+          create_match([p, q], half_rounds)
+          create_match([q, p], half_rounds + remainder)
         end
       end
     end
