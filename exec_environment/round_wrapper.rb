@@ -37,19 +37,13 @@ class RoundWrapper
     @value_char = "|"
   end
 
-  def run_match(round_robin=false)
-    if round_robin
-      num_rounds = @num_rounds/2
-    else
-      num_rounds = @num_rounds
-    end
-
+  def run_match
     if @referee.rounds_capable
       self.run_round
     else
-      num_rounds.times do |i|
+      @num_rounds.times do
         self.run_round
-        if @status[:error] == true
+        if @status[:error]
           return
         end
       end
