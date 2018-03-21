@@ -9,7 +9,7 @@ import pickle
 
 #Get options
 parser = OptionParser()
-parser.add_option("-p","--port",action="store",type="int",dest="port")
+parser.add_option("-p","--path",action="store",type="int",dest="path")
 parser.add_option("-n","--name" ,action="store",type="string",dest="name")
 (options, args) = parser.parse_args()
 
@@ -19,8 +19,7 @@ class Player():
         #Dictionary containing all the player functions
         self.playerFunctions = playerFunctions
 
-        self.ref_hostname = 'localhost'
-        self.ref_port = options.port
+        self.ref_path = options.path
         self.player_name = options.name
 
         #Connect to referee
@@ -33,10 +32,8 @@ class Player():
         self.listen()
 
     def connect(self):
-        self.ref_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.ref_ip = socket.gethostbyname(self.ref_hostname)
-
-        self.ref_socket.connect((self.ref_ip, self.ref_port))
+        self.ref_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        self.ref_socket.connect(self.ref_path)
 
     def send(self, message):
         self.ref_socket.send(message.encode())
