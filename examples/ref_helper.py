@@ -14,10 +14,9 @@ def stop_alarm():
 
 #Create and listen to a socket
 class SocketServer():
-    def __init__(self):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.bind(('', 0))
-        self.port = self.socket.getsockname()[1]
+    def __init__(self, path):
+        self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        self.socket.bind(path)
         self.socket.listen(10)
 
     def __del__(self):
@@ -56,11 +55,9 @@ class Connection():
 
 class Manager():
     #Create connection with manager
-    def __init__(self, hostname, port):
-        self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.connection.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.ip = socket.gethostbyname(hostname)
-        self.connection.connect((self.ip, port))
+    def __init__(self, path):
+        self.connection = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        self.connection.connect(path)
 
     #Send command to manager
     def send(self, command, value):
@@ -83,7 +80,7 @@ class Manager():
 
 #Parse options from manager
 parser = OptionParser()
-parser.add_option("-p","--port",action="store",type="int",dest="port")
+parser.add_option("-p","--path",action="store",type="int",dest="path")
 parser.add_option("-n","--num",action="store",type="int",dest="num") #number of players
 parser.add_option("-r", "--rounds", action="store", type="int", dest="rounds") #Number of rounds
 parser.add_option("-t", "--time", action="store", type="int", dest="time") #Max amount of time for the match
@@ -93,10 +90,10 @@ parser.add_option("-m", "--turns", action="store", type="int", dest="turns") #Ma
 signal.alarm(options.time)
 
 #connect to match wrapper
-manager = Manager('localhost', options.port)
+manager = Manager(options.path)
 
 #create and bind socket to listen for connecting players
-playerServer = SocketServer()
+playerServer = SocketServer("/tmp/ref-helper-referee")
 
 #Tell the manager what port players should connect on
-manager.send("port", playerServer.port)
+manager.send("path", "/tmp/ref-helper-referee")
