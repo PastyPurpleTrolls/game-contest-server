@@ -46,10 +46,8 @@ class UsersController < ApplicationController
 
   def update
 		if current_user.admin? && @user.update(admin_acceptable_params)
-      flash[:success] = @user.username + "'s profile has been modified"
       redirect_to @user
     elsif @user.update(acceptable_params)
-      flash[:success] = "Your profile has been modified"
       redirect_to @user
     else
       render 'edit'

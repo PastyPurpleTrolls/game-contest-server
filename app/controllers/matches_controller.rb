@@ -50,6 +50,7 @@ class MatchesController < ApplicationController
     unless @match.tournament_match?
       ensure_correct_user_from_list(list_of_users_in_match(@match), 'You do not have a player in this challenge match')
     end
+    @rounds = @match.rounds.paginate(:per_page =>10, :page => params[:page])
   end
 
   def index

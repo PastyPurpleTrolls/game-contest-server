@@ -22,7 +22,7 @@
     <div class="col-xs-4">
         <%= f.label :rounds_per_match, 'Rounds per Match:' %>
     </div>
-    <%= f.text_field :rounds_per_match, class: 'form-input form-element' %>
+    <%= f.text_field :rounds_per_match, class: 'form-control' %>
 </div>
 <script>
     var playersPerGame = <%= @contest.referee.players_per_game; %>

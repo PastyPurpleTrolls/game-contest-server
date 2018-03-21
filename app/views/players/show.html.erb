@@ -51,9 +51,22 @@
         <% end %>
     </div>
 </div>
+
 <div class="row">
     <div class="container center display-container col-md-offset-3 col-md-6">
-        <h1 class="headings left row">Matches (<%= @playermatch.count %>)</h1>
+        <h1 class="headings left row">Statistics</h1>
+        <p class="info-container">Wins: <%= @playermatch.where(result: 'Win').count %></p>
+        <p class="info-container">Losses: <%= @playermatch.where(result: 'Loss').count %></p>
+        <p class="info-container">Ties: <%= @playermatch.where(result: 'Tie').count %></p>
+        <p class="info-container">Win Percentage:
+            <%= @playermatch.where(result: 'Win').count.to_f / @playermatch.count * 100 %>%
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="container center display-container col-md-offset-3 col-md-6">
+        <h1 class="headings left row">Matches</h1>
         <%= form_tag player_path(@player), method: :get, id: :players_search, class: 'form-inline' do %>
             <%= hidden_field_tag :direction, params[:direction] %>
             <%= hidden_field_tag :sort, params[:sort] %>
@@ -62,24 +75,22 @@
                 <%= submit_tag "Search", class: 'btn btn-danger' %>
             </p>
         <%end%>
+
+        <% if @playermatch.count > 0 %>
+            <% if @playermatch.count > @per_page %>
+                <p><%= "#{@playermatch.count} found (displaying #{getRangeFromPage(params[:tournament_page], @playermatch.length)})" %></p>
+            <% else %>
+                <p><%= "#{@playermatch.count} found" %></p>
+            <% end %>
+        <% else %>
+            <p>No matches found</p>
+        <% end %>
+
         <div id="pagination">	
                 <%= render partial: 'player_matches/match_links',
                 collection: @matches,
                 as: 'player_match' %>
             <%= will_paginate @matches, inner_window: 2, outer_window: 0 %>
         </div>
-        <% @win =0 %>
-        <% @loss =0 %>
-        <% @tie =0 %>
-        <% @playermatch.each do |m| %>
-        <% if m.result == "Win" %>
-            <% @win += 1 %>
-        <% elsif m.result == "Loss" %>
-            <% @loss += 1 %>
-        <% else %>
-            <% @tie += 1 %>
-        <%end%>
-        <%end%>
-        <p>Record: <%= @win %>-<%= @loss %>-<%= @tie %></p>
     </div>
 </div>
