@@ -59,7 +59,7 @@
         <p class="info-container">Losses: <%= @playermatch.where(result: 'Loss').count %></p>
         <p class="info-container">Ties: <%= @playermatch.where(result: 'Tie').count %></p>
         <p class="info-container">Win Percentage:
-            <%= @playermatch.where(result: 'Win').count.to_f / @playermatch.count * 100 %>%
+            <%= (@playermatch.where(result: 'Win').count.to_f / @playermatch.count * 100).round(2) %>%
         </p>
     </div>
 </div>
