@@ -45,7 +45,7 @@ describe "RefereePages" do
           fill_in 'Rules', with: rules
           fill_in 'Round Limit (Inclusive)', with: round_limit_word
           select num_players, from: 'Players'
-          select time_per_game, from: 'Time per Game'
+          fill_in 'Time per Game', with: time_per_game
           attach_file('Referee File', file_location)
           attach_file('Player-Include Files', file_location)
           attach_file('Replay Plugin', file_location)
@@ -61,7 +61,7 @@ describe "RefereePages" do
           fill_in 'Rules', with: rules
           fill_in 'Round Limit (Inclusive)', with: round_limit_negative
           select num_players, from: 'Players'
-          select time_per_game, from: 'Time per Game'
+          fill_in 'Time per Game', with: time_per_game
           attach_file('Referee File', file_location)
           attach_file('Player-Include Files', file_location)
           attach_file('Replay Plugin', file_location)
@@ -77,7 +77,7 @@ describe "RefereePages" do
           fill_in 'Rules', with: rules
           fill_in 'Round Limit (Inclusive)', with: round_limit_zero
           select num_players, from: 'Players'
-          select time_per_game, from: 'Time per Game'
+          fill_in 'Time per Game', with: time_per_game
           attach_file('Referee File', file_location)
           attach_file('Player-Include Files', file_location)
           attach_file('Replay Plugin', file_location)
@@ -100,7 +100,7 @@ describe "RefereePages" do
         fill_in 'Rules', with: rules
         fill_in 'Round Limit (Inclusive)', with: round_limit
         select num_players, from: 'Players'
-        select time_per_game, from: 'Time per Game'
+        fill_in 'Time per Game', with: time_per_game
         check 'referee_rounds_capable'
         attach_file('Referee File', file_location)
         attach_file('Player-Include Files', file_location)
@@ -142,7 +142,7 @@ describe "RefereePages" do
         it "shows all referee information" do
           should have_content(name)
           should have_content(round_limit)
-          should have_link(rules)
+          should have_link('Rules', href: rules)
           should have_content("This referee is capable of handling rounds")
           should have_content(num_players)
           should have_content(time_per_game)
@@ -182,7 +182,7 @@ describe "RefereePages" do
         fill_in 'Rules', with: "#{rules}/updated"
         fill_in 'Round Limit (Inclusive)', with: round_limit
         select num_players, from: 'Players'
-        select time_per_game, from: 'Time per Game'
+        fill_in 'Time per Game', with: time_per_game
         attach_file('Referee File', file_location)
         attach_file('Player-Include Files', file_location)
         attach_file('Replay Plugin', file_location)
@@ -222,7 +222,7 @@ describe "RefereePages" do
         fill_in 'Rules', with: "#{rules}/updated"
         fill_in 'Round Limit (Inclusive)', with: round_limit
         select num_players, from: 'Players'
-        select time_per_game, from: 'Time per Game'
+        fill_in 'Time per Game', with: time_per_game
         check 'referee_rounds_capable'
         attach_file('Referee File', file_location)
         attach_file('Player-Include Files', file_location)
@@ -396,7 +396,7 @@ describe "RefereePages" do
 
     it "shows all referee information" do
       should have_content(referee.name)
-      should have_link(referee.rules_url)
+      should have_link('Rules', href: referee.rules_url)
       should have_content(referee.round_limit)
       should have_content(referee.players_per_game.to_s)
       should have_content("This referee is not capable of handling rounds")

@@ -65,7 +65,7 @@
 </div>
 
 <div class="row">
-    <div class="container center display-container col-md-offset-3 col-md-6">
+    <div class="container center display-container col-md-offset-3 col-md-6" id="player-match-container">
         <h1 class="headings left row">Matches</h1>
         <%= form_tag player_path(@player), method: :get, id: :players_search, class: 'form-inline' do %>
             <%= hidden_field_tag :direction, params[:direction] %>

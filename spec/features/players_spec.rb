@@ -201,11 +201,6 @@ describe "PlayersPages" do
       specify {expect(response).to redirect_to(contest_path(player.contest))}
     end
 
-    it "produces a delete message" do
-      delete player_path(player)
-      get response.location
-      response.body.should have_alert(:success)
-    end
 
     it "removes a player from the system" do
       expect {delete player_path(player)}.to change(Player, :count).by(-1)
@@ -256,11 +251,19 @@ describe "PlayersPages" do
 
       it {should have_header(text: 'Matches')}
 
+      it "shows proper statistics" do
+        should have_content('Wins: 7')
+        should have_content('Losses: 4')
+        should have_content('Ties: 0')
+        should have_content('Win Percentage: 63.64%')
+      end
+
       it "shows all match information" do
-        should have_content('Win', count: 7)
-        #Should only have 3 losses displayed because the 4th is on the next page.
-        should have_content('Loss', count: 3)
-        should have_content('Record: 7-4')
+        within '#player-match-container' do
+          should have_content('Win', count: 7)
+          #Should only have 3 losses displayed because the 4th is on the next page.
+          should have_content('Loss', count: 3)
+        end
       end
     end
 
@@ -271,10 +274,18 @@ describe "PlayersPages" do
         visit player_path(player)
       end
 
+      it "shows proper statistics" do
+        should have_content('Wins: 5')
+        should have_content('Losses: 0')
+        should have_content('Ties: 0')
+        should have_content('Win Percentage: 100.0%')
+      end
+
       it "shows all match information" do
-        should have_content('Win', count: 5)
-        should_not have_content('Loss')
-        should have_content('Record: 5-0')
+        within '#player-match-container' do
+          should have_content('Win', count: 5)
+          should_not have_content('Loss')
+        end
       end
     end
 
@@ -285,10 +296,18 @@ describe "PlayersPages" do
         visit player_path(player)
       end
 
+      it "shows proper statistics" do
+        should have_content('Wins: 0')
+        should have_content('Losses: 8')
+        should have_content('Ties: 0')
+        should have_content('Win Percentage: 0.0%')
+      end
+
       it "shows all match information" do
-        should_not have_content('Win')
-        should have_content('Loss', count: 8)
-        should have_content('Record: 0-8')
+        within '#player-match-container' do
+          should_not have_content('Win')
+          should have_content('Loss', count: 8)
+        end
       end
     end
   end
@@ -304,12 +323,12 @@ describe "PlayersPages" do
     it 'displays properly' do
       should have_selector('div.pagination')
       within '#player_pagination' do
-        should_not have_link('← Previous')
+        should_not have_link('<')
         should_not have_link('1')
         should have_link('2')
         should have_link('3')
         should_not have_link('4')
-        should have_link('Next →')
+        should have_link('>')
       end
     end
 
@@ -319,12 +338,12 @@ describe "PlayersPages" do
       it 'displays properly' do
         should have_selector('div.pagination')
         within '#player_pagination' do
-          should have_link('← Previous')
+          should have_link('<')
           should have_link('1')
           should have_link('2')
           should_not have_link('3')
           should_not have_link('4')
-          should_not have_link('Next →')
+          should_not have_link('>')
         end
       end
 
