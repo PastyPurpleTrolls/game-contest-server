@@ -14,7 +14,8 @@
         <div class="row left">
             <p class="col-xs-4">Selected Contest:</p>
             <%= form_tag(new_contest_match_path(:contest_id), method: :get, class: "form-input", id: "contest-form") do %>
-                <%= collection_select(:match, :manager_id, @contests, :id, :name, {prompt: "Select a Contest"}, class: "form-element", id: "contest-selector", onchange: "redirectToContest()") %>
+                <%= collection_select(:match, :manager_id, @contests, :id, :name, {prompt: "Select a Contest"},
+                                      class: "form-element", id: "contest-selector", onchange: "redirectToContest()") %>
             <% end %>
         </div>
         <% if @match %>

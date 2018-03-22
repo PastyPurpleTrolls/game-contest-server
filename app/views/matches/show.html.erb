@@ -34,10 +34,14 @@
             <% end %>
             <% if current_user==@match.manager.referee.user && @match.match_log_info %>
                 <div class="col-md-6">
-                    <p class="info-container" data-toggle="tooltip" data-placement="bottom" title="Click link to download">Standard Log:<a href="/match_logs/<%= @match.match_log_info.id %>/std_out">Referee STDOUT Log</a></p>
+                    <p class="info-container" data-toggle="tooltip" data-placement="bottom" title="Click link to download">
+                        Standard Log: <a href="/match_logs/<%= @match.match_log_info.id %>/std_out">Referee STDOUT Log</a>
+                    </p>
                 </div>
                 <div class="col-md-6">
-                    <p class="info-container" data-toggle="tooltip" data-placement="bottom" title="Click link to download">Error Log:<a href="/match_logs/<%= @match.match_log_info.id %>/std_err">Referee STDERR Log</a></p>
+                    <p class="info-container" data-toggle="tooltip" data-placement="bottom" title="Click link to download">
+                        Error Log: <a href="/match_logs/<%= @match.match_log_info.id %>/std_err">Referee STDERR Log</a>
+                    </p>
                 </div>
             <% end %>            
             <div class="col-md-12">
