@@ -28,15 +28,15 @@
     <%= f.password_field :password_confirmation, class: 'form-control' %>
 </div>
 
-<% if current_user && current_user.admin? %>
+<% if current_user&.admin? %>
     <div class="form-group row">
         <div class="col-xs-6">
             <%= f.label :contest_creator, 'Contest Creator:' %>
-            <%= f.check_box :contest_creator, :checked_value => true, :unchecked_value => false, class: 'form-checkbox form-element'%>
+            <%= f.check_box :contest_creator, checked_value: true, unchecked_value: false, class: 'form-checkbox form-element'%>
         </div>
         <div class="col-xs-6">
             <%= f.label :admin, 'Admin:' %>
-            <%= f.check_box :admin, :checked_value => true, :unchecked_value => false, class: 'form-checkbox form-element' %>
+            <%= f.check_box :admin, checked_value: true, unchecked_value: false, class: 'form-checkbox form-element' %>
         </div>
     </div>
 <% end %>

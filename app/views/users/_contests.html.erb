@@ -1,0 +1,32 @@
+<div class="container outer-home-container col-md-5">
+    <div class="display-container no-margin-top">
+        <div class="row">
+            <h1 class="headings info-text col-xs-10 col-xs-offset-1 left">My Contests</h1>
+            <div class="info-text col-xs-1 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Contest">
+                <%= link_to(new_contest_path, method: :get) do %>
+                    <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
+                <% end %>
+            </div>
+        </div>
+        <div class="row">
+            <%= form_tag user_path(@user), method: 'get', id: 'contest_form', class: 'form-inline' do %>
+                <%= text_field_tag :contest_search, params[:contest_search], class: 'form-control' %>
+                <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
+            <% end %>
+        </div>
+        <% if @contests.count > 0 %>
+            <% if @contests.count > @per_page %>
+                <p><%= "#{@contests.count} found (displaying #{getRangeFromPage(params[:contest_page], @contests.length)})" %></p>
+            <% else %>
+                <p><%= "#{@contests.count} found" %></p>
+            <% end %>
+        <% else %>
+            <p>No contests found</p>
+        <% end %>
+        <div class="row">
+            <%= render partial: 'contest', collection: @contests %>
+            <%= will_paginate @contests, param_name: 'contest_page', id: 'contest_pagination', inner_window: 2,
+                              outer_window: 0, previous_label: '<', next_label: '>' %>
+        </div>
+    </div>
+</div>

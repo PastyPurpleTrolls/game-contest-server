@@ -15,12 +15,15 @@
             <% if current_user==@tournament.contest.user and current_user.contest_creator %>
                 <div class="col-xs-2 right form-dropdown">
                     <div class="dropdown">
-                        <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">Options <span class="caret"/></a>
+                        <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">
+                            Options <span class="caret"></span>
+                        </a>
                         <ul class="dropdown-menu">
                             <% if @tournament.status != "completed" %>
                                 <%= active_link_to 'Edit', edit_tournament_path(@tournament), wrap_tag: :li %>
                             <% end %>                            
-                            <%= active_link_to 'Delete', tournament_path(@tournament), method: :delete, data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
+                            <%= active_link_to 'Delete', tournament_path(@tournament), method: :delete,
+                                               data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
                         </ul>
                     </div>
                 </div>
@@ -38,10 +41,14 @@
                 <% end %>
             </div>
             <div class="col-md-6">
-                <p class="info-container">Tournament Type: <%= @tournament.tournament_type.split.map { |i| i.capitalize }.join(' ') %></p>
+                <p class="info-container">
+                    Tournament Type: <%= @tournament.tournament_type.split.map { |i| i.capitalize }.join(' ') %>
+                </p>
             </div>
             <div class="col-md-6">
-                <p class="info-container">Contest Owner: <%= link_to @tournament.contest.user.username, @tournament.contest.user %></p>
+                <p class="info-container">
+                    Contest Owner: <%= link_to @tournament.contest.user.username, @tournament.contest.user %>
+                </p>
             </div>
             <div class="col-md-12">
                 <p class="info-container">Contest: <%= link_to @tournament.contest.name, @tournament.contest %></p>
@@ -50,7 +57,7 @@
     </div>
 </div>
 
-<% if @tournament.status == "completed" %>
+<% if @tournament.completed? %>
     <div class="row">
         <div class="container center display-container col-md-offset-1 col-md-10">
             <div class="row">
@@ -71,11 +78,11 @@
     </div>
 <% end %>
 
-<% if @tournament.tournament_type == "round robin" %>
+<% if @tournament.round_robin? %>
     <%= render "round_robin_tournament" %>
-<% elsif @tournament.tournament_type == "single elimination" %>
+<% elsif @tournament.single_elimination? %>
     <%= render "single_elimination_tournament" %>
-<% elsif @tournament.tournament_type == "multiplayer game" %>
+<% elsif @tournament.multiplayer_game? %>
     <%= render "multiplayer_game_tournament" %>
 <% else %>
     <%= render "king_of_the_hill_tournament" %>

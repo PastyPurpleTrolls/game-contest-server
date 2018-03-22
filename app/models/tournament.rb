@@ -50,5 +50,24 @@ class Tournament < ActiveRecord::Base
     errors.add :name, *errors.delete(:friendly_id) if errors[:friendly_id].present?
   end
 
+  def completed?
+    self.status == 'completed'
+  end
+
+  def round_robin?
+    self.tournament_type == 'round robin'
+  end
+
+  def single_elimination?
+    self.tournament_type == 'single elimination'
+  end
+
+  def multiplayer_game?
+    self.tournament_type == 'multiplayer game'
+  end
+
+  def king_of_the_hill?
+    self.tournament_type == 'king of the hill'
+  end
 
 end
