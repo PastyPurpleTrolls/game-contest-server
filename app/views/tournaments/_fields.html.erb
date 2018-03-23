@@ -9,14 +9,18 @@
         <%= f.label :start, "Start:" %>
     </div>
     <% Time.use_zone("America/Indianapolis") do %>
-        <%= f.datetime_select :start, { start_year: Time.now.year, use_short_month: true, minute_step: 5, order: [:month, :day, :year],  datetime_separator: " @ " }, class: 'form-input form-element' %>
+        <%= f.datetime_select :start, { start_year: Time.now.year, use_short_month: true, minute_step: 5,
+                                        order: [:month, :day, :year],  datetime_separator: " @ " },
+                              class: 'form-input form-element' %>
     <% end %>
 </div>
 <div class="form-group row left">
     <div class="col-xs-4">
         <%= f.label :tournament_type, 'Tournament Type:' %>
     </div>
-    <%= f.select :tournament_type, [['Round Robin','round robin'],['Single Elimination', 'single elimination'], ['Multiplayer Game', 'multiplayer game'], ['King of the Hill', 'king of the hill']], {}, class: 'form-input form-element'  %>
+    <%= f.select :tournament_type, [['Round Robin','round robin'],['Single Elimination', 'single elimination'],
+                                    ['Multiplayer Game', 'multiplayer game'], ['King of the Hill', 'king of the hill']],
+                 {}, class: 'form-input form-element'  %>
 </div>
 <div class="form-group row left">
     <div class="col-xs-4">
@@ -28,36 +32,35 @@
     var playersPerGame = <%= @contest.referee.players_per_game; %>
     var maxTimePerMatch = <%= @contest.referee.time_per_game; %>
 </script>
-<div id = "multiplayerAssets">
-	<div class="form-group row left">
-	    <div class="col-xs-4">
-		<%= f.label :expected_disparity, 'Skill range between players:' %> 
-	    </div>
-	    <%= f.select :expected_disparity, [['Very small'],['Small'], ['Medium small'], ['Medium'], ['Medium large'], ['Large'],['Very large']], {}, class: 'form-input form-element' %>
-	</div>
-
-	<div class="form-group row left">
-	    <div class="col-xs-4">
-		<%= f.label :total_matches, 'Total Matches:' %>
-	    </div> 
-	    <%= f.text_field :total_matches, min: "1", max: "1000000", class: 'form-control form-element' %>
-	</div>
-	<div class="form-group row left">
-	    <div class="col-xs-4">
-		<%= f.label :total_time, 'Total Time (Hrs):' %>
-	    </div>
-	    <%= f.text_field :total_time, class: 'form-control form-element' %>
-	</div>
-	<div class="form-group row left">
-	    <div class="col-xs-4">
-		<%= f.label :RMSE, 'Uncertainty:' %>
-	    </div>
-	    <%= f.select :RMSE,[["Very sure"],["Pretty sure"],["Sure"],["Unsure"],["Pretty unsure"], ["Very unsure"]], {}, class: 'form-input form-element' %>
-	</div>
+<div id="multiplayerAssets">
+    <div class="form-group row left">
+        <div class="col-xs-4">
+            <%= f.label :expected_disparity, 'Skill range between players:' %>
+        </div>
+        <%= f.select :expected_disparity, [['Very small'],['Small'], ['Medium small'], ['Medium'], ['Medium large'],
+                                           ['Large'],['Very large']],
+                     {}, class: 'form-input form-element' %>
+    </div>
+    <div class="form-group row left">
+        <div class="col-xs-4">
+            <%= f.label :total_matches, 'Total Matches:' %>
+        </div>
+        <%= f.text_field :total_matches, min: '1', max: '1000000', class: 'form-control form-element' %>
+    </div>
+    <div class="form-group row left">
+        <div class="col-xs-4">
+            <%= f.label :total_time, 'Total Time (Hrs):' %>
+        </div>
+        <%= f.text_field :total_time, class: 'form-control form-element' %>
+    </div>
+    <div class="form-group row left">
+        <div class="col-xs-4">
+            <%= f.label :RMSE, 'Uncertainty:' %>
+        </div>
+        <%= f.select :RMSE,[["Very sure"],["Pretty sure"],["Sure"],["Unsure"],["Pretty unsure"], ["Very unsure"]],
+                     {}, class: 'form-input form-element' %>
+    </div>
 </div>
-
-
-
 <div class="row multiselector">
     <div>
         <p class="center"><%= f.label :leftValues, "Available Players:", class: "player-label" %></p>

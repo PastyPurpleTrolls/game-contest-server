@@ -29,15 +29,15 @@ class UsersController < ApplicationController
     @per_page = 10
     @user = User.friendly.find(params[:id])
     @players = @user.players
-                   .search(params[:player_search])
-                   .paginate(per_page: @per_page, page: params[:player_page])
+                 .search(params[:player_search])
+                 .paginate(per_page: @per_page, page: params[:player_page])
     if @user.contest_creator
       @referees = @user.referees
-                      .search(params[:referee_search])
-                      .paginate(per_page: @per_page, page: params[:referee_page])
+                    .search(params[:referee_search])
+                    .paginate(per_page: @per_page, page: params[:referee_page])
       @contests = @user.contests
-                      .search(params[:contest_search])
-                      .paginate(per_page: @per_page, page: params[:contest_page])
+                    .search(params[:contest_search])
+                    .paginate(per_page: @per_page, page: params[:contest_page])
     end
   end
 
@@ -45,7 +45,7 @@ class UsersController < ApplicationController
   end
 
   def update
-		if current_user.admin? && @user.update(admin_acceptable_params)
+    if current_user.admin? && @user.update(admin_acceptable_params)
       redirect_to @user
     elsif @user.update(acceptable_params)
       redirect_to @user

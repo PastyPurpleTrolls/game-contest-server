@@ -11,13 +11,16 @@
             <div class="col-xs-8 col-xs-offset-2">
                 <h1 class="headings left"><%= @contest.name %></h1>
             </div>
-            <% if current_user == @contest.user and current_user.contest_creator %>
+            <% if current_user&.can_edit_contest(@contest) %>
                 <div class="col-xs-2 right form-dropdown">
                     <div class="dropdown">
-                        <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">Options <span class="caret"/></a>
+                        <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">
+                            Options <span class="caret"></span>
+                        </a>
                         <ul class="dropdown-menu">
                             <%= active_link_to 'Edit', edit_contest_path(@contest), wrap_tag: :li %>
-                            <%= active_link_to 'Delete', contest_path(@contest), method: :delete, data: {confirm: 'Are you sure?'}, wrap_tag: :li %>
+                            <%= active_link_to 'Delete', contest_path(@contest), method: :delete,
+                                               data: {confirm: 'Are you sure?'}, wrap_tag: :li %>
                         </ul>
                     </div>
                 </div>
@@ -46,81 +49,10 @@
 </div>
 <div class="row">
     <div class="container outer-home-container col-md-5 col-md-offset-1">
-        <div class="row">
-            <div class="display-container no-margin-top center">
-                <div class="row">
-                    <h1 class="headings col-xs-10 col-xs-offset-1 left">Tournaments</h1>
-                    <% if current_user == @contest.user and current_user.contest_creator %>
-                        <div class="info-text col-xs-1 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Tournament to Contest">
-                            <%= link_to(new_contest_tournament_path(@contest), method: :get) do %>
-                                <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
-                            <% end %>
-                        </div>
-                    <% end %>
-                </div>
-                <div class="row">
-                    <%= form_tag contest_path(@contest), method: 'get', id: 'tournament_form', class: 'form-inline' do %>
-                        <%= text_field_tag :tournament_search, params[:tournament_search], class: 'form-control' %>
-                        <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
-                    <% end %>
-                </div>
-                <% if @tournaments.count > 0 %>
-                    <% if @tournaments.count > @per_page %>
-                        <p><%= "#{@tournaments.count} found (displaying #{getRangeFromPage(params[:tournament_page], @tournaments.length)})" %></p>
-                    <% else %>
-                        <p><%= "#{@tournaments.count} found" %></p>
-                    <% end %>
-                <% else %>
-                    <p>No tournaments found</p>
-                <% end %>
-                <div class="row">
-                    <%= render partial: 'contest_tournament', collection: @tournaments, as: :tournament %>
-                    <%= will_paginate @tournaments, param_name: 'tournament_page', id: 'tournament_pagination', inner_window: 2,
-                                      outer_window: 0, previous_label: '<', next_label: '>' %>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <%= link_to(new_contest_match_path(@contest), method: :get, class: 'navbar-brand navbar-default-link-color center contest-challenge') do %>
-                <div class="home-container">
-                    <p>Challenge Players</p>
-                    <%= content_tag('i', nil, class: 'glyphicon glyphicon-user home-gly') %> <%= content_tag('i', nil, class: 'glyphicon glyphicon-resize-horizontal') %> <%= content_tag('i', nil, class: 'glyphicon glyphicon-user home-gly') %>
-                </div>
-            <% end %>
-        </div>
+        <%= render partial: 'contest_tournaments' %>
+        <%= render partial: 'challenge_players' %>
     </div>
     <div class="container outer-home-container col-md-5">
-        <div class="display-container no-margin-top center">
-            <div class="row">
-                <h1 class="headings col-xs-10 col-xs-offset-1 left">Players</h1>
-                <% if current_user == @contest.user and current_user.contest_creator %>
-                    <div class="info-text col-xs-1 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Player to Contest">
-                        <%= link_to(new_contest_player_path(@contest), method: :get) do %>
-                            <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
-                        <% end %>
-                    </div>
-                <% end %>
-            </div>
-            <div class="row">
-                <%= form_tag contest_path(@contest), method: 'get', id: 'player_form', class: 'form-inline' do %>
-                    <%= text_field_tag :player_search, params[:player_search], class: 'form-control' %>
-                    <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
-                <% end %>
-            </div>
-            <% if @players.count > 0 %>
-                <% if @players.count > @per_page %>
-                    <p><%= "#{@players.count} found (displaying #{getRangeFromPage(params[:player_page], @players.length)})" %></p>
-                <% else %>
-                    <p><%= "#{@players.count} found" %></p>
-                <% end %>
-            <% else %>
-                <p>No players found</p>
-            <% end %>
-            <div class="row">
-                <%= render partial: 'contest_player', collection: @players, as: :player %>
-                <%= will_paginate @players, param_name: 'player_page', id: 'player_pagination', inner_window: 2,
-                                  outer_window: 0, previous_label: '<', next_label: '>' %>
-            </div>
-        </div>
+        <%= render partial: 'contest_players' %>
     </div>
 </div>

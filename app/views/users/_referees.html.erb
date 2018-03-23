@@ -1,0 +1,32 @@
+<div class="container outer-home-container col-md-offset-1 col-md-5">
+    <div class="display-container no-margin-top">
+        <div class="row">
+            <h1 class="headings info-text col-xs-10 col-xs-offset-1 left">My Referees</h1>
+            <div class="info-text col-xs-1 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Referee">
+                <%= link_to(new_referee_path, method: :get) do %>
+                    <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
+                <% end %>
+            </div>
+        </div>
+        <div class="row">
+            <%= form_tag user_path(@user), method: 'get', id: 'referee_form', class: 'form-inline' do %>
+                <%= text_field_tag :referee_search, params[:referee_search], class: 'form-control' %>
+                <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
+            <% end %>
+        </div>
+        <% if @referees.count > 0 %>
+            <% if @referees.count > @per_page %>
+                <p><%= "#{@referees.count} found (displaying #{getRangeFromPage(params[:referee_page], @referees.length)})" %></p>
+            <% else %>
+                <p><%= "#{@referees.count} found" %></p>
+            <% end %>
+        <% else %>
+            <p>No referees found</p>
+        <% end %>
+        <div class="row">
+            <%= render partial: 'referee', collection: @referees %>
+            <%= will_paginate @referees, param_name: 'referee_page', id: 'referee_pagination', inner_window: 2,
+                              outer_window: 0, previous_label: '<', next_label: '>' %>
+        </div>
+    </div>
+</div>

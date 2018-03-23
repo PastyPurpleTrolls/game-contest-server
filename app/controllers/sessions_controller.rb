@@ -6,8 +6,8 @@ class SessionsController < ApplicationController
   end
 
   def create
-    if session[:redirect_to] != nil then
-      redirect_back_to_previous user
+    if session[:redirect_to] != nil
+      redirect_back_to_previous
     end
 
     user = User.find_by(username: params[:username])

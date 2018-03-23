@@ -1,0 +1,32 @@
+<div class="container outer-home-container col-md-5">
+    <div class="display-container">
+        <div class="row">
+            <h1 class="headings info-text col-xs-10 col-xs-offset-1 left">My Players</h1>
+            <div class="info-text col-xs-1 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Player">
+                <%= link_to(new_contest_player_path('not-specified'), method: :get) do %>
+                    <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
+                <% end %>
+            </div>
+        </div>
+        <div class="row">
+            <%= form_tag user_path(@user), method: 'get', id: 'player_form', class: 'form-inline' do %>
+                <%= text_field_tag :player_search, params[:player_search], class: 'form-control' %>
+                <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
+            <% end %>
+        </div>
+        <% if @players.count > 0 %>
+            <% if @players.count > @per_page %>
+                <p><%= "#{@players.count} found (displaying #{getRangeFromPage(params[:player_page], @players.length)})" %></p>
+            <% else %>
+                <p><%= "#{@players.count} found" %></p>
+            <% end %>
+        <% else %>
+            <p>No players found</p>
+        <% end %>
+        <div class="row">
+            <%= render partial: 'player', collection: @players %>
+            <%= will_paginate @players, param_name: 'player_page', id: 'player_pagination', inner_window: 2,
+                              outer_window: 0, previous_label: '<', next_label: '>' %>
+        </div>
+    </div>
+</div>

@@ -1,8 +1,0 @@
-<% setTitle('Tournament') %>
-<% if @is_challenge_matches %>
-	<h1>Your challenge matches for <%= @manager.name %></h1>
-	<ol><%= render @matches %></ol>
-<% else %>
-	<h1>Matches for <%= @manager.name %></h1>
-	<ol><%= render @manager.matches %></ol>
-<% end %>

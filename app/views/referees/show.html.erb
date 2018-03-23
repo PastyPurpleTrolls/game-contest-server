@@ -11,19 +11,24 @@
             <div class="col-xs-8 col-xs-offset-2">
                 <h1 class="headings left">Referee Information</h1>
             </div>
-            <div class="col-xs-2 right form-dropdown">
-                <div class="dropdown">
-                    <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">Options <span class="caret"/></a>
-                    <ul class="dropdown-menu">
-                        <% if current_user == @referee.user and current_user.contest_creator %>
-                            <%= active_link_to 'Edit', edit_referee_path(@referee), wrap_tag: :li %>
-                        <% end %>
-                        <% if @referee.deletable?(current_user) %>
-                            <%= active_link_to 'Delete', referee_path(@referee), method: :delete, data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
-                        <% end %>
-                    </ul>
+            <% if current_user&.can_edit_referee(@referee) %>
+                <div class="col-xs-2 right form-dropdown">
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">
+                            Options <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <% if current_user == @referee.user and current_user.contest_creator %>
+                                <%= active_link_to 'Edit', edit_referee_path(@referee), wrap_tag: :li %>
+                            <% end %>
+                            <% if @referee.deletable?(current_user) %>
+                                <%= active_link_to 'Delete', referee_path(@referee), method: :delete,
+                                                   data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
+                            <% end %>
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            <% end %>
         </div>
         <div class="row">
             <div class="col-md-6">
