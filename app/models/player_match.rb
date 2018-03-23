@@ -5,23 +5,12 @@ class PlayerMatch < ActiveRecord::Base
 
   validates :player,    presence: true
   validates :match,     presence: true
-
   validates :result,  	inclusion: [nil,'Pending', 'Error', 'Win', 'Loss', 'Tie', 'Unknown Result']
-
-#	validate :check_ids
 
   default_scope -> { order("player_matches.result DESC") }
   scope :wins, -> { where(result: 'Win') }
   scope :losses, -> { where(result: 'Loss') }
   scope :ties, -> { where(result: 'Tie') }
- 	
-  def check_ids
-    pm_count =  PlayerMatch.where(match_id: self.match_id, player_id: self.player_id).where.not(id: self.id).count
-#   puts pr_count
-    if pm_count > 0
-      errors.add(:match_id, "you cannot have more than one player match with the same player and match id")
-    end
-  end
 
   def self.search(player, search)
     if search.blank?

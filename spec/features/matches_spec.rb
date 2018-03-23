@@ -329,56 +329,6 @@ describe "MatchesPages" do
       should have_content(match.manager.referee.players_per_game)
     end
   end
-
-  describe "show all tournament matches" do
-    let (:tournament) {FactoryBot.create(:tournament)}
-    let! (:t2) {FactoryBot.create(:tournament)}
-
-    before do
-      FactoryBot.create_list(:tournament_match, 5, manager: tournament)
-      FactoryBot.create_list(:tournament_match, 5, manager: t2)
-
-      visit tournament_matches_path(tournament)
-    end
-
-    it "lists all the tournament matches for a single tournament in the system" do
-      Match.where(manager: tournament).each do |m|
-        should have_selector('li', text: m.id)
-        should have_link(m.id, href: match_path(m))
-      end
-    end
-
-    it "should not list matches of other tournaments" do
-      Match.where(manager: t2).each do |m|
-        should_not have_selector('li', text: m.id)
-        should_not have_link(m.id, href: match_path(m))
-      end
-    end
-  end
-
-  describe "show all contest matches" do
-    let! (:challenge_matches_player1_is_in) {FactoryBot.create_list(:challenge_match, 5, manager: contest, player: player1)}
-    let! (:challenge_matches_player1_is_not_in) {FactoryBot.create_list(:challenge_match, 5, manager: contest, player: player2)}
-
-    before do
-      login creator
-      visit contest_matches_path(contest)
-    end
-
-    it "should list all the challenge matches for a contest in which the user has a player participating" do
-      challenge_matches_player1_is_in.each do |m|
-        should have_selector('li', text: m.id)
-        should have_link(m.id, href: match_path(m))
-      end
-    end
-
-    it "should not list challenge matches (within the same contest) in which the user doesn\'t have a player participating" do
-      challenge_matches_player1_is_not_in.each do |m|
-        should_not have_selector('li', text: m.id)
-        should_not have_link(m.id, href: match_path(m))
-      end
-    end
-  end
 end
 
 
