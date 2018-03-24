@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
     sigaction( SIGPIPE, &sa, NULL);
 
     net::socketstream manager(argv[1]);
-    net::server referee("/tmp/battleships-referee");
+    net::server referee(argv[1]);
 
     memset( &sa, 0, sizeof(sa) );
     sa.sa_handler = timeout;
