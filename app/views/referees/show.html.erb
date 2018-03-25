@@ -11,7 +11,7 @@
             <div class="col-xs-8 col-xs-offset-2">
                 <h1 class="headings left">Referee Information</h1>
             </div>
-            <% if current_user&.can_edit_referee(@referee) %>
+            <% if current_user&.can_edit_referee?(@referee) %>
                 <div class="col-xs-2 right form-dropdown">
                     <div class="dropdown">
                         <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">
@@ -77,15 +77,9 @@
                 </p>
             <% end %>
         </div>
-        <% if @contests.count > 0 %>
-            <% if @contests.count > @per_page %>
-                <p><%= "#{@contests.count} found (displaying #{getRangeFromPage(params[:page], @contests.length)})" %></p>
-            <% else %>
-                <p><%= "#{@contests.count} found" %></p>
-            <% end %>
-        <% else %>
-            <p>No contests found</p>
-        <% end %>
+
+        <p><%= display_results_found(@contests, 'contests', params[:page], @per_page) %></p>
+        
         <div class="row">
             <%= render partial: 'referees/referee_contest', collection: @contests, as: :contest %>
             <%= will_paginate @contests, id: 'referee_pagination', inner_window: 2, outer_window: 0 %>

@@ -63,12 +63,4 @@
     <%= render partial: 'progress' %>
 <% end %>
 
-<% if @tournament.round_robin? %>
-    <%= render "round_robin_tournament" %>
-<% elsif @tournament.single_elimination? %>
-    <%= render "single_elimination_tournament" %>
-<% elsif @tournament.multiplayer_game? %>
-    <%= render "multiplayer_game_tournament" %>
-<% else %>
-    <%= render "king_of_the_hill_tournament" %>
-<% end %>
+<%= render "#{@tournament.tournament_type.sub(' ', '_')}_tournament" %>

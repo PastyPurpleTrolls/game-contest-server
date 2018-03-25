@@ -25,15 +25,7 @@
             </p>
         <% end %>
         <div class="col-xs-12">
-            <% if @contests.count > 0 %>
-                <% if @contests.count > @per_page %>
-                    <p><%= "#{@contests.count} found (displaying #{getRangeFromPage(params[:page], @contests.length)})" %></p>
-                <% else %>
-                    <p><%= "#{@contests.count} found" %></p>
-                <% end %>
-            <% else %>
-                <p>No contests found</p>
-            <% end %>
+            <p><%= display_results_found(@contests, 'contests', params[:page], @per_page) %></p>
         </div>
         <div id= "pagination">
             <%= render @contests %>
