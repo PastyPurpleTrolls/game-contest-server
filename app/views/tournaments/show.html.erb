@@ -58,24 +58,9 @@
 </div>
 
 <% if @tournament.completed? %>
-    <div class="row">
-        <div class="container center display-container col-md-offset-1 col-md-10">
-            <div class="row">
-                <div class="col-md-4 center">
-                    <%= image_tag 'silver_medal.png', class: 'col-md-offset-2 col-md-8' %>
-                    <%= render partial: 'winner', collection: @second_place, as: :winner %>
-                </div>
-                <div class="col-md-4 center">
-                    <%= image_tag 'gold_medal.png', class: 'col-md-12' %>
-                    <%= render partial: 'winner', collection: @first_place, as: :winner %>
-                </div>
-                <div class="col-md-4 center">
-                    <%= image_tag 'bronze_medal.png', class: 'col-md-offset-2 col-md-8' %>
-                    <%= render partial: 'winner', collection: @third_place, as: :winner %>
-                </div>
-            </div>
-        </div>
-    </div>
+    <%= render partial: 'medals' %>
+<% else %>
+    <%= render partial: 'progress' %>
 <% end %>
 
 <% if @tournament.round_robin? %>
