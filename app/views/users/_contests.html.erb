@@ -14,15 +14,9 @@
                 <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
             <% end %>
         </div>
-        <% if @contests.count > 0 %>
-            <% if @contests.count > @per_page %>
-                <p><%= "#{@contests.count} found (displaying #{getRangeFromPage(params[:contest_page], @contests.length)})" %></p>
-            <% else %>
-                <p><%= "#{@contests.count} found" %></p>
-            <% end %>
-        <% else %>
-            <p>No contests found</p>
-        <% end %>
+
+        <p><%= display_results_found(@contests, 'contests', params[:contest_page], @per_page) %></p>
+
         <div class="row">
             <%= render partial: 'contest', collection: @contests %>
             <%= will_paginate @contests, param_name: 'contest_page', id: 'contest_pagination', inner_window: 2,

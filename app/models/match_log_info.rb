@@ -29,16 +29,11 @@ class MatchLogInfo < ActiveRecord::Base
     self.match_source.match_log_info == self
   end
 
+  def valid_log?(log)
+    !log.nil? && log.length > 0
+  end
+
   def has_logs?
-    if self.log_stdout == nil
-      return false
-    elsif self.log_stderr == nil
-      return false
-    elsif self.log_stdout.length == 0
-      return false
-    elsif self.log_stderr.length == 0
-      return false
-    end
-    true
+    valid_log?(self.log_stdout) && valid_log?(self.log_stderr)
   end
 end

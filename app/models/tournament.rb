@@ -54,22 +54,6 @@ class Tournament < ActiveRecord::Base
     self.status == 'completed'
   end
 
-  def round_robin?
-    self.tournament_type == 'round robin'
-  end
-
-  def single_elimination?
-    self.tournament_type == 'single elimination'
-  end
-
-  def multiplayer_game?
-    self.tournament_type == 'multiplayer game'
-  end
-
-  def king_of_the_hill?
-    self.tournament_type == 'king of the hill'
-  end
-
   def percent_complete
     if self.matches.count == 0
       return 0

@@ -31,4 +31,16 @@ module ApplicationHelper
   def yesno(bool)
     bool ? 'Yes' : 'No'
   end
+
+  def display_results_found(collection, collection_name, current_page, results_per_page)
+    if collection.count > 0
+      text = "#{collection.count} found"
+      if collection.count > results_per_page
+        text += " (displaying #{getRangeFromPage(current_page, collection.length)})"
+      end
+      text
+    else
+      "No #{collection_name} found"
+    end
+  end
 end

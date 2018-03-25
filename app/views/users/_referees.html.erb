@@ -14,15 +14,9 @@
                 <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
             <% end %>
         </div>
-        <% if @referees.count > 0 %>
-            <% if @referees.count > @per_page %>
-                <p><%= "#{@referees.count} found (displaying #{getRangeFromPage(params[:referee_page], @referees.length)})" %></p>
-            <% else %>
-                <p><%= "#{@referees.count} found" %></p>
-            <% end %>
-        <% else %>
-            <p>No referees found</p>
-        <% end %>
+
+        <p><%= display_results_found(@referees, 'referees', params[:referee_page], @per_page) %></p>
+
         <div class="row">
             <%= render partial: 'referee', collection: @referees %>
             <%= will_paginate @referees, param_name: 'referee_page', id: 'referee_pagination', inner_window: 2,

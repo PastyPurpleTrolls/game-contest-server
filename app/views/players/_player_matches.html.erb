@@ -8,17 +8,9 @@
                 <%= text_field_tag :search, params[:search], class: 'form-control' %>
                 <%= submit_tag "Search", class: 'btn btn-danger' %>
             </p>
-        <%end%>
-
-        <% if @playermatch.count > 0 %>
-            <% if @playermatch.count > @per_page %>
-                <p><%= "#{@playermatch.count} found (displaying #{getRangeFromPage(params[:tournament_page], @playermatch.length)})" %></p>
-            <% else %>
-                <p><%= "#{@playermatch.count} found" %></p>
-            <% end %>
-        <% else %>
-            <p>No matches found</p>
         <% end %>
+
+        <p><%= display_results_found(@playermatch, 'matches', params[:tournament_page], @per_page) %></p>
 
         <div id="pagination">
             <%= render partial: 'player_matches/match_links',
