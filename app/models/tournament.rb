@@ -103,9 +103,6 @@ class Tournament < ActiveRecord::Base
       times_between_completion << completion_times[i] - completion_times[i-1]
     end
 
-    puts "Times Between Completion"
-    puts times_between_completion.class
-
     average_times = times_between_completion.sum / num_completed_matches
     time_remaining = average_times * self.matches.uncompleted_matches.count
     human_readable_time(time_remaining)
