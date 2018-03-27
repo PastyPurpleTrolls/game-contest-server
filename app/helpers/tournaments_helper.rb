@@ -24,7 +24,8 @@ module TournamentsHelper
   end
 
   def populate_results(tournament)
-    tournament.matches.each do |match|
+    matches = tournament.matches.includes(rounds: [:player_rounds, :players])
+    matches.each do |match|
       match.rounds.each do |round|
         round.player_rounds.each do |player_round|
           player_id = player_round.player_id

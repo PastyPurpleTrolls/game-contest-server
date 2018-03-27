@@ -54,20 +54,58 @@ class Tournament < ActiveRecord::Base
     self.status == 'completed'
   end
 
-  def round_robin?
-    self.tournament_type == 'round robin'
+  def percent_complete
+    if self.matches.count == 0
+      return 0
+    end
+    (self.matches.completed_matches.count.to_f / self.matches.count * 100).to_i
   end
 
-  def single_elimination?
-    self.tournament_type == 'single elimination'
+  def human_readable_time(time)
+    time = time.to_i
+    seconds_in_year = 31536000
+    seconds_in_week = 604800
+    seconds_in_day = 86400
+    seconds_in_hour = 3600
+    seconds_in_minute = 60
+    years = time / seconds_in_year
+    weeks = time / seconds_in_week
+    days = time / seconds_in_day
+    hours = time / seconds_in_hour
+    minutes = time / seconds_in_minute
+    if time > seconds_in_year
+      format("%s %s", years, 'year'.pluralize(years))
+    elsif time > seconds_in_week
+      format("%s %s", weeks, 'week'.pluralize(weeks))
+    elsif time > seconds_in_day
+      format("%s %s", days, 'day'.pluralize(days))
+    elsif time > seconds_in_hour
+      format("%s %s", hours, 'hour'.pluralize(hours))
+    elsif time > seconds_in_minute
+      format("%s %s", minutes, 'minute'.pluralize(minutes))
+    else
+      format("%s %s", time, 'second'.pluralize(time))
+    end
   end
 
-  def multiplayer_game?
-    self.tournament_type == 'multiplayer game'
-  end
+  def time_remaining
+    completed_matches = self.matches.completed_matches
+    num_completed_matches = completed_matches.count
 
-  def king_of_the_hill?
-    self.tournament_type == 'king of the hill'
+    if num_completed_matches < 2
+      return nil
+    end
+
+    completion_times = completed_matches.pluck(:completion).sort
+    times_between_completion = []
+
+    (1...num_completed_matches).each do |i|
+      times_between_completion << completion_times[i] - completion_times[i-1]
+    end
+
+    average_times = times_between_completion.sum / num_completed_matches
+    time_remaining = average_times * self.matches.uncompleted_matches.count
+    human_readable_time(time_remaining)
   end
 
 end

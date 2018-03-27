@@ -14,15 +14,9 @@
                 <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
             <% end %>
         </div>
-        <% if @players.count > 0 %>
-            <% if @players.count > @per_page %>
-                <p><%= "#{@players.count} found (displaying #{getRangeFromPage(params[:player_page], @players.length)})" %></p>
-            <% else %>
-                <p><%= "#{@players.count} found" %></p>
-            <% end %>
-        <% else %>
-            <p>No players found</p>
-        <% end %>
+
+        <p><%= display_results_found(@players, 'players', params[:player_page], @per_page) %></p>
+
         <div class="row">
             <%= render partial: 'player', collection: @players %>
             <%= will_paginate @players, param_name: 'player_page', id: 'player_pagination', inner_window: 2,

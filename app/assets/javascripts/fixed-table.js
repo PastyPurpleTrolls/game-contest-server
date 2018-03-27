@@ -143,7 +143,7 @@ $(function() {
 
 });
 
-$( document ).ready(function() {
+$(document).on('turbolinks:load', function() {
     var fixedTable = $('#fixed-table-container-1');
     if (fixedTable.length > 0) {
         fixTable(fixedTable[0]);
