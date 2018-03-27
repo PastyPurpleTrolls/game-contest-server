@@ -1,0 +1,10 @@
+<br>
+<ol class="breadcrumb">
+    <li><%= link_to 'Home', root_path %></li>
+    <li><%= link_to 'Help', help_path %></li>
+    <li class="active"><%= @category.capitalize %></li>
+</ol>
+<div class="display-container">
+    <%= render file: @filename %>
+</div>
+<br>
