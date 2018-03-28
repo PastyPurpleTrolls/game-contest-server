@@ -1,0 +1,16 @@
+<br>
+<ol class="breadcrumb">
+    <li><%= link_to 'Home', root_path %></li>
+    <li><%= link_to 'Help', help_path %></li>
+    <li class="active">Entity Relationship Diagram (ERD)</li>
+</ol>
+
+<div class="row">
+    <div class="display-container">
+        <h1>Entity Relationship Diagram (ERD)</h1>
+        <div class="center">
+            <%= image_tag 'aires_erd.png', alt: 'erd', class: 'erd' %>
+            <p class="erd-caption"><i>Many to many relationships are represented with a colored connection. This represents an additional associative entity (such as player_rounds) that connects the two entities.</i></p>
+        </div>
+    </div>
+</div>

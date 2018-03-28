@@ -1,20 +1,29 @@
 class HelpController < ApplicationController
+  include ApplicationHelper
+
   before_action :ensure_user_logged_in
 
   def index
   end
 
-  # Show documentation markdown files in documentation/(category)/(filename)
-  def show
-    @category = params[:category]
 
-    # Make sure the user is accessing a "page" and remove all non alphanumeric characters
-    # If the user does not provide a page, look for a file with the same name as the category
-    page = (params[:page] || @category).downcase.gsub(/[^a-z0-9]/, '')
-    @filename = File.join(Rails.root, 'documentation', @category, page + '.md')
+  # General
 
-    unless File.exist?(@filename)
-      raise ActionController::RoutingError.new('Not Found')
+  def terminology
+  end
+
+
+  # Administrator Role
+
+  def erd
+  end
+
+  private
+
+  def ensure_admin
+    unless current_user.admin
+      flash[:danger] = 'Not an administrator.'
+      redirect_to root_path
     end
   end
 end

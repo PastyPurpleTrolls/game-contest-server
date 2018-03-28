@@ -464,3 +464,18 @@ blockquote {
 .breadcrumb > .active {
   color: darken(#b9b59f, 20%);
 }
+
+.definition {
+  padding-left: 25px;
+}
+
+.erd {
+  background-color: white;
+  padding: 15px;
+}
+
+.erd-caption {
+  display: inline-block;
+  margin-top: 25px;
+  width: 543px;
+}

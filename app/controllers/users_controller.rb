@@ -77,7 +77,7 @@ class UsersController < ApplicationController
       request_okay = false
     end
 
-    unless current_user.admin?
+    unless current_user.admin
       flash[:danger] = 'Only administrators can delete users.'
       request_okay = false
     end
