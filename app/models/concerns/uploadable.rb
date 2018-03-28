@@ -9,6 +9,8 @@ module Uploadable
     validate :file_location_exists
   end
 
+  # For referees - referee file
+  # For players - player file
   def upload=(uploaded_io)
     unless self.name.blank?
       self.file_location = '' if self.file_location.nil?
@@ -28,6 +30,7 @@ module Uploadable
     end
   end
 
+  # For referees - player-includes file
   def upload2=(uploaded_io)
     unless self.name.blank?
       self.compressed_file_location = '' if self.compressed_file_location.nil?
@@ -36,6 +39,7 @@ module Uploadable
     end
   end
 
+  # For referees - replay plugin file
   def upload3=(uploaded_io)
     unless self.name.blank?
       self.replay_assets_location = '' if self.replay_assets_location.nil?
@@ -44,12 +48,6 @@ module Uploadable
     end
   end
 
-
-  #def compressed_file_location_exists
-  #   if self.compressed_file_location.nil? || !File.exists?(self.compressed_file_location)
-  #	errors.add(:compressed_file_location, "doesn't exist on the server")
-  #   end
-  #end
   def file_location_exists
     if self.file_location.nil? || !File.exists?(self.file_location)
       errors.add(:file_location, "doesn't exist on the server")
@@ -64,7 +62,7 @@ module Uploadable
     delete_code(self.replay_assets_location) if (self.has_attribute?(:replay_assets_location) && !self.replay_assets_location.nil?)
   end
 
-  #Delete directory where file is located
+  # Delete directory where file is located
   def delete_code(location)
     pathname = Pathname.new(location)
     if not pathname.directory?
