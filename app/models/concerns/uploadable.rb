@@ -19,20 +19,11 @@ module Uploadable
       self.file_location = location_data[:file]
       dir = location_data[:directory]
       FileUtils.mkdir_p "#{dir}/logs"
-
-      if self.class == Player
-        if %w(.tar .zip).include? File.extname(self.contest.referee.compressed_file_location)
-          uncompress(self.contest.referee.compressed_file_location, File.dirname(self.file_location))
-        else
-          cp_call = Process.spawn("cp '#{self.contest.referee.compressed_file_location}' '#{File.dirname(self.file_location)}'")
-          Process.wait cp_call
-        end
-      end
-
+      uncompress(self.contest.referee.compressed_file_location, File.dirname(self.file_location))
+      FileUtils.cp(self.contest.referee.compressed_file_location, File.dirname(self.file_location))
       old_dir = File.dirname(old_location)
       if File.exist?(old_dir + "/logs/")
-        cp_call = Process.spawn("cp #{old_dir}/logs/* #{dir}/logs/", :out => "/dev/null", :err => "/dev/null")
-        Process.wait cp_call
+        FileUtils.cp("#{old_dir}/logs/*", "#{dir}/logs/")
         self.update_log_locations self.file_location
       end
       delete_code(old_location)
@@ -98,10 +89,16 @@ module Uploadable
   end
 
   def uncompress(src, dest)
-    system("tar -xvf #{Shellwords.escape src} -C #{Shellwords.escape dest} > /dev/null 2>&1")
-    system("unzip -o #{Shellwords.escape src} -d #{Shellwords.escape dest} > /dev/null 2>&1")
-    system("chmod +x #{Shellwords.escape dest}/*")
-    system("dos2unix -q #{Shellwords.escape dest}/*")
+    safe_src = Shellwords.escape src
+    safe_dest = Shellwords.escape dest
+    system("tar -xvf #{safe_src} -C #{safe_dest} > /dev/null 2>&1")
+    system("unzip -o #{safe_src} -d #{safe_dest} > /dev/null 2>&1")
+    mark_as_executable("#{safe_dest}/*")
+    system("dos2unix -q #{safe_dest}/*")
+  end
+
+  def mark_as_executable(file)
+    FileUtils.chmod('+x', file)
   end
 
   def random_hex
