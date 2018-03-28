@@ -43,9 +43,9 @@ describe "RefereePages" do
         before do
           fill_in 'Name', with: name
           fill_in 'Rules', with: rules
-          fill_in 'Round Limit (Inclusive)', with: round_limit_word
+          fill_in 'Round Limit', with: round_limit_word
           select num_players, from: 'Players'
-          fill_in 'Time per Game', with: time_per_game
+          fill_in 'Time Per Match', with: time_per_game
           attach_file('Referee File', file_location)
           attach_file('Player-Include Files', file_location)
           attach_file('Replay Plugin', file_location)
@@ -59,9 +59,9 @@ describe "RefereePages" do
         before do
           fill_in 'Name', with: name
           fill_in 'Rules', with: rules
-          fill_in 'Round Limit (Inclusive)', with: round_limit_negative
+          fill_in 'Round Limit', with: round_limit_negative
           select num_players, from: 'Players'
-          fill_in 'Time per Game', with: time_per_game
+          fill_in 'Time Per Match', with: time_per_game
           attach_file('Referee File', file_location)
           attach_file('Player-Include Files', file_location)
           attach_file('Replay Plugin', file_location)
@@ -75,9 +75,9 @@ describe "RefereePages" do
         before do
           fill_in 'Name', with: name
           fill_in 'Rules', with: rules
-          fill_in 'Round Limit (Inclusive)', with: round_limit_zero
+          fill_in 'Round Limit', with: round_limit_zero
           select num_players, from: 'Players'
-          fill_in 'Time per Game', with: time_per_game
+          fill_in 'Time Per Match', with: time_per_game
           attach_file('Referee File', file_location)
           attach_file('Player-Include Files', file_location)
           attach_file('Replay Plugin', file_location)
@@ -98,9 +98,9 @@ describe "RefereePages" do
       before do
         fill_in 'Name', with: name
         fill_in 'Rules', with: rules
-        fill_in 'Round Limit (Inclusive)', with: round_limit
+        fill_in 'Round Limit', with: round_limit
         select num_players, from: 'Players'
-        fill_in 'Time per Game', with: time_per_game
+        fill_in 'Time Per Match', with: time_per_game
         check 'referee_rounds_capable'
         attach_file('Referee File', file_location)
         attach_file('Player-Include Files', file_location)
@@ -180,9 +180,9 @@ describe "RefereePages" do
       before do
         fill_in 'Name', with: ''
         fill_in 'Rules', with: "#{rules}/updated"
-        fill_in 'Round Limit (Inclusive)', with: round_limit
+        fill_in 'Round Limit', with: round_limit
         select num_players, from: 'Players'
-        fill_in 'Time per Game', with: time_per_game
+        fill_in 'Time Per Match', with: time_per_game
         attach_file('Referee File', file_location)
         attach_file('Player-Include Files', file_location)
         attach_file('Replay Plugin', file_location)
@@ -220,9 +220,9 @@ describe "RefereePages" do
       before do
         fill_in 'Name', with: name
         fill_in 'Rules', with: "#{rules}/updated"
-        fill_in 'Round Limit (Inclusive)', with: round_limit
+        fill_in 'Round Limit', with: round_limit
         select num_players, from: 'Players'
-        fill_in 'Time per Game', with: time_per_game
+        fill_in 'Time Per Match', with: time_per_game
         check 'referee_rounds_capable'
         attach_file('Referee File', file_location)
         attach_file('Player-Include Files', file_location)

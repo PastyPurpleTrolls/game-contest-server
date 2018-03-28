@@ -228,8 +228,20 @@ label {
   font-weight: normal;
 }
 
+.no-wrap {
+  white-space: nowrap;
+}
+
 .outer-home-container {
   padding: 10px;
+}
+
+.padding-right-5 {
+  padding-right: 5px;
+}
+
+.padding-right-25 {
+  padding-right: 25px;
 }
 
 .player-results-container {
