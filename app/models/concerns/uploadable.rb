@@ -15,10 +15,12 @@ module Uploadable
 	    old_location = self.file_location
             location_data = store_file(uploaded_io, self.class.to_s.downcase.pluralize)
 	    self.file_location = location_data[:file]
-	    FileUtils.mkdir_p "#{File.dirname(self.file_location)}/logs"
-            uncompress(self.contest.referee.compressed_file_location, File.dirname(self.file_location)) if self.class == Player
-	    if File.exist?(File.dirname(old_location)+"/logs/") then
-              cp_call = Process.spawn("cp #{File.dirname(old_location)}/logs/* #{File.dirname(self.file_location)}/logs/", :out=>"/dev/null", :err=>"/dev/null")
+	    dir = location_data[:directory]
+	    FileUtils.mkdir_p "#{dir}/logs"
+            uncompress(self.contest.referee.compressed_file_location, dir) if self.class == Player
+	    old_dir = File.dirname(old_location)
+	    if File.exist?(old_dir+"/logs/") then
+              cp_call = Process.spawn("cp #{old_dir}/logs/* #{dir}/logs/", :out=>"/dev/null", :err=>"/dev/null")
 	      Process.wait cp_call
 	      self.update_log_locations self.file_location
 	    end
