@@ -19,7 +19,16 @@ module Uploadable
       self.file_location = location_data[:file]
       dir = location_data[:directory]
       FileUtils.mkdir_p "#{dir}/logs"
-      uncompress(self.contest.referee.compressed_file_location, dir) if self.class == Player
+
+      if self.class == Player
+        if %w(.tar .zip).include? File.extname(self.contest.referee.compressed_file_location)
+          uncompress(self.contest.referee.compressed_file_location, File.dirname(self.file_location))
+        else
+          cp_call = Process.spawn("cp '#{self.contest.referee.compressed_file_location}' '#{File.dirname(self.file_location)}'")
+          Process.wait cp_call
+        end
+      end
+
       old_dir = File.dirname(old_location)
       if File.exist?(old_dir + "/logs/")
         cp_call = Process.spawn("cp #{old_dir}/logs/* #{dir}/logs/", :out => "/dev/null", :err => "/dev/null")
