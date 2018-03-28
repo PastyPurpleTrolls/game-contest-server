@@ -13,31 +13,30 @@ module Uploadable
   # For players - player file
   def upload=(uploaded_io)
     unless self.name.blank?
-      old_directory = get_dirname(self.file_location)
       location_data = store_file(uploaded_io, self.class.to_s.downcase.pluralize)
+      copy_player_includes_to_player(location_data[:file]) if self.class == Player
+      copy_logs(self.file_location, location_data[:directory])
+      delete_code(self.file_location)
       self.file_location = location_data[:file]
-      new_directory = location_data[:directory]
-      copy_player_includes_to_player if self.class == Player
-      move_logs(old_directory, new_directory)
     end
   end
 
   # For referees - player-includes file
   def upload2=(uploaded_io)
     unless self.name.blank?
-      old_player_includes_directory = get_dirname(self.compressed_file_location)
-      delete_code(old_player_includes_directory)
-      new_player_includes_location = store_file(uploaded_io, 'environments')[:file]
-      self.compressed_file_location = new_player_includes_location
+      delete_code(self.compressed_file_location)
+      location_data = store_file(uploaded_io, 'environments')
+      self.compressed_file_location = location_data[:file]
     end
   end
 
   # For referees - replay plugin file
   def upload3=(uploaded_io)
     unless self.name.blank?
-      self.replay_assets_location = '' if self.replay_assets_location.nil?
       delete_code(self.replay_assets_location)
-      self.replay_assets_location = store_file(uploaded_io, File.join("static", self.class.to_s.downcase.pluralize))[:directory]
+      new_directory = File.join("static", self.class.to_s.downcase.pluralize)
+      location_data = store_file(uploaded_io, new_directory)
+      self.replay_assets_location = location_data[:directory]
     end
   end
 
@@ -49,19 +48,14 @@ module Uploadable
 
   private
 
-  def get_dirname(path)
-    path = '' if path.nil?
-    File.dirname(path)
-  end
-
-  def copy_player_includes_to_player
+  def copy_player_includes_to_player(player_location)
     player_includes_location = self.contest.referee.compressed_file_location
-    player_directory = File.dirname(self.file_location)
+    player_directory = File.dirname(player_location)
     uncompress(player_includes_location, player_directory)
     FileUtils.cp(player_includes_location, player_directory)
   end
 
-  def move_logs(old_directory, new_directory)
+  def copy_logs(old_directory, new_directory)
     old_log_directory = "#{old_directory}/logs"
     new_log_directory = "#{new_directory}/logs"
     FileUtils.mkdir_p new_log_directory
@@ -69,24 +63,25 @@ module Uploadable
       FileUtils.cp("#{old_log_directory}/*", new_log_directory)
       self.update_log_locations new_directory
     end
-    delete_code(old_directory)
   end
 
   def delete_code_locations
     delete_code(self.file_location)
-    delete_code(self.compressed_file_location) if (self.has_attribute?(:compressed_file_location) && !self.compressed_file_location.nil?)
-    delete_code(self.replay_assets_location) if (self.has_attribute?(:replay_assets_location) && !self.replay_assets_location.nil?)
+    delete_code(self.compressed_file_location) if self.has_attribute?(:compressed_file_location)
+    delete_code(self.replay_assets_location) if self.has_attribute?(:replay_assets_location)
   end
 
   # Delete directory where file is located
   def delete_code(location)
-    pathname = Pathname.new(location)
-    if not pathname.directory?
-      location = pathname.dirname
-    end
-    FileUtils.rm_rf(location) if pathname.exist?
-    if pathname.exist?
-      raise "Deleting stuff it shouldnt"
+    unless location.nil?
+      pathname = Pathname.new(location)
+      unless pathname.directory?
+        location = pathname.dirname
+      end
+      FileUtils.rm_rf(location) if pathname.exist?
+      if pathname.exist?
+        raise "Deleting stuff it shouldnt"
+      end
     end
   end
 
