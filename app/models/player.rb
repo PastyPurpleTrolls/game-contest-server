@@ -36,12 +36,12 @@ class Player < ActiveRecord::Base
   end
   after_validation :move_friendly_id_error_to_name
 
-  def update_log_locations(new_location)
+  def update_log_locations(new_directory)
     self.player_matches.each do |playermatch|
       log_info = playermatch.match_log_info
       unless log_info.nil?
-        log_info.log_stdout = File.dirname(new_location)+"/logs/"+File.basename(log_info.log_stdout)
-        log_info.log_stderr = File.dirname(new_location)+"/logs/"+File.basename(log_info.log_stderr)
+        log_info.log_stdout = new_directory+"/logs/"+File.basename(log_info.log_stdout)
+        log_info.log_stderr = new_directory+"/logs/"+File.basename(log_info.log_stderr)
         log_info.save!
       end
     end

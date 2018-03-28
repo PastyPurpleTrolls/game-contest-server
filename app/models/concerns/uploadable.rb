@@ -13,33 +13,22 @@ module Uploadable
   # For players - player file
   def upload=(uploaded_io)
     unless self.name.blank?
-      self.file_location = '' if self.file_location.nil?
-      old_location = self.file_location
+      old_directory = get_dirname(self.file_location)
       location_data = store_file(uploaded_io, self.class.to_s.downcase.pluralize)
       self.file_location = location_data[:file]
-      dir = location_data[:directory]
-      FileUtils.mkdir_p "#{dir}/logs"
-
-      if self.class == Player
-        uncompress(self.contest.referee.compressed_file_location, File.dirname(self.file_location))
-        FileUtils.cp(self.contest.referee.compressed_file_location, File.dirname(self.file_location))
-      end
-
-      old_dir = File.dirname(old_location)
-      if File.exist?(old_dir + "/logs/")
-        FileUtils.cp("#{old_dir}/logs/*", "#{dir}/logs/")
-        self.update_log_locations self.file_location
-      end
-      delete_code(old_location)
+      new_directory = location_data[:directory]
+      copy_player_includes_to_player if self.class == Player
+      move_logs(old_directory, new_directory)
     end
   end
 
   # For referees - player-includes file
   def upload2=(uploaded_io)
     unless self.name.blank?
-      self.compressed_file_location = '' if self.compressed_file_location.nil?
-      delete_code(self.compressed_file_location)
-      self.compressed_file_location = store_file(uploaded_io, 'environments')[:file]
+      old_player_includes_directory = get_dirname(self.compressed_file_location)
+      delete_code(old_player_includes_directory)
+      new_player_includes_location = store_file(uploaded_io, 'environments')[:file]
+      self.compressed_file_location = new_player_includes_location
     end
   end
 
@@ -59,6 +48,29 @@ module Uploadable
   end
 
   private
+
+  def get_dirname(path)
+    path = '' if path.nil?
+    File.dirname(path)
+  end
+
+  def copy_player_includes_to_player
+    player_includes_location = self.contest.referee.compressed_file_location
+    player_directory = File.dirname(self.file_location)
+    uncompress(player_includes_location, player_directory)
+    FileUtils.cp(player_includes_location, player_directory)
+  end
+
+  def move_logs(old_directory, new_directory)
+    old_log_directory = "#{old_directory}/logs"
+    new_log_directory = "#{new_directory}/logs"
+    FileUtils.mkdir_p new_log_directory
+    if File.exist?(old_log_directory)
+      FileUtils.cp("#{old_log_directory}/*", new_log_directory)
+      self.update_log_locations new_directory
+    end
+    delete_code(old_directory)
+  end
 
   def delete_code_locations
     delete_code(self.file_location)
