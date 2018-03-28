@@ -16,7 +16,7 @@ module Uploadable
             location_data = store_file(uploaded_io, self.class.to_s.downcase.pluralize)
 	    self.file_location = location_data[:file]
 	    FileUtils.mkdir_p "#{File.dirname(self.file_location)}/logs"
-            uncompress(self.contest.referee.compressed_file_location, File.dirname(self.file_location)) if self.class == Player 
+            uncompress(self.contest.referee.compressed_file_location, File.dirname(self.file_location)) if self.class == Player
 	    if File.exist?(File.dirname(old_location)+"/logs/") then
               cp_call = Process.spawn("cp #{File.dirname(old_location)}/logs/* #{File.dirname(self.file_location)}/logs/", :out=>"/dev/null", :err=>"/dev/null")
 	      Process.wait cp_call
@@ -57,11 +57,9 @@ module Uploadable
     private
 
     def delete_code_locations
-
-        delete_code(self.file_location) 
+        delete_code(self.file_location)
         delete_code(self.compressed_file_location) if (self.has_attribute?(:compressed_file_location) && !self.compressed_file_location.nil?)
         delete_code(self.replay_assets_location) if (self.has_attribute?(:replay_assets_location) && !self.replay_assets_location.nil?)
-
     end
 
     #Delete directory where file is located
