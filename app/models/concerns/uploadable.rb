@@ -19,8 +19,12 @@ module Uploadable
       self.file_location = location_data[:file]
       dir = location_data[:directory]
       FileUtils.mkdir_p "#{dir}/logs"
-      uncompress(self.contest.referee.compressed_file_location, File.dirname(self.file_location))
-      FileUtils.cp(self.contest.referee.compressed_file_location, File.dirname(self.file_location))
+
+      if self.class == Player
+        uncompress(self.contest.referee.compressed_file_location, File.dirname(self.file_location))
+        FileUtils.cp(self.contest.referee.compressed_file_location, File.dirname(self.file_location))
+      end
+
       old_dir = File.dirname(old_location)
       if File.exist?(old_dir + "/logs/")
         FileUtils.cp("#{old_dir}/logs/*", "#{dir}/logs/")
