@@ -81,7 +81,7 @@ module Uploadable
         dir_location = ''
         unless uploaded_io.nil?
             dir_location = Rails.root.join('code', dir, Rails.env, random_hex)
-            file_location = dir_location.join(self.name).to_s
+	    file_location = dir_location.join(uploaded_io.original_filename).to_s
             dir_location = dir_location.to_s
             FileUtils.mkdir_p dir_location
             IO.copy_stream(uploaded_io, file_location)
