@@ -11,10 +11,9 @@ module Uploadable
 
     def upload=(uploaded_io)
         unless self.name.blank?
-            random_hex = SecureRandom.hex
             self.file_location = '' if self.file_location.nil?
 	    old_location = self.file_location
-            location_data = store_file(uploaded_io, self.class.to_s.downcase.pluralize, random_hex)
+            location_data = store_file(uploaded_io, self.class.to_s.downcase.pluralize)
 	    self.file_location = location_data[:file]
 	    FileUtils.mkdir_p "#{File.dirname(self.file_location)}/logs"
             uncompress(self.contest.referee.compressed_file_location, File.dirname(self.file_location)) if self.class == Player 
@@ -29,19 +28,17 @@ module Uploadable
 
     def upload2=(uploaded_io)
         unless self.name.blank?
-            random_hex = SecureRandom.hex
             self.compressed_file_location = '' if self.compressed_file_location.nil?
             delete_code(self.compressed_file_location)
-            self.compressed_file_location = store_file(uploaded_io, 'environments', random_hex)[:file]
+            self.compressed_file_location = store_file(uploaded_io, 'environments')[:file]
         end
     end
 
     def upload3=(uploaded_io)
         unless self.name.blank?
-            random_hex = SecureRandom.hex
             self.replay_assets_location = '' if self.replay_assets_location.nil?
             delete_code(self.replay_assets_location)
-            self.replay_assets_location = store_file(uploaded_io, File.join("static", self.class.to_s.downcase.pluralize), random_hex)[:directory]
+            self.replay_assets_location = store_file(uploaded_io, File.join("static", self.class.to_s.downcase.pluralize))[:directory]
         end
     end
 
@@ -79,7 +76,7 @@ module Uploadable
         end
     end
 
-    def store_file(uploaded_io, dir, random_hex)
+    def store_file(uploaded_io, dir)
         file_location = ''
         dir_location = ''
         unless uploaded_io.nil?
@@ -98,6 +95,10 @@ module Uploadable
         system("unzip -o #{Shellwords.escape src} -d #{Shellwords.escape dest} > /dev/null 2>&1")
         system("chmod +x #{Shellwords.escape dest}/*")
         system("dos2unix -q #{Shellwords.escape dest}/*")
+    end
+
+    def random_hex
+	SecureRandom.hex
     end
 end
 
