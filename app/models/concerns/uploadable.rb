@@ -102,10 +102,11 @@ module Uploadable
   def uncompress(src, dest)
     safe_src = Shellwords.escape src
     safe_dest = Shellwords.escape dest
+    safe_dest_files = Dir.glob "#{safe_dest}/*"
     system("tar -xvf #{safe_src} -C #{safe_dest} > /dev/null 2>&1")
     system("unzip -o #{safe_src} -d #{safe_dest} > /dev/null 2>&1")
-    mark_as_executable("#{safe_dest}/*")
-    system("dos2unix -q #{safe_dest}/*")
+    mark_as_executable safe_dest_files
+    system("dos2unix -q #{safe_dest_files}")
   end
 
   def mark_as_executable(file)
