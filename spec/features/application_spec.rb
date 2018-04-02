@@ -68,7 +68,7 @@ feature "HomePage" do
       before {visit root_path}
 
       it "has the correct content" do
-        should have_content("Welcome to Taylor University's Game Contest Server!")
+        should have_content("Battle it out, AI style. Host AI tournaments for your classes. Challenge another player to determine who's king.")
 
         should_not have_content("Add Player")
         should_not have_link('', href: new_contest_player_path("not-specified"))

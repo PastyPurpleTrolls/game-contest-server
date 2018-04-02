@@ -1,5 +1,13 @@
-#ifndef OttoWhitePlayer_H		// Double inclusion protection
-#define OttoWhitePlayer_H
+/**
+ * @author Stefan Brandle, Jonathan Geisler
+ * @date September, 2004
+ *
+ * Please type in your name[s] here:
+ *
+ */
+
+#ifndef DUMBPLAYERV2_H		// Double inclusion protection
+#define DUMBPLAYERV2_H
 
 using namespace std;
 
@@ -9,10 +17,10 @@ using namespace std;
 
 // DumbPlayer inherits from/extends PlayerV2
 
-class OttoWhitePlayer: public PlayerV2 {
+class DumbPlayerV2: public PlayerV2 {
     public:
-	OttoWhitePlayer( int boardSize );
-	~OttoWhitePlayer();
+	DumbPlayerV2( int boardSize );
+	~DumbPlayerV2();
 	void newRound();
 	Message placeShip(int length);
 	Message getMove();
@@ -24,9 +32,6 @@ class OttoWhitePlayer: public PlayerV2 {
         int lastCol;
 	int numShipsPlaced;
         char board[MAX_BOARD_SIZE][MAX_BOARD_SIZE];
-        char whereAreShips[MAX_BOARD_SIZE][MAX_BOARD_SIZE];
-    bool canPlaceShip(int length, Direction dir, int row, int col);
-    void placeOnBoard(int length, Direction dir, int row, int col);
 };
 
 #endif

@@ -14,7 +14,6 @@ class Player < ActiveRecord::Base
   validates :contest,       presence: true
   validates :description,   presence: true
   validates :name,          presence: true, uniqueness: { scope: :contest }
-  #  validates :programming_language, presence: true
 
   default_scope -> { order("created_at DESC") }
 

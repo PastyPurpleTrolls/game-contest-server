@@ -27,6 +27,18 @@ body {
   background-color: transparent;
 }
 
+#catchphrase {
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.catchphrase-container {
+  background-color: #d9d7cb;
+  color: #625346;
+  vertical-align: middle;
+  padding: 15px 30px;
+}
+
 .center {
   text-align: center;
 }
@@ -216,8 +228,20 @@ label {
   font-weight: normal;
 }
 
+.no-wrap {
+  white-space: nowrap;
+}
+
 .outer-home-container {
   padding: 10px;
+}
+
+.padding-right-5 {
+  padding-right: 5px;
+}
+
+.padding-right-25 {
+  padding-right: 25px;
 }
 
 .player-results-container {

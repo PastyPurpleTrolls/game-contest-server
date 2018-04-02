@@ -4,11 +4,9 @@
 #include <cstdlib>
 #include <string>
 
-#include "conio.h"
 #include "Sylok.h"
 #include <stack>
 
-using namespace conio;
 using namespace std;
 
 /**

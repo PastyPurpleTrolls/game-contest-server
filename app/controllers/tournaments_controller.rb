@@ -52,7 +52,11 @@ class TournamentsController < ApplicationController
   def show
     @tournament = Tournament.friendly.find(params[:id])
     @results = get_player_results(@tournament)
+    @player_wins = get_player_wins_array
     @player_attributes = get_player_attributes(@tournament)
+    @first_place = get_player_attrs_with_rank(@player_wins, @player_attributes, 1)
+    @second_place = get_player_attrs_with_rank(@player_wins, @player_attributes, 2)
+    @third_place = get_player_attrs_with_rank(@player_wins, @player_attributes, 3)
   end
 
   def destroy
