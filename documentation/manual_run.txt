@@ -1,5 +1,0 @@
-TAB 1: Anywhere: nc -lU <path>
-TAB 2: referee directory: make run path=<path> num_players=<#> num_rounds=<#> max_time=<large number>
-TAB 1: Find path reported (referee_path)
-TAB 3: Player 1 directory: make contest path=<referee_path> name=<player name>
-TAB 4: Player 2 directory: make contest path=<referee_path> name=<player name>
