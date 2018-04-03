@@ -15,10 +15,45 @@ class HelpController < ApplicationController
 
   # Administrator Role
 
+  def deleting_users
+  end
+
+  def changing_user_roles
+  end
+
   def erd
   end
 
+  def manually_running_match
+  end
+
+
+  # Contest Creator Role
+
+  def create_modify_referees
+  end
+
+  def create_modify_contests
+  end
+
+  def create_modify_tournaments
+  end
+
+
+  # Student Role
+
+  def upload_players_to_contest
+  end
+
+  def challenge_other_players
+  end
+
+  def view_results
+  end
+
+
   private
+
 
   def ensure_admin
     unless current_user.admin

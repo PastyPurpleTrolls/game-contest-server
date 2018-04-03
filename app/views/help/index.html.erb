@@ -16,10 +16,10 @@
         <div class="col-md-6">
             <div class="display-container">
                 <h1>Administrator Role</h1>
-                <div class="info-container center"><%= link_to 'Deleting Users', '#' %></div>
-                <div class="info-container center"><%= link_to 'Changing User Roles', '#' %></div>
+                <div class="info-container center"><%= link_to 'Deleting Users', help_deleting_users_path %></div>
+                <div class="info-container center"><%= link_to 'Changing User Roles', help_changing_user_roles_path %></div>
                 <div class="info-container center"><%= link_to 'Entity Relationship Diagram (ERD)', help_erd_path %></div>
-                <div class="info-container center"><%= link_to 'Manually Running a Match', '#' %></div>
+                <div class="info-container center"><%= link_to 'Manually Running a Match', help_manually_running_match_path %></div>
             </div>
         </div>
     <% end %>
@@ -28,9 +28,9 @@
         <div class="col-md-6">
             <div class="display-container">
                 <h1>Contest Creator Role</h1>
-                <div class="info-container center"><%= link_to 'Create, Modify, or Delete Referees', '#' %></div>
-                <div class="info-container center"><%= link_to 'Create, Modify, or Delete Contests', '#' %></div>
-                <div class="info-container center"><%= link_to 'Create, Modify, or Delete Tournaments', '#' %></div>
+                <div class="info-container center"><%= link_to 'Create, Modify, or Delete Referees', help_create_modify_referees_path %></div>
+                <div class="info-container center"><%= link_to 'Create, Modify, or Delete Contests', help_create_modify_contests_path %></div>
+                <div class="info-container center"><%= link_to 'Create, Modify, or Delete Tournaments', help_create_modify_tournaments_path %></div>
             </div>
         </div>
     <% end %>
@@ -38,9 +38,9 @@
     <div class="col-md-6">
         <div class="display-container">
             <h1>Student Role</h1>
-            <div class="info-container center"><%= link_to 'Upload Players to a Contest', '#' %></div>
-            <div class="info-container center"><%= link_to 'Challenge Other Players', '#' %></div>
-            <div class="info-container center"><%= link_to 'View Tournament and Challenge Match Results', '#' %></div>
+            <div class="info-container center"><%= link_to 'Upload Players to a Contest', help_upload_players_to_contest_path %></div>
+            <div class="info-container center"><%= link_to 'Challenge Other Players', help_challenge_other_players_path %></div>
+            <div class="info-container center"><%= link_to 'View Tournament and Challenge Match Results', help_view_results_path %></div>
         </div>
     </div>
 </div>

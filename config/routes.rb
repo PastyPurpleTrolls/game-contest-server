@@ -4,7 +4,17 @@ GameContestServer::Application.routes.draw do
 
   get '/help/', to: 'help#index'
   get '/help/terminology', to: 'help#terminology'
+  get '/help/deleting_users', to: 'help#deleting_users'
+  get '/help/changing_user_roles', to: 'help#changing_user_roles'
   get '/help/erd', to: 'help#erd'
+  get '/help/manually_running_match', to: 'help#manually_running_match'
+  get '/help/create_modify_referees', to: 'help#create_modify_referees'
+  get '/help/create_modify_contests', to: 'help#create_modify_contests'
+  get '/help/create_modify_tournaments', to: 'help#create_modify_tournaments'
+  get '/help/upload_players_to_contest', to: 'help#upload_players_to_contest'
+  get '/help/challenge_other_players', to: 'help#challenge_other_players'
+  get '/help/view_results', to: 'help#view_results'
+
   get '/match_logs/:id/std_out', to: 'match_log_infos#std_out'
   get '/match_logs/:id/std_err', to: 'match_log_infos#std_err'
   
