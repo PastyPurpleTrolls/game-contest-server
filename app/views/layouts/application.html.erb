@@ -7,6 +7,11 @@
         <%= stylesheet_link_tag 'application', 'https://fonts.googleapis.com/css?family=Merriweather'%>
         <%= stylesheet_link_tag 'application', 'https://fonts.googleapis.com/css?family=PT+Serif:400,700'%>
         <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+
+        <!-- Syntax highlighting on help pages -->
+        <%= stylesheet_link_tag 'application', '//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css' %>
+        <%= javascript_include_tag 'application', '//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js' %>
+
         <%= yield :javascript_includes %>
         <%= csrf_meta_tags %>
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,6 +36,10 @@
         </div>
 
     </body>
+
+    <!-- Syntax highlighting on help pages -->
+    <script>hljs.initHighlightingOnLoad();</script>
+
     <footer class="container">
     <% if current_user&.admin %>
       <div class="right system-status">
