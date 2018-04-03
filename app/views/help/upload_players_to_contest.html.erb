@@ -1,12 +1,33 @@
 <br>
 <ol class="breadcrumb">
-  <li><%= link_to 'Home', root_path %></li>
-  <li><%= link_to 'Help', help_path %></li>
-  <li class="active">Upload Players to a Contest</li>
+    <li><%= link_to 'Home', root_path %></li>
+    <li><%= link_to 'Help', help_path %></li>
+    <li class="active">Upload Players to a Contest</li>
 </ol>
 
 <div class="row">
-  <div class="display-container">
-    <h1>Upload Players to a Contest</h1>
-  </div>
+    <div class="display-container">
+        <h1>Upload Players to a Contest</h1>
+        <p>
+            Under "Contests", navigate to the contest of your choosing. Click the plus sign near "Players", and fill out
+            the required fields.
+        </p>
+        <ul>
+            <li>
+                <b>Selected Contest</b>: Choose the parent contest of your new player.
+            </li>
+            <li>
+                <b>Player File</b>: A single file or tar/zip of a player AI file and any dependencies. Example:
+                <code>checkers_player.py</code>.
+            </li>
+            <li>
+                <b>Allow others to compete against this player</b>: Leave this checked unless you want this player to be
+                in tournaments or challenges.
+            </li>
+            <li>
+                <b>Allow others to download this player</b>: This gives other users the ability to download and examine
+                the code of a player's AI.
+            </li>
+        </ul>
+    </div>
 </div>

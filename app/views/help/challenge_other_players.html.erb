@@ -1,12 +1,32 @@
 <br>
 <ol class="breadcrumb">
-  <li><%= link_to 'Home', root_path %></li>
-  <li><%= link_to 'Help', help_path %></li>
-  <li class="active">Challenge Other Players</li>
+    <li><%= link_to 'Home', root_path %></li>
+    <li><%= link_to 'Help', help_path %></li>
+    <li class="active">Challenge Other Players</li>
 </ol>
 
 <div class="row">
-  <div class="display-container">
-    <h1>Challenge Other Players</h1>
-  </div>
+    <div class="display-container">
+        <h1>Challenge Other Players</h1>
+        <p>
+            On the home page, click "Challenge Players". Select the appropriate contest, and fill out the required
+            fields.
+        </p>
+        <ul>
+            <li>
+                <b>Start</b>: Choose a start time for the match. If the time is set before the current time, the
+                match will automatically start.
+            </li>
+            <li>
+                <b>Number of Rounds</b>: The number of rounds to be played for the match. More rounds helps determine
+                which AI is consistently preforming stronger, but may increase the amount of time it takes for it to
+                complete.
+            </li>
+        </ul>
+        <p>
+            From the list of available players, select the player you wish to enter into the challenge match, along with
+            the player you wish to challenge. Then, click the right arrow to add the players to the challenge match.
+            Press the "Challenge!" button, and you're off!
+        </p>
+    </div>
 </div>
