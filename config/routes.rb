@@ -24,7 +24,8 @@ GameContestServer::Application.routes.draw do
   get '/help/student_capabilities', to: 'help#student_capabilities'
   get '/help/upload_players_to_contest', to: 'help#upload_players_to_contest'
   get '/help/challenge_other_players', to: 'help#challenge_other_players'
-  get '/help/view_results', to: 'help#view_results'
+  get '/help/view_tournament_results', to: 'help#view_tournament_results'
+  get '/help/view_challenge_match_results', to: 'help#view_challenge_match_results'
 
   get '/match_logs/:id/std_out', to: 'match_log_infos#std_out'
   get '/match_logs/:id/std_err', to: 'match_log_infos#std_err'

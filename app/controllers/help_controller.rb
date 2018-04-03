@@ -57,7 +57,10 @@ class HelpController < ApplicationController
   def challenge_other_players
   end
 
-  def view_results
+  def view_tournament_results
+  end
+
+  def view_challenge_match_results
   end
 
 
