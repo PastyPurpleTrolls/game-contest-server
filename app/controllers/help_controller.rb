@@ -15,6 +15,9 @@ class HelpController < ApplicationController
 
   # Administrator Role
 
+  def admin_capabilities
+  end
+
   def deleting_users
   end
 
@@ -44,6 +47,9 @@ class HelpController < ApplicationController
 
 
   # Student Role
+
+  def student_capabilities
+  end
 
   def upload_players_to_contest
   end
