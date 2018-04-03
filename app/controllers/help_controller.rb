@@ -39,6 +39,12 @@ class HelpController < ApplicationController
   def create_modify_tournaments
   end
 
+  def writing_referee
+  end
+
+  def writing_replay_plugin
+  end
+
 
   # Student Role
 

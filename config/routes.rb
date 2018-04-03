@@ -11,6 +11,8 @@ GameContestServer::Application.routes.draw do
   get '/help/create_modify_referees', to: 'help#create_modify_referees'
   get '/help/create_modify_contests', to: 'help#create_modify_contests'
   get '/help/create_modify_tournaments', to: 'help#create_modify_tournaments'
+  get '/help/writing_referee', to: 'help#writing_referee'
+  get '/help/writing_replay_plugin', to: 'help#writing_replay_plugin'
   get '/help/upload_players_to_contest', to: 'help#upload_players_to_contest'
   get '/help/challenge_other_players', to: 'help#challenge_other_players'
   get '/help/view_results', to: 'help#view_results'
