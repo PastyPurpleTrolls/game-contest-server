@@ -39,6 +39,9 @@ class HelpController < ApplicationController
   def create_modify_tournaments
   end
 
+  def creating_contest
+  end
+
   def writing_referee
   end
 
