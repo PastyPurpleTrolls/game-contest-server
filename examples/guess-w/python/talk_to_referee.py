@@ -23,7 +23,7 @@ def init(move):
     while True:
         reply = s.recv(4096).decode()
         if "move" in reply:
-            s.send(move.encode())
+            s.send(move().encode())
         elif "wins" in reply:
             break
 
