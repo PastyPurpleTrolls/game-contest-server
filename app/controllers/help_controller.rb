@@ -30,13 +30,7 @@ class HelpController < ApplicationController
 
   # Contest Creator Role
 
-  def create_modify_referees
-  end
-
-  def create_modify_contests
-  end
-
-  def create_modify_tournaments
+  def contest_creator_capabilities
   end
 
   def creating_contest
