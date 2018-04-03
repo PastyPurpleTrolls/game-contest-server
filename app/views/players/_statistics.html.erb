@@ -1,0 +1,11 @@
+<div class="container outer-home-container col-md-offset-1 col-md-5">
+    <div class="display-container center">
+        <h1 class="headings left row">Statistics</h1>
+        <p class="info-container">Wins: <%= @playermatch.wins.count %></p>
+        <p class="info-container">Losses: <%= @playermatch.losses.count %></p>
+        <p class="info-container">Ties: <%= @playermatch.ties.count %></p>
+        <p class="info-container">Win Percentage:
+            <%= @playermatch.win_percentage %>%
+        </p>
+    </div>
+</div>

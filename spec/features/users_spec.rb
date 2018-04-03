@@ -330,11 +330,6 @@ describe "UsersPages" do
           specify {expect(response).to redirect_to(user_path(user))}
         end
 
-        it "produces an update message" do
-          click_button submit
-          should have_alert(:success)
-        end
-
         it "does not add a new user to the system" do
           expect {click_button submit}.not_to change(User, :count)
         end
@@ -421,11 +416,6 @@ describe "UsersPages" do
           end
 
           specify {expect(response).to redirect_to(user_path(user))}
-        end
-
-        it "produces an update message" do
-          click_button submit
-          should have_alert(:success)
         end
 
         it "does not add a new user to the system" do

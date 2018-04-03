@@ -7,17 +7,15 @@ def init(move):
     #Parsing command line arguments
     #Usage: client.py --name [name] -p [port]"
     parser = OptionParser()
-    parser.add_option("-p", "--port", action="store", type="int", dest="port")
+    parser.add_option("-p", "--path", action="store", type="int", dest="path")
     parser.add_option("-n", "--name", action="store", type="string", dest="name")
     (options, args) = parser.parse_args()
 
-    HOST = 'localhost'
-    PORT = options.port
+    PATH = options.path
     NAME = options.name
 
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    ip = socket.gethostbyname(HOST)
-    s.connect((ip, PORT))
+    s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    s.connect(PATH)
 
     message = str(NAME + "\n")
     s.send(message.encode())

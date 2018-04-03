@@ -1,5 +1,5 @@
 <tr>
-    <td><%= link_to @player_attributes[player[0]]['player_name'] %> (<%= @player_attributes[player[0]]['user_name'] %>)</td>
+    <td><%= link_to @player_attributes[player[0]]['player_name'], player_path(player[0]) %> (<%= @player_attributes[player[0]]['user_name'] %>)</td>
     <td><%= @results[player[0]][:rank] %></td>
     <td><%= @results[player[0]][:wins] %></td>
     <%= render partial: 'result', collection: @results[player[0]][:results], as: :result, locals: {player: player} %>

@@ -25,7 +25,9 @@ class Match < ActiveRecord::Base
 
   validate :num_rounds_upper_bound
 
-  default_scope -> {order("created_at DESC")}
+  default_scope -> { order("created_at DESC") }
+  scope :completed_matches, -> { where(status: 'completed') }
+  scope :uncompleted_matches, -> { where.not(status: 'completed') }
 
   def num_rounds_upper_bound
     if self.num_rounds.nil? || self.manager.nil?

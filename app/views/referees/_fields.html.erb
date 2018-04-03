@@ -1,12 +1,12 @@
 <div class="form-group row left">
-    <div class="col-xs-4">
-        <%= f.label :name %>:
+    <div class="col-xs-4 text-right padding-right-25">
+        <%= f.label :name, 'Name:' %>
     </div>
     <%= f.text_field :name, class: 'form-control' %>
 </div>
 
 <div class="form-group row left">
-    <div class="col-xs-4">
+    <div class="col-xs-4 text-right padding-right-25">
         <%= f.label :rules_url, 'Rules URL:' %>
     </div>
     <%= f.text_field :rules_url, class: 'form-control' %>
@@ -14,53 +14,76 @@
 
 <br>
 
-<div class="form-group row left" data-toggle="tooltip" data-placement="bottom" title="Single file containing the logic for the referee">
-    <%= f.label :upload, 'Referee File:', class: 'col-xs-4' %>
-    <%= f.file_field :upload %>
+<div class="form-group row left" >
+    <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
+        <%= f.label :upload, 'Referee File', class: 'padding-right-5' %>
+        <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
+           title="A single file or tar/zip of the referee file and any dependencies"></i>
+    </div>
+    <%= f.file_field :upload, class: 'col-xs-5 no-left-padding no-right-padding' %>
 </div>
 
-<div class="form-group row left" data-toggle="tooltip" data-placement="bottom" title="Compressed file containing any required assets for players">
-    <%= f.label :upload2, 'Player-Include Files:', class: 'col-xs-4 xs-font' %>
-    <%= f.file_field :upload2 %>
+<div class="form-group row left">
+    <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
+        <%= f.label :upload2, 'Player-Include Files', class: 'padding-right-5' %>
+        <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
+           title="A single file or tar/zip of everything that a player includes in his or her file"></i>
+    </div>
+    <%= f.file_field :upload2, class: 'col-xs-5 no-left-padding no-right-padding' %>
 </div>
 
-<div class="form-group row left" data-toggle="tooltip" data-placement="bottom" title="Compressed file containing script.js and any required assets">
-    <%= f.label :upload3, 'Replay Plugin:', class: 'col-xs-4' %>
-    <%= f.file_field :upload3 %>
+<div class="form-group row left">
+    <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
+        <%= f.label :upload3, 'Replay Plugin', class: 'padding-right-5' %>
+        <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
+           title="A single file or tar/zip of all assets (js files, images, etc.) needed for the replay plugin"></i>
+    </div>
+    <%= f.file_field :upload3, class: 'col-xs-5 no-left-padding no-right-padding' %>
 </div>
 
-<div class="form-group row left" data-toggle="tooltip" data-placement="bottom" title="Test Player file or a zip containing a makefile">
-    <%= f.label :upload4, 'Test Player:', class: 'col-xs-4' %>
-    <%= f.file_field :upload4 %>
+<div class="form-group row left">
+    <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
+        <%= f.label :upload4, 'Test Player', class: 'padding-right-5' %>
+        <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
+           title="A single file or tar/zip of a test player file and any dependencies, to verify that everything is working as expected"></i>
+    </div>
+    <%= f.file_field :upload4, class: 'col-xs-5 no-left-padding no-right-padding' %>
 </div>
 
 <br>
 
 <div class="form-group row left">
-    <div class="col-xs-4 no-right-padding">
-        <%= f.label :round_limit, "Round Limit (Inclusive):", class: 'xs-font' %>
+    <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
+        <%= f.label :round_limit, 'Round Limit', class: 'padding-right-5' %>
+        <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
+           title="Maximum amount of rounds that the referee will allow. Inclusive."></i>
     </div>
-    <div class="col-xs-2 no-left-padding">    
-        <%= f.text_field :round_limit, class: 'form-input small-box', :value=>'100' %>
-    </div>
-    <div class="col-xs-4">
-        <%= f.label :players_per_game, 'Players per Game:' %>
-    </div>
-    <div class="col-xs-2">  
-        <%= f.select :players_per_game, 1..10, {}, class: 'form-input form-element' %>
-    </div>
+    <%= f.text_field :round_limit, class: 'form-control', value: '100' %>
 </div>
 
 <div class="form-group row left">
-    <div class="col-xs-4">
-        <%= f.label :time_per_game, 'Time per Game (s):' %>
+    <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
+        <%= f.label :players_per_game, 'Players Per Match', class: 'padding-right-5' %>
+        <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
+           title="Number of players that the referee is designed to interact with"></i>
+    </div>
+    <%= f.select :players_per_game, 1..10, {}, class: 'form-control' %>
+</div>
+
+<div class="form-group row left">
+    <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
+        <%= f.label :time_per_game, 'Time Per Match', class: 'padding-right-5' %>
+        <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
+           title="Maximum amount of time that the referee will allow a player to submit a move"></i>
     </div>
     <%= f.text_field :time_per_game, class: 'form-control' %>
 </div>
 
 <div class="form-group row left">
-    <div class="col-xs-12">
-        <%= f.label :rounds_capable, 'Referee capable of handling rounds:' %>
-        <%= f.check_box :rounds_capable, :checked_value => true, :unchecked_value => false, class: 'form-checkbox form-element' %>
+    <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
+        <%= f.label :rounds_capable, 'Rounds-Capable', class: 'padding-right-5' %>
+        <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
+           title="Indicates whether or not the referee is design to be able to handle rounds"></i>
     </div>
+    <%= f.check_box :rounds_capable, checked_value: true, unchecked_value: false, class: 'form-checkbox form-element' %>
 </div>

@@ -10,9 +10,6 @@
         <%= yield :javascript_includes %>
         <%= csrf_meta_tags %>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <% if content_for?(:refresh_rate) %>
-            <meta http-equiv="refresh" content="<%= yield :refresh_rate %>">
-        <% end %>
     </head>
     <body>
 

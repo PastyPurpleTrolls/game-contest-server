@@ -21,20 +21,20 @@ class BoardV3 {
 	void operator=(const BoardV3& other);
 	// General public access functions.
 	bool placeShip(int row, int col, int length, Direction dir);
-    	char getOpponentView(int row, int col);
-    	char getOwnerView(int row, int col);
-    	char getShipMark(int row, int col);
+    	char getOpponentView(int row, int col) const;
+    	char getOwnerView(int row, int col) const;
+    	char getShipMark(int row, int col) const;
     	char processShot(int row, int col);
-    	bool hasWon();
+    	bool hasWon() const;
 
         const static int MaxBoardSize = 10;     // Maximum board size.
 
     private:
 	// Put prototypes for your private helper functions here.
 	void initialize(char board[MaxBoardSize][MaxBoardSize]);
-	bool positionOk(int row, int col, int length, bool horiz);
+	bool positionOk(int row, int col, int length, bool horiz) const;
 	void markShip(int row, int col, int length, bool horiz);
-        bool isSunk(int row, int col);
+        bool isSunk(int row, int col) const;
         void markSunk(int row, int col);
 
 	// Suggested data variables. Although you can ignore these, it

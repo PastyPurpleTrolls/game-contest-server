@@ -11,26 +11,31 @@
             <div class="col-xs-8 col-xs-offset-2">
                 <h1 class="headings left">Referee Information</h1>
             </div>
-            <div class="col-xs-2 right form-dropdown">
-                <div class="dropdown">
-                    <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">Options <span class="caret"/></a>
-                    <ul class="dropdown-menu">
-                        <% if current_user == @referee.user and current_user.contest_creator %>
-                            <%= active_link_to 'Edit', edit_referee_path(@referee), wrap_tag: :li %>
-                        <% end %>
-                        <% if @referee.deletable?(current_user) %>
-                            <%= active_link_to 'Delete', referee_path(@referee), method: :delete, data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
-                        <% end %>
-                    </ul>
+            <% if current_user&.can_edit_referee?(@referee) %>
+                <div class="col-xs-2 right form-dropdown">
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">
+                            Options <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <% if current_user == @referee.user and current_user.contest_creator %>
+                                <%= active_link_to 'Edit', edit_referee_path(@referee), wrap_tag: :li %>
+                            <% end %>
+                            <% if @referee.deletable?(current_user) %>
+                                <%= active_link_to 'Delete', referee_path(@referee), method: :delete,
+                                                   data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
+                            <% end %>
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            <% end %>
         </div>
         <div class="row">
             <div class="col-md-6">
                 <p class="info-container">Name: <%= @referee.name %></p>
             </div>
             <div class="col-md-6">
-                <p class="info-container">Rules: <%= link_to @referee.rules_url, @referee %></p>
+                <p class="info-container"><%= link_to 'Rules', @referee.rules_url, target: '_blank' %></p>
             </div>
             <div class="col-md-6">
                 <p class="info-container">Limit of Rounds (Inclusive): <%= @referee.round_limit %></p>
@@ -72,15 +77,9 @@
                 </p>
             <% end %>
         </div>
-        <% if @contests.count > 0 %>
-            <% if @contests.count > @per_page %>
-                <p><%= "#{@contests.count} found (displaying #{getRangeFromPage(params[:page], @contests.length)})" %></p>
-            <% else %>
-                <p><%= "#{@contests.count} found" %></p>
-            <% end %>
-        <% else %>
-            <p>No contests found</p>
-        <% end %>
+
+        <p><%= display_results_found(@contests, 'contests', params[:page], @per_page) %></p>
+        
         <div class="row">
             <%= render partial: 'referees/referee_contest', collection: @contests, as: :contest %>
             <%= will_paginate @contests, id: 'referee_pagination', inner_window: 2, outer_window: 0 %>

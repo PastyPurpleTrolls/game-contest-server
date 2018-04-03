@@ -14,8 +14,10 @@ class RoundWrapper
 
   #Constructor, sets socket for communication to referee and starts referee and players
   def initialize(referee, match_id, number_of_players, max_match_time, players, rounds, duplicate_players)
-    #Sets port for referee to talk to wrapper_server
-    @wrapper_server = TCPServer.new(0)
+    #Sets path for referee to talk to wrapper_server
+    @aires_path = "/tmp/aires-manager"
+    File.delete @aires_path if File.exists? @aires_path
+    @wrapper_server = UNIXServer.new(@aires_path)
 
     @players = players
     @referee = referee
@@ -39,9 +41,9 @@ class RoundWrapper
     if @referee.rounds_capable
       self.run_round
     else
-      @num_rounds.times do |i|
+      @num_rounds.times do
         self.run_round
-        if @status[:error] == true
+        if @status[:error]
           return
         end
       end
@@ -109,10 +111,10 @@ class RoundWrapper
       begin
         Timeout::timeout(5) do
           #Wait for referee to connect
-          @client_port = nil
-          while @client_port.nil?
+          @client_path = nil
+          while @client_path.nil?
             line = client.gets
-            @client_port = self.find_command("port", line)
+            @client_path = self.find_command("path", line)
             @ref_client = client
           end
         end
@@ -125,11 +127,10 @@ class RoundWrapper
     }
     sleep 0.1
     #Start referee process, giving it the port to talk to us on
-    wrapper_server_port = @wrapper_server.addr[1]
     if Dir.glob("#{File.dirname(@referee.file_location)}/[Mm]akefile").size > 0
-      command = "cd #{Shellwords.escape File.dirname(@referee.file_location)}; make run port=#{wrapper_server_port} num_players=#{@number_of_players} num_rounds=#{@num_rounds} max_time=#{@max_match_time}"
+      command = "cd #{Shellwords.escape File.dirname(@referee.file_location)}; make run path=#{@aires_path} num_players=#{@number_of_players} num_rounds=#{@num_rounds} max_time=#{@max_match_time}"
     else
-      command = "#{Shellwords.escape @referee.file_location} -p #{wrapper_server_port} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time}"
+      command = "#{Shellwords.escape @referee.file_location} -p #{@aires_path} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time}"
     end
 
     loc = "#{Shellwords.escape @referee.file_location[0, @referee.file_location.length - @referee.name.length]}logs/#{@referee.name}_match_#{@match_id}_round_#{@rounds.length() + 1}"
@@ -148,9 +149,9 @@ class RoundWrapper
     @players.each do |player|
       #Name must be given before port because it crashes for mysterious ("--name not found") reasons otherwise
       if Dir.glob("#{File.dirname(player.file_location)}/[Mm]akefile").size > 0
-        command = "cd #{Shellwords.escape File.dirname(player.file_location)}; make contest name=#{Shellwords.escape player.name} port=#{@client_port}"
+        command = "cd #{Shellwords.escape File.dirname(player.file_location)}; make contest name=#{Shellwords.escape player.name} path=#{@client_path}"
       else
-        command = "#{Shellwords.escape player.file_location} -n #{Shellwords.escape player.name} -p #{@client_port}"
+        command = "#{Shellwords.escape player.file_location} -n #{Shellwords.escape player.name} -p #{@client_path}"
       end
 
       loc = "#{Shellwords.escape player.file_location[0, player.file_location.length - player.name.length]}logs/#{player.name}_match_#{@match_id}_round_#{@rounds.length() + 1}"

@@ -89,7 +89,7 @@ class RefereesController < ApplicationController
           log_info.log_stderr = new_dir + "/logs/" + File.basename(log_info.log_stderr)
         end
       end
-      contest.tournaments.each do |tourney|
+      contest.tournaments.each do
         contest.matches.each do |match|
           log_info = match.match_log_info
           unless log_info.nil?

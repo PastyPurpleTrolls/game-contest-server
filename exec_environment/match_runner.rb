@@ -184,7 +184,7 @@ class MatchRunner
     end
     tournament = Tournament.find(@match.manager_id)
     tournament.matches.each do |childmatch|
-      if childmatch.status == "started"
+      if childmatch.status != "completed"
         return false
       end
     end
