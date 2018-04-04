@@ -44,7 +44,7 @@ class Game():
             player.connection.send(winner.name + " wins\n")
             # Get the result for who won
             result = "Win" if (player.name == winner.name) else "Loss"
-            manager.send(resulttype, [player.name, result, str(player.wins)])
+        manager.send(resulttype, [player.name, result, str(player.wins)])
 
     def runGame(self):
         # Loop until someone wins
