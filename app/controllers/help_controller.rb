@@ -3,10 +3,10 @@ class HelpController < ApplicationController
 
   before_action :ensure_user_logged_in
 
-  before_action :ensure_contest_creator,
+  before_action :check_contest_creator,
                 only: [:contest_creator_capabilities, :creating_contest, :writing_referee, :writing_replay_plugin]
 
-  before_action :ensure_admin,
+  before_action :check_admin,
                 only: [:admin_capabilities, :deleting_users, :changing_user_roles, :erd, :manually_running_match]
 
   def index
@@ -72,11 +72,17 @@ class HelpController < ApplicationController
 
   private
 
+  def check_contest_creator
+    unless current_user.contest_creator
+      flash[:danger] = 'You must be a contest creator to view this page'
+      redirect_to help_path
+    end
+  end
 
-  def ensure_admin
+  def check_admin
     unless current_user.admin
-      flash[:danger] = 'Not an administrator.'
-      redirect_to root_path
+      flash[:danger] = 'You must be an administrator to view this page'
+      redirect_to help_path
     end
   end
 end
