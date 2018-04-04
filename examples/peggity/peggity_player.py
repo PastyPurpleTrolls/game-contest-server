@@ -1,4 +1,6 @@
 import random
+import talk_to_referee
+
 def manualMove(pcolors,currentPlayer,board):
     emptyCellsList=[]
     for row in range(15):
@@ -9,3 +11,5 @@ def manualMove(pcolors,currentPlayer,board):
     row=ord(move[0])-65
     col=int(move[1:])
     return row,col
+
+talk_to_referee.init(manualMove)
