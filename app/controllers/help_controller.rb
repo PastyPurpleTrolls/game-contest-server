@@ -3,6 +3,12 @@ class HelpController < ApplicationController
 
   before_action :ensure_user_logged_in
 
+  before_action :ensure_contest_creator,
+                only: [:contest_creator_capabilities, :creating_contest, :writing_referee, :writing_replay_plugin]
+
+  before_action :ensure_admin,
+                only: [:admin_capabilities, :deleting_users, :changing_user_roles, :erd, :manually_running_match]
+
   def index
   end
 

@@ -1,45 +1,54 @@
 <br>
 <ol class="breadcrumb">
-  <li><%= link_to 'Home', root_path %></li>
-  <li><%= link_to 'Help', help_path %></li>
-  <li class="active">Manually Running a Match</li>
+    <li><%= link_to 'Home', root_path %></li>
+    <li><%= link_to 'Help', help_path %></li>
+    <li class="active">Manually Running a Match</li>
 </ol>
 
 <div class="row">
-  <div class="display-container">
-    <h1>Manually Running a Match</h1>
-    <p>Complete the following steps to manually run a match outside of the web interface. This can help debug issues you
-    may be facing with Aires, your referee, or players.</p>
-    <ol>
-      <li class="space-between">
-        Open four tabs in a terminal window.
-      </li>
-      <li class="space-between">
-        In the first tab, from any directory, run:
-        <pre>nc -lU &#60;manager_path&#62;</pre>
-        where <code>&#60;manager_path&#62;</code> is a path of your choosing (for example: <code>/tmp/aires-manager</code>)
-      </li>
-      <li class="space-between">
-        In the second tab, from the directory where the referee files are located, run:
-        <pre>make run path=&#60;manager_path&#62; num_players=&#60;num_players&#62; num_rounds=&#60;num_rounds&#62; max_time=&#60;large number&#62;</pre>
-        where <code>&#60;manager_path&#62;</code> is the path you specified in Step 2, <code>&#60;num_players&#62;</code>
-        is the number of players is designed to handle (most likely 2), <code>&#60;num_rounds&#62;</code> is the number
-        of rounds you want the manual match to have, and <code>&#60;large_number&#62;</code> is a number large enough
-        that you have enough time to complete the steps below (something like 9999 will work).
-      </li>
-      <li class="space-between">
-        In the first tab, find the path reported. We will call this <code>referee_path</code>.
-      </li>
-      <li class="space-between">
-        In the third tab, in the first player's directory, run:
-        <pre>make contest path=&#60;referee_path&#62; name=&#60;player_name&#62;</pre>
-        where <code>&#60;referee_path&#62;</code> is the path specified in Step 4, and <code>&#60;player_name&#62;</code>
-        is a player name of your choosing.
-      </li>
-      <li class="space-between">
-        Repeat Step 5 in the second player's directory.
-      </li>
-    </ol>
-    <p>That's it! From there you should be able to see any errors that arise.</p>
-  </div>
+    <div class="display-container">
+        <h1>Manually Running a Match</h1>
+        <p>Complete the following steps to manually run a match outside of the web interface. This can help debug issues
+            you
+            may be facing with Aires, your referee, or players.</p>
+        <ol>
+            <li class="space-between">
+                Open four tabs in a terminal window.
+            </li>
+            <li class="space-between">
+                In the first tab, from any directory, run: <pre>nc -lU &#60;manager_path&#62;</pre> where
+                <code>&#60;manager_path&#62;</code> is a path of your choosing (for example:
+                <code>/tmp/aires-manager</code>)
+            </li>
+            <li class="space-between">
+                In the second tab, navigate to the directory where the referee files are located.
+                <br><br>
+                If the referee is a makefile referee, run:
+                <pre>make run path=&#60;manager_path&#62; num_players=&#60;num_players&#62; num_rounds=&#60;num_rounds&#62; max_time=&#60;large_number&#62;</pre>
+                where <code>&#60;manager_path&#62;</code> is the path you specified in Step 2,
+                <code>&#60;num_players&#62;</code>
+                is the number of players is designed to handle (most likely 2), <code>&#60;num_rounds&#62;</code> is the
+                number of rounds you want the manual match to have, and <code>&#60;large_number&#62;</code> is a number
+                large enough that you have enough time to complete the steps below (something like 9999 will work).
+                <br><br>
+                If the referee is a single-file referee, run:
+                <pre>./&#60;referee_file&#62; -p &#60;manager_path&#62; -n &#60;num_players&#62; -r &#60;num_rounds&#62; -t &#60;large_number&#62;</pre>
+                where <code>&#60;referee_file&#62;</code> is the file name of your referee, and the other variables are
+                the same as listed above.
+            </li>
+            <li class="space-between">
+                In the first tab, find the path reported. We will call this <code>referee_path</code>.
+            </li>
+            <li class="space-between">
+                In the third tab, in the first player's directory, run:
+                <pre>make contest path=&#60;referee_path&#62; name=&#60;player_name&#62;</pre> where
+                <code>&#60;referee_path&#62;</code> is the path specified in Step 4, and
+                <code>&#60;player_name&#62;</code> is a player name of your choosing.
+            </li>
+            <li class="space-between">
+                Repeat Step 5 in the second player's directory.
+            </li>
+        </ol>
+        <p>That's it! From there you should be able to see any errors that arise.</p>
+    </div>
 </div>
