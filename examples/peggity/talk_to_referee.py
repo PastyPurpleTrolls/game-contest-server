@@ -20,7 +20,7 @@ def handle_moves(s):
     pcolors = ["blue", "green", "yellow", "orange", "black", "white", "purple"]
     win = False
     while not win:
-        currentPlayer, board = pickle.loads(s.recv(4096).decode())
+        currentPlayer, board = pickle.loads(s.recv(4096))
         if board != "win":
             row, col = playerFunction(pcolors, currentPlayer, board)
             data = "%s,%s" % (row, col)
@@ -39,7 +39,7 @@ def init(playerFunction):
     PATH = options.path
     NAME = options.name
 
-    s = connect_to_socket(HOST, PATH)
+    s = connect_to_socket(PATH)
     send_name_using_socket(s, NAME)
     handle_moves(s)
     s.close()
