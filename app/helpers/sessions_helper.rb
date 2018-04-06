@@ -44,7 +44,6 @@ module SessionsHelper
     redirect_to(return_to || root_path)
   end
 
-
   private
 
   def ensure_user_logged_in
@@ -62,7 +61,7 @@ module SessionsHelper
   end
 
   def ensure_contest_creator
-    unless current_user.contest_creator?
+    unless current_user.contest_creator
       flash[:danger] = 'Not a contest creator.'
       redirect_to root_path
     end
