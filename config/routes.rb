@@ -1,11 +1,32 @@
 GameContestServer::Application.routes.draw do
-#  get "matches/show"
-#  get "matches/index"
   get "visual_tests/colorscheme", as: :colorscheme
   root 'users#home'
 
   get '/help/', to: 'help#index'
-  get '/help/:category/(:page)', to: 'help#show'
+
+  # General Help Routes
+  get '/help/terminology', to: 'help#terminology'
+
+  # Admin Help Routes
+  get '/help/admin_capabilities', to: 'help#admin_capabilities'
+  get '/help/deleting_users', to: 'help#deleting_users'
+  get '/help/changing_user_roles', to: 'help#changing_user_roles'
+  get '/help/erd', to: 'help#erd'
+  get '/help/manually_running_match', to: 'help#manually_running_match'
+
+  # Contest Creator Help Routes
+  get '/help/contest_creator_capabilities', to: 'help#contest_creator_capabilities'
+  get '/help/creating_contest', to: 'help#creating_contest'
+  get '/help/writing_referee', to: 'help#writing_referee'
+  get '/help/writing_replay_plugin', to: 'help#writing_replay_plugin'
+
+  # Student Help Routes
+  get '/help/student_capabilities', to: 'help#student_capabilities'
+  get '/help/upload_players_to_contest', to: 'help#upload_players_to_contest'
+  get '/help/challenge_other_players', to: 'help#challenge_other_players'
+  get '/help/view_tournament_results', to: 'help#view_tournament_results'
+  get '/help/view_challenge_match_results', to: 'help#view_challenge_match_results'
+
   get '/match_logs/:id/std_out', to: 'match_log_infos#std_out'
   get '/match_logs/:id/std_err', to: 'match_log_infos#std_err'
   
@@ -33,60 +54,4 @@ GameContestServer::Application.routes.draw do
   get 'signup', to: 'users#new', as: :signup
   get 'login', to: 'sessions#new', as: :login
   delete 'logout', to: 'sessions#destroy', as: :logout
-
-
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
-  # root 'welcome#index'
-
-  # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
-
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
-
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Example resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Example resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Example resource route with more complex sub-resources:
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', on: :collection
-  #     end
-  #   end
-
-  # Example resource route with concerns:
-  #   concern :toggleable do
-  #     post 'toggle'
-  #   end
-  #   resources :posts, concerns: :toggleable
-  #   resources :photos, concerns: :toggleable
-
-  # Example resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
 end
