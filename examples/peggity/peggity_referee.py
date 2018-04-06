@@ -3,6 +3,7 @@
 from ref_helper import *
 import json
 import pickle
+import random
 
 BOARD_SIZE = 16
 
@@ -25,7 +26,7 @@ class Player:
 
 class Game:
     def __init__(self, numPlayers):
-        self.players = self.getPlayers()
+        self.players = self.getPlayers(numPlayers)
         manager.send("match", "start")
         winner = self.runGame()
         manager.send("round", "end")
@@ -33,7 +34,7 @@ class Game:
         manager.send("match", "end")
         self.reportResults("matchresult", winner)
     
-    def getPlayers(self):
+    def getPlayers(self, numPlayers):
         players = []
         for i in range(numPlayers):
             players.append(Player(playerServer))
@@ -42,19 +43,22 @@ class Game:
     def runGame(self):
         manager.send("round", ["start", 0])
         board = self.getInitialBoard()
-        player = self.getStartingPlayer()
+        invalidPreviousMove = False
+        playerNum = 1
         while True:
             for player in self.players:
-                row, col = player.move()
-                if not self.isValidMove(row, col):
-                    player = self.switchPlayer(player)
-                    return player
-                board[row][col] = player
-                if self.checkWin(board):
-                    player.addWin()
-                    return player
-                player = self.switchPlayer(player)
-    
+                if invalidPreviousMove:
+                    return player.name
+                row, col = player.move(playerNum, board)
+                if self.isValidMove(row, col):
+                    board[row][col] = player
+                    if self.checkWin(board):
+                        player.addWin()
+                        return player
+                    playerNum = switchPlayer(playerNum)
+                else:
+                    invalidPreviousMove = True
+
     def getInitialBoard(self):
         board = []
         for rows in range(BOARD_SIZE):
@@ -63,11 +67,6 @@ class Game:
                 row.append(0)
             board.append(row)
         return board
-    
-    def getStartingPlayer(self):
-        if random.randint(0, 1) == 0:
-            return 1
-        return 2
     
     def isValidMove(self, row, col):
         if row < 0 or row >= BOARD_SIZE or col < 0 or row >= BOARD_SIZE:
