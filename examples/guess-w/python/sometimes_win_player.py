@@ -3,7 +3,8 @@
 import random
 import talk_to_referee
 
-asciiVal = random.choice(range(97, 123))
-move = chr(asciiVal)
+def move():
+    asciiVal = random.choice(range(97, 123))
+    return chr(asciiVal)
 
 talk_to_referee.init(move)

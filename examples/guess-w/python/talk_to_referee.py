@@ -7,7 +7,7 @@ def init(move):
     #Parsing command line arguments
     #Usage: client.py --name [name] -p [port]"
     parser = OptionParser()
-    parser.add_option("-p", "--path", action="store", type="int", dest="path")
+    parser.add_option("-p", "--path", action="store", type="string", dest="path")
     parser.add_option("-n", "--name", action="store", type="string", dest="name")
     (options, args) = parser.parse_args()
 
@@ -23,7 +23,7 @@ def init(move):
     while True:
         reply = s.recv(4096).decode()
         if "move" in reply:
-            s.send(move.encode())
+            s.send(move().encode())
         elif "wins" in reply:
             break
 

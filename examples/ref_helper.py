@@ -80,7 +80,7 @@ class Manager():
 
 #Parse options from manager
 parser = OptionParser()
-parser.add_option("-p","--path",action="store",type="int",dest="path")
+parser.add_option("-p","--path",action="store",type="string",dest="path")
 parser.add_option("-n","--num",action="store",type="int",dest="num") #number of players
 parser.add_option("-r", "--rounds", action="store", type="int", dest="rounds") #Number of rounds
 parser.add_option("-t", "--time", action="store", type="int", dest="time") #Max amount of time for the match

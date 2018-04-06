@@ -133,7 +133,7 @@ class RoundWrapper
       command = "#{Shellwords.escape @referee.file_location} -p #{@aires_path} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time}"
     end
 
-    loc = "#{Shellwords.escape @referee.file_location[0, @referee.file_location.length - @referee.name.length]}logs/#{@referee.name}_match_#{@match_id}_round_#{@rounds.length() + 1}"
+    loc = get_log_location(@referee)
     @child_list.push(Process.spawn("#{command}", :out => "#{loc}_log.txt", :err => "#{loc}_err.txt"))
     @match[:ref_logs] = loc
 
@@ -154,7 +154,7 @@ class RoundWrapper
         command = "#{Shellwords.escape player.file_location} -n #{Shellwords.escape player.name} -p #{@client_path}"
       end
 
-      loc = "#{Shellwords.escape player.file_location[0, player.file_location.length - player.name.length]}logs/#{player.name}_match_#{@match_id}_round_#{@rounds.length() + 1}"
+      loc = get_log_location(player)
       @child_list.push(Process.spawn("#{command}", :out => "#{loc}_log.txt", :err => "#{loc}_err.txt"))
       @match[:logs][player.name] = loc
     end
@@ -172,6 +172,19 @@ class RoundWrapper
     end
 
     reap_children
+  end
+
+  def get_log_directory(entity)
+    file_location_parts = entity.file_location.split('/')
+    file_location_parts.pop
+    dir_location = file_location_parts.join('/')
+    "#{Shellwords.escape dir_location}/logs/"
+  end
+
+  def get_log_location(entity)
+    log_directory = get_log_directory(entity)
+    file_name = "#{entity.name}_match_#{@match_id}_round_#{@rounds.length + 1}"
+    log_directory + file_name
   end
 
   #Receive input from referee and perform actions
@@ -228,10 +241,10 @@ class RoundWrapper
 
   def compress_logs
     locs = []
-    locs << "#{Shellwords.escape @referee.file_location[0, @referee.file_location.length - @referee.name.length]}logs/"
+    locs << get_log_directory(@referee)
     @match[:ref_logs] = locs.last + "match_#{@match_id}_logs"
     @players.each do |player|
-      locs << "#{Shellwords.escape player.file_location[0, player.file_location.length - player.name.length]}logs/"
+      locs << get_log_directory(player)
       @match[:logs][player.name] = locs.last + "match_#{@match_id}_logs"
     end
 

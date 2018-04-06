@@ -79,28 +79,6 @@ class RefereesController < ApplicationController
 
   private
 
-  def update_log_locations(new_location)
-    new_dir = File.dirname(new_location)
-    self.contests.each do |contest|
-      contest.matches.each do |match|
-        log_info = match.match_log_info
-        unless log_info.nil?
-          log_info.log_stdout = new_dir + "/logs/" + File.basename(log_info.log_stdout)
-          log_info.log_stderr = new_dir + "/logs/" + File.basename(log_info.log_stderr)
-        end
-      end
-      contest.tournaments.each do
-        contest.matches.each do |match|
-          log_info = match.match_log_info
-          unless log_info.nil?
-            log_info.log_stdout = new_dir + "/logs/" + File.basename(log_info.log_stdout)
-            log_info.log_stderr = new_dir + "/logs/" + File.basename(log_info.log_stderr)
-          end
-        end
-      end
-    end
-  end
-
   def acceptable_params
     params.require(:referee).permit(:name,
                                     :rules_url,
