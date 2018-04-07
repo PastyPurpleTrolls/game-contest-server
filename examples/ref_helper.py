@@ -15,6 +15,8 @@ def stop_alarm():
 #Create and listen to a socket
 class SocketServer():
     def __init__(self, path):
+#        if os.path.exists(path):
+#            os.remove(path)
         self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self.socket.bind(path)
         self.socket.listen(10)
