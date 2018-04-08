@@ -2,9 +2,12 @@ module TournamentsHelper
   def get_player_results(tournament)
     @results = {}
     initialize_hash(tournament)
-    populate_results(tournament)
-    populate_wins
-    populate_ranks
+    begin
+      populate_results(tournament)
+      populate_wins
+      populate_ranks
+    rescue
+    end
     @results
   end
 

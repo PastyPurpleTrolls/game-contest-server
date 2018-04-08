@@ -56,21 +56,21 @@ class TournamentRunner
 
     # Run different tournament types
     case @tournament.tournament_type
-      when "round robin"
-        round_robin(@tournament_players)
-      when "single elimination"
-        if @number_of_players > 2
-          puts " ERROR: Single elimination doesn't work with more than 2 players per game"
-        else
-          single_elimination(@tournament_players)
-        end
-        return
-      when "multiplayer game"
-        multiplayer_game(@tournament_players, @number_of_players)
-        return
+    when "round robin"
+      round_robin(@tournament_players)
+    when "single elimination"
+      if @number_of_players > 2
+        puts " ERROR: Single elimination doesn't work with more than 2 players per game"
       else
-        puts " ERROR: Tournament type is not recognized"
-        return
+        single_elimination(@tournament_players)
+      end
+      return
+    when "multiplayer game"
+      multiplayer_game(@tournament_players, @number_of_players)
+      return
+    else
+      puts " ERROR: Tournament type is not recognized"
+      return
     end
     puts " Tournament runner finished creating matches for tournament #" + @tournament_id.to_s
 
@@ -82,9 +82,9 @@ class TournamentRunner
     players.each_with_index do |p, i|
       players.each_with_index do |q, j|
         if i < j
-	  half_rounds = @tournament.rounds_per_match / 2
-	  remainder = @tournament.rounds_per_match % 2
-          create_match([p, q], half_rounds)
+          half_rounds = @tournament.rounds_per_match / 2
+          remainder = @tournament.rounds_per_match % 2
+          create_match([p, q], half_rounds) if half_rounds > 0
           create_match([q, p], half_rounds + remainder)
         end
       end
