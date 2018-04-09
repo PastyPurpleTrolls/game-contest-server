@@ -16,7 +16,7 @@ def send_name_using_socket(s, name):
     s.send(message.encode())
 
 
-def handle_moves(s):
+def handle_moves(s, playerFunction):
     pcolors = ["blue", "green", "yellow", "orange", "black", "white", "purple"]
     win = False
     while not win:
@@ -24,9 +24,10 @@ def handle_moves(s):
         if board != "win":
             row, col = playerFunction(pcolors, currentPlayer, board)
             data = "%s,%s" % (row, col)
-            s.send(data)
+            s.send(data.encode())
         else:
             win = True
+
 
 
 def init(playerFunction):
@@ -41,5 +42,5 @@ def init(playerFunction):
 
     s = connect_to_socket(PATH)
     send_name_using_socket(s, NAME)
-    handle_moves(s)
+    handle_moves(s, playerFunction)
     s.close()

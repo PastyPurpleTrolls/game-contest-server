@@ -14,8 +14,7 @@ class Player:
         self.name = self.connection.listen(1024).decode().rstrip()
 
     def move(self, currentPlayer, board):
-        stringBoard = pickle.dumps(board)
-        data = "%s|%s" % (currentPlayer, board)
+        data = pickle.dumps((currentPlayer, board))
         self.connection.send(data)
         move = self.connection.listen(1024).decode().rstrip()
         moveList = move.split(',')
@@ -30,9 +29,9 @@ class Game:
         manager.send("match", "start")
         winner = self.runGame()
         manager.send("round", "end")
-        self.reportResults("roundresult", winner)
+        self.reportResults("roundresult", winner, True)
         manager.send("match", "end")
-        self.reportResults("matchresult", winner)
+        self.reportResults("matchresult", winner, False)
     
     def getPlayers(self, numPlayers):
         players = []
@@ -50,12 +49,14 @@ class Game:
                 if invalidPreviousMove:
                     return player.name
                 row, col = player.move(playerNum, board)
-                if self.isValidMove(row, col):
-                    board[row][col] = player
+                row = int(row)
+                col = int(col)
+                self.sendMoveToManager(player, row, col)
+                if self.isValidMove(board, row, col):
+                    board[row][col] = playerNum
                     if self.checkWin(board):
-                        player.addWin()
                         return player
-                    playerNum = switchPlayer(playerNum)
+                    playerNum = self.switchPlayer(playerNum)
                 else:
                     invalidPreviousMove = True
 
@@ -68,7 +69,7 @@ class Game:
             board.append(row)
         return board
     
-    def isValidMove(self, row, col):
+    def isValidMove(self, board, row, col):
         if row < 0 or row >= BOARD_SIZE or col < 0 or row >= BOARD_SIZE:
             return False
         return board[row][col] == 0
@@ -127,11 +128,12 @@ class Game:
                     return True
         return False
     
-    def reportResults(self, resulttype, winner):
+    def reportResults(self, resulttype, winner, informPlayer=True):
         for player in self.players:
             # Tell the player who won
-            data = "%s|%s" % (winner, "win")
-            player.connection.send(data)
+            data = pickle.dumps((winner.name, "win"))
+            if informPlayer:
+                player.connection.send(data)
             # Get the result for who won
             result = "Win" if (player.name == winner.name) else "Loss"
             manager.send(resulttype, [player.name, result, str(player.wins)])
