@@ -12,7 +12,7 @@
     </div>
     <div class="row">
         <%= form_tag contest_path(@contest), method: 'get', id: 'player_form', class: 'form-inline' do %>
-            <%= text_field_tag :player_search, params[:player_search], class: 'form-control' %>
+            <%= text_field_tag :player_search, params[:player_search], class: 'form-control inline-block' %>
             <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
         <% end %>
     </div>
