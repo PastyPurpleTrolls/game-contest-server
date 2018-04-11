@@ -254,8 +254,7 @@ describe "PlayersPages" do
       it "shows proper statistics" do
         should have_content('Wins: 7')
         should have_content('Losses: 4')
-        should have_content('Ties: 0')
-        should have_content('Win Percentage: 63.64%')
+        should have_content('64%')
       end
 
       it "shows all match information" do
@@ -277,8 +276,7 @@ describe "PlayersPages" do
       it "shows proper statistics" do
         should have_content('Wins: 5')
         should have_content('Losses: 0')
-        should have_content('Ties: 0')
-        should have_content('Win Percentage: 100.0%')
+        should have_content('100%')
       end
 
       it "shows all match information" do
@@ -299,8 +297,7 @@ describe "PlayersPages" do
       it "shows proper statistics" do
         should have_content('Wins: 0')
         should have_content('Losses: 8')
-        should have_content('Ties: 0')
-        should have_content('Win Percentage: 0.0%')
+        should have_content('0%')
       end
 
       it "shows all match information" do

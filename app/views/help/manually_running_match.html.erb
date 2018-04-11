@@ -40,10 +40,17 @@
                 In the first tab, find the path reported. We will call this <code>referee_path</code>.
             </li>
             <li class="space-between">
-                In the third tab, in the first player's directory, run:
+                In the third tab, navigate to the first player's directory.
+                <br><br>
+                If the player is a makefile player, run:
                 <pre>make contest path=&#60;referee_path&#62; name=&#60;player_name&#62;</pre> where
                 <code>&#60;referee_path&#62;</code> is the path specified in Step 4, and
                 <code>&#60;player_name&#62;</code> is a player name of your choosing.
+                <br><br>
+                If the player is a single-file player, run:
+                <pre>./&#60;player_file&#62; -p &#60;referee_path&#62; -n &#60;player_name&#62;</pre>
+                where <code>&#60;player_file&#62;</code> is the file name of your player, and the other variables are
+                the same as listed above.
             </li>
             <li class="space-between">
                 Repeat Step 5 in the second player's directory.

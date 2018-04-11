@@ -91,7 +91,7 @@ class Match < ActiveRecord::Base
   end
 
   def name
-    self.players.map(&:name).join("-")
+    self.players.map(&:name).join(" vs. ")
   end
 
   extend FriendlyId

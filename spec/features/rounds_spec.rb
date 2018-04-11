@@ -54,10 +54,12 @@ describe "RoundsPages" do
     end
 
     it "lists all the rounds for the match" do
+      counter = 1
       Round.where(match: challenge_match).each do |r|
         #should have_selector('li', text: 'Round '+ r.id.to_s)
-        should have_selector('div', text: /Round #{r.id}$/)
-        should have_link(r.id, href: round_path(r))
+        should have_selector('div', text: /Round #{counter}$/)
+        should have_link("Round #{counter}", href: round_path(r))
+        counter += 1
       end
     end
 

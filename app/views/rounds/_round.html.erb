@@ -1,3 +1,7 @@
 <div class="info-container">
-  <%= link_to  "Round #{round.id}", round_path(round) %>	
+    <% if params[:page].nil? %>
+        <%= link_to  "Round #{round_counter+1}", round_path(round) %>
+    <% else %>
+        <%= link_to  "Round #{round_counter+1+(params[:page].to_i-1)*10}", round_path(round) %>
+    <% end %>
 </div> 

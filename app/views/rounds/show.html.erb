@@ -1,5 +1,5 @@
 <% content_for :javascript_includes do %>
-    <%= javascript_include_tag URI.join(@assets_url, "script.js"), "data-turbolinks-track" => true %>
+    <%= javascript_include_tag URI.join(@assets_url, "script.js"), "data-turbolinks-track" => 'reload' %>
 <% end %>
 <% setTitle("Round") %>
 <br>
@@ -12,7 +12,7 @@
         <li><a href="<%= contest_path(@match.manager.contest) %>"><%= @match.manager.contest.name %></a></li>
         <li><a href="<%= tournament_path(@match.manager) %>"><%= @match.manager.name %></a></li>
     <% end %>
-    <li><a href="<%= match_path(@match) %>">Match <%= @match.id %></a></li>
+    <li><a href="<%= match_path(@match) %>">Match</a></li>
     <li class="active">Round <%= @round.id %></li>
 </ol>
 <div class="row">
@@ -22,9 +22,6 @@
         </div>
         <div class="row">
             <%= render partial: 'player_rounds/player_links', collection: @round.player_rounds, as: 'player_round' %>
-            <div class="col-md-12">
-                <p class="info-container"><%= link_to "Match " + @round.match_id.to_s, @match %></p>
-            </div>
         </div>
     </div>
 </div>

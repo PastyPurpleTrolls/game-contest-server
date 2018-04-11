@@ -1,15 +1,17 @@
-<% if !player_match.nil? %>
-	<% @tmp = [] %>
-	<% player_match.match.players.each do |p|%>
-		<% @tmp << p.name %>
-	<% end %>
+<% unless player_match.nil? %>
 	<%= button_to(match_path(player_match.match), method: :get, class: 'results-container') do %>
-		<%= @tmp.to_sentence %>
-		<% unless player_match.result %>
-			<span class="xs-font">(Waiting)</span>
-		<% else %>
-			<span class="xs-font">(<%= player_match.result %> on <%= player_match.created_at.strftime("%m-%d-%y") %>)</span>
-		<% end %>
+		<%= player_match.match.name %>
+		<% if player_match.result %>
+            <% if player_match.result == 'Win' %>
+                <span class="green badge"><%= player_match.result %></span>
+            <% elsif player_match.result == 'Loss' %>
+                <span class="red badge"><%= player_match.result %></span>
+            <% else %>
+                <span class="badge"><%= player_match.result %></span>
+            <% end %>
+        <% else %>
+            <span class="badge">Waiting</span>
+        <% end %>
 	<% end %>
 <% end %>
 

@@ -10,7 +10,6 @@ class PlayerMatch < ActiveRecord::Base
   default_scope -> { order("player_matches.result DESC") }
   scope :wins, -> { where(result: 'Win') }
   scope :losses, -> { where(result: 'Loss') }
-  scope :ties, -> { where(result: 'Tie') }
 
   def self.search(player, search)
     if search.blank?
@@ -20,11 +19,20 @@ class PlayerMatch < ActiveRecord::Base
     end
   end
 
+  # Do not include ties, as test matches would negatively impact the win
+  # percentage.
   def self.win_percentage
-    if self.count == 0
-      0.0
+    wins = self.wins.count.to_f
+    losses = self.losses.count.to_f
+    total = wins + losses
+    if total == 0
+      0
     else
-      (self.wins.count.to_f / self.count * 100).round(2)
+      (wins / total * 100).round(0)
     end
+  end
+
+  def self.loss_percentage
+    100 - self.win_percentage
   end
 end
