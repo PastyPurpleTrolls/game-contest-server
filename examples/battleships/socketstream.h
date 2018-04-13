@@ -265,9 +265,7 @@ class basic_server {
 	}
 
 	basic_server(const std::string& use_path) : path(use_path) {
-		if (unlink(path.c_str()) < 0) {
-		    throw std::runtime_error("unlink() failed");
-		}
+		unlink(path.c_str());
 
 		sd = socket(AF_UNIX, SOCK_STREAM, 0);
 		if (sd < 0) {
