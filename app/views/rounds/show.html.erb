@@ -13,12 +13,12 @@
         <li><a href="<%= tournament_path(@match.manager) %>"><%= @match.manager.name %></a></li>
     <% end %>
     <li><a href="<%= match_path(@match) %>">Match</a></li>
-    <li class="active">Round <%= @round.id %></li>
+    <li class="active">Round Results</li>
 </ol>
 <div class="row">
     <div class="center display-container col-md-offset-1 col-md-10">
         <div class="row">
-            <h1 class="headings left">Round <%= @round.id %></h1>
+            <h1 class="headings left">Round Results</h1>
         </div>
         <div class="row">
             <%= render partial: 'player_rounds/player_links', collection: @round.player_rounds, as: 'player_round' %>

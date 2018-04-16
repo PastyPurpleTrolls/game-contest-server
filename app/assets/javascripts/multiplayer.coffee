@@ -14,7 +14,7 @@ bNumPlayersPerGameExponent = .077255
 RMSEPhraseList = ["Very sure", "Pretty sure", "Sure", "Unsure", "Pretty unsure", "Very unsure"]
 
 
-window.onload = () -> (   
+$(document).on "turbolinks:load", -> (
    setupForMultiplayerElements() 
    attachListeners()
 )
@@ -250,7 +250,7 @@ calculateRMSE = (numMatchesToPlay) -> (
 
 attachListeners = () -> (
    matchType = getMatchTypeSelector()
-   matchType.addEventListener('click', setupForMultiplayerElements)
+   matchType.addEventListener('change', setupForMultiplayerElements)
    totalMatchesInput = getTotalMatchesInput()
    totalMatchesInput.addEventListener('keyup', totalMatchesChange)
    totalTimeInput = getTotalTimeInput()

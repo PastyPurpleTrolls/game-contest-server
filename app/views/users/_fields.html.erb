@@ -1,28 +1,28 @@
 <%= render 'shared/error_messages', object: @user %>
 
 <div class="form-group row left">
-    <div class="col-xs-4">
+    <div class="col-xs-4 text-right padding-right-25">
         <%= f.label :username %>:
     </div>
     <%= f.text_field :username, class: 'form-control' %>
 </div>
 
 <div class="form-group row left">
-    <div class="col-xs-4">
+    <div class="col-xs-4 text-right padding-right-25">
         <%= f.label :email %>:
     </div>
     <%= f.text_field :email, class: 'form-control' %>
 </div>
 
 <div class="form-group row left">
-    <div class="col-xs-4">
+    <div class="col-xs-4 text-right padding-right-25">
         <%= f.label :password %>:
     </div>
     <%= f.password_field :password, class: 'form-control' %>
 </div>
 
 <div class="form-group row left">
-    <div class="col-xs-4">
+    <div class="col-xs-4 text-right padding-right-25">
         <%= f.label :password_confirmation, 'Confirmation' %>:
     </div>
     <%= f.password_field :password_confirmation, class: 'form-control' %>

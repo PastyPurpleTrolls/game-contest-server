@@ -1,5 +1,5 @@
 <div class="form-group row left"  data-toggle="tooltip" data-placement="bottom" title="Selecting a start time that is before the current time will automatically start the match as soon as possible">
-    <div class="col-xs-4">
+    <div class="col-xs-4 text-right padding-right-25">
         <%= f.label :earliest_start, "Start:" %>
     </div>
     <% Time.use_zone("America/Indianapolis") do %>
@@ -8,8 +8,8 @@
 </div>
 
 <div class="form-group row left">
-    <div class="col-xs-4">Number of Rounds:</div>
-    <%= f.select :num_rounds, 1..@contest.referee.round_limit.to_i, {}, class: 'form-input' %>
+    <p class="col-xs-4 text-right padding-right-25">Number of Rounds:</p>
+    <%= f.text_field :num_rounds, class: 'form-control' %>
 </div>
 
 <% if @contest.playable_players_by(current_user).count > 0 %>

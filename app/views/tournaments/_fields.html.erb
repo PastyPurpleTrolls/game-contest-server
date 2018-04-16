@@ -1,11 +1,11 @@
 <div class="form-group row left">
-    <div class="col-xs-4">
+    <div class="col-xs-4 text-right padding-right-25">
         <%= f.label :name %>:
     </div>
     <%= f.text_field :name, class: 'form-control' %>
 </div>
 <div class="form-group row left">
-    <div class="col-xs-4">
+    <div class="col-xs-4 text-right padding-right-25">
         <%= f.label :start, "Start:" %>
     </div>
     <% Time.use_zone("America/Indianapolis") do %>
@@ -15,7 +15,7 @@
     <% end %>
 </div>
 <div class="form-group row left">
-    <div class="col-xs-4">
+    <div class="col-xs-4 text-right padding-right-25">
         <%= f.label :tournament_type, 'Tournament Type:' %>
     </div>
     <%= f.select :tournament_type, [['Round Robin','round robin'],['Single Elimination', 'single elimination'],
@@ -23,7 +23,7 @@
                  {}, class: 'form-input form-element'  %>
 </div>
 <div class="form-group row left">
-    <div class="col-xs-4">
+    <div class="col-xs-4 text-right padding-right-25">
         <%= f.label :rounds_per_match, 'Rounds per Match:' %>
     </div>
     <%= f.text_field :rounds_per_match, class: 'form-control' %>
@@ -34,7 +34,7 @@
 </script>
 <div id="multiplayerAssets">
     <div class="form-group row left">
-        <div class="col-xs-4">
+        <div class="col-xs-4 text-right padding-right-25">
             <%= f.label :expected_disparity, 'Skill range between players:' %>
         </div>
         <%= f.select :expected_disparity, [['Very small'],['Small'], ['Medium small'], ['Medium'], ['Medium large'],
@@ -42,19 +42,19 @@
                      {}, class: 'form-input form-element' %>
     </div>
     <div class="form-group row left">
-        <div class="col-xs-4">
+        <div class="col-xs-4 text-right padding-right-25">
             <%= f.label :total_matches, 'Total Matches:' %>
         </div>
         <%= f.text_field :total_matches, min: '1', max: '1000000', class: 'form-control form-element' %>
     </div>
     <div class="form-group row left">
-        <div class="col-xs-4">
+        <div class="col-xs-4 text-right padding-right-25">
             <%= f.label :total_time, 'Total Time (Hrs):' %>
         </div>
         <%= f.text_field :total_time, class: 'form-control form-element' %>
     </div>
     <div class="form-group row left">
-        <div class="col-xs-4">
+        <div class="col-xs-4 text-right padding-right-25">
             <%= f.label :RMSE, 'Uncertainty:' %>
         </div>
         <%= f.select :RMSE,[["Very sure"],["Pretty sure"],["Sure"],["Unsure"],["Pretty unsure"], ["Very unsure"]],

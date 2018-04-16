@@ -31,19 +31,16 @@
             <% end %>
             <% if current_user==@match.manager.referee.user && @match.match_log_info %>
                 <div class="col-md-6">
-                    <p class="info-container" data-toggle="tooltip" data-placement="bottom" title="Click link to download">
-                        Standard Log: <a href="/match_logs/<%= @match.match_log_info.id %>/std_out">Referee STDOUT Log</a>
+                    <p class="info-container">
+                        <a href="/match_logs/<%= @match.match_log_info.id %>/std_out" download>Download Referee Standard Log</a>
                     </p>
                 </div>
                 <div class="col-md-6">
-                    <p class="info-container" data-toggle="tooltip" data-placement="bottom" title="Click link to download">
-                        Error Log: <a href="/match_logs/<%= @match.match_log_info.id %>/std_err">Referee STDERR Log</a>
+                    <p class="info-container">
+                        <a href="/match_logs/<%= @match.match_log_info.id %>/std_err" download>Download Referee Error Log</a>
                     </p>
                 </div>
             <% end %>            
-            <div class="col-md-12">
-                <p class="info-container">Contest: <%= link_to @match.manager.name, @match.manager %></p>
-            </div>
         </div>
     </div>
 </div>    
