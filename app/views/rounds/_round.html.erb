@@ -1,7 +1,13 @@
 <div class="info-container">
     <% if params[:page].nil? %>
         <%= link_to  "Round #{round_counter+1}", round_path(round) %>
+        <%= image_tag 'crown.png', class: 'margin-left xs-image' %>
+        <span class="xs-font"><%= round.winners %></span>
+        <%= image_tag 'crown.png', class: 'xs-image' %>
     <% else %>
         <%= link_to  "Round #{round_counter+1+(params[:page].to_i-1)*10}", round_path(round) %>
+        <%= image_tag 'crown.png', class: 'margin-left xs-image' %>
+        <span class="xs-font"><%= round.winners %></span>
+        <%= image_tag 'crown.png', class: 'xs-image' %>
     <% end %>
 </div> 
