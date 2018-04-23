@@ -35,4 +35,19 @@ class PlayerMatch < ActiveRecord::Base
   def self.loss_percentage
     100 - self.win_percentage
   end
+
+  def win_count
+    wins = 0
+    rounds = self.match.rounds.includes(:player_rounds)
+    rounds.each do |round|
+      player_rounds = round.player_rounds.where(player_id: self.player.id)
+      player_rounds.each do |player_round|
+        if player_round.result == 'Win'
+          wins += 1
+          break
+        end
+      end
+    end
+    wins
+  end
 end

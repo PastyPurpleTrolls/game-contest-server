@@ -4,16 +4,19 @@
         <% if player_match.result %>
             <% if player_match.result == 'Win' %>
                 <span class="green badge"><%= player_match.result %></span>
+                <span class="green badge">Score: <%= player_match.win_count %></span>
             <% elsif player_match.result == 'Loss' %>
                 <span class="red badge"><%= player_match.result %></span>
+                <span class="red badge">Score: <%= player_match.win_count %></span>
             <% else %>
                 <span class="badge"><%= player_match.result %></span>
+                <span class="badge">Score: <%= player_match.win_count %></span>
             <% end %>
         <% else %>
             <span class="badge">Pending</span>
         <% end %>
     </div>
-    <div class="top-padding">    
+    <div class="top-padding">
         <% if player_match.match_log_info %>
             <span class="xs-font">Logs: </span>
             <a class="xs-font"
@@ -33,5 +36,5 @@
                 <u>Standard Error</u>
             </a>
         <% end %>
-    </div>    
+    </div>
 </div>
