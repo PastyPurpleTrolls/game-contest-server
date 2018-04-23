@@ -54,9 +54,9 @@
 
 <div class="form-group row left">
     <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
-        <%= f.label :round_limit, 'Round Limit', class: 'padding-right-5' %>
+        <%= f.label :round_limit, 'Maximum Rounds', class: 'padding-right-5' %>
         <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
-           title="Maximum amount of rounds that the referee will allow. Inclusive."></i>
+           title="Maximum number of rounds that the referee will allow. Inclusive."></i>
     </div>
     <%= f.text_field :round_limit, class: 'form-control', value: '100' %>
 </div>
@@ -72,9 +72,9 @@
 
 <div class="form-group row left">
     <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
-        <%= f.label :time_per_game, 'Time Per Match', class: 'padding-right-5' %>
+        <%= f.label :time_per_game, 'Maximum Match Time', class: 'padding-right-5' %>
         <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
-           title="Maximum amount of time that the referee will allow a player to submit a move"></i>
+           title="Maximum amount of time the match is allowed to take before timing out"></i>
     </div>
     <%= f.text_field :time_per_game, class: 'form-control' %>
 </div>
