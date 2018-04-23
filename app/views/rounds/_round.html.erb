@@ -6,7 +6,7 @@
             <span class="xs-font"><%= round.winners %></span>
             <%= image_tag 'crown.png', class: 'xs-image' %>
         <% else %>
-            <span class="xs-font">Tie</span>
+            <span class="margin-left xs-font">Tie</span>
         <% end %>
     <% else %>
         <%= link_to "Round #{round_counter + 1 + (params[:page].to_i - 1) * 10}", round_path(round) %>
@@ -15,7 +15,7 @@
             <span class="xs-font"><%= round.winners %></span>
             <%= image_tag 'crown.png', class: 'xs-image' %>
         <% else %>
-            <span class="xs-font">Tie</span>
+            <span class="margin-left xs-font">Tie</span>
         <% end %>
     <% end %>
 </div> 
