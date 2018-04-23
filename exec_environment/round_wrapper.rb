@@ -48,8 +48,8 @@ class RoundWrapper
         end
       end
       calculate_results
-      compress_logs
     end
+    compress_logs
   end
 
   #Used if referee is not rounds capable and can't calculate it's own match results
