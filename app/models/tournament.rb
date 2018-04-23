@@ -50,6 +50,10 @@ class Tournament < ActiveRecord::Base
     errors.add :name, *errors.delete(:friendly_id) if errors[:friendly_id].present?
   end
 
+  def started?
+    self.status == 'started'
+  end
+
   def completed?
     self.status == 'completed'
   end

@@ -1,0 +1,6 @@
+<div class="row">
+    <div class="center display-container col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6">
+        <h1 class="headings row left">Players</h1>
+        <%= render partial: 'contests/contest_player', collection: @tournament.players, as: :player %>
+    </div>
+</div>

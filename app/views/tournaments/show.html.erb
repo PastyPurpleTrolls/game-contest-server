@@ -59,8 +59,10 @@
 
 <% if @tournament.completed? %>
     <%= render partial: 'medals' %>
-<% else %>
+    <%= render "#{@tournament.tournament_type.sub(' ', '_')}_tournament" %>
+<% elsif @tournament.started? %>
     <%= render partial: 'progress' %>
+    <%= render "#{@tournament.tournament_type.sub(' ', '_')}_tournament" %>
+<% else %>
+    <%= render 'players_in_tournament' %>
 <% end %>
-
-<%= render "#{@tournament.tournament_type.sub(' ', '_')}_tournament" %>
