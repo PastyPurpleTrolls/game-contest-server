@@ -18,8 +18,7 @@
     <div class="col-xs-4 text-right padding-right-25">
         <%= f.label :tournament_type, 'Tournament Type:' %>
     </div>
-    <%= f.select :tournament_type, [['Round Robin','round robin'],['Single Elimination', 'single elimination'],
-                                    ['Multiplayer Game', 'multiplayer game'], ['King of the Hill', 'king of the hill']],
+    <%= f.select :tournament_type, [['Round Robin','round robin'],['Single Elimination', 'single elimination']],
                  {}, class: 'form-input form-element'  %>
 </div>
 <div class="form-group row left">
