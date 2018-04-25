@@ -67,7 +67,7 @@
         <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
            title="Number of players that the referee is designed to interact with"></i>
     </div>
-    <%= f.select :players_per_game, 1..10, {}, class: 'form-control' %>
+    <%= f.select :players_per_game, 1..10, {selected: 2}, class: 'form-control' %>
 </div>
 
 <div class="form-group row left">
@@ -76,7 +76,7 @@
         <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
            title="Maximum amount of time the match is allowed to take before timing out"></i>
     </div>
-    <%= f.text_field :time_per_game, class: 'form-control' %>
+    <%= f.text_field :time_per_game, class: 'form-control', value: 30 %>
 </div>
 
 <div class="form-group row left">
