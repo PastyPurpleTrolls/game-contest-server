@@ -22,10 +22,11 @@ $(document).on "turbolinks:load", -> (
 setupForMultiplayerElements = () -> (
    matchTypeSelector = getMatchTypeSelector()
    multiplayerDiv = document.getElementById("multiplayerAssets")
-   if matchTypeSelector.value == "multiplayer game"
-     multiplayerDiv.removeAttribute("hidden")
-   else
-     multiplayerDiv.setAttribute("hidden", true)
+   if multiplayerDiv != null
+     if matchTypeSelector.value == "multiplayer game"
+       multiplayerDiv.removeAttribute("hidden")
+     else
+       multiplayerDiv.setAttribute("hidden", true)
 )
 
 getDisparityDiv = () -> (
@@ -248,19 +249,24 @@ calculateRMSE = (numMatchesToPlay) -> (
   return RMSE
 )
 
+addEventListenerIfNotNull = (domElement, listenerType, callback) -> (
+  if domElement != null
+    domElement.addEventListener(listenerType, callback)
+)
+
 attachListeners = () -> (
    matchType = getMatchTypeSelector()
-   matchType.addEventListener('change', setupForMultiplayerElements)
+   addEventListenerIfNotNull(matchType, 'change', setupForMultiplayerElements)
    totalMatchesInput = getTotalMatchesInput()
-   totalMatchesInput.addEventListener('keyup', totalMatchesChange)
+   addEventListenerIfNotNull(totalMatchesInput, 'keyup', totalMatchesChange)
    totalTimeInput = getTotalTimeInput()
-   totalTimeInput.addEventListener('keyup', totalTimeChange)
+   addEventListenerIfNotNull(totalTimeInput, 'keyup', totalTimeChange)
    totalUncertaintyInput = getUncertaintyInput()
-   totalUncertaintyInput.addEventListener('click', totalUncertaintyChange)
+   addEventListenerIfNotNull(totalUncertaintyInput, 'click', totalUncertaintyChange)
    disparityInput = getDisparityInput()
-   disparityInput.addEventListener('click', RMSEConditionChange)
+   addEventListenerIfNotNull(disparityInput, 'click', RMSEConditionChange)
    rightButton = document.getElementById('btnRight')
    leftButton  = document.getElementById('btnLeft')
-   rightButton.addEventListener('click', RMSEConditionChange)
-   leftButton.addEventListener('click', RMSEConditionChange)
+   addEventListenerIfNotNull(rightButton, 'click', RMSEConditionChange)
+   addEventListenerIfNotNull(leftButton, 'click', RMSEConditionChange)
 )

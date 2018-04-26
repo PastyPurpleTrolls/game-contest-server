@@ -14,6 +14,8 @@ class Contest < ActiveRecord::Base
   validates :description,   presence: true
   validates :name,          presence: true, uniqueness: true
 
+  before_save :remove_invalid_characters
+
   default_scope -> { order("created_at DESC") }
 
   def contest
@@ -42,4 +44,8 @@ class Contest < ActiveRecord::Base
     errors.add :name, *errors.delete(:friendly_id) if errors[:friendly_id].present?
   end
 
+  def remove_invalid_characters
+    self.name.gsub!("'", '')
+    self.name.gsub!('"', '')
+  end
 end

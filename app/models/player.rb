@@ -15,6 +15,8 @@ class Player < ActiveRecord::Base
   validates :description,   presence: true
   validates :name,          presence: true, uniqueness: { scope: :contest }
 
+  before_save :remove_invalid_characters
+
   default_scope -> { order("created_at DESC") }
 
   include Uploadable
@@ -63,5 +65,12 @@ class Player < ActiveRecord::Base
 
   def num_match_wins(match)
     self.player_rounds.where(round: match.rounds, result: 'Win').count
+  end
+
+  private
+
+  def remove_invalid_characters
+    self.name.gsub!("'", '')
+    self.name.gsub!('"', '')
   end
 end

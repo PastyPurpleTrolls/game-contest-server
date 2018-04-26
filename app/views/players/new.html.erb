@@ -9,12 +9,12 @@
     <li class="active">New Player</li>
 </ol>
 <div class="row">
-    <div class="center display-container col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6">
+    <div class="center display-container col-md-offset-2 col-md-8">
         <h1 class="headings new-heading row left">New Player</h1>
         <div class="row left">
-            <p class="col-xs-4">Selected Contest:</p>
+            <p class="col-xs-4 text-right padding-right-25">Selected Contest:</p>
             <%= form_tag(new_contest_player_path(:contest_id), method: :get, class: "form-input", id: "contest-form") do %>
-                <%= collection_select(:player, :contest_id, @contests, :id, :name, {prompt: "Select a Contest"}, class: "form-element", id: "contest-selector", onchange: "redirectToContest()") %>
+                <%= collection_select(:player, :contest_id, @contests, :id, :name, {prompt: "Select a Contest"}, class: "form-control", id: "contest-selector", onchange: "redirectToContest()") %>
             <% end %>
         </div>
         <% if @player %>
