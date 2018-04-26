@@ -13,12 +13,13 @@ CXXFLAGS += -std=gnu++11 -ggdb -O3 -DPLAYER=$(Player) -DPLAYER_H=\"$(Player).h\"
 LDFLAGS += -ggdb
 CC = $(CXX)
 
-objects = AIContest.o BoardV3.o Message.o PlayerV2.o PlayerConnection.o
+objects = AIContest.o BoardV3.o conio.o Message.o PlayerV2.o PlayerConnection.o
 
 referee: $(AIContestMain) $(objects)
 referee.o: referee.cpp AIContest.h PlayerConnection.h socketstream.h
 AIContest.o: AIContest.cpp BoardV3.h PlayerConnection.h socketstream.h
 
+conio.o: conio.h conio.cpp
 player: player.o $(Player).o $(objects)
 player.o: player.cpp socketstream.h
 $(Player).o: $(Player).cpp socketstream.h

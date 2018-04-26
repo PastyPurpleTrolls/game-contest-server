@@ -4,6 +4,8 @@ Referee File (all of the following, zipped):
 * `AIContest.h`
 * `BoardV3.cpp`
 * `BoardV3.h`
+* `conio.cpp`
+* `conio.h`
 * `defines.h`
 * `Makefile`
 * `Message.cpp`
@@ -20,6 +22,8 @@ Player-Include Files (all of the following, zipped):
 * `AIContest.h`
 * `BoardV3.cpp`
 * `BoardV3.h`
+* `conio.cpp`
+* `conio.h`
 * `defines.h`
 * `Makefile`
 * `Message.cpp`
@@ -30,7 +34,7 @@ Player-Include Files (all of the following, zipped):
 * `PlayerV2.cpp`
 * `PlayerV2.h`
 * `socketstream.h`
-
+cd ..
 Replay Plugin:
 * All files in `replay-plugin` directory (zipped)
     
