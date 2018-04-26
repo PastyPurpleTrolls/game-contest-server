@@ -1,5 +1,10 @@
 <% setTitle("Sign Up") %>
 <div class="row">
+    <div class="center display-container top-margin col-md-offset-2 col-md-8">
+        <h1 class="headings new-heading">Warning!</h1>
+        <p>At this time, this login page is not using HTTPS. Please do <em>not</em>
+            use a password that you use on other sites.</p>
+    </div>
     <div class="center display-container top-margin col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6">
         <h1 class="headings new-heading row">Sign Up</h1>
         <%= form_for(@user) do |f| %>
