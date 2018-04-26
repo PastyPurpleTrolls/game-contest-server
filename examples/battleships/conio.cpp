@@ -38,14 +38,14 @@ namespace conio {
      * gotoRowCol = CSI r;c
      */
     string gotoRowCol( const int row, const int col ) {
-	    return NULL;
+	    return "";
     }
 
     const int Foreground = 1;	// local implementation-specific values
     const int Background = 2;
 
     string getColorSequence( Color c, int fgOrBg ) {
-        return NULL;
+        return "";
     }
 
     /** @brief Returns a string that contains the escape sequence to set the
@@ -55,7 +55,7 @@ namespace conio {
      *     to the terminal to set the foreground color.
      */
     string fgColor( Color c ) {
-	    return NULL;
+	    return "";
     }
 
     /** @brief Returns a string that contains the escape sequence to set the
@@ -65,7 +65,7 @@ namespace conio {
      *     to the terminal to set the background color.
      */
     string bgColor( Color c ) {
-        return NULL;
+        return "";
     }
 
     /** @brief Returns a string that contains the escape sequence to set the
@@ -75,7 +75,7 @@ namespace conio {
      *     to the terminal to set the text style.
      */
     string setTextStyle( TextStyle ts ) {
-        return NULL;
+        return "";
     }
 
 
@@ -85,7 +85,7 @@ namespace conio {
      *     to the terminal to reset text output to the default.
      */
     string resetAll( ) {
-        return NULL;
+        return "";
     }
 
     /** @brief Returns a string that contains the escape sequence to clear
@@ -94,7 +94,7 @@ namespace conio {
      *     to the terminal to clear the screen.
      */
     string clrscr() {
-        return NULL;
+        return "";
     }
 
 }
