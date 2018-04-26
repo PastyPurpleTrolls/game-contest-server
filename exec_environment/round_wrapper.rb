@@ -42,9 +42,14 @@ class RoundWrapper
       self.run_round
     else
       @num_rounds.times do
-        self.run_round
-        if @status[:error]
-          return
+        if @max_match_time >= 1
+          begin_time = Time.now
+          self.run_round
+          end_time = Time.now
+          @max_match_time -= (end_time - begin_time)
+          if @status[:error]
+            return
+          end
         end
       end
       calculate_results
@@ -128,9 +133,11 @@ class RoundWrapper
     sleep 0.1
     #Start referee process, giving it the port to talk to us on
     if Dir.glob("#{File.dirname(@referee.file_location)}/[Mm]akefile").size > 0
-      command = "cd #{Shellwords.escape File.dirname(@referee.file_location)}; make run path=#{@aires_path} num_players=#{@number_of_players} num_rounds=#{@num_rounds} max_time=#{@max_match_time}"
+      file_location = Shellwords.escape File.dirname(@referee.file_location)
+      command = "cd #{file_location}; make run path=#{@aires_path} num_players=#{@number_of_players} num_rounds=#{@num_rounds} max_time=#{@max_match_time.to_i}"
     else
-      command = "#{Shellwords.escape @referee.file_location} -p #{@aires_path} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time}"
+      file_location = Shellwords.escape @referee.file_location
+      command = "#{file_location} -p #{@aires_path} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time}"
     end
 
     loc = get_log_location(@referee)
@@ -147,11 +154,15 @@ class RoundWrapper
 
     #Start players
     @players.each do |player|
+      player_name = Shellwords.escape player.name
+
       #Name must be given before port because it crashes for mysterious ("--name not found") reasons otherwise
       if Dir.glob("#{File.dirname(player.file_location)}/[Mm]akefile").size > 0
-        command = "cd #{Shellwords.escape File.dirname(player.file_location)}; make contest name=#{Shellwords.escape player.name} path=#{@client_path}"
+        file_location = Shellwords.escape File.dirname(player.file_location)
+        command = "cd #{file_location}; make contest name=#{player_name} path=#{@client_path}"
       else
-        command = "#{Shellwords.escape player.file_location} -n #{Shellwords.escape player.name} -p #{@client_path}"
+        file_location = Shellwords.escape player.file_location
+        command = "#{file_location} -n #{player_name} -p #{@client_path}"
       end
 
       loc = get_log_location(player)
