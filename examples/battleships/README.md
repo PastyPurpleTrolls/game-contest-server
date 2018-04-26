@@ -34,7 +34,7 @@ Player-Include Files (all of the following, zipped):
 * `PlayerV2.cpp`
 * `PlayerV2.h`
 * `socketstream.h`
-cd ..
+
 Replay Plugin:
 * All files in `replay-plugin` directory (zipped)
     
