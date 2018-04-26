@@ -137,7 +137,7 @@ class RoundWrapper
       command = "cd #{file_location}; make run path=#{@aires_path} num_players=#{@number_of_players} num_rounds=#{@num_rounds} max_time=#{@max_match_time.to_i}"
     else
       file_location = Shellwords.escape @referee.file_location
-      command = "#{file_location} -p #{@aires_path} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time}"
+      command = "#{file_location} -p #{@aires_path} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time.to_i}"
     end
 
     loc = get_log_location(@referee)

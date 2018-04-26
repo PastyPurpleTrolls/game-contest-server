@@ -76,10 +76,16 @@ class MatchRunner
     puts round_runner.status
     if round_runner.status[:error]
       report_error
+      self.complete_match(true)
+      #Check to see if the tournament can be completed
+      self.complete_tournament
       return
     else
       if not self.save_rounds(round_runner.rounds)
         report_error
+        self.complete_match(true)
+        #Check to see if the tournament can be completed
+        self.complete_tournament
         return false
       end
       #Print and save results, schedule follow-up matches
@@ -118,9 +124,11 @@ class MatchRunner
 
   def report_error
     @match_participants.each do |player|
-      player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id).first
-      player_match.result = "Error"
-      player_match.save!
+      player_matches = PlayerMatch.where(match_id: @match_id, player_id: player.id)
+      player_matches.each do |player_match|
+        player_match.result = "Error"
+        player_match.save!
+      end
       print_results(player.name, "Error", nil)
     end
     puts "    Match runner could not finish match #" + @match.id.to_s
@@ -148,6 +156,8 @@ class MatchRunner
       self.save_round_json(round_obj.slug, round)
     end
     return true
+  rescue
+    return false
   end
 
   #Generate log files for playing back rounds
@@ -172,8 +182,12 @@ class MatchRunner
     end
   end
 
-  def complete_match
-    @match.status = "completed"
+  def complete_match(error=false)
+    if error
+      @match.status = "completed"
+    else
+      @match.status = 'error'
+    end
     @match.completion = Time.now
     @match.save!
   end
@@ -184,7 +198,7 @@ class MatchRunner
     end
     tournament = Tournament.find(@match.manager_id)
     tournament.matches.each do |childmatch|
-      if childmatch.status != "completed"
+      unless %w(completed error).include? childmatch.status
         return false
       end
     end
