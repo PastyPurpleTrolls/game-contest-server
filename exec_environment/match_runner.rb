@@ -184,9 +184,9 @@ class MatchRunner
 
   def complete_match(error=false)
     if error
-      @match.status = "completed"
-    else
       @match.status = 'error'
+    else
+      @match.status = 'completed'
     end
     @match.completion = Time.now
     @match.save!
