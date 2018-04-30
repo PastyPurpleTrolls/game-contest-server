@@ -135,9 +135,6 @@ class MatchRunner
   end
 
   def save_rounds(rounds)
-    if rounds.length != @num_rounds
-      return false
-    end
     #Loop through all the rounds and create a new record in the DB
     rounds.each do |round|
       round_obj = Round.create!(
