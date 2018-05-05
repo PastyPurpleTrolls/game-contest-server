@@ -18,10 +18,8 @@
                             Options <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <% if current_user == @referee.user and current_user.contest_creator %>
+                            <% if current_user.can_edit_referee?(@referee) %>
                                 <%= active_link_to 'Edit', edit_referee_path(@referee), wrap_tag: :li %>
-                            <% end %>
-                            <% if @referee.deletable?(current_user) %>
                                 <%= active_link_to 'Delete', referee_path(@referee), method: :delete,
                                                    data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
                             <% end %>

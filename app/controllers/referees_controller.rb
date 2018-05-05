@@ -72,8 +72,8 @@ class RefereesController < ApplicationController
         redirect_to referees_path
       end
     else
-      flash[:danger] = 'This referee is currently being used in a contest'
-      render 'show'
+      flash[:danger] = 'This referee is currently being used in contests'
+      redirect_to referee_path(@referee)
     end
   end
 
