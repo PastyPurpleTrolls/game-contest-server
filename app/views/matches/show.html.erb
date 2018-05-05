@@ -14,17 +14,32 @@
 <div class="row">
     <div class="center display-container col-md-offset-1 col-md-10">
         <div class="row">
-            <h1 class="headings left">Match</h1>
+            <div class="col-xs-8 col-xs-offset-2">
+                <h1 class="headings left">Match</h1>
+            </div>
+            <% if current_user&.admin %>
+                <div class="col-xs-2 right form-dropdown">
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">
+                            Options <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <%= active_link_to 'Delete', match_path(@match), method: :delete,
+                                               data: {confirm: 'Are you sure?'}, wrap_tag: :li %>
+                        </ul>
+                    </div>
+                 </div>
+            <% end %>
         </div>
         <div class="row">
-            <div class="col-md-6">            
+            <div class="col-md-6">
                 <p class="info-container">Status: <%= @match.status.capitalize %></p>
             </div>
             <% if @match.completed? %>
                 <div class="col-md-6">
                     <p class="info-container">Completed: <%= timeRelativeToNow(@match.completion) %></p>
                 </div>
-            <% else %>                
+            <% else %>
                 <div class="col-md-6">
                     <p class="info-container">Earliest Start Time: <%= timeRelativeToNow(@match.earliest_start) %></p>
                 </div>
@@ -40,10 +55,10 @@
                         <a href="/match_logs/<%= @match.match_log_info.id %>/std_err" download>Download Referee Error Log</a>
                     </p>
                 </div>
-            <% end %>            
+            <% end %>
         </div>
     </div>
-</div>    
+</div>
 <div class="row center">
     <div class="outer-home-container col-md-offset-1 col-md-5">
         <div class="display-container">
