@@ -35,14 +35,14 @@ class User < ActiveRecord::Base
   end
 
   def can_edit_contest?(contest)
-    self == contest.user and self.contest_creator
+    (self == contest.user and self.contest_creator) or self.admin
   end
 
   def can_edit_player?(player)
-    self == player.user or player.deletable?(self)
+    self == player.user or self.admin
   end
 
   def can_edit_referee?(referee)
-    (self == referee.user and self.contest_creator) or referee.deletable?(self)
+    (self == referee.user and self.contest_creator) or self.admin
   end
 end
