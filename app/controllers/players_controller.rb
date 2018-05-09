@@ -46,6 +46,12 @@ class PlayersController < ApplicationController
   end
 
   def destroy
+    @player.matches.each do |match|
+      match.player_matches.each {|m| m.destroy}
+      match.parent_matches.each {|m| m.destroy}
+      match.child_matches.each {|m| m.destroy}
+      match.destroy
+    end
     @player.destroy
     redirect_to contest_path(@player.contest)
   end

@@ -19,12 +19,16 @@
                             Options <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <% if current_user == @player.user %>
+                            <% if current_user.can_edit_player?(@player) %>
                                 <%= active_link_to 'Edit', edit_player_path(@player), wrap_tag: :li %>
                             <% end %>
-                            <% if @player.deletable?(current_user) %>
+                            <% if current_user.can_delete_player?(@player) %>
                                 <%= active_link_to 'Delete', player_path(@player), method: :delete,
                                                    data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
+                            <% elsif current_user.can_delete_player_with_warning?(@player) %>
+                                <%= active_link_to 'Delete', player_path(@player), method: :delete,
+                                                   data: {confirm: 'Deleting this player will delete all associating matches. Are you sure you want to do this?'},
+                                                   wrap_tag: :li %>
                             <% end %>
                         </ul>
                     </div>

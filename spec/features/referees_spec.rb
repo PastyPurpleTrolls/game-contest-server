@@ -43,9 +43,9 @@ describe "RefereePages" do
         before do
           fill_in 'Name', with: name
           fill_in 'Rules', with: rules
-          fill_in 'Round Limit', with: round_limit_word
+          fill_in 'Maximum Rounds', with: round_limit_word
           select num_players, from: 'Players'
-          fill_in 'Time Per Match', with: time_per_game
+          fill_in 'Maximum Match Time', with: time_per_game
           attach_file('Referee File', file_location)
           attach_file('Player-Include Files', file_location)
           attach_file('Replay Plugin', file_location)
@@ -59,9 +59,9 @@ describe "RefereePages" do
         before do
           fill_in 'Name', with: name
           fill_in 'Rules', with: rules
-          fill_in 'Round Limit', with: round_limit_negative
+          fill_in 'Maximum Rounds', with: round_limit_negative
           select num_players, from: 'Players'
-          fill_in 'Time Per Match', with: time_per_game
+          fill_in 'Maximum Match Time', with: time_per_game
           attach_file('Referee File', file_location)
           attach_file('Player-Include Files', file_location)
           attach_file('Replay Plugin', file_location)
@@ -75,9 +75,9 @@ describe "RefereePages" do
         before do
           fill_in 'Name', with: name
           fill_in 'Rules', with: rules
-          fill_in 'Round Limit', with: round_limit_zero
+          fill_in 'Maximum Rounds', with: round_limit_zero
           select num_players, from: 'Players'
-          fill_in 'Time Per Match', with: time_per_game
+          fill_in 'Maximum Match Time', with: time_per_game
           attach_file('Referee File', file_location)
           attach_file('Player-Include Files', file_location)
           attach_file('Replay Plugin', file_location)
@@ -98,9 +98,9 @@ describe "RefereePages" do
       before do
         fill_in 'Name', with: name
         fill_in 'Rules', with: rules
-        fill_in 'Round Limit', with: round_limit
+        fill_in 'Maximum Rounds', with: round_limit
         select num_players, from: 'Players'
-        fill_in 'Time Per Match', with: time_per_game
+        fill_in 'Maximum Match Time', with: time_per_game
         check 'referee_rounds_capable'
         attach_file('Referee File', file_location)
         attach_file('Player-Include Files', file_location)
@@ -143,7 +143,8 @@ describe "RefereePages" do
           should have_content(name)
           should have_content(round_limit)
           should have_link('Rules', href: rules)
-          should have_content("This referee is capable of handling rounds")
+          should have_selector('i.glyphicon.glyphicon-ok')
+          should_not have_selector('i.glyphicon.glyphicon-remove')
           should have_content(num_players)
           should have_content(time_per_game)
         end
@@ -180,9 +181,9 @@ describe "RefereePages" do
       before do
         fill_in 'Name', with: ''
         fill_in 'Rules', with: "#{rules}/updated"
-        fill_in 'Round Limit', with: round_limit
+        fill_in 'Maximum Rounds', with: round_limit
         select num_players, from: 'Players'
-        fill_in 'Time Per Match', with: time_per_game
+        fill_in 'Maximum Match Time', with: time_per_game
         attach_file('Referee File', file_location)
         attach_file('Player-Include Files', file_location)
         attach_file('Replay Plugin', file_location)
@@ -220,9 +221,9 @@ describe "RefereePages" do
       before do
         fill_in 'Name', with: name
         fill_in 'Rules', with: "#{rules}/updated"
-        fill_in 'Round Limit', with: round_limit
+        fill_in 'Maximum Rounds', with: round_limit
         select num_players, from: 'Players'
-        fill_in 'Time Per Match', with: time_per_game
+        fill_in 'Maximum Match Time', with: time_per_game
         check 'referee_rounds_capable'
         attach_file('Referee File', file_location)
         attach_file('Player-Include Files', file_location)
@@ -399,7 +400,8 @@ describe "RefereePages" do
       should have_link('Rules', href: referee.rules_url)
       should have_content(referee.round_limit)
       should have_content(referee.players_per_game.to_s)
-      should have_content("This referee is not capable of handling rounds")
+      should_not have_selector('i.glyphicon.glyphicon-ok')
+      should have_selector('i.glyphicon.glyphicon-remove')
       should_not have_content(referee.file_location)
       should have_content(referee.user.username)
     end

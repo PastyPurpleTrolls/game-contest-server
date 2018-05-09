@@ -41,7 +41,7 @@ describe "PlayersPages" do
         fill_in 'Name', with: name
         fill_in 'Description', with: description
         check('Allow others to compete against this player')
-        uncheck('Allow others to download this player')
+        # uncheck('Allow others to download this player')
         attach_file('Player File', file_location)
       end
 
@@ -99,8 +99,8 @@ describe "PlayersPages" do
     it "shows all fields" do
       should have_field('Name', with: player.name)
       should have_field('Description', with: player.description)
-      should have_unchecked_field('download')
-      should_not have_checked_field('download')
+      # should have_unchecked_field('download')
+      # should_not have_checked_field('download')
       should have_checked_field('compete')
       should_not have_unchecked_field('compete')
     end
@@ -201,15 +201,9 @@ describe "PlayersPages" do
       specify {expect(response).to redirect_to(contest_path(player.contest))}
     end
 
-
     it "removes a player from the system" do
       expect {delete player_path(player)}.to change(Player, :count).by(-1)
     end
-
-    it "does not remove a player from the system that is in a match" do
-      expect {delete player_path(player2)}.to change(Player, :count).by(0)
-    end
-
   end
 
   describe "show" do
