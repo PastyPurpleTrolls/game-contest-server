@@ -13,18 +13,15 @@
             </div>
             <% if current_user&.can_edit_referee?(@referee) %>
                 <div class="col-xs-2 right form-dropdown">
-                    <div class="dropdown">
-                        <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">
-                            Options <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <% if current_user.can_edit_referee?(@referee) %>
-                                <%= active_link_to 'Edit', edit_referee_path(@referee), wrap_tag: :li %>
-                                <%= active_link_to 'Delete', referee_path(@referee), method: :delete,
-                                                   data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
-                            <% end %>
-                        </ul>
-                    </div>
+                    <% if current_user.can_edit_referee?(@referee) %>
+                        <%= link_to edit_referee_path(@referee), class: 'no-underline' do %>
+                            <i class="glyphicon glyphicon-cog options-glyphicon"></i>
+                        <% end %>
+                        <%= link_to referee_path(@referee), method: :delete, class: 'no-underline',
+                                    data: { confirm: 'Are you sure?' } do %>
+                            <i class="glyphicon glyphicon-trash options-glyphicon"></i>
+                        <% end %>
+                    <% end %>
                 </div>
             <% end %>
         </div>

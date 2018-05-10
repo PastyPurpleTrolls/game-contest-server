@@ -11,18 +11,15 @@
             <div class="row">
                 <h1 class="headings left">My Information</h1>
                 <% if current_user&.admin? %>
-                    <div class="dropdown">
-                        <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">
-                            Options <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <%= active_link_to 'Edit', edit_user_path(@user), wrap_tag: :li %>
-                            <% if current_user != @user %>
-                                <%= active_link_to 'Delete', user_path(@user), method: :delete,
-                                                   data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
-                            <% end %>
-                        </ul>
-                    </div>
+                    <%= link_to edit_user_path(@user), class: 'no-underline' do %>
+                        <i class="glyphicon glyphicon-cog options-glyphicon"></i>
+                    <% end %>
+                    <% if current_user != @user %>
+                        <%= link_to user_path(@user), method: :delete, class: 'no-underline',
+                                    data: { confirm: 'Are you sure?' } do %>
+                            <i class="glyphicon glyphicon-trash options-glyphicon"></i>
+                        <% end %>
+                    <% end %>
                 <% end %>
             </div>
             <div class="row">

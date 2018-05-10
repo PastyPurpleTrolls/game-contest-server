@@ -14,24 +14,22 @@
             </div>
             <% if current_user&.can_edit_player?(@player) %>
                 <div class="col-xs-2 right form-dropdown">
-                    <div class="dropdown">
-                        <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">
-                            Options <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <% if current_user.can_edit_player?(@player) %>
-                                <%= active_link_to 'Edit', edit_player_path(@player), wrap_tag: :li %>
-                            <% end %>
-                            <% if current_user.can_delete_player?(@player) %>
-                                <%= active_link_to 'Delete', player_path(@player), method: :delete,
-                                                   data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
-                            <% elsif current_user.can_delete_player_with_warning?(@player) %>
-                                <%= active_link_to 'Delete', player_path(@player), method: :delete,
-                                                   data: {confirm: 'Deleting this player will delete all associating matches. Are you sure you want to do this?'},
-                                                   wrap_tag: :li %>
-                            <% end %>
-                        </ul>
-                    </div>
+                    <% if current_user.can_edit_player?(@player) %>
+                        <%= link_to edit_player_path(@player), class: 'no-underline' do %>
+                            <i class="glyphicon glyphicon-cog options-glyphicon"></i>
+                        <% end %>
+                    <% end %>
+                    <% if current_user.can_delete_player?(@player) %>
+                        <%= link_to player_path(@player), method: :delete, class: 'no-underline',
+                                    data: { confirm: 'Are you sure?' } do %>
+                            <i class="glyphicon glyphicon-trash options-glyphicon"></i>
+                        <% end %>
+                    <% elsif current_user.can_delete_player_with_warning?(@player) %>
+                        <%= link_to player_path(@player), method: :delete, class: 'no-underline',
+                                    data: {confirm: 'Deleting this player will delete all associating matches. Are you sure you want to do this?'} do %>
+                            <i class="glyphicon glyphicon-trash options-glyphicon"></i>
+                        <% end %>
+                    <% end %>
                 </div>
             <% end %>
         </div>

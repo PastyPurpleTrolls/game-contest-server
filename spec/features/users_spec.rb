@@ -429,7 +429,7 @@ describe "UsersPages" do
         let!(:user) {FactoryBot.create(:user)}
         before {visit user_path(user)}
 
-        it {should_not have_link('Delete')}
+        it {should_not have_css('.glyphicon-trash')}
       end
 
       describe "as a user" do
@@ -440,7 +440,7 @@ describe "UsersPages" do
           visit user_path(user)
         end
 
-        it {should_not have_link('Delete')}
+        it {should_not have_css('.glyphicon-trash')}
       end
 
       describe "as admin" do
@@ -452,7 +452,7 @@ describe "UsersPages" do
           visit user_path(user)
         end
 
-        it {should have_link('Delete', href: user_path(user))}
+        it {should have_css('.glyphicon-trash')}
 
         describe "redirects properly", type: :request do
           before do
@@ -464,7 +464,7 @@ describe "UsersPages" do
         end
 
         it "removes a user from the system" do
-          expect {click_link('Delete', match: :first)}.to change(User, :count).by(-1)
+          expect {click_link(href: user_path(user), match: :first)}.to change(User, :count).by(-1)
         end
       end
 
@@ -477,7 +477,7 @@ describe "UsersPages" do
           visit user_path(admin1)
         end
 
-        it {should have_link('Delete', href: user_path(admin1))}
+        it {should have_css('.glyphicon-trash')}
 
         describe "redirects properly", type: :request do
           before do
@@ -497,7 +497,7 @@ describe "UsersPages" do
           visit user_path(admin)
         end
 
-        it {should_not have_link('Delete', href: user_path(admin))}
+        it {should_not have_css('.glyphicon-trash')}
       end
     end
   end
