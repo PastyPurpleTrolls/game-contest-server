@@ -14,17 +14,19 @@
 
 <% if @contest.playable_players_by(current_user).count > 0 %>
     <div class="row multiselector">
-        <div class="col-xs-5 first-player-select right">
+        <div>
             <p class="center player-label">Available Players:</p>
             <select id="leftValues" class="player-select" size="5" multiple>
-                <%= render partial: "playable_player", collection: @contest.playable_players_by(current_user) %>
+                <%= render partial: "players/player_option",
+                           collection: @contest.playable_players_by(current_user),
+                           as: :player %>
             </select>
         </div>
         <div class="player-selectors">
             <br>
             <br>
-            <input type="button" id="btnRight" onclick="addPlayer()" value="&gt;&gt;" />
-            <input type="button" id="btnLeft" onclick="removePlayer()" value="&lt;&lt;" />
+            <input type="button" id="btnRight" onclick="addPlayer()" value="&#xf061;" />
+            <input type="button" id="btnLeft" onclick="removePlayer()" value="&#xf060;" />
         </div>
         <div>
             <p class="player-label">Selected Players:</p>    

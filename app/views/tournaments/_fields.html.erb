@@ -19,7 +19,7 @@
         <%= f.label :tournament_type, 'Tournament Type:' %>
     </div>
     <%= f.select :tournament_type, [['Round Robin','round robin'],['Single Elimination', 'single elimination']],
-                 {}, class: 'form-input form-element'  %>
+                 {}, class: 'form-control'  %>
 </div>
 <div class="form-group row left">
     <div class="col-xs-4 text-right padding-right-25">
@@ -64,9 +64,7 @@
     <div>
         <p class="center"><%= f.label :leftValues, "Available Players:", class: "player-label" %></p>
         <select id="leftValues" class="player-select" size="5" multiple>
-            <% @tournament.contest.players.select{ |p| !p.tournaments.include?(@tournament)}.each do |p| %>
-                <option value=<%= p.id %>><%= p.name %> (<%= p.user.username %>)</option>
-            <% end %>  
+            <%= render partial: "players/player_option", collection: @tournament.available_players, as: :player %>
         </select>
     </div>
     <div class="player-selectors">
@@ -78,9 +76,7 @@
     <div>
         <p class="center"><%= f.label :rightValues, "Selected Players:", class: "player-label" %></p>
         <select name="tournament[player_ids][]" id="rightValues" class="player-select" size="5" multiple>
-        <% @tournament.players.each do |p| %>
-            <option value=<%= p.id %>><%= p.name %> (<%= p.user.username %>)</option>
-        <% end %>  
+            <%= render partial: "players/player_option", collection: @tournament.players, as: :player %>
         </select>
     </div>
 </div>

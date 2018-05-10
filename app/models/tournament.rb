@@ -58,6 +58,10 @@ class Tournament < ActiveRecord::Base
     self.status == 'completed'
   end
 
+  def available_players
+    self.contest.players.select{ |p| !p.tournaments.include?(self) }.each
+  end
+
   def percent_complete
     if self.matches.count == 0
       return 0

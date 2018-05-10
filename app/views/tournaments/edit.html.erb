@@ -8,15 +8,29 @@
     <li class="active">Edit</li>
 </ol>
 <div class="row">
-    <div class="center display-container col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6">
+    <div class="center display-container col-md-offset-2 col-md-8">
         <h1 class="headings new-heading row left">Edit Tournament</h1>
         <%= form_for @tournament do |f| %>
             <%= render 'shared/error_messages', object: @tournament %>
+
+            <% if @tournament.completed? %>
+                <p class="center">
+                    <i class="glyphicon glyphicon-info-sign"></i>&nbsp;Some fields cannot be modified after the
+                    tournament has completed
+                </p><br>
+            <% end %>
+
             <div class="form-group row left">
                 <div class="col-xs-4 text-right padding-right-25">Contest:</div>
                 <div class="col-xs-8 info-link"><%= @tournament.contest.name %></div>
             </div>
-            <%= render 'fields', f: f %>
+
+            <% if @tournament.completed? %>
+                <%= render 'completed_fields', f: f %>
+            <% else %>
+                <%= render 'fields', f: f %>
+            <% end %>
+
             <%= f.submit "Update Tournament", class: 'btn btn-danger' %>
         <% end %>
     </div>            

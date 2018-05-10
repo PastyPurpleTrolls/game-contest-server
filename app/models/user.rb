@@ -53,4 +53,8 @@ class User < ActiveRecord::Base
   def can_edit_referee?(referee)
     (self == referee.user and self.contest_creator) or self.admin
   end
+
+  def can_edit_tournament?(tournament)
+    (self == tournament.contest.user and self.contest_creator) or self.admin
+  end
 end
