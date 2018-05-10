@@ -9,15 +9,15 @@
     <div class="outer-home-container col-lg-offset-1 col-lg-5 col-md-6">
         <div class="display-container">
             <div class="row">
-                <h1 class="headings left">My Information</h1>
+                <h1 class="headings">My Information</h1>
                 <% if current_user&.admin? %>
                     <%= link_to edit_user_path(@user), class: 'no-underline' do %>
-                        <i class="glyphicon glyphicon-cog options-glyphicon"></i>
+                        <i class="glyphicon glyphicon-cog glyphicon-lg"></i>
                     <% end %>
                     <% if current_user != @user %>
                         <%= link_to user_path(@user), method: :delete, class: 'no-underline',
                                     data: { confirm: 'Are you sure?' } do %>
-                            <i class="glyphicon glyphicon-trash options-glyphicon"></i>
+                            <i class="glyphicon glyphicon-trash glyphicon-lg"></i>
                         <% end %>
                     <% end %>
                 <% end %>

@@ -3,11 +3,11 @@
         <%= link_to player_match.player.name, player_path(player_match.player) %>
         <% if player_match.result %>
             <% if player_match.result == 'Win' %>
-                <span class="green badge"><%= player_match.result %></span>
-                <span class="green badge">Score: <%= player_match.win_count %></span>
+                <span class="bg-green badge"><%= player_match.result %></span>
+                <span class="bg-green badge">Score: <%= player_match.win_count %></span>
             <% elsif player_match.result == 'Loss' %>
-                <span class="red badge"><%= player_match.result %></span>
-                <span class="red badge">Score: <%= player_match.win_count %></span>
+                <span class="bg-red badge"><%= player_match.result %></span>
+                <span class="bg-red badge">Score: <%= player_match.win_count %></span>
             <% else %>
                 <span class="badge"><%= player_match.result %></span>
                 <span class="badge">Score: <%= player_match.win_count %></span>
@@ -16,10 +16,10 @@
             <span class="badge">Pending</span>
         <% end %>
     </div>
-    <div class="top-padding">
+    <div>
         <% if player_match.match_log_info %>
-            <span class="xs-font">Logs: </span>
-            <a class="xs-font"
+            <span class="text-xs">Logs: </span>
+            <a class="text-xs"
                href="/match_logs/<%= player_match.match_log_info.id %>/std_out"
                data-toggle="tooltip"
                data-placement="bottom"
@@ -27,7 +27,7 @@
                download>
                 <u>Standard Out</u>
             </a>
-            <a class="xs-font"
+            <a class="text-xs"
                href="/match_logs/<%= player_match.match_log_info.id %>/std_err"
                data-toggle="tooltip"
                data-placement="bottom"

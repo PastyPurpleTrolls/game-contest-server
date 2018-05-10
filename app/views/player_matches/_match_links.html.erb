@@ -3,9 +3,9 @@
 		<%= player_match.match.name %>
 		<% if player_match.result %>
             <% if player_match.result == 'Win' %>
-                <span class="green badge"><%= player_match.result %></span>
+                <span class="bg-green badge"><%= player_match.result %></span>
             <% elsif player_match.result == 'Loss' %>
-                <span class="red badge"><%= player_match.result %></span>
+                <span class="bg-red badge"><%= player_match.result %></span>
             <% else %>
                 <span class="badge"><%= player_match.result %></span>
             <% end %>

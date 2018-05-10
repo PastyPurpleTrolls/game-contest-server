@@ -7,7 +7,7 @@
 <div class="row">
     <div class="center display-container col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6">
         <div class="row">
-            <h1 class="headings col-xs-12 left">Users</h1>
+            <h1 class="headings col-xs-12">Users</h1>
         </div>
         <%= form_tag users_path, method: :get, id: :users_search, class: 'form-inline' do %>
             <%= hidden_field_tag :direction, params[:direction] %>

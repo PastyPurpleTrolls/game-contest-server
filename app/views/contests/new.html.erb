@@ -7,18 +7,18 @@
 </ol>
 <div class="row">
     <div class="center display-container col-md-offset-2 col-lg-offset-3 col-md-8 col-lg-6">
-        <h1 class="headings new-heading left row">New Contest</h1>
+        <h1 class="headings new-heading row">New Contest</h1>
         <%= form_for @contest do |f| %>
             <%= render 'shared/error_messages', object: @contest %>
-            <div class="row left no-margin-bottom">
+            <div class="row no-margin-bottom">
                 <div class="col-xs-4 text-right padding-right-25">
                     <%= f.label :referee_id, 'Referee:' %>
                 </div>
                 <%= f.collection_select(:referee_id, @referees, :id, :name, {prompt: "Select a Referee"}, class: 'form-control col-xs-4') %>
             </div>
             <div class="row left">
-                <span class="col-xs-offset-4 xs-font info-link">
-                    OR <%= link_to 'Create New Referee', new_referee_path %>
+                <span class="col-xs-offset-4 text-xs">
+                    OR <%= link_to 'Create New Referee', new_referee_path, class: 'text-underline' %>
                 </span>
             </div>
             <%= render 'fields', f: f %>

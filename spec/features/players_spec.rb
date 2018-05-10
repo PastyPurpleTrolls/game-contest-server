@@ -75,7 +75,6 @@ describe "PlayersPages" do
           should have_content(name)
           should have_content(description)
           should have_content('can be challenged')
-          should have_content('cannot be downloaded')
           should have_link(player.contest.name,
                                href: contest_path(player.contest))
           should have_link(player.user.username,

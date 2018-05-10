@@ -1,12 +1,12 @@
 <div class="form-group row left">
-    <div class="col-xs-4 text-right padding-right-25">
+    <div class="col-xs-4 text-right">
         <%= f.label :name, 'Name:' %>
     </div>
     <%= f.text_field :name, class: 'form-control' %>
 </div>
 
 <div class="form-group row left">
-    <div class="col-xs-4 text-right padding-right-25">
+    <div class="col-xs-4 text-right">
         <%= f.label :rules_url, 'Rules URL:' %>
     </div>
     <%= f.text_field :rules_url, class: 'form-control' %>
@@ -15,46 +15,46 @@
 <br>
 
 <div class="form-group row left" >
-    <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
-        <%= f.label :upload, 'Referee File', class: 'padding-right-5' %>
+    <div class="col-xs-4 text-right no-padding-left no-wrap">
+        <%= f.label :upload, 'Referee File' %>&nbsp;
         <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
            title='A single file or tar/zip of the referee file and any dependencies. If it is a compressed file, it must support "make run".'></i>
     </div>
-    <%= f.file_field :upload, class: 'col-xs-5 no-left-padding no-right-padding' %>
+    <%= f.file_field :upload, class: 'col-xs-5 no-padding-left no-padding-right' %>
 </div>
 
 <div class="form-group row left">
-    <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
-        <%= f.label :upload2, 'Player-Include Files', class: 'padding-right-5' %>
+    <div class="col-xs-4 text-right no-padding-left no-wrap">
+        <%= f.label :upload2, 'Player-Include Files' %>&nbsp;
         <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
            title="A single file or tar/zip of everything that a player includes in his or her file"></i>
     </div>
-    <%= f.file_field :upload2, class: 'col-xs-5 no-left-padding no-right-padding' %>
+    <%= f.file_field :upload2, class: 'col-xs-5 no-padding-left no-padding-right' %>
 </div>
 
 <div class="form-group row left">
-    <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
-        <%= f.label :upload3, 'Replay Plugin', class: 'padding-right-5' %>
+    <div class="col-xs-4 text-right no-padding-left no-wrap">
+        <%= f.label :upload3, 'Replay Plugin' %>&nbsp;
         <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
            title="A single file or tar/zip of all assets (js files, images, etc.) needed for the replay plugin"></i>
     </div>
-    <%= f.file_field :upload3, class: 'col-xs-5 no-left-padding no-right-padding' %>
+    <%= f.file_field :upload3, class: 'col-xs-5 no-padding-left no-padding-right' %>
 </div>
 
 <div class="form-group row left">
-    <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
-        <%= f.label :upload4, 'Test Player', class: 'padding-right-5' %>
+    <div class="col-xs-4 text-right no-padding-left no-wrap">
+        <%= f.label :upload4, 'Test Player' %>&nbsp;
         <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
            title="A single file or tar/zip of a test player file and any dependencies, to verify that everything is working as expected"></i>
     </div>
-    <%= f.file_field :upload4, class: 'col-xs-5 no-left-padding no-right-padding' %>
+    <%= f.file_field :upload4, class: 'col-xs-5 no-padding-left no-padding-right' %>
 </div>
 
 <br>
 
 <div class="form-group row left">
-    <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
-        <%= f.label :round_limit, 'Maximum Rounds', class: 'padding-right-5' %>
+    <div class="col-xs-4 text-right no-padding-left no-wrap">
+        <%= f.label :round_limit, 'Maximum Rounds' %>&nbsp;
         <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
            title="Maximum number of rounds that the referee will allow. Inclusive."></i>
     </div>
@@ -62,8 +62,8 @@
 </div>
 
 <div class="form-group row left">
-    <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
-        <%= f.label :players_per_game, 'Players Per Match', class: 'padding-right-5' %>
+    <div class="col-xs-4 text-right no-padding-left no-wrap">
+        <%= f.label :players_per_game, 'Players Per Match' %>&nbsp;
         <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
            title="Number of players that the referee is designed to interact with"></i>
     </div>
@@ -75,8 +75,8 @@
 </div>
 
 <div class="form-group row left">
-    <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
-        <%= f.label :time_per_game, 'Maximum Match Time', class: 'padding-right-5' %>
+    <div class="col-xs-4 text-right no-padding-left no-wrap">
+        <%= f.label :time_per_game, 'Maximum Match Time' %>&nbsp;
         <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
            title="Maximum amount of time the match is allowed to take before timing out"></i>
     </div>
@@ -84,8 +84,8 @@
 </div>
 
 <div class="form-group row left">
-    <div class="col-xs-4 text-right no-left-padding padding-right-25 no-wrap">
-        <%= f.label :rounds_capable, 'Rounds-Capable', class: 'padding-right-5' %>
+    <div class="col-xs-4 text-right no-padding-left no-wrap">
+        <%= f.label :rounds_capable, 'Rounds-Capable' %>&nbsp;
         <i class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="bottom"
            title="Indicates whether the referee can start new rounds on its own, or a new game has to be started for each round"></i>
     </div>

@@ -1,0 +1,24 @@
+.banner-wrap {
+  width: 950px;
+}
+
+.home-banner {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin-top: 25px;
+}
+
+// "Battle it out, AI style" on landing page
+
+#catchphrase {
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.catchphrase-container {
+  background-color: #d9d7cb;
+  color: #625346;
+  vertical-align: middle;
+  padding: 15px 30px;
+}

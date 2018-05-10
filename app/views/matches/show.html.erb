@@ -15,13 +15,13 @@
     <div class="center display-container col-md-offset-1 col-md-10">
         <div class="row">
             <div class="col-xs-8 col-xs-offset-2">
-                <h1 class="headings left">Match</h1>
+                <h1 class="headings">Match</h1>
             </div>
             <% if current_user&.admin %>
                 <div class="col-xs-2 right form-dropdown">
                     <%= link_to match_path(@match), method: :delete, class: 'no-underline',
                                 data: {confirm: 'Are you sure?'} do %>
-                        <i class="glyphicon glyphicon-trash options-glyphicon"></i>
+                        <i class="glyphicon glyphicon-trash glyphicon-lg"></i>
                     <% end %>
                 </div>
             <% end %>
@@ -57,13 +57,13 @@
 <div class="row center">
     <div class="outer-home-container col-md-offset-1 col-md-5">
         <div class="display-container">
-            <h1 class="headings left row">Players</h1>
+            <h1 class="headings row">Players</h1>
             <%= render partial: 'player_matches/player_links', collection: @match.player_matches, as: 'player_match' %>
         </div>
     </div>
     <div class="outer-home-container col-md-5">
         <div class="display-container">
-            <h1 class="headings left row">Rounds</h1>
+            <h1 class="headings row">Rounds</h1>
             <%= render @rounds %>
             <%= will_paginate @rounds, inner_window: 2, outer_window: 0, previous_label: '<', next_label: '>' %>
         </div>

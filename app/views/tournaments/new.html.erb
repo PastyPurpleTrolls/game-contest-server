@@ -11,11 +11,13 @@
 <div class="row">
     <div class="center display-container col-md-offset-2 col-md-8">
         <h1 class="headings new-heading row">New Tournament</h1>
-        <div class="row left">
-            <p class="col-xs-4 text-right padding-right-25">Selected Contest:</p>
+        <div class="row">
+            <p class="col-xs-4 text-right padding-right-25">
+                <label>Selected Contest:</label>
+            </p>
             <%= form_tag(new_contest_tournament_path(:contest_id), method: :get, class: "form-input", id: "contest-form") do %>
                 <%= collection_select(:tournament, :contest_id, @contests, :id, :name, {prompt: "Select a Contest"},
-                                      class: "form-element", id: "contest-selector", onchange: "redirectToContest()") %>
+                                      class: "form-control", id: "contest-selector", onchange: "redirectToContest()") %>
             <% end %>
         </div>
         <% if @tournament %>
