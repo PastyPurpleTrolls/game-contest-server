@@ -29,7 +29,7 @@ describe "AuthenticationPages" do
       end
 
       it "has the correct content on the navbar" do
-        should have_selector(:xpath, "//li/a", text: 'Account')
+        should have_selector(:xpath, "//li/a", text: user.username)
         should have_link('Profile', href: user_path(user))
         should have_link('Settings', href: edit_user_path(user))
         should have_link('Log Out', href: logout_path)
@@ -43,7 +43,7 @@ describe "AuthenticationPages" do
         it "has the correct content on the navbar" do
           should have_button('Log In')
           should have_button('Sign Up')
-          should_not have_selector(:xpath, "//li/a", text: 'Account')
+          should_not have_selector(:xpath, "//li/a", text: user.username)
           should_not have_link('Log Out', href: logout_path)
           should_not have_link('Settings')
           should_not have_link('Profile')
