@@ -19,7 +19,7 @@ class MatchesController < ApplicationController
   def create
     @contest = Contest.friendly.find(params[:contest_id])
     player_ids = params[:match][:player_ids]
-    if selected_own_players(params[:match][:player_ids])
+    if selected_own_players(params[:match][:player_ids]) or current_user.admin
       if players_unplayable(player_ids, current_user)
         flash.now[:danger] = 'Not all players are playable'
         redirect_to root_path
