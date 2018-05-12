@@ -126,8 +126,8 @@ class MatchRunner
       player_matches.where(result: nil).each do |player_match|
         player_match.result = "Error"
         player_match.save!
+        print_results(player.name, "Error", nil)
       end
-      print_results(player.name, "Error", nil)
     end
     puts "    Match runner could not finish match #" + @match.id.to_s
     self.complete_match(true)
