@@ -206,6 +206,6 @@ Matches are executed and saved by `match_runner.rb`. This executable is in charg
 Each round is executed by `round_wrapper.rb`. The referee is started and told to listen on a specific port for a set number of players. Then the players are started and told the port where they can find the referee. Referees are in charge of handling communication with the players, but they must check in with `round_wrapper.rb` or the match runner will assume the game has failed and will stop the match. 
 
 ### ERD
-![Image of ERD document](/documentation/GameContestServerERD.png)
+![Image of ERD document](/app/assets/images/aires_erd.png)
 
 Many to many relationships are represented with a colored connection. This represents an additional associative entity (such as player_rounds) that connects the two entities. 
