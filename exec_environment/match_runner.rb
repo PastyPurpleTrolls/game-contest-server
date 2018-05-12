@@ -123,7 +123,7 @@ class MatchRunner
   def report_error
     @match_participants.each do |player|
       player_matches = PlayerMatch.where(match_id: @match_id, player_id: player.id)
-      player_matches.each do |player_match|
+      player_matches.where(result: nil).each do |player_match|
         player_match.result = "Error"
         player_match.save!
       end
