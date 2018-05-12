@@ -59,7 +59,7 @@ module Uploadable
     old_log_directory = "#{old_directory}/logs"
     new_log_directory = "#{new_directory}/logs"
     FileUtils.mkdir_p new_log_directory
-    if File.exist?(old_log_directory)
+    if File.exist?("#{old_log_directory}/*")
       FileUtils.cp("#{old_log_directory}/*", new_log_directory)
       self.update_log_locations new_directory
     end
