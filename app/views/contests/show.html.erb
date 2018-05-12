@@ -25,21 +25,31 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <p class="info-container">Description: <%= @contest.description %></p>
-            </div>
-            <div class="col-md-6">
-                <p class="info-container">Referee: <%= link_to @contest.referee.name, @contest.referee %></p>
-            </div>
-            <div class="col-md-6">
-                <p class="info-container">Creator: <%= link_to @contest.user.username, @contest.user %></p>
+                <p class="info-container"><%= @contest.description %></p>
             </div>
             <div class="col-md-6">
                 <p class="info-container">
+                    <i class="glyphicon glyphicon-flag"></i>
+                    Referee: <%= link_to @contest.referee.name, @contest.referee %>
+                </p>
+            </div>
+            <div class="col-md-6">
+                <p class="info-container">
+                    <i class="glyphicon glyphicon-user"></i>
+                    <%= link_to @contest.user.username, @contest.user %>
+                </p>
+            </div>
+            <div class="col-md-6">
+                <p class="info-container">
+                    <i class="glyphicon glyphicon-calendar"></i>
                     Deadline: <%= timeRelativeToNow(@contest.deadline) %>
                 </p>
             </div>
             <div class="col-md-6">
-                <p class="info-container"><%= link_to 'Rules', @contest.referee.rules_url, target: '_blank' %></p>
+                <p class="info-container">
+                    <i class="glyphicon glyphicon-list-alt"></i>
+                    <%= link_to 'Rules', @contest.referee.rules_url, target: '_blank' %>
+                </p>
             </div>
         </div>
     </div>

@@ -1,8 +1,11 @@
 <div class="col-md-6">
 	<p class="info-container">
+        <% if player_round.result == 'Win' %>
+            <i class="glyphicon glyphicon-king text-gold"></i>&nbsp;
+        <% end %>
         <%= link_to player_round.player.name, player_path(player_round.player) %>
         <% if player_round.result == 'Win' %>
-            <%= image_tag 'crown.png' %>
+            &nbsp;<i class="glyphicon glyphicon-king text-gold"></i>
         <% end %>
     </p>
 </div>

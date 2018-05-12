@@ -57,6 +57,10 @@ class Match < ActiveRecord::Base
     status == 'completed'
   end
 
+  def error?
+    status == 'error'
+  end
+
   def player_ids=(ids)
     ids.each do |p, use|
       self.player_matches.build(player: Player.find(p))

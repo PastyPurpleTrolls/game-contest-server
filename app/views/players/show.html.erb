@@ -34,14 +34,14 @@
             <% end %>
         </div>
         <div class="row">
-            <div class="col-md-12">            
-                <p class="info-container">Description: <%= @player.description %></p>
+            <div class="col-md-6">
+                <p class="info-container word-break"><%= @player.description %></p>
             </div>
             <div class="col-md-6">
-                <p class="info-container">Contest: <%= link_to @player.contest.name, @player.contest %></p>
-            </div>
-            <div class="col-md-6">
-                <p class="info-container">Creator: <%= link_to @player.user.username, @player.user %></p>
+                <p class="info-container">
+                    <i class="glyphicon glyphicon-user"></i>
+                    <%= link_to @player.user.username, @player.user %>
+                </p>
             </div>
         </div>
         <% if @player.playable %>

@@ -27,28 +27,43 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <p class="info-container"><%= link_to 'Rules', @referee.rules_url, target: '_blank' %></p>
+                <p class="info-container">
+                    <i class="glyphicon glyphicon-list-alt"></i>
+                    <%= link_to 'Rules', @referee.rules_url, target: '_blank' %>
+                </p>
             </div>
             <div class="col-md-6">
-                <p class="info-container">Maximum Rounds: <%= @referee.round_limit %></p>
+                <p class="info-container">
+                    <i class="glyphicon glyphicon-arrow-up"></i>
+                    Maximum Rounds: <%= @referee.round_limit %>
+                </p>
             </div>
             <div class="col-md-6">
-                <p class="info-container">Players Per Match: <%= @referee.players_per_game %></p>
+                <p class="info-container">
+                    <i class="glyphicon glyphicon-flag"></i>
+                    Players Per Match: <%= @referee.players_per_game %>
+                </p>
             </div>
             <div class="col-md-6">
-                <p class="info-container">Time Per Match: <%= @referee.time_per_game %> sec</p>
+                <p class="info-container">
+                    <i class="glyphicon glyphicon-time"></i>
+                    Time Per Match: <%= @referee.time_per_game %> sec
+                </p>
             </div>
             <div class="col-md-6">
-                <p class="info-container">Created By: <%= @referee.user.username %></p>
+                <p class="info-container">
+                    <i class="glyphicon glyphicon-user"></i>
+                    <%= @referee.user.username %>
+                </p>
             </div>
             <div class="col-md-6">
                 <% if @referee.rounds_capable %>
                     <p class="info-container">
-                        Rounds capable: <%= content_tag('i', nil, class: 'glyphicon glyphicon-ok') %>
+                        <%= content_tag('i', nil, class: 'glyphicon glyphicon-ok') %> Rounds capable
                     </p>
                 <% else %>
                     <p class="info-container">
-                        Rounds capable: <%= content_tag('i', nil, class: 'glyphicon glyphicon-remove') %>
+                        <%= content_tag('i', nil, class: 'glyphicon glyphicon-remove') %> Not rounds capable
                     </p>
                 <% end %>
             </div>

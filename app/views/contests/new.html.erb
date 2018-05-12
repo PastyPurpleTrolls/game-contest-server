@@ -11,7 +11,7 @@
         <%= form_for @contest do |f| %>
             <%= render 'shared/error_messages', object: @contest %>
             <div class="row no-margin-bottom">
-                <div class="col-xs-4 text-right padding-right-25">
+                <div class="col-xs-4 text-right">
                     <%= f.label :referee_id, 'Referee:' %>
                 </div>
                 <%= f.collection_select(:referee_id, @referees, :id, :name, {prompt: "Select a Referee"}, class: 'form-control col-xs-4') %>

@@ -28,26 +28,49 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <p class="info-container">Status: <%= @match.status.capitalize %></p>
+                <% if @match.completed? %>
+                    <p class="info-container">
+                        <i class="glyphicon glyphicon-ok"></i>
+                        <%= @match.status.capitalize %>
+                    </p>
+                <% elsif @match.error? %>
+                    <p class="info-container">
+                        <i class="glyphicon glyphicon-remove"></i>
+                        <%= @match.status.capitalize %>
+                    </p>
+                <% else %>
+                    <p class="info-container">
+                        <i class="glyphicon glyphicon-refresh"></i>
+                        <%= @match.status.capitalize %>
+                    </p>
+                <% end %>
             </div>
             <% if @match.completed? %>
                 <div class="col-md-6">
-                    <p class="info-container">Completed: <%= timeRelativeToNow(@match.completion) %></p>
+                    <p class="info-container">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        Completed: <%= timeRelativeToNow(@match.completion) %>
+                    </p>
                 </div>
             <% else %>
                 <div class="col-md-6">
-                    <p class="info-container">Earliest Start Time: <%= timeRelativeToNow(@match.earliest_start) %></p>
+                    <p class="info-container">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        Earliest Start Time: <%= timeRelativeToNow(@match.earliest_start) %>
+                    </p>
                 </div>
             <% end %>
             <% if current_user==@match.manager.referee.user && @match.match_log_info %>
                 <div class="col-md-6">
                     <p class="info-container">
-                        <a href="/match_logs/<%= @match.match_log_info.id %>/std_out" download>Download Referee Standard Log</a>
+                        <i class="glyphicon glyphicon-download-alt"></i>
+                        <a href="/match_logs/<%= @match.match_log_info.id %>/std_out" download>Referee Standard Log</a>
                     </p>
                 </div>
                 <div class="col-md-6">
                     <p class="info-container">
-                        <a href="/match_logs/<%= @match.match_log_info.id %>/std_err" download>Download Referee Error Log</a>
+                        <i class="glyphicon glyphicon-download-alt"></i>
+                        <a href="/match_logs/<%= @match.match_log_info.id %>/std_err" download>Referee Error Log</a>
                     </p>
                 </div>
             <% end %>

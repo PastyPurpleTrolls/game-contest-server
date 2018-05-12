@@ -12,7 +12,7 @@
         <%= form_for @contest do |f| %>
             <%= render 'shared/error_messages', object: @contest %>
             <div class="form-group row left">
-                <div class="col-xs-4 text-right padding-right-25">Referee:</div>
+                <div class="col-xs-4 text-right">Referee:</div>
                 <div class="col-xs-8 info-link"><%= @contest.referee.name %></div>
             </div>
             <%= render 'fields', f: f %>

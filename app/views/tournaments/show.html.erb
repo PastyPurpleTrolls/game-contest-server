@@ -26,27 +26,42 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <p class="info-container">Status: <%= @tournament.status.capitalize %></p>
+                <% if @tournament.completed? %>
+                    <p class="info-container">
+                        <i class="glyphicon glyphicon-ok"></i>
+                        <%= @tournament.status.capitalize %>
+                    </p>
+                <% else %>
+                    <p class="info-container">
+                        <i class="glyphicon glyphicon-refresh"></i>
+                        <%= @tournament.status.capitalize %>
+                    </p>
+                <% end %>
             </div>
             <div class="col-md-6">
-                <% if @tournament.status == "completed" %>
-                    <p class="info-container">Finished: <%= timeRelativeToNow(@tournament.start) %></p>
+                <% if @tournament.completed? %>
+                    <p class="info-container">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        Finished: <%= timeRelativeToNow(@tournament.start) %>
+                    </p>
                 <% else %>
-                    <p class="info-container">Start: <%= timeRelativeToNow(@tournament.start) %></p>
+                    <p class="info-container">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        Start: <%= timeRelativeToNow(@tournament.start) %>
+                    </p>
                 <% end %>
             </div>
             <div class="col-md-6">
                 <p class="info-container">
-                    Tournament Type: <%= @tournament.tournament_type.split.map { |i| i.capitalize }.join(' ') %>
+                    <i class="glyphicon glyphicon-pawn"></i>
+                    <%= @tournament.tournament_type.split.map { |i| i.capitalize }.join(' ') %>
                 </p>
             </div>
             <div class="col-md-6">
                 <p class="info-container">
-                    Contest Owner: <%= link_to @tournament.contest.user.username, @tournament.contest.user %>
+                    <i class="glyphicon glyphicon-user"></i>
+                    <%= link_to @tournament.contest.user.username, @tournament.contest.user %>
                 </p>
-            </div>
-            <div class="col-md-12">
-                <p class="info-container">Contest: <%= link_to @tournament.contest.name, @tournament.contest %></p>
             </div>
         </div>
     </div>
