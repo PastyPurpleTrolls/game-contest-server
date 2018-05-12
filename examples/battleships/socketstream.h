@@ -46,8 +46,10 @@ is granted under the same conditions.
 '----------------------------------------------------------------*/
 
 extern "C" {
+#include <string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <sys/un.h>
 #include <netdb.h>
 #include <unistd.h>
 #include <errno.h>
@@ -163,6 +165,11 @@ public:
 		throw std::runtime_error("connect() failed") ;
 	    }
 	}
+	basic_socketstream(const std::string& path) : stream_type(&buf) {
+	    if (!open(path)) {
+		throw std::runtime_error("cannot open unix domain socket");
+	    }
+	}
 
 	~basic_socketstream() {
 	    close();
@@ -185,7 +192,29 @@ public:
 		sin.sin_family = AF_INET;
 		sin.sin_port = htons(port);
 
-		if(connect(sd, reinterpret_cast<sockaddr*>(&sin), sizeof(sin)) < 0) {
+		int result = 0;
+
+        do {
+            result = connect(sd, reinterpret_cast<sockaddr*>(&sin), sizeof(sin));
+        } while (errno == ECONNREFUSED);
+
+		if (result < 0) {
+			stream_type::setstate(std::ios::failbit);
+			return false;
+		}
+
+		buf.set_socket(sd);
+		return true;
+	}
+
+	bool open(const std::string& path) {
+		close();
+		int sd = socket(AF_UNIX, SOCK_STREAM, 0);
+		sockaddr_un uin;
+		uin.sun_family = AF_UNIX;
+		strcpy(uin.sun_path, path.c_str());
+
+		if (connect(sd, reinterpret_cast<sockaddr*>(&uin), path.length() + sizeof(uin.sun_family)) < 0) {
 			stream_type::setstate(std::ios::failbit);
 			return false;
 		}
@@ -203,11 +232,12 @@ class basic_server {
     private:
         int sd;
 	int port;
+	std::string path;
 
     public:
 	~basic_server() { close(sd); }
 
-        basic_server(uint16_t use_port = 0) : port(use_port) {
+        basic_server(uint16_t use_port) : port(use_port) {
 		sd = socket(AF_INET, SOCK_STREAM, 0);
 		if (sd < 0) {
 			throw std::runtime_error("socket() failed") ;
@@ -234,6 +264,27 @@ class basic_server {
 		}
 	}
 
+	basic_server(const std::string& use_path) : path(use_path) {
+		unlink(path.c_str());
+
+		sd = socket(AF_UNIX, SOCK_STREAM, 0);
+		if (sd < 0) {
+			throw std::runtime_error("socket() failed");
+		}
+
+		sockaddr_un server;
+		server.sun_family = AF_UNIX;
+		strcpy(server.sun_path, path.c_str());
+
+		if (bind(sd, reinterpret_cast<sockaddr*>(&server), path.length() + sizeof(server.sun_family)) < 0) {
+			throw std::runtime_error("bind() failed");
+		}
+
+		if (listen(sd, 5) < 0) {
+			throw std::runtime_error("listen() failed");
+		}
+	}
+
 	basic_socketstream<Char>* serve() const {
 		int cd = accept(sd, NULL, NULL);
 		if (cd < 0) {
@@ -244,6 +295,7 @@ class basic_server {
 	}
 
 	int get_port() const { return port; }
+	std::string get_path() const { return path; }
 };
 
 typedef basic_server<char> server;

@@ -56,9 +56,9 @@ class MatchRunner
 
   #Uses a MatchWrapper to run a match between the given players and send the results to the database
   def run_match
-    if @number_of_players != @match_participants.count()
+    if @number_of_players != @match_participants.count
       puts "   Match runner skipping match #" + @match_id.to_s +
-           " (" + @match_participants.count().to_s + "/" + @number_of_players.to_s + " in player_matches)"
+           " (" + @match_participants.count.to_s + "/" + @number_of_players.to_s + " in player_matches)"
       return
     end
     #Call round wrapper which runs the executables and generates game hashes
@@ -73,63 +73,71 @@ class MatchRunner
 
   #Creates PlayerMatch objects for each player using the results dictionary we got back from the MatchWrapper
   def send_results_to_db(round_runner)
-    puts round_runner.status
-    if round_runner.status[:error]
-      report_error
-      return
-    else
-      if not self.save_rounds(round_runner.rounds)
+    begin
+      puts round_runner.status
+      if round_runner.status[:error]
         report_error
-        return false
-      end
-      #Print and save results, schedule follow-up matches
-      child_matches = MatchPath.where(parent_match_id: @match_id)
-      puts "   Match runner writing results match #" + @match_id.to_s
-      #Loop through participants and find their results
-      @match_participants.each do |player|
-        PlayerMatch.where(match_id: @match_id, player_id: player.id).each do |player_match|
-          log_info = MatchLogInfo.create()
-
-          log_info.log_stdout = round_runner.match[:logs][player.name] + "_out.tgz"
-          log_info.log_stderr = round_runner.match[:logs][player.name] + "_err.tgz"
-
-          player_match.result = round_runner.match[player.name][:result]
-          player_match.save!
-
-          log_info.match_source = player_match
-          log_info.save!
-          print_results(player.name, player_match.result, round_runner.match[player.name][:score])
-          self.schedule_matches(player, player_match, child_matches)
+        return
+      else
+        unless self.save_rounds(round_runner.rounds)
+          report_error
+          return
         end
+        #Print and save results, schedule follow-up matches
+        child_matches = MatchPath.where(parent_match_id: @match_id)
+        puts "   Match runner writing results match #" + @match_id.to_s
+        #Loop through participants and find their results
+        @match_participants.each do |player|
+          PlayerMatch.where(match_id: @match_id, player_id: player.id).each do |player_match|
+            log_info = MatchLogInfo.create
+
+            log_info.log_stdout = round_runner.match[:logs][player.name] + "_out.tgz"
+            log_info.log_stderr = round_runner.match[:logs][player.name] + "_err.tgz"
+
+            player_match.result = round_runner.match[player.name][:result]
+            player_match.save!
+
+            log_info.match_source = player_match
+            log_info.save!
+            print_results(player.name, player_match.result, round_runner.match[player.name][:score])
+            self.schedule_matches(player, player_match, child_matches)
+          end
+        end
+        puts "   Match runner finished match #" + @match_id.to_s
+
+        log_ref_info = MatchLogInfo.create
+        log_ref_info.log_stdout = round_runner.match[:ref_logs] + "_out.tgz"
+        log_ref_info.log_stderr = round_runner.match[:ref_logs] + "_err.tgz"
+        log_ref_info.match_source = @match
+        log_ref_info.save!
+
+        self.complete_match
       end
-      puts "   Match runner finished match #" + @match_id.to_s
-
-      log_ref_info = MatchLogInfo.create()
-      log_ref_info.log_stdout = round_runner.match[:ref_logs] + "_out.tgz"
-      log_ref_info.log_stderr = round_runner.match[:ref_logs] + "_err.tgz"
-      log_ref_info.match_source = @match
-      log_ref_info.save!
-
-      self.complete_match
+      #Check to see if the tournament can be completed
+      self.complete_tournament
+    rescue
+      report_error
     end
-    #Check to see if the tournament can be completed
-    self.complete_tournament
   end
 
   def report_error
     @match_participants.each do |player|
-      player_match = PlayerMatch.where(match_id: @match_id, player_id: player.id).first
-      player_match.result = "Error"
-      player_match.save!
-      print_results(player.name, "Error", nil)
+      player_matches = PlayerMatch.where(match_id: @match_id, player_id: player.id)
+      player_matches.where(result: nil)
+        .or(player_matches.where(result: "Pending"))
+        .each do |player_match|
+        player_match.result = "Error"
+        player_match.save!
+        print_results(player.name, "Error", nil)
+      end
     end
     puts "    Match runner could not finish match #" + @match.id.to_s
+    self.complete_match(true)
+    #Check to see if the tournament can be completed
+    self.complete_tournament
   end
 
   def save_rounds(rounds)
-    if rounds.length != @num_rounds
-      return false
-    end
     #Loop through all the rounds and create a new record in the DB
     rounds.each do |round|
       round_obj = Round.create!(
@@ -148,6 +156,8 @@ class MatchRunner
       self.save_round_json(round_obj.slug, round)
     end
     return true
+  rescue
+    return false
   end
 
   #Generate log files for playing back rounds
@@ -172,8 +182,12 @@ class MatchRunner
     end
   end
 
-  def complete_match
-    @match.status = "completed"
+  def complete_match(error=false)
+    if error
+      @match.status = 'error'
+    else
+      @match.status = 'completed'
+    end
     @match.completion = Time.now
     @match.save!
     if @match.manager.class == Tournament && @match.manager.tournament_type == "king of the hill"
@@ -272,13 +286,13 @@ class MatchRunner
     end
     tournament = Tournament.find(@match.manager_id)
     tournament.matches.each do |childmatch|
-      if childmatch.status == "started"
+      unless %w(completed error).include? childmatch.status
         return false
       end
     end
     tournament.status = "completed"
     tournament.save!
-    return true
+    true
   end
 
   #Prints a name, result, and score

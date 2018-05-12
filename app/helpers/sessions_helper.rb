@@ -32,7 +32,7 @@ module SessionsHelper
     redirect_back_to_previous
   end
 
-  def friendly_redirect_to_previous(message=nil)
+  def friendly_redirect_to_previous(message = nil)
     store_location
     flash[:danger] = message unless message.nil?
     redirect_back_to_previous
@@ -43,7 +43,6 @@ module SessionsHelper
     clear_return_to
     redirect_to(return_to || root_path)
   end
-
 
   private
 
@@ -62,23 +61,23 @@ module SessionsHelper
   end
 
   def ensure_contest_creator
-    unless current_user.contest_creator?
+    unless current_user.contest_creator
       flash[:danger] = 'Not a contest creator.'
       redirect_to root_path
     end
   end
-	
-	def ensure_correct_user_from_list(list_of_users, message)
+
+  def ensure_correct_user_from_list(list_of_users, message)
     if !logged_in?
       flash[:danger] = 'Not logged in.'
       redirect_to login_path
     else
-			unless list_of_users.include?(current_user)
-      	flash[:danger] = message
-      	redirect_to root_path
-			end
+      unless current_user.admin or list_of_users.include?(current_user)
+        flash[:danger] = message
+        redirect_to root_path
+      end
     end
-	end
+  end
 
   def ensure_correct_user(user_id = params[:id])
     @user = User.friendly.find(user_id)
@@ -88,7 +87,7 @@ module SessionsHelper
     end
   end
 
-  
+
   def store_location
     session[:return_to] = request.referrer
   end

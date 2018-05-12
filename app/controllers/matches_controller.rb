@@ -19,7 +19,7 @@ class MatchesController < ApplicationController
   def create
     @contest = Contest.friendly.find(params[:contest_id])
     player_ids = params[:match][:player_ids]
-    if selected_own_players(params[:match][:player_ids])
+    if selected_own_players(params[:match][:player_ids]) or current_user.admin
       if players_unplayable(player_ids, current_user)
         flash.now[:danger] = 'Not all players are playable'
         redirect_to root_path
@@ -50,32 +50,7 @@ class MatchesController < ApplicationController
     unless @match.tournament_match?
       ensure_correct_user_from_list(list_of_users_in_match(@match), 'You do not have a player in this challenge match')
     end
-  end
-
-  def index
-    if params[:tournament_id]
-      @is_challenge_matches = false
-      @manager = Tournament.friendly.find(params[:tournament_id])
-    elsif params[:contest_id]
-      @is_challenge_matches = true
-      @manager = Contest.friendly.find(params[:contest_id])
-
-      @users_in_challenge_matches_of_contest = []
-      @manager.matches.each do |match|
-        @users_in_challenge_matches_of_contest.concat(list_of_users_in_match(match))
-      end
-
-      # ensure that user is logged in, and that the user has a player in contest's challenge matches
-      ensure_correct_user_from_list(@users_in_challenge_matches_of_contest, 'Unable to find matches')
-
-      # the following code is relevant if ensure_correct_user_from_list does not redirect to root or a login
-      # find all the contest's challenge matches in which the user has a player participating in
-      @matches = Match.joins(:players).where(players: {user: current_user, contest: @manager})
-      return
-    else
-      flash[:danger] = "Unable to find matches"
-      redirect_to root_path
-    end
+    @rounds = @match.rounds.paginate(:per_page =>10, :page => params[:page])
   end
 
   def destroy

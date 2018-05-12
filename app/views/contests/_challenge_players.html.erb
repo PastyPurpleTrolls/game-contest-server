@@ -1,0 +1,11 @@
+<div class="row">
+    <%= link_to(new_contest_match_path(@contest), method: :get,
+                class: 'navbar-brand navbar-default-link-color center contest-challenge no-padding') do %>
+        <div class="home-container">
+            <p>Challenge Players</p>
+            <%= content_tag('i', nil, class: 'glyphicon glyphicon-user home-gly') %>
+            <%= content_tag('i', nil, class: 'glyphicon glyphicon-resize-horizontal') %>
+            <%= content_tag('i', nil, class: 'glyphicon glyphicon-user home-gly') %>
+        </div>
+    <% end %>
+</div>

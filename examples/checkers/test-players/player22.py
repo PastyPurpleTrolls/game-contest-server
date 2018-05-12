@@ -1,3 +1,7 @@
+#! /usr/bin/env python3
+
+from talk_to_referee import *
+
 #Checkers Player
 #12/12/12
 import time

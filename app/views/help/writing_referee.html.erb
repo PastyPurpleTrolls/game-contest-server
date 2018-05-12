@@ -1,0 +1,208 @@
+<br>
+<ol class="breadcrumb">
+    <li><%= link_to 'Home', root_path %></li>
+    <li><%= link_to 'Help', help_path %></li>
+    <li class="active">Writing a Referee</li>
+</ol>
+
+<div class="row">
+    <div class="display-container">
+        <h1>Writing a Referee</h1>
+        <p>
+            Referees are the central system for controlling games between players. These pieces of software connect with
+            players via sockets, report game results, and enforce rules.
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="display-container">
+        <h2 class="help-l2-header"><b>Design</b></h2>
+        <p>
+            Referees may be uploaded as a single file, or in a tar/zip file that contains
+            the referee and a makefile.
+        </p><br>
+
+        <h3><b>Single-File Referees</b></h3>
+        <p>
+            Referees should be implemented to support four flags from the game manager.
+        </p>
+        <ul>
+            <li>
+                <code>-p</code>: (string) UNIX domain socket path in which the manager is listening for a connection. The
+                referee must connect and send a UNIX domain socket path for the players to connect to. If the referee does not
+                respond with a UNIX domain socket path within three seconds of being started, the manager will declare a
+                timeout.
+            </li>
+            <li>
+                <code>-n</code>: (int) The number of players that will connect to the referee.
+            </li>
+            <li>
+                <code>-r</code>: (int) The number of rounds that the referee should run between the players. If your referee
+                does not support rounds, you can ignore the value of this flag.
+            </li>
+            <li>
+                <code>-t</code>: (int) Maximum amount of time allowed per match, in seconds. The game manager will enforce this
+                time.
+            </li>
+        </ul><br>
+
+        <h3><b>Makefile Referees</b></h3>
+        <p>
+            The makefile should implement two actions: run, and contest. For example, a Python referee might have a makefile
+            like this:
+        </p>
+        <pre><code class="makefile">.PHONY: run contest manager clean
+
+include player.mk
+
+manager:
+    nc -lU $(path)
+
+run: test_referee.py
+    ./test_referee.py -p $(path) -n $(num_players) -r $(num_rounds) -t $(max_time)
+
+contest: $(PLAYER)
+    ./$(PLAYER).py -p $(path) -n '$(name)'</code></pre>
+        <p>
+            The run rule is called to start the referee.  When the referee is called through the Makefile, the manager will
+            provide four flags:
+        </p>
+        <ul>
+            <li>
+                <code>path</code>: (string) UNIX domain socket path in which the manager is listening for a connection. The
+                referee must connect and send a UNIX domain socket path for the players to connect to. If the referee does not
+                respond with a UNIX domain socket path within three seconds of being started, the manager will declare a
+                timeout.
+            </li>
+            <li>
+                <code>num_players</code>: (int) The number of players that will connect to the referee.
+            </li>
+            <li>
+                <code>num_rounds</code>: (int) The number of rounds that the referee should run between the players. If your
+                referee does not support rounds, you can ignore the value of this flag.
+            </li>
+            <li>
+                <code>max_time</code>: (int) Maximum amount of time allowed per match, in seconds. The game manager will enforce
+                this time.
+            </li>
+        </ul>
+        <p>
+            The contest rule is called to start the player.  When the player is called through the Makefile, the manager will
+            provide two flags:
+        </p>
+        <ul>
+            <li>
+                <code>name</code>: The name of the player as registered on the contest server. The player will be required to
+                communicate this name to the referee so the referee can report the results to the manager properly. The player
+                should not assume a particular name to report to the referee because the manager may choose to give a different
+                name to the player for each match for disambiguation purposes.
+            </li>
+            <li>
+                <code>path</code>: (string) UNIX domain socket path in which the manager is listening for a connection. All
+                communication with the referee will be done via this path; there is no other mechanism for communication between
+                the referee or any other player.
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="display-container">
+        <h2 class="help-l2-header"><b>Player-Includes Files</b></h2>
+        <p>
+            Player-includes files are files of code that are automatically included in the same directory as the
+            student's players, but students need not interact with them, or even upload them. Writing player-includes
+            files is strongly recommended, as beginner programming students do not know how to write the networking code
+            to interact with the referee.
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="display-container">
+        <h2 class="help-l2-header"><b>Examples</b></h2>
+        <p>
+            The GitHub repository contains an
+            <a href="https://github.com/PastyPurpleTrolls/game-contest-server/blob/dev/examples/guess-w/python/guess_w_referee.py"
+            class="text-underline">
+            example referee</a>,
+            <a href="https://github.com/PastyPurpleTrolls/game-contest-server/blob/dev/examples/guess-w/python/talk_to_referee.py"
+            class="text-underline">
+            player-includes file</a>, and an
+            <a href="https://github.com/PastyPurpleTrolls/game-contest-server/blob/dev/examples/guess-w/python/sometimes_win_player.py"
+            class="text-underline">
+            example player</a>.
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="display-container">
+        <h2 class="help-l2-header"><b>Protocol</b></h2>
+        <p>
+            Referees must communicate with the game manager via a UNIX domain socket. Three main pieces of information are
+            expected: a player TCP port number, results of rounds, final results of match (if rounds are supported). The
+            referee must also send the moves made in each round.
+        </p>
+        <p>
+            For efficiency in the client visualizer, the referee should periodically should send the game state to the
+            manager. We have chosen a value of 10 moves for the initial games prototyped with the system.
+        </p>
+        <p>
+            Commands are sent as key:value pairs. The first <code>:</code> in the command is seen as a special character and
+            represents the end of a command name. Everything that follows is interpreted as the value. Pipes <code>|</code>
+            represent separation between values that should be parsed.
+        </p>
+        <p>
+            Do <b>not</b> use <code>|</code> for any purpose except as a delimiter to represent lists in the protocol. It
+            should not be used in game state representations.
+        </p><br>
+
+        <h3><b>Defined Keywords</b></h3>
+        <ul>
+            <li>
+                <code>path</code>: (string) UNIX domain socket path in which the manager is listening for a connection. This
+                needs to be sent within the first three seconds of being started.
+            </li>
+            <li>
+                <code>match</code>: Values: <code>start</code>, <code>end</code>. Tell the manager to expect information about
+                the match.
+            </li>
+            <li>
+                <code>round</code>: Pipe separated double. <code>start</code> or <code>end</code>. Round start can also contain
+                any data about the round.
+            </li>
+            <li>
+                <code>move</code>: Human readable description of the move as well as any round data needed by the visualizer.
+                Data should be formatted in JSON to make parsing easier.
+            </li>
+            <li>
+                <code>gamestate</code>: Implementation dependant value. Sent periodically to represent the current state of the
+                game. To ease parsing in the browser, please use JSON.
+            </li>
+            <li>
+                <code>roundresult</code>: Sent directly after <code>round:end</code>. Pipe separated tuple with player name,
+                result, and score. Score is implementation dependent. Result can only be <code>Win</code>, <code>Loss</code>,
+                and <code>Tie</code>.
+            </li>
+            <li>
+                <code>matchresult</code>: Sent directly after <code>match:end</code>. Pipe separated tuple with player name,
+                result, and rounds won.
+            </li>
+        </ul><br>
+
+        <h3><b>Example communication</b></h3>
+        <pre><code class="nohighlight">path:/tmp/guess-w-referee
+match:start
+round:start|{}
+move:description|movedata
+gamestate:{}
+round:end
+roundresult:playername|result|score
+roundresult:playername|result|score
+match:end
+matchresult:playername|result|roundswon
+matchresult:playername|result|roundswon</code></pre>
+    </div>
+</div>

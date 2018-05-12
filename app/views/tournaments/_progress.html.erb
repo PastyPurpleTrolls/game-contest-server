@@ -1,0 +1,15 @@
+<div class="row">
+    <div class="center display-container col-md-offset-1 col-md-10">
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="<%= @tournament.percent_complete %>"
+                 aria-valuemin="0" aria-valuemax="100" style="width: <%= @tournament.percent_complete %>%;">
+                <span class="sr-only"><%= @tournament.percent_complete %>% Complete</span>
+            </div>
+        </div>
+        <% if @tournament.time_remaining.nil? %>
+            <%= @tournament.percent_complete %>% Complete | Calculating time remaining...
+        <% else %>
+            <%= @tournament.percent_complete %>% Complete | Approximately <%= @tournament.time_remaining %> remaining
+        <% end %>
+    </div>
+</div>

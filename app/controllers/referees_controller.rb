@@ -72,34 +72,12 @@ class RefereesController < ApplicationController
         redirect_to referees_path
       end
     else
-      flash[:danger] = 'This referee is currently being used in a contest'
-      render 'show'
+      flash[:danger] = 'This referee is currently being used in contests'
+      redirect_to referee_path(@referee)
     end
   end
 
   private
-
-  def update_log_locations(new_location)
-    new_dir = File.dirname(new_location)
-    self.contests.each do |contest|
-      contest.matches.each do |match|
-        log_info = match.match_log_info
-        unless log_info.nil?
-          log_info.log_stdout = new_dir + "/logs/" + File.basename(log_info.log_stdout)
-          log_info.log_stderr = new_dir + "/logs/" + File.basename(log_info.log_stderr)
-        end
-      end
-      contest.tournaments.each do |tourney|
-        contest.matches.each do |match|
-          log_info = match.match_log_info
-          unless log_info.nil?
-            log_info.log_stdout = new_dir + "/logs/" + File.basename(log_info.log_stdout)
-            log_info.log_stderr = new_dir + "/logs/" + File.basename(log_info.log_stderr)
-          end
-        end
-      end
-    end
-  end
 
   def acceptable_params
     params.require(:referee).permit(:name,

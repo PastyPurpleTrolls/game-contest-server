@@ -4,7 +4,7 @@ Referee File:
 * `checkers_referee.py`
     
 Player-Include Files:
-* `checkers_helper.py`
+* `talk_to_referee.py`
     
 Replay Plugin:
 * All files in `replay-plugin` directory (zipped)

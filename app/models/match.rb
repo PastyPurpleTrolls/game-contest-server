@@ -13,7 +13,7 @@ class Match < ActiveRecord::Base
   has_many :child_matches, class_name: 'MatchPath', foreign_key: 'parent_match_id', dependent: :destroy
 
   validates :manager, presence: true
-  validates :status, presence: true, inclusion: %w[unassigned waiting started completed]
+  validates :status, presence: true, inclusion: %w[unassigned waiting started error completed]
   validates :earliest_start, presence: true, unless: :started?
   validates :num_rounds, presence: true, numericality: {only_integer: true}
 
@@ -25,7 +25,9 @@ class Match < ActiveRecord::Base
 
   validate :num_rounds_upper_bound
 
-  default_scope -> {order("created_at DESC")}
+  default_scope -> { order("created_at DESC") }
+  scope :completed_matches, -> { where('status=? OR status=?', 'completed', 'error') }
+  scope :uncompleted_matches, -> { where.not(status: 'completed') }
 
   def num_rounds_upper_bound
     if self.num_rounds.nil? || self.manager.nil?
@@ -53,6 +55,10 @@ class Match < ActiveRecord::Base
 
   def completed?
     status == 'completed'
+  end
+
+  def error?
+    status == 'error'
   end
 
   def player_ids=(ids)
@@ -89,7 +95,7 @@ class Match < ActiveRecord::Base
   end
 
   def name
-    self.players.map(&:name).join("-")
+    self.players.map(&:name).join(" vs. ")
   end
 
   extend FriendlyId

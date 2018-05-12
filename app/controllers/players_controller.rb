@@ -28,6 +28,7 @@ class PlayersController < ApplicationController
   end
 
   def show
+    @per_page = 10
     @player = Player.friendly.find(params[:id])
     @playermatch = PlayerMatch.search(@player, params[:search])
     @matches = PlayerMatch.search(@player, params[:search]).paginate(:per_page =>10, :page => params[:page])
@@ -45,8 +46,13 @@ class PlayersController < ApplicationController
   end
 
   def destroy
+    @player.matches.each do |match|
+      match.player_matches.each {|m| m.destroy}
+      match.parent_matches.each {|m| m.destroy}
+      match.child_matches.each {|m| m.destroy}
+      match.destroy
+    end
     @player.destroy
-    flash[:success] = 'Player deleted.'
     redirect_to contest_path(@player.contest)
   end
 

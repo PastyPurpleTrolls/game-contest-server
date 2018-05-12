@@ -45,6 +45,8 @@
 coverage
 
 # Ignore the JetBrains IDE config files
-/.idea/*
+.idea
 .vscode
 runserver.sh
+
+.DS_Store

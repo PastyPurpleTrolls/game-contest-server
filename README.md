@@ -179,7 +179,7 @@ Referees are executable files that are uploaded by instructors to enforce the ru
 
 For security and practical purposes, players and referees are started as seperate processes on the system. Communication is handled via a TCP socket that the referee creates. The protocol that referees and players use to communicate is entirely dependant upon the game, but the protocol that referees use to report results back to the game manager is carefully defined in the [referee documentation](documentation/creator/referee.md). Please refer to this documentation for any additional information on how to build a referee.
 
-Example referees are located in [examples](examples). Python referees should take advantage of [ref_helper.py](examples/ref_helper.py) which implements several useful classes and methods for managing communication with the game manager.
+Example referees are located in [examples](examples). Python referees should take advantage of a "talk-to-referee" file, which implements several useful classes and methods for managing communication with the game manager.
 
 ### Replay Plugin
 
@@ -206,6 +206,6 @@ Matches are executed and saved by `match_runner.rb`. This executable is in charg
 Each round is executed by `round_wrapper.rb`. The referee is started and told to listen on a specific port for a set number of players. Then the players are started and told the port where they can find the referee. Referees are in charge of handling communication with the players, but they must check in with `round_wrapper.rb` or the match runner will assume the game has failed and will stop the match. 
 
 ### ERD
-![Image of ERD document](/documentation/GameContestServerERD.png)
+![Image of ERD document](/app/assets/images/aires_erd.png)
 
 Many to many relationships are represented with a colored connection. This represents an additional associative entity (such as player_rounds) that connects the two entities. 

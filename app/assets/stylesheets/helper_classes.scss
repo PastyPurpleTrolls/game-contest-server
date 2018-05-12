@@ -1,0 +1,117 @@
+// Alignment Helper Classes
+
+.left {
+  text-align: left !important;
+}
+
+.center {
+  text-align: center !important;
+}
+
+.right {
+  text-align: right !important;
+}
+
+// Color Helper Classes
+
+.bg-green {
+  background-color: green !important;
+}
+
+.bg-red {
+  background-color: red !important;
+}
+
+.text-limegreen {
+  color: limegreen !important;
+}
+
+.text-red {
+  color: red !important;
+}
+
+.text-gold {
+  color: darkgoldenrod !important;
+}
+
+// Margin Helper Classes
+
+.no-margin {
+  margin: 0 !important;
+}
+
+.no-margin-top {
+  margin-top: 0 !important;
+}
+
+.no-margin-right {
+  margin-right: 0 !important;
+}
+
+.no-margin-bottom {
+  margin-bottom: 0 !important;
+}
+
+.no-margin-left {
+  margin-left: 0 !important;
+}
+
+// Padding Helper Classes
+
+.no-padding {
+  padding: 0 !important;
+}
+
+.no-padding-top {
+  padding-top: 0 !important;
+}
+
+.no-padding-right {
+  padding-right: 0 !important;
+}
+
+.no-padding-bottom {
+  padding-bottom: 0 !important;
+}
+
+.no-padding-left {
+  padding-left: 0 !important;
+}
+
+// Text Helper Classes
+
+.no-wrap {
+  white-space: nowrap !important;
+}
+
+.text-bold {
+  font-weight: bold !important;
+}
+
+.text-underline {
+  text-decoration: underline !important;
+}
+
+.text-xs {
+  font-size: 12px !important;
+}
+
+.word-break {
+  word-break: break-word !important;
+}
+
+// Size Helper Classes
+
+.glyphicon-lg {
+  font-size: 1.5em !important;
+}
+
+// Other Helper Classes
+
+.no-underline {
+  text-decoration: none !important;
+}
+
+.inline-block {
+  display: inline-block !important;
+}

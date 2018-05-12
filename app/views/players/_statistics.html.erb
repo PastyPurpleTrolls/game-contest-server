@@ -1,0 +1,14 @@
+<div class="outer-home-container col-md-offset-1 col-md-5">
+    <div class="display-container center">
+        <h1 class="headings">Statistics</h1>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="<%= @playermatch.win_percentage %>"
+                 aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: <%= @playermatch.win_percentage %>%;">
+                <%= @playermatch.win_percentage %>%
+            </div>
+        </div>
+        <p>
+            Wins: <%= @playermatch.wins.count %> | Losses: <%= @playermatch.losses.count %>
+        </p>
+    </div>
+</div>

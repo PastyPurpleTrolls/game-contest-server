@@ -69,15 +69,15 @@ int main(int argc, char **argv) {
     sa.sa_handler = SIG_IGN;
     sigaction( SIGPIPE, &sa, NULL);
 
-    net::socketstream manager("localhost", atoi(argv[1]));
-    net::server referee;
+    net::socketstream manager(argv[1]);
+    net::server referee("/tmp/battleships-referee");
 
     memset( &sa, 0, sizeof(sa) );
     sa.sa_handler = timeout;
     sigaction( SIGALRM, &sa, NULL);
     alarm(atoi(argv[4]));
 
-    manager << "port:" << referee.get_port() << endl;
+    manager << "path:" << referee.get_path() << endl;
     manager << "match:start" << endl;
 
     vector<PlayerConnection> players;

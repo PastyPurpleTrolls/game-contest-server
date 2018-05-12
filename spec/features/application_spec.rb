@@ -31,7 +31,7 @@ feature "HomePage" do
         within ".navbar" do
           should have_link('', href: root_path)
           should have_link('Contests', href: contests_path)
-          should have_content('Account')
+          should have_content(user.username)
         end
       end
     end
@@ -44,7 +44,7 @@ feature "HomePage" do
           should have_link('', href: root_path)
           should have_link('Contests', href: contests_path)
           should have_link('Referees', href: referees_path)
-          should have_content('Account')
+          should have_content(creator.username)
         end
       end
     end
@@ -57,7 +57,7 @@ feature "HomePage" do
           should have_link('', href: root_path)
           should have_link('Users', href: users_path)
           should have_link('Contests', href: contests_path)
-          should have_content('Account')
+          should have_content(admin.username)
         end
       end
     end
@@ -68,7 +68,7 @@ feature "HomePage" do
       before {visit root_path}
 
       it "has the correct content" do
-        should have_content("Welcome to Taylor University's Game Contest Server!")
+        should have_content("Battle it out, AI style. Host AI tournaments for your classes. Challenge another player to determine who's king.")
 
         should_not have_content("Add Player")
         should_not have_link('', href: new_contest_player_path("not-specified"))

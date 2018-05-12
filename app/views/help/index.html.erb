@@ -1,0 +1,92 @@
+<br>
+<ol class="breadcrumb">
+    <li><%= link_to 'Home', root_path %></li>
+    <li class="active">Help</li>
+</ol>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="display-container">
+            <h1>General</h1>
+            <div class="info-container center">
+                <%= link_to 'Terminology', help_terminology_path %>
+            </div>
+        </div>
+    </div>
+
+    <% if current_user.admin %>
+        <div class="col-md-6">
+            <div class="display-container">
+                <h1>Administrator Role</h1>
+                <div class="info-container center">
+                    <%= link_to 'Capabilities', help_admin_capabilities_path %>
+                </div>
+                <div class="info-container center">
+                    <%= link_to 'Changing User Roles', help_changing_user_roles_path %>
+                </div>
+                <div class="info-container center">
+                    <%= link_to 'Deleting Users', help_deleting_users_path %>
+                </div>
+                <div class="info-container center">
+                    <%= link_to 'Manually Running a Match', help_manually_running_match_path %>
+                </div>
+                <div class="info-container center">
+                    <%= link_to 'Entity Relationship Diagram (ERD)', help_erd_path %>
+                </div>
+            </div>
+        </div>
+    <% end %>
+
+    <% if current_user.contest_creator %>
+        <div class="col-md-6">
+            <div class="display-container">
+                <h1>Contest Creator Role</h1>
+                <div class="info-container center">
+                    <%= link_to 'Capabilities', help_contest_creator_capabilities_path %>
+                </div>
+                <div class="info-container center">
+                    <%= link_to 'Creating and Running a Contest', help_creating_contest_path %>
+                </div>
+                <div class="info-container center">
+                    <%= link_to 'Writing a Referee', help_writing_referee_path %>
+                </div>
+                <div class="info-container center">
+                    <%= link_to 'Writing a Replay Plugin', help_writing_replay_plugin_path %>
+                </div>
+                <div class="info-container center">
+                    <a href="referee.py" download>Download Python Referee Template</a>
+                </div>
+                <div class="info-container center">
+                    <a href="talk_to_referee.py" download>Download Python Player-Includes Template</a>
+                </div>
+                <div class="info-container center">
+                    <a href="script.js" download>Download Replay Plugin Template</a>
+                </div>
+                <div class="info-container center">
+                    <a href="player.py" download>Download Python Player Template</a>
+                </div>
+            </div>
+        </div>
+    <% end %>
+
+    <div class="col-md-6">
+        <div class="display-container">
+            <h1>Student Role</h1>
+            <div class="info-container center">
+                <%= link_to 'Capabilities', help_student_capabilities_path %>
+            </div>
+            <div class="info-container center">
+                <%= link_to 'Upload Players to a Contest', help_upload_players_to_contest_path %>
+            </div>
+            <div class="info-container center">
+                <%= link_to 'Challenge Other Players', help_challenge_other_players_path %>
+            </div>
+            <div class="info-container center">
+                <%= link_to 'View Tournament Results', help_view_tournament_results_path %>
+            </div>
+            <div class="info-container center">
+                <%= link_to 'View Challenge Match Results', help_view_challenge_match_results_path %>
+            </div>
+        </div>
+    </div>
+</div>

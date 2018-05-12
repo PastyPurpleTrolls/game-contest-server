@@ -1,0 +1,179 @@
+<br>
+<ol class="breadcrumb">
+    <li><%= link_to 'Home', root_path %></li>
+    <li><%= link_to 'Help', help_path %></li>
+    <li class="active">Creating and Running a Contest</li>
+</ol>
+
+<div class="row">
+    <div class="display-container">
+        <h1>Creating and Running a Contest</h1>
+        <h2 class="help-l2-header"><b>Step 1: Creating a Referee</b></h2>
+        <h3>Referees</h3>
+        <p class="definition">
+            Sets of code used by the game server to create, manage and judge specific games.
+        </p><br>
+        <p>
+            Navigate to Referees page and select the plus sign to get redirected to the new referees page.
+        </p>
+        <ul>
+            <li>
+                <b>Name</b>: A short name describing what game the referee judges.
+            </li>
+            <li>
+                <b>Rules URL</b>: Link to a web page that describes the rules for the game.
+            </li>
+            <li>
+                <b>Referee File</b>: A single file or a tar/zip of multiple files. If using multiple files, a Makefile
+                must be included and it must support "make run". This is the code that is run in order to accomplish
+                each game. Example: <code>checkers_referee.py</code>.
+            </li>
+            <li>
+                <b>Player-Include Files</b>: A single file or tar/zip of everything that a player includes in his or her
+                file. Example: <code>talk_to_referee.py</code>.
+            </li>
+            <li>
+                <b>Replay Plugin</b>: A tar/zip containing a <code>script.js</code> and any assets necessary in order to
+                visually represent each match.
+            </li>
+            <li>
+                <b>Test Player</b>: A single file or tar/zip of a test player file and any dependencies, to verify that
+                everything is working as expected. Example: <code>checkers_player.py</code>.
+            </li>
+            <li>
+                <b>Round Limit</b>: Maximum amount of rounds that the referee will allow, inclusive.
+            </li>
+            <li>
+                <b>Players Per Match</b>: Number of players that the referee is designed to interact with. For standard
+                tournaments, just use 2 players per game.
+            </li>
+            <li>
+                <b>Time Per Match</b>: Maximum amount of time that the referee will allow a player to submit a move.
+            </li>
+            <li>
+                <b>Referee Capable of Handling Rounds</b>: Indicates whether the referee can start new rounds on its
+                own, or a new game has to be started for each round. Default to <b>no</b> unless you know you need it
+                turned on.
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="display-container">
+        <h2 class="help-l2-header"><b>Step 2: Creating a Contest</b></h2>
+        <h3>Contests</h3>
+        <p class="definition">
+            Track the results of one or more tournaments and store AI's to be run in those tournaments.
+        </p><br>
+        <p>
+            Navigate to Contests page and select the plus sign to get redirected to the new contests page.
+        </p>
+        <ul>
+            <li>
+                <b>Referee</b>: Select the referee that will be used to your contest.
+            </li>
+            <li>
+                <b>Deadline</b>: After this date, no new players are accepted.
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="display-container">
+        <h2 class="help-l2-header"><b>Step 3: Adding Players to Your Contest</b></h2>
+        <h3>Players</h3>
+        <p class="definition">
+            AIs developed by students for the purpose of competing in various tournaments or challenges.
+        </p><br>
+        <p>
+            Once you have navigated to a specific contest, you will be presented with three different sections of
+            information. In the top center of page, you will see useful information pertaining to the contest. Below
+            that block of content, you will see two main categories of information: <b>Players</b> and
+            <b>Tournaments</b>. You must first create players before you can run a tournament.
+        </p>
+        <ul>
+            <li>
+                <b>Selected Contest</b>: Choose the parent contest of your new player.
+            </li>
+            <li>
+                <b>Player File</b>: A single file or tar/zip of a player AI file and any dependencies. Example:
+                <code>checkers_player.py</code>.
+            </li>
+            <li>
+                <b>Allow others to compete against this player</b>: Leave this checked unless you want this player to be
+                in tournaments or challenges.
+            </li>
+            <li>
+                <b>Allow others to download this player</b>: This gives other users the ability to download and examine
+                the code of a player's AI.
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="display-container">
+        <h2 class="help-l2-header"><b>Step 4: Creating a Tournament</b></h2>
+        <h3>Tournaments</h3>
+        <p class="definition">
+            Orchestrate a series of games involving a set of player AI's, typically <b>Single Elimination</b> or
+            <b>Round Robin</b>.
+        </p><br>
+        <p>
+            Under a specific contest, select the plus sign by "Tournaments" to get redirected to the new tournaments
+            page.
+        </p>
+        <ul>
+            <li>
+                <b>Selected Contest</b>: Choose the parent contest of your new tournament.
+            </li>
+            <li>
+                <b>Start</b>: Choose a start time for the tournament. If the time is set before the current time, the
+                tournament will automatically start.
+            </li>
+            <li>
+                <b>Tournament Type</b>: Choose between a variety of tournament types, such as Single Elimination, Round
+                Robin, and King of the Hill.
+            </li>
+            <li>
+                <b>Rounds Per Match</b>: The number of rounds to be played for a given match between players. More
+                rounds helps determine which AI is consistently preforming stronger, but may increase the amount of time
+                it takes for a match to complete.
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="display-container">
+        <h2 class="help-l2-header"><b>Step 5: Selecting Players</b></h2>
+        <p>
+            To add players to a tournament, select them from the left column listed as available players. Once you
+            select a player or group of players, select the right pointing arrow to add them to the list of selected
+            players for your tournament.
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="display-container">
+        <h2 class="help-l2-header"><b>Step 6: Viewing the Results</b></h2>
+        <p>
+            To view the results a tournament, select the tournament you are currently running from the contests page.
+            From there, you will be presented of different formatted visualization depending on game mode.
+        </p>
+        <ul>
+            <li>
+                <b>Single Elimination</b>: Bracket-style tournament. Note: Some information is displayed inaccurately if
+                the tournament has not yet finished. Once the tournament status is complete, you will be able to a
+                bracketed view of the final results.
+            </li>
+            <li>
+                <b>Round Robin</b>: Each player is paired against all other players. Results are shown in a table
+                format.
+            </li>
+        </ul>
+    </div>
+</div>

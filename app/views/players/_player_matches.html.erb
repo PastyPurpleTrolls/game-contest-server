@@ -1,0 +1,22 @@
+<div class="outer-home-container col-md-5" id="player-match-container">
+    <div class="display-container center">
+        <h1 class="headings row">Matches</h1>
+        <%= form_tag player_path(@player), method: :get, id: :players_search, class: 'form-inline' do %>
+            <%= hidden_field_tag :direction, params[:direction] %>
+            <%= hidden_field_tag :sort, params[:sort] %>
+            <p>
+                <%= text_field_tag :search, params[:search], class: 'form-control' %>
+                <%= submit_tag "Search", class: 'btn btn-danger' %>
+            </p>
+        <% end %>
+
+        <p><%= display_results_found(@playermatch, 'matches', params[:tournament_page], @per_page) %></p>
+
+        <div id="pagination">
+            <%= render partial: 'player_matches/match_links',
+                       collection: @matches,
+                       as: 'player_match' %>
+            <%= will_paginate @matches, inner_window: 2, outer_window: 0, previous_label: '<', next_label: '>' %>
+        </div>
+    </div>
+</div>

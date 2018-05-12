@@ -6,20 +6,20 @@
     <li class="active"><%= @user.username %></li>
 </ol>
 <div class="row center">
-    <div class="container outer-home-container col-md-offset-1 col-md-5">
+    <div class="outer-home-container col-lg-offset-1 col-lg-5 col-md-6">
         <div class="display-container">
             <div class="row">
-                <h1 class="headings left">My Information</h1>
+                <h1 class="headings">My Information</h1>
                 <% if current_user&.admin? %>
-                    <div class="dropdown">
-                        <a href="#" class="dropdown-toggle btn" data-toggle="dropdown">Options <span class="caret"/></a>
-                        <ul class="dropdown-menu">
-                            <%= active_link_to 'Edit', edit_user_path(@user), wrap_tag: :li %>
-                            <% if current_user != @user %>
-                                <%= active_link_to 'Delete', user_path(@user), method: :delete, data: { confirm: 'Are you sure?' }, wrap_tag: :li %>
-                            <% end %>
-                        </ul>
-                    </div>
+                    <%= link_to edit_user_path(@user), class: 'no-underline' do %>
+                        <i class="glyphicon glyphicon-cog glyphicon-lg"></i>
+                    <% end %>
+                    <% if current_user != @user %>
+                        <%= link_to user_path(@user), method: :delete, class: 'no-underline',
+                                    data: { confirm: 'Are you sure?' } do %>
+                            <i class="glyphicon glyphicon-trash glyphicon-lg"></i>
+                        <% end %>
+                    <% end %>
                 <% end %>
             </div>
             <div class="row">
@@ -30,101 +30,11 @@
             </div>
         </div>
     </div>
-    <div class="container outer-home-container col-md-5">
-        <div class="display-container">
-            <div class="row">
-                <h1 class="headings info-text col-xs-10 col-xs-offset-1 left">My Players</h1>
-                <div class="info-text col-xs-1 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Player">
-                    <%= link_to(new_contest_player_path('not-specified'), method: :get) do %>
-                        <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
-                    <% end %>
-                </div>
-            </div>
-            <div class="row">
-                <%= form_tag user_path(@user), method: 'get', id: 'player_form', class: 'form-inline' do %>
-                    <%= text_field_tag :player_search, params[:player_search], class: 'form-control' %>
-                    <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
-                <% end %>
-            </div>
-            <% if @players.count > 0 %>
-                <% if @players.count > @per_page %>
-                    <p><%= "#{@players.count} found (displaying #{getRangeFromPage(params[:player_page], @players.length)})" %></p>
-                <% else %>
-                    <p><%= "#{@players.count} found" %></p>
-                <% end %>
-            <% else %>
-                <p>No players found</p>
-            <% end %>
-            <div class="row">
-                <%= render partial: 'player', collection: @players %>
-                <%= will_paginate @players, param_name: 'player_page', id: 'player_pagination', inner_window: 2, outer_window: 0 %>
-            </div>
-        </div>
-    </div>
+    <%= render partial: 'players' %>
 </div>
 <div class="row center">
     <% if @user.contest_creator %>
-        <div class="container outer-home-container col-md-offset-1 col-md-5">
-            <div class="display-container no-margin-top">
-                <div class="row">            
-                    <h1 class="headings info-text col-xs-10 col-xs-offset-1 left">My Referees</h1>
-                    <div class="info-text col-xs-1 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Referee">
-                        <%= link_to(new_referee_path, method: :get) do %>
-                            <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
-                        <% end %>
-                    </div>
-                </div>
-                <div class="row">
-                    <%= form_tag user_path(@user), method: 'get', id: 'referee_form', class: 'form-inline' do %>
-                        <%= text_field_tag :referee_search, params[:referee_search], class: 'form-control' %>
-                        <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
-                    <% end %>
-                </div>
-                <% if @referees.count > 0 %>
-                    <% if @referees.count > @per_page %>
-                        <p><%= "#{@referees.count} found (displaying #{getRangeFromPage(params[:referee_page], @referees.length)})" %></p>
-                    <% else %>
-                        <p><%= "#{@referees.count} found" %></p>
-                    <% end %>
-                <% else %>
-                    <p>No referees found</p>
-                <% end %>
-                <div class="row">
-                    <%= render partial: 'referee', collection: @referees %>
-                    <%= will_paginate @referees, param_name: 'referee_page', id: 'referee_pagination', inner_window: 2, outer_window: 0 %>
-                </div>
-            </div>
-        </div>
-        <div class="container outer-home-container col-md-5">
-            <div class="display-container no-margin-top">
-                <div class="row">            
-                    <h1 class="headings info-text col-xs-10 col-xs-offset-1 left">My Contests</h1>
-                    <div class="info-text col-xs-1 plus-div right" data-toggle="tooltip" data-placement="bottom" title="Add Contest">
-                        <%= link_to(new_contest_path, method: :get) do %>
-                            <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
-                        <% end %>
-                    </div>
-                </div>
-                <div class="row">
-                    <%= form_tag user_path(@user), method: 'get', id: 'contest_form', class: 'form-inline' do %>
-                        <%= text_field_tag :contest_search, params[:contest_search], class: 'form-control' %>
-                        <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
-                    <% end %>
-                </div>
-                <% if @contests.count > 0 %>
-                    <% if @contests.count > @per_page %>
-                        <p><%= "#{@contests.count} found (displaying #{getRangeFromPage(params[:contest_page], @contests.length)})" %></p>
-                    <% else %>
-                        <p><%= "#{@contests.count} found" %></p>
-                    <% end %>
-                <% else %>
-                    <p>No contests found</p>
-                <% end %>
-                <div class="row">
-                    <%= render partial: 'contest', collection: @contests %>
-                    <%= will_paginate @contests, param_name: 'contest_page', id: 'contest_pagination', inner_window: 2, outer_window: 0 %>
-                </div>
-            </div>
-        </div>
+        <%= render partial: 'referees' %>
+        <%= render partial: 'contests' %>
     <% end %>
 </div>

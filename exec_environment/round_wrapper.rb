@@ -14,8 +14,10 @@ class RoundWrapper
 
   #Constructor, sets socket for communication to referee and starts referee and players
   def initialize(referee, match_id, number_of_players, max_match_time, players, rounds, duplicate_players)
-    #Sets port for referee to talk to wrapper_server
-    @wrapper_server = TCPServer.new(0)
+    #Sets path for referee to talk to wrapper_server
+    @aires_path = "/tmp/aires-manager"
+    File.delete @aires_path if File.exists? @aires_path
+    @wrapper_server = UNIXServer.new(@aires_path)
 
     @players = players
     @referee = referee
@@ -39,15 +41,20 @@ class RoundWrapper
     if @referee.rounds_capable
       self.run_round
     else
-      @num_rounds.times do |i|
-        self.run_round
-        if @status[:error] == true
-          return
+      @num_rounds.times do
+        if @max_match_time >= 1
+          begin_time = Time.now
+          self.run_round
+          end_time = Time.now
+          @max_match_time -= (end_time - begin_time)
+          if @status[:error]
+            return
+          end
         end
       end
       calculate_results
-      compress_logs
     end
+    compress_logs
   end
 
   #Used if referee is not rounds capable and can't calculate it's own match results
@@ -103,45 +110,62 @@ class RoundWrapper
   end
 
   def run_round
+    #Wait for referee in separate thread to fix race condition
+    t = Thread.start(@wrapper_server) { |server|
+      client = server.accept
+      begin
+        Timeout::timeout(5) do
+          #Wait for referee to connect
+          @client_path = nil
+          while @client_path.nil?
+            line = client.gets
+            @client_path = self.find_command("path", line)
+            @ref_client = client
+          end
+        end
+      rescue Timeout::Error
+        @status[:error] = true
+        @status[:message] = "INCONCLUSIVE: Referee failed to provide a port!"
+        reap_children
+        return
+      end
+    }
+    sleep 0.1
     #Start referee process, giving it the port to talk to us on
-    wrapper_server_port = @wrapper_server.addr[1]
     if Dir.glob("#{File.dirname(@referee.file_location)}/[Mm]akefile").size > 0
-      command = "cd #{Shellwords.escape File.dirname(@referee.file_location)}; make run port=#{wrapper_server_port} num_players=#{@number_of_players} num_rounds=#{@num_rounds} max_time=#{@max_match_time}"
+      file_location = Shellwords.escape File.dirname(@referee.file_location)
+      command = "cd #{file_location}; make run path=#{@aires_path} num_players=#{@number_of_players} num_rounds=#{@num_rounds} max_time=#{@max_match_time.to_i}"
     else
-      command = "#{Shellwords.escape @referee.file_location} -p #{wrapper_server_port} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time}"
+      file_location = Shellwords.escape @referee.file_location
+      command = "#{file_location} -p #{@aires_path} -n  #{@number_of_players} -r #{@num_rounds} -t #{@max_match_time.to_i}"
     end
 
-    loc = "#{Shellwords.escape @referee.file_location[0, @referee.file_location.length - @referee.name.length]}logs/#{@referee.name}_match_#{@match_id}_round_#{@rounds.length() + 1}"
+    loc = get_log_location(@referee)
     @child_list.push(Process.spawn("#{command}", :out => "#{loc}_log.txt", :err => "#{loc}_err.txt"))
     @match[:ref_logs] = loc
 
     #Wait for referee to tell wrapper_server what port to start players on
-    begin
-      Timeout::timeout(3) do
-        #Wait for referee to connect
-        @ref_client = @wrapper_server.accept
-        @client_port = nil
-        while @client_port.nil?
-          @client_port = self.find_command("port", @ref_client.gets)
-        end
-      end
-    rescue Timeout::Error
-      @status[:error] = true
-      @status[:message] = "INCONCLUSIVE: Referee failed to provide a port!"
-      reap_children
-      return
+    t.join
+    return if @status[:error]
+
+    if @players.uniq.length == 1
+      `cd #{Shellwords.escape File.dirname(@players.first.file_location)}; make contest_compile`
     end
 
     #Start players
     @players.each do |player|
+      player_name = Shellwords.escape player.name
+
       #Name must be given before port because it crashes for mysterious ("--name not found") reasons otherwise
       if Dir.glob("#{File.dirname(player.file_location)}/[Mm]akefile").size > 0
-        command = "cd #{Shellwords.escape File.dirname(player.file_location)}; make contest name=#{Shellwords.escape player.name} port=#{@client_port}"
+        file_location = Shellwords.escape File.dirname(player.file_location)
+        command = "cd #{file_location}; make contest name=#{player_name} path=#{@client_path}"
       else
-        command = "#{Shellwords.escape player.file_location} -n #{Shellwords.escape player.name} -p #{@client_port}"
+        file_location = Shellwords.escape player.file_location
+        command = "#{file_location} -n #{player_name} -p #{@client_path}"
       end
 
-      loc = "#{Shellwords.escape player.file_location[0, player.file_location.length - player.name.length]}logs/#{player.name}_match_#{@match_id}_round_#{@rounds.length() + 1}"
+      loc = get_log_location(player)
       @child_list.push(Process.spawn("#{command}", :out => "#{loc}_log.txt", :err => "#{loc}_err.txt"))
       @match[:logs][player.name] = loc
     end
@@ -159,6 +183,19 @@ class RoundWrapper
     end
 
     reap_children
+  end
+
+  def get_log_directory(entity)
+    file_location_parts = entity.file_location.split('/')
+    file_location_parts.pop
+    dir_location = file_location_parts.join('/')
+    "#{Shellwords.escape dir_location}/logs/"
+  end
+
+  def get_log_location(entity)
+    log_directory = get_log_directory(entity)
+    file_name = "#{entity.name}_match_#{@match_id}_round_#{@rounds.length + 1}"
+    log_directory + file_name
   end
 
   #Receive input from referee and perform actions
@@ -215,10 +252,10 @@ class RoundWrapper
 
   def compress_logs
     locs = []
-    locs << "#{Shellwords.escape @referee.file_location[0, @referee.file_location.length - @referee.name.length]}logs/"
+    locs << get_log_directory(@referee)
     @match[:ref_logs] = locs.last + "match_#{@match_id}_logs"
     @players.each do |player|
-      locs << "#{Shellwords.escape player.file_location[0, player.file_location.length - player.name.length]}logs/"
+      locs << get_log_directory(player)
       @match[:logs][player.name] = locs.last + "match_#{@match_id}_logs"
     end
 

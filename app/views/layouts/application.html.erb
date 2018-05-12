@@ -4,15 +4,19 @@
         <title>Aires | Taylor University Game Contest Server</title>
         <%= favicon_link_tag       "favicon.ico" %>
         <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
-        <%= stylesheet_link_tag 'application', 'https://fonts.googleapis.com/css?family=Merriweather'%>
-        <%= stylesheet_link_tag 'application', 'https://fonts.googleapis.com/css?family=PT+Serif:400,700'%>
         <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+
+        <!-- Custom Fonts -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,700">
+
+        <!-- Syntax highlighting on help pages -->
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
         <%= yield :javascript_includes %>
         <%= csrf_meta_tags %>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <% if content_for?(:refresh_rate) %>
-            <meta http-equiv="refresh" content="<%= yield :refresh_rate %>">
-        <% end %>
     </head>
     <body>
 
@@ -34,14 +38,18 @@
         </div>
 
     </body>
+
+    <!-- Syntax highlighting on help pages -->
+    <script>hljs.initHighlightingOnLoad();</script>
+
     <footer class="container">
     <% if current_user&.admin %>
       <div class="right system-status">
             System Status: 
             <% if @daemon_status then %>
-                <span class="glyphicon glyphicon-ok system-check" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-ok text-limegreen" aria-hidden="true"></span>
             <% else %>
-                <span class="glyphicon glyphicon-remove system-x" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-remove text-red" aria-hidden="true"></span>
             <% end %>
         </div>
     <% end %>

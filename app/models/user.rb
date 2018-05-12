@@ -33,4 +33,28 @@ class User < ActiveRecord::Base
   def move_friendly_id_error_to_username
     errors.add :username, *errors.delete(:friendly_id) if errors[:friendly_id].present?
   end
+
+  def can_edit_contest?(contest)
+    (self == contest.user and self.contest_creator) or self.admin
+  end
+
+  def can_edit_player?(player)
+    self == player.user or self.admin
+  end
+
+  def can_delete_player?(player)
+    (self == player.user or self.can_edit_contest?(player.contest)) and player.matches.size == 0
+  end
+
+  def can_delete_player_with_warning?(player)
+    self.can_edit_contest?(player.contest)
+  end
+
+  def can_edit_referee?(referee)
+    (self == referee.user and self.contest_creator) or self.admin
+  end
+
+  def can_edit_tournament?(tournament)
+    (self == tournament.contest.user and self.contest_creator) or self.admin
+  end
 end

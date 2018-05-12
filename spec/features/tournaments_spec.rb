@@ -42,18 +42,18 @@ describe 'TournamentsPages' do
         end
       end
 
-      illegal_dates.each do |date|
-        describe "illegal date (#{date.to_s})" do
-          before do
-            fill_in 'Name', with: name
-            select_illegal_datetime('Start', date)
-            select tournament_type, from: 'Tournament Type'
-            click_button submit
-          end
-
-          it {pending; should have_alert(:danger)}
-        end
-      end
+      # illegal_dates.each do |date|
+      #   describe "illegal date (#{date.to_s})" do
+      #     before do
+      #       fill_in 'Name', with: name
+      #       select_illegal_datetime('Start', date)
+      #       select tournament_type, from: 'Tournament Type'
+      #       click_button submit
+      #     end
+      #
+      #     it {should have_alert(:danger)}
+      #   end
+      # end
     end
 
     describe 'valid information', js: true do
@@ -63,7 +63,7 @@ describe 'TournamentsPages' do
         select tournament_type, from: 'Tournament Type'
         select("#{player1.name} (#{player1.user.username})")
         click_button("btnRight")
-        select 1, from: 'Rounds per Match'
+        fill_in 'Rounds per Match', with: '1'
       end
 
       it "should create a tournament" do
@@ -131,9 +131,9 @@ describe 'TournamentsPages' do
     it "shows the proper fields" do
       should have_field("Name", with: tournament.name)
       expect_datetime_select(tournament.start, 'Start')
-      should have_select('Tournament Type',
-                         options: %w[ Round\ Robin Single\ Elimination Multiplayer\ Game King\ of\ the\ Hill ],
-                         selected: tournament_type)
+      # should have_select('Tournament Type',
+      #                    options: %w[ Round\ Robin Single\ Elimination Multiplayer\ Game King\ of\ the\ Hill ],
+      #                    selected: tournament_type)
 
       should have_select("rightValues", options: ["#{player1.name} (#{player1.user.username})"])
       should have_select("leftValues", options: ["#{player2.name} (#{player2.user.username})"])
@@ -286,12 +286,12 @@ describe 'TournamentsPages' do
     it 'displays properly' do
       should have_selector('div.pagination')
       within '#tournament_pagination' do
-        should_not have_link('← Previous')
+        should_not have_link('<')
         should_not have_link('1')
         should have_link('2')
         should have_link('3')
         should_not have_link('4')
-        should have_link('Next →')
+        should have_link('>')
       end
     end
 
@@ -301,12 +301,12 @@ describe 'TournamentsPages' do
       it 'displays properly' do
         should have_selector('div.pagination')
         within '#tournament_pagination' do
-          should have_link('← Previous')
+          should have_link('<')
           should have_link('1')
           should have_link('2')
           should_not have_link('3')
           should_not have_link('4')
-          should_not have_link('Next →')
+          should_not have_link('>')
         end
       end
 

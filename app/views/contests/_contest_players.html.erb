@@ -1,0 +1,27 @@
+<div class="display-container no-margin-top center">
+    <div class="row">
+        <h1 class="headings col-xs-10 col-xs-offset-1">Players</h1>
+        <% if current_user %>
+            <div class="info-text col-xs-1 plus-div right" data-toggle="tooltip" data-placement="bottom"
+                 title="Add Player to Contest">
+                <%= link_to(new_contest_player_path(@contest), method: :get) do %>
+                    <%= content_tag('i', nil, class: 'glyphicon glyphicon-plus gly-plus') %>
+                <% end %>
+            </div>
+        <% end %>
+    </div>
+    <div class="row">
+        <%= form_tag contest_path(@contest), method: 'get', id: 'player_form', class: 'form-inline' do %>
+            <%= text_field_tag :player_search, params[:player_search], class: 'form-control inline-block' %>
+            <%= submit_tag "Search", description: nil, class: 'btn btn-danger' %>
+        <% end %>
+    </div>
+
+    <p><%= display_results_found(@players, 'players', params[:player_page], @per_page) %></p>
+
+    <div class="row">
+        <%= render partial: 'contest_player', collection: @players, as: :player %>
+        <%= will_paginate @players, param_name: 'player_page', id: 'player_pagination', inner_window: 2,
+                          outer_window: 0, previous_label: '<', next_label: '>' %>
+    </div>
+</div>

@@ -1,3 +1,7 @@
+#! /usr/bin/env python3
+
+from talk_to_referee import *
+
 EMPTY=0
 INCs=[-1,1]
 VALID_RANGE=range(8)

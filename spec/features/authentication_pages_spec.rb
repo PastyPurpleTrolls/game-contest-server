@@ -29,7 +29,7 @@ describe "AuthenticationPages" do
       end
 
       it "has the correct content on the navbar" do
-        should have_selector(:xpath, "//li/a", text: 'Account')
+        should have_selector(:xpath, "//li/a", text: user.username)
         should have_link('Profile', href: user_path(user))
         should have_link('Settings', href: edit_user_path(user))
         should have_link('Log Out', href: logout_path)
@@ -43,7 +43,7 @@ describe "AuthenticationPages" do
         it "has the correct content on the navbar" do
           should have_button('Log In')
           should have_button('Sign Up')
-          should_not have_selector(:xpath, "//li/a", text: 'Account')
+          should_not have_selector(:xpath, "//li/a", text: user.username)
           should_not have_link('Log Out', href: logout_path)
           should_not have_link('Settings')
           should_not have_link('Profile')
@@ -160,13 +160,6 @@ describe "AuthorizationPages" do
     end
 
     describe "for Matches controller" do
-      describe "index action (with path 'contest_matches')" do
-        it_behaves_like "redirects to a login", browser_only: true do
-          let (:contest) {FactoryBot.create(:contest)}
-          let (:path) {contest_matches_path(contest)}
-        end
-      end
-
       describe "show action (with a challenge match)" do
         it_behaves_like "redirects to a login", browser_only: true do
           let (:challenge_match) {FactoryBot.create(:challenge_match)}
@@ -309,13 +302,6 @@ describe "AuthorizationPages" do
       let (:challenge_match) {FactoryBot.create(:challenge_match)}
       let (:other_user) {FactoryBot.create(:user)}
       let (:login_user) {other_user}
-      describe "index action (with a challenge match)" do
-        it_behaves_like "redirects to root", browser_only: true do
-          let (:signature) {'Matches for'}
-          let (:error_type) {:danger}
-          let (:path) {contest_matches_path(challenge_match.manager)}
-        end
-      end
 
       describe "show action (with a challenge match)" do
         it_behaves_like "redirects to root", browser_only: true do
