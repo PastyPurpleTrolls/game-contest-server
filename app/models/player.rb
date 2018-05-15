@@ -53,10 +53,6 @@ class Player < ActiveRecord::Base
     errors.add :name, *errors.delete(:friendly_id) if errors[:friendly_id].present?
   end
 
-  def deletable?(u)
-    u == user && player_matches.size == 0
-  end
-
   def wins(tournament)
     PlayerMatch.where(player: self,
       match: Match.where(manager: tournament),

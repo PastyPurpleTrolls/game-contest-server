@@ -17,14 +17,12 @@ def send_name_using_socket(s, name):
 
 
 def handle_moves(s, playerFunction):
-    pcolors = ["blue", "green", "yellow", "orange", "black", "white", "purple"]
     win = False
     while not win:
         currentPlayer, board = pickle.loads(s.recv(4096))
         if board != "win":
-            row, col = playerFunction(pcolors, currentPlayer, board)
-            data = "%s,%s" % (row, col)
-            s.send(data.encode())
+            move = playerFunction(currentPlayer, board)
+            s.send(move.encode())
         else:
             win = True
 

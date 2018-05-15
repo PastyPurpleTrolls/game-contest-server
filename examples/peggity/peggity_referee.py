@@ -93,9 +93,8 @@ class Player:
         data = pickle.dumps((currentPlayer, board))
         self.connection.send(data)
         move = self.connection.listen(1024).decode().rstrip()
-        moveList = move.split(',')
-        row = moveList[0]
-        col = moveList[1]
+        row = ord(move[0])-65
+        col = int(moveList[1:])
         return row, col
 
 
