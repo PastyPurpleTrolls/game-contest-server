@@ -3,7 +3,7 @@
 import random
 import talk_to_referee
 
-def manualMove(pcolors,currentPlayer,board):
+def manualMove(currentPlayer,board):
     emptyCellsList=[]
     for row in range(16):
         for col in range(16):

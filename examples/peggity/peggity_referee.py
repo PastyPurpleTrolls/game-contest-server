@@ -94,7 +94,7 @@ class Player:
         self.connection.send(data)
         move = self.connection.listen(1024).decode().rstrip()
         row = ord(move[0])-65
-        col = int(moveList[1:])
+        col = int(move[1:])
         return row, col
 
 
