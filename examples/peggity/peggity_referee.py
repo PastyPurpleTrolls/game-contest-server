@@ -127,7 +127,7 @@ class Match:
         while spacesFilled < BOARD_SIZE ** 2:
             for player in self.players:
                 if invalidPreviousMove:
-                    return player.name
+                    return player
                 row, col = player.move(playerNum, board)
                 row = int(row)
                 col = int(col)
