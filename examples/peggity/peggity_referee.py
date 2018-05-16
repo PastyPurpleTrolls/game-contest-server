@@ -93,9 +93,8 @@ class Player:
         data = pickle.dumps((currentPlayer, board))
         self.connection.send(data)
         move = self.connection.listen(1024).decode().rstrip()
-        moveList = move.split(',')
-        row = moveList[0]
-        col = moveList[1]
+        row = ord(move[0])-65
+        col = int(move[1:])
         return row, col
 
 
@@ -128,7 +127,7 @@ class Match:
         while spacesFilled < BOARD_SIZE ** 2:
             for player in self.players:
                 if invalidPreviousMove:
-                    return player.name
+                    return player
                 row, col = player.move(playerNum, board)
                 row = int(row)
                 col = int(col)

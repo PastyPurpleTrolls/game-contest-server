@@ -36,10 +36,6 @@ class Referee < ActiveRecord::Base
     errors.add :name, *errors.delete(:friendly_id) if errors[:friendly_id].present?
   end
 
-  def deletable?(u)
-    u == user && contests.size == 0
-  end
-
   def update_log_locations(new_directory)
     self.contests.each do |contest|
       contest.matches.each do |match|

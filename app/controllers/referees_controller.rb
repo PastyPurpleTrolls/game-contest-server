@@ -64,16 +64,16 @@ class RefereesController < ApplicationController
   end
 
   def destroy
-    if @referee.deletable?(current_user)
+    if @referee.contests.size > 0
+      flash[:danger] = 'This referee is currently being used in contests'
+      redirect_to referee_path(@referee)
+    elsif current_user.can_edit_referee?(@referee)
       @referee.destroy
       if params[:returnto] == 'profile'
         redirect_to user_path(current_user)
       else
         redirect_to referees_path
       end
-    else
-      flash[:danger] = 'This referee is currently being used in contests'
-      redirect_to referee_path(@referee)
     end
   end
 
